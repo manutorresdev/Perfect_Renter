@@ -5,4 +5,5 @@ jsdocEXAMPLE.js
 .vscode
 READMEJSDOC.MD
 node_modules
-
+docs
+.env
