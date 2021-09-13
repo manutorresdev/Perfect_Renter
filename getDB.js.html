@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>getDB.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,43 +32,49 @@
 
 <div id="main">
     
+    <h1 class="page-title">getDB.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>require('dotenv').config();
 
+const mysql = require('mysql2/promise');
 
-    <section class="package">
-        <h3> </h3>		
+const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } = process.env;
+
+let pool;
+/**
+ * @module module:Database
+ */
+/**
+ * Conexión a base de datos.
+ * @name DatabaseConnection
+ * @returns {Promise}
+ */
+const getDB = async () => {
+  if (!pool) {
+    pool = mysql.createPool({
+      connectionLimit: 10,
+      host: MYSQL_HOST,
+      user: MYSQL_USER,
+      password: MYSQL_PASSWORD,
+      database: MYSQL_DATABASE,
+      timezone: 'Z',
+    });
+  }
+  return await pool.getConnection();
+};
+
+module.exports = getDB;
+</code></pre>
+        </article>
     </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    <section class="readme usertext">
-        <article><h2>Proyecto PERFECT RENTER</h2>
-<p>Aquí encontrarás:</p>
-<ul>
-<li>Modulos</li>
-<li>Variables</li>
-<li>Funciones</li>
-<li>Middlewares</li>
-</ul>
-<p>Con toda su explicación y lo necesario para utilizarlas.</p></article>
-    </section>
-
-
 
 
 
