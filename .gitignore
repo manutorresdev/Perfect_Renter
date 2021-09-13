@@ -1,5 +1,3 @@
-node_modules
-Documentacion
 .envMine
 docs
 index.js
@@ -7,3 +5,7 @@ jsdoc.json
 jsdocEXAMPLE.js
 .vscode
 READMEJSDOC.MD
+<<<<<<< HEAD
+=======
+node_modules
+>>>>>>> origin
