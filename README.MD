@@ -10,6 +10,7 @@
 
 1. Documentación
 
+
    - Contiene documentación general del proyecto, como el análisis funcional, el wireframe...
 
 2. Config
@@ -47,3 +48,12 @@
 - PUT - [/users/recover-password] - Enviar un correo con el enlace de reseteo de la contraseña.
 - PUT - [users/reset-password/:idUser/:recoverCode] - Cambiar la contraseña de un usuario con el código de reseteo.
 - DELETE - [/users/:idUser] - Eliminar un usuario.
+
+   - Contiene documentación general del proyecto, como el análisis funcional, el wireframe...
+2. Config
+   - Contiene archivos de configuración de la base de datos/servidor. (_Debería estar en .gitIgnore_)
+3. Libs
+   - Contiene modulos de funciones, middlewares... para utilizar en múltiples ocasiones en los demás módulos.
+4. Models
+   - Contiene los schemas de las diferentes páginas dónde el usuario debe insertar datos.
+
