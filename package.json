@@ -1,40 +1,40 @@
 {
-    "name": "Perfect_Renter",
-    "version": "1.0.0",
-    "description": "",
-    "main": "app.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/manutowersdev/Perfect_Renter.git"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/manutowersdev/Perfect_Renter/issues"
-    },
-    "homepage": "https://github.com/manutowersdev/Perfect_Renter#readme",
-    "dependencies": {
-        "@sendgrid/mail": "^7.4.6",
-        "date-fns": "^2.23.0",
-        "dotenv": "^10.0.0",
-        "express": "^4.17.1",
-        "express-fileupload": "^1.2.1",
-        "fs-extra": "^10.0.0",
-        "joi": "^17.4.2",
-        "jsonwebtoken": "^8.5.1",
-        "morgan": "^1.10.0",
-        "mysql2": "^2.3.0",
-        "sharp": "^0.29.1",
-        "uuid": "^8.3.2"
-    },
-    "devDependencies": {
-        "eslint": "^7.32.0",
-        "faker": "^5.5.3",
-        "prettier": "^2.4.0",
-        "nodemon": "^2.0.12"
-    }
+  "name": "Perfect_Renter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "initDB": "node config/initDB.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manutowersdev/Perfect_Renter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manutowersdev/Perfect_Renter/issues"
+  },
+  "homepage": "https://github.com/manutowersdev/Perfect_Renter#readme",
+  "dependencies": {
+    "@sendgrid/mail": "^7.4.6",
+    "date-fns": "^2.23.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "fs-extra": "^10.0.0",
+    "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.0",
+    "sharp": "^0.29.1",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "faker": "^5.5.3",
+    "prettier": "^2.4.0",
+    "nodemon": "^2.0.12"
+  }
 }
