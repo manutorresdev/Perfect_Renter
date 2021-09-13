@@ -5,4 +5,7 @@ jsdoc.json
 jsdocEXAMPLE.js
 .vscode
 READMEJSDOC.MD
+<<<<<<< HEAD
+=======
 node_modules
+>>>>>>> origin
