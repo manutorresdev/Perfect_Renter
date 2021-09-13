@@ -7,8 +7,7 @@
     "docs": "jsdoc -c jsdoc.json",
     "initDB": "node config/initDB.js",
     "dev": "nodemon app.js",
-    "deploy": "gh-pages -d docs",
-    "manu": "git request-pull branch-manu origin"
+    "deploy": "gh-pages -d docs"
   },
   "repository": {
     "type": "git",
