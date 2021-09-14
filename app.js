@@ -13,6 +13,7 @@ const { PORT } = process.env;
  */
 const newUser = require('./controllers/users/newUser.js');
 const loginUser = require('./controllers/users/loginUser.js');
+
 //Logger
 
 app.use(morgan('dev'));
