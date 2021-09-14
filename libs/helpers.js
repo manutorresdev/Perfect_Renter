@@ -1,9 +1,16 @@
+// @ts-nocheck
 require('dotenv').config();
 const sgMail = require('@sendgrid/mail');
 const { format } = require('date-fns');
 const crypto = require('crypto');
 
-const { SENDGRID_FROM } = process.env;
+const {
+  UPLOADS_DIRECTORY,
+  SENDGRID_API_KEY: api,
+  SENDGRID_FROM: from,
+} = process.env;
+sgMail.setApiKey(api);
+
 /**
  * ##############
  * ## sendMail ##
@@ -13,7 +20,7 @@ async function sendMail({ to, subject, body }) {
   // Preparamos el mensaje.
   const msg = {
     to,
-    from: SENDGRID_FROM,
+    from: from,
     subject,
     text: body,
     html: `

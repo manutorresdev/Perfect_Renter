@@ -57,7 +57,7 @@ app.get('/users/:idUser', authUser, userExists, getUser);
 
 // Recuperación de contraseña.
 
-app.put('/users/recover-password', recoverUserPass);
+app.put('/users/password/recover', recoverUserPass);
 
 // Agregar un nuevo usuario.
 app.post('/users', newUser);
