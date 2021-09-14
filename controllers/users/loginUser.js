@@ -2,7 +2,16 @@
 
 const getDB = require('../../config/getDB');
 const jwt = require('jsonwebtoken');
-
+/**
+ * @module Users
+ */
+/**
+ * Middleware para loguear un usuario y obtener un token para utilizarlo en la app.
+ * @param {*} req Como requests, se piden dos datos. Email y contraseña.
+ * @param {*} res El servidor responde generando un token para su posterior utilización.
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * @returns {Promise} Devuelve un token.
+ */
 const loginUser = async (req, res, next) => {
   let connection;
 

@@ -1,6 +1,15 @@
 // @ts-nocheck
 const jwt = require('jsonwebtoken');
-
+/**
+ *
+ * @module Helpers
+ */
+/**
+ * Middleware para la correcta autorización de un usuario en el servidor.
+ * @param {*} req Se obtiene la cabecera de autorización del token y desencriptamos el token para obtener el ID y el ROL del usuario en cuestión.
+ * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ */
 const authUser = async (req, res, next) => {
   try {
     // Obtenemos la cabecera de autorización.

@@ -2,11 +2,13 @@ const getDB = require('./getDB');
 const faker = require('faker/locale/es');
 const { format } = require('date-fns');
 const mail = require('@sendgrid/mail');
-
+/**
+ * @module Database
+ */
 /**
  * Creación base de datos
  * @name InitDataBase
- * @memberof module:Database
+ * @returns {Promise} Crea la base de datos con los datos proporcionados por la dependencia Faker.
  */
 async function main() {
   let connection;
