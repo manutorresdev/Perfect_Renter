@@ -1,10 +1,10 @@
 require('dotenv').config();
-const { PORT } = process.env;
-const fileUpload = require('express-fileupload');
+const express = require('express');
+const fileupload = require('express-fileupload');
 const morgan = require('morgan');
 
-const express = require('express');
 const app = express();
+const { PORT } = process.env;
 
 // LOGGER
 app.use(morgan('dev'));
@@ -36,13 +36,13 @@ app.use(fileUpload());
  * ## USER CONTROLLERS ##
  * ######################
  */
-
+const newUser = require('./controllers/users/newUser.js');
 /**
  * ####################
  * ## USER ENDPOINTS ##
  * ####################
  */
-
+app.post('/users', newUser);
 /**
  * ####################
  * ## ERROR LISTENER ##
