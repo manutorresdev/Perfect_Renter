@@ -18,6 +18,8 @@ app.use(fileUpload());
  * ## LIBS MIDDLEWARES ##
  * ######################
  */
+const userExists = require('./libs/middlewares/userExists');
+const authUser = require('./libs/middlewares/authUser');
 
 /**
  * #######################
@@ -37,7 +39,7 @@ app.use(fileUpload());
  * ######################
  */
 
-const { recoverUserPass, newUser } = require('./controllers/users/index');
+const { recoverUserPass, newUser,getUser } = require('./controllers/users/index');
 
 /**
  * ####################
@@ -45,12 +47,17 @@ const { recoverUserPass, newUser } = require('./controllers/users/index');
  * ####################
  */
 
+
+// Obtener información de un usuario.
+app.get('/users/:idUser', authUser, userExists, getUser);
+
 // Recuperación de contraseña.
 
 app.put('/users/recover-password', recoverUserPass);
 
 // Agregar un nuevo usuario.
 app.post('/users', newUser);
+
 
 /**
  * ####################
