@@ -1,3 +1,4 @@
+// @ts-nocheck
 const getDB = require('../../config/getDB');
 const jwt = require('jsonwebtoken');
 

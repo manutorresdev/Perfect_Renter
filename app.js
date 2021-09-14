@@ -43,6 +43,7 @@ const {
   recoverUserPass,
   newUser,
   getUser,
+  loginUser,
 } = require('./controllers/users/index');
 
 /**
@@ -60,6 +61,9 @@ app.put('/users/recover-password', recoverUserPass);
 
 // Agregar un nuevo usuario.
 app.post('/users', newUser);
+
+// Loguear un usuario devolviendo un token
+app.post('/users/login', loginUser);
 
 /**
  * ####################
