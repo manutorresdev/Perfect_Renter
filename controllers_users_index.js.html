@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Users - Documentation</title>
+    <title>controllers/users/index.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,55 +32,32 @@
 
 <div id="main">
     
-    <h1 class="page-title">Users</h1>
+    <h1 class="page-title">controllers/users/index.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        
-    
-</header>
-
-<article>
-    
-        <div class="container-overview">
-        
-            
-
-            
-        
-        </div>
-    
-
-    
-
-    
-
-    
-    
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const getUser = require('./getUser');
+const recoverUserPass = require('./recoverUserPass');
+const newUser = require('./newUser');
+const loginUser = require('./loginUser');
+/**
+ * @module Users
+ */
+module.exports = {
+  recoverUserPass,
+  newUser,
+  getUser,
+  loginUser,
+};
+</code></pre>
+        </article>
+    </section>
 
 
 
