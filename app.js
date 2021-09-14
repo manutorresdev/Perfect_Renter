@@ -37,8 +37,7 @@ app.use(fileUpload());
  * ######################
  */
 
-const { recoverUserPass } = require('./controllers/users/index');
-const newUser = require('./controllers/users/newUser.js');
+const { recoverUserPass, newUser } = require('./controllers/users/index');
 
 /**
  * ####################

@@ -1,8 +1,10 @@
+// @ts-nocheck
 const getDB = require('../../config/getDB');
+
 const {
   generateRandomString,
   formatDate,
-  /* sendMail, */
+  sendMail,
   validate,
 } = require('../../libs/helpers');
 
@@ -13,7 +15,7 @@ const newUser = async (req, res, next) => {
 
   try {
     connection = await getDB();
-
+    console.log(req.body.email);
     //validamos los datos del body
     await validate(userSchema, req.body);
 
@@ -50,11 +52,31 @@ const newUser = async (req, res, next) => {
       ]
     );
 
-    /*  // Mensaje que enviaremos al usuario.
+    // Mensaje que enviaremos al usuario.
     const emailBody = `
-            Te acabas de registrar en Perfect Renter
-            Pulsa en este link para verificar tu cuenta: ${process.env.PUBLIC_HOST}/users/validate/${registrationCode}
-        `;
+      <table>
+        <thead>
+            <th>Verificación de usuario</th>
+        </thead>
+        <tbody>
+            <td>
+              Bienvenido/a ${name}
+              Te acabas de registrar en Perfect Renter
+              ¡Pulsa el botón para verificar tu cuenta!
+            </td>
+        </tbody>
+        <tfoot>
+            <td>
+              <button>
+              <a
+              href="http://localhost:4000/${process.env.PUBLIC_HOST}/users/validate/${registrationCode}"
+              ></a
+              >VERIFICAR
+              </button>
+            </td>
+        </tfoot>
+      </table>
+    `;
 
     try {
       // Enviamos el mensaje al correo del usuario.
@@ -64,8 +86,10 @@ const newUser = async (req, res, next) => {
         body: emailBody,
       });
     } catch (error) {
+      console.log(error.code);
+      console.log(error);
       throw new Error('Error enviando el mensaje de verificación');
-    } */
+    }
 
     res.send({
       status: 'ok',

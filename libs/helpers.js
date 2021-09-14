@@ -23,7 +23,6 @@ async function sendMail({ to, subject, body }) {
             </div>
         `,
   };
-
   // Enviamos el mensaje.
   await sgMail.send(msg);
 }
