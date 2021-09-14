@@ -1,10 +1,10 @@
 require('dotenv').config();
-const { PORT } = process.env;
-const fileUpload = require('express-fileupload');
+const express = require('express');
+const fileupload = require('express-fileupload');
 const morgan = require('morgan');
 
-const express = require('express');
 const app = express();
+const { PORT } = process.env;
 
 // LOGGER
 app.use(morgan('dev'));
@@ -38,6 +38,7 @@ app.use(fileUpload());
  */
 
 const { recoverUserPass } = require('./controllers/users/index');
+const newUser = require('./controllers/users/newUser.js');
 
 /**
  * ####################
@@ -45,9 +46,13 @@ const { recoverUserPass } = require('./controllers/users/index');
  * ####################
  */
 
-// Recuperación de contraseña
+
+// Recuperación de contraseña.
 
 app.put('/users/recover-password', recoverUserPass);
+
+// Agregar un nuevo usuario.
+app.post('/users', newUser);
 
 /**
  * ####################
