@@ -3,10 +3,5 @@ jsdocEXAMPLE.js
 .vscode
 READMEJSDOC.MD
 node_modules
-<<<<<<< HEAD
-.env
-
-=======
 docs
 .env
->>>>>>> origin
