@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>controllers/users/getUser.js - Documentation</title>
+    <title>controllers/users/recoverUserPass.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">controllers/users/getUser.js</h1>
+    <h1 class="page-title">controllers/users/recoverUserPass.js</h1>
     
 
     
@@ -42,61 +42,104 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const getDB = require('../../config/getDB');
+            <pre class="prettyprint source linenums"><code>// @ts-nocheck
+const getDB = require('../../config/getDB');
+const { sendMail, generateRandomString } = require('../../libs/helpers');
 /**
  * @module Users
  */
 /**
- * Middleware para listar un usuario en concreto.
- * @param {*} req Necesaria la autenticación con un "token", en la que se encuentra el ID del usuario iniciado. Además del id del usuario a obtener información en los path params.
- * @param {*} res Como respuesta, obtienes un objeto con los datos del usuario
+ * Middleware que genera un enlace de cambio de contraseña y lo envía al correo.
+ * @param {*} req Como "requests", se requiere un email válido, de no ser así, se lanza un error.
+ * @param {*} res El servidor lanza como respuesta un correo para el correcto cambio de la contraseña.
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
- * @returns {Promise} Devuelve un objeto con los datos.
  */
-const getUser = async (req, res, next) => {
+const recoverUserPass = async (req, res, next) => {
   let connection;
   try {
     connection = await getDB();
+    // Obtenemos el email del usuario.
+    const { email } = req.body;
 
-    //Obtenemos el id del usuario.
-    const { idUser } = req.params;
+    // Si el campo de email está vacío, lanzamos un error.
+    if (!email) {
+      const error = new Error('Escribe un correo electrónico válido.');
+      error.httpStatus = 400;
+      throw error;
+    }
 
-    //Obtenemos el id del usuario que hace la request
-    const idReqUser = req.userAuth.id;
-
-    //Obtenemos los datos del usuario
+    // Obtenemos el usuario
     const [user] = await connection.query(
       `
-            SELECT nif, name, lastName, tel, email, avatar, role, createdAt FROM users WHERE idUser = ?`,
-      [idUser]
+      SELECT idUser FROM users WHERE email = ?
+      `,
+      [email]
     );
 
-    //Objeto con la info basica del usuario
-    const userInfo = {
-      name: user[0].name,
-      lastName: user[0].lastName,
-      avatar: user[0].avatar,
-    };
-
-    //Usuario propietario
-    if (user[0].id === idReqUser || req.userAuth.role === 'admin') {
-      userInfo.email = user[0].email;
-      userInfo.role = user[0].role;
-      userInfo.createdAt = user[0].createdAt;
+    // Comprobamos que exista el usuario con el email proporcionado. Si no existe, lanzamos error.
+    if (user.length &lt; 1) {
+      const error = new Error(
+        'No existe ningún usuario con ese email, por favor, comprueba que el email sea correcto.'
+      );
+      error.httpStatus = 404;
+      throw error;
     }
+
+    // Generamos el recoverCode,
+    const recoverCode = generateRandomString(20);
+
+    // Creamos el cuerpo del email.
+    const emailBody = `
+        &lt;table>
+            &lt;thead>
+                &lt;th>Recuperación de contraseña&lt;/th>
+            &lt;/thead>
+            &lt;tbody>
+                &lt;td>
+                    Se ha solicitado un cambio de contraseña para el usuario registrado
+                    con este email en Perfect Renter.
+                    &lt;br />
+                    Haz click en el botón recuperar contraseña para cambiarla.
+                    &lt;br />
+                    Si no has sido tú, por favor, ignora este email.
+                &lt;/td>
+            &lt;/tbody>
+            &lt;tfoot>
+                &lt;td>
+                    &lt;button>
+                    &lt;a href="http://localhost:4000/users/reset-password/${user[0].idUser}/${recoverCode}"
+                    >RECUPERAR CONTRASEÑA&lt;/a>&lt;/button>
+            &lt;/td>
+            &lt;/tfoot>
+        &lt;/table>
+    `;
+    // Envío de email.
+    await sendMail({
+      to: email,
+      subject: 'Cambio de contraseña Perfect Renter',
+      body: emailBody,
+    });
+
+    // Agregamos el código de recuperación al usuario en la base de datos.
+    await connection.query(
+      `
+    UPDATE users SET recoverCode = ? WHERE email = ?
+    `,
+      [recoverCode, email]
+    );
 
     res.send({
       status: 'ok',
-      userInfo,
+      message: 'Email enviado con éxito.',
     });
   } catch (error) {
-    next(error);
+    next();
   } finally {
     if (connection) connection.release();
   }
 };
 
-module.exports = getUser;
+module.exports = recoverUserPass;
 </code></pre>
         </article>
     </section>
