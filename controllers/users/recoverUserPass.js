@@ -1,5 +1,6 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
+const { sendMail } = require('../../libs/helpers');
 
 const recoverUserPass = async (req, res, next) => {
   let connection;
@@ -72,8 +73,23 @@ const recoverUserPass = async (req, res, next) => {
       body: emailBody,
     });
 
-    // Agregamos código
+    // Agregamos el código de recuperación al usuario en la base de datos.
+    await connection.query(
+      `
+    UPDATE users SET recoverCode = ? WHERE email = ?
+    `,
+      [recoverCode, email]
+    );
+
+    res.send({
+      status: 'ok',
+      message: 'Email enviado con éxito.',
+    });
   } catch (error) {
     next();
+  } finally {
+    if (connection) connection.release();
   }
 };
+
+module.exports = recoverUserPass;

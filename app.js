@@ -37,11 +37,17 @@ app.use(fileUpload());
  * ######################
  */
 
+const { recoverUserPass } = require('./controllers/users/index');
+
 /**
  * ####################
  * ## USER ENDPOINTS ##
  * ####################
  */
+
+// Recuperación de contraseña
+
+app.put('/users/recover-password', recoverUserPass);
 
 /**
  * ####################
