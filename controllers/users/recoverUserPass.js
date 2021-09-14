@@ -1,13 +1,11 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-const { sendMail } = require('../../libs/helpers');
+const { sendMail, generateRandomString } = require('../../libs/helpers');
 
 const recoverUserPass = async (req, res, next) => {
   let connection;
-
   try {
     connection = await getDB();
-
     // Obtenemos el email del usuario.
     const { email } = req.body;
 
@@ -21,8 +19,8 @@ const recoverUserPass = async (req, res, next) => {
     // Obtenemos el usuario
     const [user] = await connection.query(
       `
-    SELECT id FROM users WHERE email = ?
-    `,
+      SELECT idUser FROM users WHERE email = ?
+      `,
       [email]
     );
 
@@ -57,11 +55,8 @@ const recoverUserPass = async (req, res, next) => {
             <tfoot>
                 <td>
                     <button>
-                    <a
-                    href="http://localhost:4000/users/reset-password/${idUser}/${recoverCode}"
-                    ></a
-            >RECUPERAR CONTRASEÑA
-            </button>
+                    <a href="http://localhost:4000/users/reset-password/${user[0].idUser}/${recoverCode}"
+                    >RECUPERAR CONTRASEÑA</a></button>
             </td>
             </tfoot>
         </table>
