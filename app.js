@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const fileupload = require('express-fileupload');
+const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
 
 const app = express();
@@ -45,7 +45,6 @@ const newUser = require('./controllers/users/newUser.js');
  * ## USER ENDPOINTS ##
  * ####################
  */
-
 
 // Recuperación de contraseña.
 
