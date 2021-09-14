@@ -1,6 +1,5 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-
 const {
   generateRandomString,
   formatDate,
@@ -68,10 +67,7 @@ const newUser = async (req, res, next) => {
         <tfoot>
             <td>
               <button>
-              <a
-              href="http://localhost:4000/${process.env.PUBLIC_HOST}/users/validate/${registrationCode}"
-              ></a
-              >VERIFICAR
+              <a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR</a>
               </button>
             </td>
         </tfoot>
