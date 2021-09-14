@@ -1,10 +1,9 @@
 {
-  "name": "Perfect_Renter",
+  "name": "perfect_renter",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-
     "docs": "jsdoc -c jsdoc.json",
     "initDB": "node config/initDB.js",
     "dev": "nodemon app.js",
@@ -24,7 +23,6 @@
   "dependencies": {
     "@sendgrid/mail": "^7.4.6",
     "date-fns": "^2.23.0",
-    "docdash": "^1.2.0",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.1",
@@ -39,10 +37,11 @@
   "devDependencies": {
     "eslint": "^7.32.0",
     "faker": "^5.5.3",
+    "docdash": "^1.2.0",
     "prettier": "^2.4.0",
-    "nodemon": "^2.0.12"
+    "nodemon": "^2.0.12",
     "gh-pages": "^3.2.3",
     "jsdoc": "^3.6.7",
-    "jsdoc-http-plugin": "^0.3.2",
+    "jsdoc-http-plugin": "^0.3.2"
   }
 }

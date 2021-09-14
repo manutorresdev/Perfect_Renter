@@ -3,6 +3,11 @@ const faker = require('faker/locale/es');
 const { format } = require('date-fns');
 const mail = require('@sendgrid/mail');
 
+/**
+ * Creación base de datos
+ * @name InitDataBase
+ * @memberof module:Database
+ */
 async function main() {
   let connection;
 
@@ -22,7 +27,7 @@ async function main() {
 
     /* Creamos la tabla users */
     await connection.query(`
-        CREATE TABLE users ( 
+        CREATE TABLE users (
             idUser INT PRIMARY KEY AUTO_INCREMENT,
             nif VARCHAR(10),
             name VARCHAR(100),
@@ -119,10 +124,7 @@ async function main() {
     // Insertamos los usuarios.
     for (let i = 0; i < USERS; i++) {
       // Datos de faker.
-      const nif = Math.round(
-        Math.random() * (999999999 - 100000000) + 100000000
-      );
-      console.log(nif);
+      const nif = faker.finance.routingNumber();
       const name = faker.name.findName();
       const lastName = faker.name.lastName();
       const phone = faker.phone.phoneNumber();
