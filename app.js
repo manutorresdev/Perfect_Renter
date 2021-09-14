@@ -6,32 +6,71 @@ const morgan = require('morgan');
 const app = express();
 const { PORT } = process.env;
 
+// LOGGER
+app.use(morgan('dev'));
+// BODY DESERIALIZER
+app.use(express.json());
+// FORM-DATA DESERIALIZER
+app.use(fileUpload());
+
 /**
- * ############################
- * ## Controladores usuarios ##
- * ############################
+ * ######################
+ * ## LIBS MIDDLEWARES ##
+ * ######################
+ */
+
+/**
+ * #######################
+ * ## FLATS CONTROLLERS ##
+ * #######################
+ */
+
+/**
+ * #####################
+ * ## FLATS ENDPOINTS ##
+ * #####################
+ */
+
+/**
+ * ######################
+ * ## USER CONTROLLERS ##
+ * ######################
  */
 const newUser = require('./controllers/users/newUser.js');
-
-//Logger
-
-app.use(morgan('dev'));
-
-//Deserealizacion el body
-
-app.use(express.json());
-
-//deserealizamos el body de tipo "form-data"
-app.use(fileupload());
-
 /**
- * ########################
- * ## Endpoints usuarios ##
- * ########################
+ * ####################
+ * ## USER ENDPOINTS ##
+ * ####################
  */
-// Crear un usuario.
 app.post('/users', newUser);
-
+/**
+ * ####################
+ * ## ERROR LISTENER ##
+ * ####################
+ */
+app.use((error, req, res, next) => {
+  console.error(error);
+  res.status(error.httpStatus || 500).send({
+    status: 'error',
+    message: error.message,
+  });
+});
+/**
+ * ##########################
+ * ## NOT FOUND MIDDLEWARE ##
+ * ##########################
+ */
+app.use((req, res) => {
+  res.status(404).send({
+    status: 'error',
+    message: 'Not found',
+  });
+});
+/**
+ * ####################
+ * ## SERVER ON PORT ##
+ * ####################
+ */
 app.listen(PORT, () => {
-  console.log(`server listening at http://localhost:${PORT}`);
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
