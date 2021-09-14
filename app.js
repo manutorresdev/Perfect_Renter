@@ -1,10 +1,10 @@
 require('dotenv').config();
-const { PORT } = process.env;
+const express = require('express');
 const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
 
-const express = require('express');
 const app = express();
+const { PORT } = process.env;
 
 // LOGGER
 app.use(morgan('dev'));
@@ -38,15 +38,26 @@ const authUser = require('./libs/middlewares/authUser');
  * ## USER CONTROLLERS ##
  * ######################
  */
-const { getUser } = require('./controllers/users');
+
+const { recoverUserPass, newUser,getUser } = require('./controllers/users/index');
+
 /**
  * ####################
  * ## USER ENDPOINTS ##
  * ####################
  */
 
+
 // Obtener información de un usuario.
 app.get('/users/:idUser', authUser, userExists, getUser);
+
+// Recuperación de contraseña.
+
+app.put('/users/recover-password', recoverUserPass);
+
+// Agregar un nuevo usuario.
+app.post('/users', newUser);
+
 
 /**
  * ####################
