@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>libs/helpers.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,43 +32,106 @@
 
 <div id="main">
     
+    <h1 class="page-title">libs/helpers.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// @ts-nocheck
+require('dotenv').config();
+const sgMail = require('@sendgrid/mail');
+const { format } = require('date-fns');
+const crypto = require('crypto');
 
+const {
+  UPLOADS_DIRECTORY,
+  SENDGRID_API_KEY: api,
+  SENDGRID_FROM: from,
+} = process.env;
+sgMail.setApiKey(api);
 
-    <section class="package">
-        <h3> </h3>		
+/**
+ * ##############
+ * ## sendMail ##
+ * ##############
+ */
+async function sendMail({ to, subject, body }) {
+  // Preparamos el mensaje.
+  const msg = {
+    to,
+    from: from,
+    subject,
+    text: body,
+    html: `
+            &lt;div>
+                &lt;h1>${subject}&lt;/h1>
+                &lt;p>${body}&lt;/p>
+            &lt;/div>
+        `,
+  };
+  // Enviamos el mensaje.
+  await sgMail.send(msg);
+}
+
+/**
+ * ################
+ * ## formatDate ##
+ * ################
+ */
+
+function formatDate(date) {
+  return format(date, 'yyyy-MM-dd HH:mm:ss');
+}
+
+/**
+ * ####################
+ * ## getRandomValue ##
+ * ####################
+ */
+
+function getRandomValue(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
+}
+
+/**
+ * ##########################
+ * ## generateRandomString ##
+ * ##########################
+ */
+
+function generateRandomString(lenght) {
+  return crypto.randomBytes(lenght).toString('hex');
+}
+
+/**
+ * ##############
+ * ## validate ##
+ * ##############
+ */
+
+async function validate(schema, data) {
+  try {
+    await schema.validateAsync(data);
+  } catch (error) {
+    error.httpStatus = 400;
+    throw error;
+  }
+}
+module.exports = {
+  formatDate,
+  getRandomValue,
+  generateRandomString,
+  validate,
+  sendMail,
+};
+</code></pre>
+        </article>
     </section>
-
-
-
-
-
-
-
-
-
-    
-
-
-
-    <section class="readme usertext">
-        <article><h2>Proyecto PERFECT RENTER</h2>
-<p>Aquí encontrarás:</p>
-<ul>
-<li>Modulos</li>
-<li>Variables</li>
-<li>Funciones</li>
-<li>Middlewares</li>
-</ul>
-<p>Con toda su explicación y lo necesario para utilizarlas.</p></article>
-    </section>
-
-
 
 
 
