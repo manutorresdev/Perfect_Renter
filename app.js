@@ -39,14 +39,17 @@ const authUser = require('./libs/middlewares/authUser');
  * ######################
  */
 
-const { recoverUserPass, newUser,getUser } = require('./controllers/users/index');
+const {
+  recoverUserPass,
+  newUser,
+  getUser,
+} = require('./controllers/users/index');
 
 /**
  * ####################
  * ## USER ENDPOINTS ##
  * ####################
  */
-
 
 // Obtener información de un usuario.
 app.get('/users/:idUser', authUser, userExists, getUser);
@@ -57,7 +60,6 @@ app.put('/users/recover-password', recoverUserPass);
 
 // Agregar un nuevo usuario.
 app.post('/users', newUser);
-
 
 /**
  * ####################
