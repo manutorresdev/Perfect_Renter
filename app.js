@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const fileupload = require('express-fileupload');
+const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
 
 const app = express();
@@ -12,7 +12,7 @@ const { PORT } = process.env;
  * ############################
  */
 const newUser = require('./controllers/users/newUser.js');
-
+const loginUser = require('./controllers/users/loginUser.js');
 //Logger
 
 app.use(morgan('dev'));
@@ -22,7 +22,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 //deserealizamos el body de tipo "form-data"
-app.use(fileupload());
+app.use(fileUpload());
 
 /**
  * ########################
@@ -31,6 +31,10 @@ app.use(fileupload());
  */
 // Crear un usuario.
 app.post('/users', newUser);
+
+// loguear usuario
+
+app.post('/users/login', loginUser);
 
 app.listen(PORT, () => {
   console.log(`server listening at http://localhost:${PORT}`);
