@@ -36,13 +36,24 @@ app.use(fileUpload());
  * ## USER CONTROLLERS ##
  * ######################
  */
+
+const { recoverUserPass } = require('./controllers/users/index');
 const newUser = require('./controllers/users/newUser.js');
+
 /**
  * ####################
  * ## USER ENDPOINTS ##
  * ####################
  */
+
+
+// Recuperación de contraseña.
+
+app.put('/users/recover-password', recoverUserPass);
+
+// Agregar un nuevo usuario.
 app.post('/users', newUser);
+
 /**
  * ####################
  * ## ERROR LISTENER ##
