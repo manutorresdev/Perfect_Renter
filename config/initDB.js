@@ -124,10 +124,7 @@ async function main() {
     // Insertamos los usuarios.
     for (let i = 0; i < USERS; i++) {
       // Datos de faker.
-      const nif = Math.round(
-        Math.random() * (999999999 - 100000000) + 100000000
-      );
-      console.log(nif);
+      const nif = faker.finance.routingNumber();
       const name = faker.name.findName();
       const lastName = faker.name.lastName();
       const phone = faker.phone.phoneNumber();
