@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>config/getDB.js - Documentation</title>
+    <title>controllers/users/loginUser.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">config/getDB.js</h1>
+    <h1 class="page-title">controllers/users/loginUser.js</h1>
     
 
     
@@ -42,36 +42,78 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>require('dotenv').config();
+            <pre class="prettyprint source linenums"><code>// @ts-nocheck
 
-const mysql = require('mysql2/promise');
-
-const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } = process.env;
-
-let pool;
+const getDB = require('../../config/getDB');
+const jwt = require('jsonwebtoken');
 /**
- * @module module:Database
+ * @module module:Users
  */
 /**
- * Conexión a base de datos.
- * @name DatabaseConnection
- * @returns {Promise} Devuelve una conexión a la base de datos.
+ * Middleware para loguear un usuario y obtener un token para utilizarlo en la app.
+ * @param {*} req Como requests, se piden dos datos. Email y contraseña.
+ * @param {*} res El servidor responde generando un token para su posterior utilización.
+ * @returns {Promise} Devuelve un token.
  */
-const getDB = async () => {
-  if (!pool) {
-    pool = mysql.createPool({
-      connectionLimit: 10,
-      host: MYSQL_HOST,
-      user: MYSQL_USER,
-      password: MYSQL_PASSWORD,
-      database: MYSQL_DATABASE,
-      timezone: 'Z',
+const loginUser = async (req, res, next) => {
+  let connection;
+
+  try {
+    connection = await getDB();
+
+    // Obtenemos el email y el password.
+    const { email, password } = req.body;
+
+    // Si falta algún dato lanzamos un error.
+    if (!email || !password) {
+      const error = new Error('Faltan campos');
+      error.httpStatus = 400;
+      throw error;
+    }
+
+    // Comprobamos si existe un usuario con ese email y esa contraseña.
+    const [user] = await connection.query(
+      `SELECT idUser, role, renterActive FROM users WHERE email = ? AND password = SHA2(?, 512)`,
+      [email, password]
+    );
+
+    // Si el usuario no existe lanzamos un error.
+    if (user.length &lt; 1) {
+      const error = new Error('Email o contraseña incorrectos');
+      error.httpStatus = 401;
+      throw error;
+    }
+
+    /*   // Si el usuario existe pero no está activo lanzamos un error.
+    if (!user[0].active) {
+      const error = new Error('Usuario pendiente de validar');
+      error.httpStatus = 401;
+      throw error;
+    } */
+
+    // Objeto con la información que le queramos pasar al token.
+    const tokenInfo = {
+      id: user[0].id,
+      role: user[0].role,
+    };
+
+    // Creamos el token. Puedo importar .env arriba y poner sólo SECRET
+    const token = jwt.sign(tokenInfo, process.env.SECRET, {
+      expiresIn: '30d',
     });
+
+    res.send({
+      status: 'ok',
+      token,
+    });
+  } catch (error) {
+    next(error);
+  } finally {
+    if (connection) connection.release();
   }
-  return await pool.getConnection();
 };
 
-module.exports = getDB;
+module.exports = loginUser;
 </code></pre>
         </article>
     </section>
