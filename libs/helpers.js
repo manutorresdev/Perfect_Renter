@@ -1,5 +1,31 @@
+require('dotenv').config();
+const sgMail = require('@sendgrid/mail');
 const { format } = require('date-fns');
 const crypto = require('crypto');
+
+const { SENDGRID_FROM } = process.env;
+/**
+ * ##############
+ * ## sendMail ##
+ * ##############
+ */
+async function sendMail({ to, subject, body }) {
+  // Preparamos el mensaje.
+  const msg = {
+    to,
+    from: SENDGRID_FROM,
+    subject,
+    text: body,
+    html: `
+            <div>
+                <h1>${subject}</h1>
+                <p>${body}</p>
+            </div>
+        `,
+  };
+  // Enviamos el mensaje.
+  await sgMail.send(msg);
+}
 
 /**
  * ################
@@ -32,9 +58,9 @@ function generateRandomString(lenght) {
 }
 
 /**
- * ##################
- * ## validate    ###
- * ##################
+ * ##############
+ * ## validate ##
+ * ##############
  */
 
 async function validate(schema, data) {
@@ -50,4 +76,5 @@ module.exports = {
   getRandomValue,
   generateRandomString,
   validate,
+  sendMail,
 };

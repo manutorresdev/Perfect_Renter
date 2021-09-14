@@ -1,3 +1,10 @@
+<<<<<<< HEAD:.env
+MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=root
+MYSQL_DATABASE=perfect_renter
+PORT=4000
+=======
 MYSQL_HOST=
 MYSQL_USER=
 MYSQL_PASSWORD=
@@ -8,3 +15,4 @@ SENDGRID_FROM=
 SENDGRID_API_KEY=
 PUBLIC_HOST=
 SECRET=
+>>>>>>> origin:.envExample
