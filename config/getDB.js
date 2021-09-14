@@ -6,12 +6,12 @@ const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE } = process.env;
 
 let pool;
 /**
- * @module module:Database
+ * @module Database
  */
 /**
  * Conexión a base de datos.
  * @name DatabaseConnection
- * @returns {Promise}
+ * @returns {Promise} Devuelve una conexión a la base de datos.
  */
 const getDB = async () => {
   if (!pool) {

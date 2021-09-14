@@ -8,7 +8,15 @@ const {
 } = require('../../libs/helpers');
 
 const userSchema = require('../../models/userSchema');
-
+/**
+ * @module Users
+ */
+/**
+ * Middleware para generar un nuevo usuario en la base de datos.
+ * @param {*} req Como "requests", se requieren cinco datos del usuario.
+ * @param {*} res El servidor lanza como respuesta la confirmación de la creación de un nuevo usuario con el envío del email para validarlo.
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ */
 const newUser = async (req, res, next) => {
   let connection;
 
@@ -82,8 +90,6 @@ const newUser = async (req, res, next) => {
         body: emailBody,
       });
     } catch (error) {
-      console.log(error.code);
-      console.log(error);
       throw new Error('Error enviando el mensaje de verificación');
     }
 

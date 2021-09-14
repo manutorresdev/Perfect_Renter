@@ -1,6 +1,15 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-
+/**
+ *
+ * @module Helpers
+ */
+/**
+ * Middleware para verificar la existencia de un usuario en la base de datos.
+ * @param {*} req Como "request", se obtiene el id del usuario a verificar y comprobamos si existe posteriormente.
+ * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ */
 const userExists = async (req, res, next) => {
   let connection;
 
