@@ -54,6 +54,7 @@ const {
   getUser,
   loginUser,
   deleteUser,
+  listUsers,
 } = require('./controllers/users/index');
 
 /**
@@ -75,6 +76,18 @@ const {
  * @response {Object} Response Datos de usuario
  */
 app.get('/users/:idUser', authUser, userExists, getUser);
+
+/**Listar todos los usuarios
+ *
+ * @name getUsers
+ * @path {GET} /users
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el usuario no existe
+ * @response [{Object}] Response. Array de datos de todos los usuarios
+ */
+
+app.get('/users', listUsers);
 
 /**
  * Obtener enlace de recuperación de contraseña.
