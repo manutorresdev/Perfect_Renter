@@ -5,3 +5,4 @@ READMEJSDOC.MD
 node_modules
 .env
 docs
+doc.md
