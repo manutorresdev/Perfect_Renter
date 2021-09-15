@@ -11,7 +11,7 @@ const userExists = async (req, res, next) => {
 
     // Obtenemos el usuario.
     const [user] = await connection.query(
-      `SELECT id FROM users WHERE id = ? AND deleted = false`,
+      `SELECT idUser FROM users WHERE id = ? AND deleted = false`,
       [idUser]
     );
 

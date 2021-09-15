@@ -21,7 +21,7 @@ const recoverUserPass = async (req, res, next) => {
     // Obtenemos el usuario
     const [user] = await connection.query(
       `
-    SELECT id FROM users WHERE email = ?
+    SELECT idUsers FROM users WHERE email = ?
     `,
       [email]
     );
