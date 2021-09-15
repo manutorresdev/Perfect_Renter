@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li></ul></li><li></li><li></li><li></li></ul><h3>Global</h3><ul><li><a href="global.html#userExists">userExists</a></li></ul>
+    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li></ul></li><li></li><li></li><li></li></ul>
 </nav>
 
 <div id="main">
@@ -87,7 +87,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line59">line 59</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line64">line 64</a>
     </li></ul></dd>
     
 
@@ -136,6 +136,44 @@
                             </tr>
                             </table>
                             Obtener usuario.
+                            <h5>Header Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">Authorization</td>
+            <td class="type"></td>
+            
+            
+            <td class="description last">Es la identificación utlizada para llevar a cabo la request</td>
+          </tr>
+          </table>
+                            <h5>Route Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">:idUser</td>
+            <td class="type">number</td>
+            
+            
+            <td class="description last">Número de usuario a mostrar</td>
+          </tr>
+          </table>
                             <h5>Response:</h5>
           <table class="params">
             <thead>
@@ -148,11 +186,11 @@
               </tr>
             </thead>
             <tr>
-            <td class="name">Datos</td>
+            <td class="name">Response</td>
             <td class="type">Object</td>
             
             
-            <td class="description last">de usuario</td>
+            <td class="description last">Datos de usuario</td>
           </tr>
           </table>
                             <h5>Response Code:</h5>
@@ -177,7 +215,7 @@
             <td class="type">401</td>
             
             
-            <td class="description last">Si la autorización del usuario es errónea.</td>
+            <td class="description last">Si la autorización del usuario es errónea</td>
           </tr><tr>
             
             <td class="type">404</td>
@@ -208,7 +246,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line97">line 97</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -257,6 +295,31 @@
                             </tr>
                             </table>
                             Loguear usuario.
+                            <h5>Body Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">email</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Correo electrónico del usuario</td>
+          </tr><tr>
+            <td class="name">password</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Contraseña del usuario</td>
+          </tr>
+          </table>
                             <h5>Response:</h5>
           <table class="params">
             <thead>
@@ -269,11 +332,11 @@
               </tr>
             </thead>
             <tr>
-            <td class="name">Devuelve</td>
+            <td class="name">Response</td>
             <td class="type">Object</td>
             
             
-            <td class="description last">un token.</td>
+            <td class="description last">Devuelve un token</td>
           </tr>
           </table>
                             <h5>Response Code:</h5>
@@ -298,13 +361,13 @@
             <td class="type">400</td>
             
             
-            <td class="description last">Si faltan campos a rellenar.</td>
+            <td class="description last">Si faltan campos a rellenar</td>
           </tr><tr>
             
             <td class="type">401</td>
             
             
-            <td class="description last">Si el email o la contraseña son incorrectos.</td>
+            <td class="description last">Si el email o la contraseña son incorrectos</td>
           </tr>
           </table>
 </div>
@@ -329,7 +392,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line85">line 85</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -378,6 +441,49 @@
                             </tr>
                             </table>
                             Agregar usuario.
+                            <h5>Body Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">name</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Nombre del usuario</td>
+          </tr><tr>
+            <td class="name">lastname</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Apellidos del usuario</td>
+          </tr><tr>
+            <td class="name">email</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Correo electrónico del usuario</td>
+          </tr><tr>
+            <td class="name">password</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Contraseña del usuario</td>
+          </tr><tr>
+            <td class="name">bio</td>
+            <td class="type">String</td>
+            
+            
+            <td class="description last">Breve descripción del usuario</td>
+          </tr>
+          </table>
                             <h5>Response:</h5>
           <table class="params">
             <thead>
@@ -390,11 +496,11 @@
               </tr>
             </thead>
             <tr>
-            <td class="name">Confirmación</td>
+            <td class="name">Response</td>
             <td class="type">Object</td>
             
             
-            <td class="description last">registro.</td>
+            <td class="description last">Confirmación registro</td>
           </tr>
           </table>
                             <h5>Response Code:</h5>
@@ -419,7 +525,7 @@
             <td class="type">409</td>
             
             
-            <td class="description last">Si el correo electrónico ya existe en la base de datos.</td>
+            <td class="description last">Si el correo electrónico ya existe en la base de datos</td>
           </tr>
           </table>
 </div>
@@ -444,7 +550,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line72">line 72</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -505,11 +611,11 @@
               </tr>
             </thead>
             <tr>
-            <td class="name">Confirmación</td>
+            <td class="name">Response</td>
             <td class="type">Object</td>
             
             
-            <td class="description last">recuperación contraseña.</td>
+            <td class="description last">Confirmación recuperación contraseña</td>
           </tr>
           </table>
                             <h5>Response Code:</h5>
@@ -534,7 +640,7 @@
             <td class="type">400</td>
             
             
-            <td class="description last">Si el correo electrónico no es valido.</td>
+            <td class="description last">Si el correo electrónico no es valido</td>
           </tr><tr>
             
             <td class="type">404</td>
@@ -574,7 +680,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Sep 15 2021 00:53:24 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Sep 15 2021 15:55:16 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
