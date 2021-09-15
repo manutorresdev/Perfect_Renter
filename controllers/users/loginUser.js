@@ -50,9 +50,10 @@ const loginUser = async (req, res, next) => {
 
     // Objeto con la información que le queramos pasar al token.
     const tokenInfo = {
-      id: user[0].id,
+      idUser: user[0].idUser,
       role: user[0].role,
     };
+    /* console.log(tokenInfo); */
 
     // Creamos el token. Puedo importar .env arriba y poner sólo SECRET
     const token = jwt.sign(tokenInfo, process.env.SECRET, {

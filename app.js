@@ -47,6 +47,7 @@ const {
   newUser,
   getUser,
   loginUser,
+  deleteUser,
 } = require('./controllers/users/index');
 
 /**
@@ -105,6 +106,18 @@ app.post('/users', newUser);
  * @response {Object} Devuelve un token.
  */
 app.post('/users/login', loginUser);
+
+//Eliminar un usuario
+/**
+ * Eliminar usuario.
+ *
+ * @name deleteUser
+ * @path {Delete} /users/:iduser
+ * @code {403} Si se intenta eliminar al administrador
+ * @code {403} Si el usuario que hace la petición no es el registrado en esa cuenta
+ * @response {Object} Confirmación de usuario eliminado.
+ */
+app.delete('/users/:idUser', authUser, userExists, deleteUser);
 
 /**
  * ####################
