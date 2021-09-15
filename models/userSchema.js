@@ -2,7 +2,6 @@ const Joi = require('joi');
 /**
  * @module Schemas
  */
-
 /**
  * Esquema de usuario para validación de datos.
  * @name UserSchema

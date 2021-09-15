@@ -22,7 +22,7 @@ const newUser = async (req, res, next) => {
 
   try {
     connection = await getDB();
-    console.log(req.body.email);
+
     //validamos los datos del body
     await validate(userSchema, req.body);
 
@@ -47,7 +47,7 @@ const newUser = async (req, res, next) => {
 
     // Guardamos al usuario en la base de datos junto al código de registro.
     await connection.query(
-      `INSERT INTO users (name, lastname, email, password, bio, registrationCode, createdAt) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?)`,
+      `INSERT INTO users (name, lastname, email, password, bio, registrationCode, createdAt, renterActive) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false)`,
       [
         name,
         lastname,

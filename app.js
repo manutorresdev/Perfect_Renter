@@ -1,3 +1,4 @@
+console.clear();
 require('dotenv').config();
 const express = require('express');
 const fileUpload = require('express-fileupload');
@@ -53,6 +54,9 @@ const {
   newUser,
   getUser,
   loginUser,
+  passUserRecover,
+  editUserPass,
+  validateUser,
   deleteUser,
   listUsers,
 } = require('./controllers/users/index');
@@ -68,7 +72,7 @@ const {
  *
  * @name getUser
  * @path {GET} /users/:idUser
- * @params {number} :idUser Número de usuario a mostrar
+ * @params {number} idUser Número de usuario a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {200} Si la respuesta es correcta
  * @code {401} Si la autorización del usuario es errónea
@@ -131,17 +135,24 @@ app.post('/users', newUser);
  */
 app.post('/users/login', loginUser);
 
+app.get('/users/validate/:registrationCode', validateUser);
+
+app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
+
+app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
+
 //Eliminar un usuario
 /**
  * Eliminar usuario.
- *
  * @name deleteUser
- * @path {Delete} /users/:iduser
+ * @path {DELETE} /users/:idUser
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {403} Si se intenta eliminar al administrador
  * @code {403} Si el usuario que hace la petición no es el registrado en esa cuenta
- * @response {Object} Confirmación de usuario eliminado.
+ * @response {Object} Response Confirmación de usuario eliminado.
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
+
 
 /**
  * ####################
