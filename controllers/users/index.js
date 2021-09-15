@@ -3,6 +3,7 @@ const recoverUserPass = require('./recoverUserPass');
 const newUser = require('./newUser');
 const loginUser = require('./loginUser');
 const deleteUser = require('./deleteUser');
+const listUsers = require('./listUsers');
 
 module.exports = {
   recoverUserPass,
@@ -10,4 +11,5 @@ module.exports = {
   getUser,
   loginUser,
   deleteUser,
+  listUsers,
 };
