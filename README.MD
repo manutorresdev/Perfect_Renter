@@ -37,7 +37,8 @@
 
 ## Endpoints del usuario
 
-- GET - [/users] - Listar los usuarios ✅
+
+- GET - [/users] - Listar los usuarios ✅ (poner filtro por ciudades)
 - GET - [/users/:idUser] - Obtener un usuario en concreto.✅
 - POST - [/users] - Crea un usuario pendiente de activación.✅
 - POST - [/users/login] - Inicia sesión a un usuario y proporciona un token.✅

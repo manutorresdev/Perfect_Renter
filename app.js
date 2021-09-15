@@ -57,6 +57,8 @@ const {
   passUserRecover,
   editUserPass,
   validateUser,
+  deleteUser,
+  listUsers,
 } = require('./controllers/users/index');
 
 /**
@@ -78,6 +80,18 @@ const {
  * @response {Object} Response Datos de usuario
  */
 app.get('/users/:idUser', authUser, userExists, getUser);
+
+/**Listar todos los usuarios
+ *
+ * @name getUsers
+ * @path {GET} /users
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el usuario no existe
+ * @response [{Object}] Response. Array de datos de todos los usuarios
+ */
+
+app.get('/users', listUsers);
 
 /**
  * Obtener enlace de recuperación de contraseña.
@@ -126,6 +140,19 @@ app.get('/users/validate/:registrationCode', validateUser);
 app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
 
 app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
+
+//Eliminar un usuario
+/**
+ * Eliminar usuario.
+ * @name deleteUser
+ * @path {DELETE} /users/:idUser
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {403} Si se intenta eliminar al administrador
+ * @code {403} Si el usuario que hace la petición no es el registrado en esa cuenta
+ * @response {Object} Response Confirmación de usuario eliminado.
+ */
+app.delete('/users/:idUser', authUser, userExists, deleteUser);
+
 
 /**
  * ####################
