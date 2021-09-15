@@ -6,10 +6,10 @@ const { passSchema } = require('../../models/passSchema');
  * @module Users
  */
 /**
- * Middleware que genera un enlace de cambio de contraseña y lo envía al correo.
- * @param {*} req Como "requests", se requiere un email válido, de no ser así, se lanza un error.
- * @param {*} res El servidor lanza como respuesta un correo para el correcto cambio de la contraseña.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware que genera un enlace de cambio de contraseña y lo envía al correo
+ * @param {*} req Como "requests", se requiere un email válido, de no ser así, se lanza un error
+ * @param {*} res El servidor lanza como respuesta un correo para el correcto cambio de la contraseña
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const passUserRecover = async (req, res, next) => {
   let connection;
@@ -42,7 +42,7 @@ const passUserRecover = async (req, res, next) => {
     // Cambiamos el código de recuperación y la contraseña al usuario en la base de datos. Desactivamos al usuario mientras no confirme el cambio de contraseña.
     await connection.query(
       `
-    UPDATE users SET recoverCode = NULL, password = SHA2(?, 512), modifiedAt = ? WHERE idUser = ?
+    UPDATE users SET recoverCode = NULL, password = SHA2(?, 512), modifiedAt = ?, renterActive = false WHERE idUser = ?
     `,
       [password, formatDate(new Date()), idUser]
     );

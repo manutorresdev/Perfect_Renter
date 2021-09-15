@@ -1,6 +1,14 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-
+/**
+ * @module Users
+ */
+/**
+ * Middleware que valida un usuario a traves de un enlace previamente proporcionado
+ * @param {*} req Como "requests", se requiere el código que viene en la URL
+ * @param {*} res El servidor confirma la validación si no hay errores
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
+ */
 const validateUser = async (req, res, next) => {
   let connection;
 

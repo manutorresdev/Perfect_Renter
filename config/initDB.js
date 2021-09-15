@@ -15,7 +15,6 @@ async function main() {
 
   try {
     connection = await getDB();
-
     //Eliminación de tablas existentes
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
@@ -35,10 +34,12 @@ async function main() {
             name VARCHAR(100),
             lastName VARCHAR(100),
             tel VARCHAR(20),
+            birthDate DATE NOT NULL,
             email VARCHAR(100) UNIQUE NOT NULL,
             password VARCHAR(512) NOT NULL,
             avatar VARCHAR(50),
             bio TEXT,
+            city VARCHAR(50) NOT NULL,
             renterActive BOOLEAN DEFAULT false,
             tenatActive BOOLEAN DEFAULT false,
             deleted BOOLEAN DEFAULT false,
@@ -108,7 +109,7 @@ async function main() {
 
     // Insertar el usuario administrador.
     await connection.query(`
-    INSERT INTO users (nif, name, lastName, tel, email, password, role, createdAt)
+    INSERT INTO users (nif, name, lastName, tel, email, password, role, createdAt, city, birthDate)
     VALUES (
         "123456789A",
         "david",
@@ -117,7 +118,9 @@ async function main() {
         "david1935@gmail.com",
         SHA2("123456", 512),
         "admin",
-        "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}"
+        "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}",
+        "A coruña",
+        "1900-01-30 02:30:23"
     )
 `);
     // Nº de usuarios que queremos introducir.
@@ -132,13 +135,18 @@ async function main() {
       const phone = faker.phone.phoneNumber();
       const email = faker.internet.email();
       const password = faker.internet.password();
+      const city = faker.address.cityName();
+      const birthDate = format(
+        faker.datatype.datetime(),
+        'yyyy-MM-dd HH:mm:ss'
+      );
 
       // Fecha de cración.
       const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
       await connection.query(`
-        INSERT INTO users (nif, name, lastName, tel, email, password, createdAt)
-        VALUES ("${nif}", "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}" )
+        INSERT INTO users (nif, name, lastName, tel, email, password, createdAt, city, birthDate)
+        VALUES ("${nif}", "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
     `);
     }
 
