@@ -63,7 +63,7 @@ const recoverUserPass = async (req, res, next) => {
             <tfoot>
                 <td>
                     <button>
-                    <a href="http://localhost:4000/users/reset-password/${user[0].idUser}/${recoverCode}"
+                    <a href="http://localhost:4000/users/password/recover/${user[0].idUser}/${recoverCode}"
                     >RECUPERAR CONTRASEÑA</a></button>
             </td>
             </tfoot>
@@ -89,7 +89,7 @@ const recoverUserPass = async (req, res, next) => {
       message: 'Email enviado con éxito.',
     });
   } catch (error) {
-    next();
+    next(error);
   } finally {
     if (connection) connection.release();
   }

@@ -97,12 +97,13 @@ function generateRandomString(lenght) {
 /**
  * Función que valida los carácteres introducidos por el usuario.
  * @param {Object} schema Esquema de validación de datos.
- * @param {*} data Datos introducidos por el usuario.
+ * @param {*} data Datos introducidos por el usuario, provienen del req.body.
  */
 async function validate(schema, data) {
   try {
     await schema.validateAsync(data);
   } catch (error) {
+    console.log(error.message);
     error.httpStatus = 400;
     throw error;
   }
