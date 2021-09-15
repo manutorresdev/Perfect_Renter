@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>libs/middlewares/userExists.js - Documentation</title>
+    <title>models/passSchema.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">libs/middlewares/userExists.js</h1>
+    <h1 class="page-title">models/passSchema.js</h1>
     
 
     
@@ -42,49 +42,37 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// @ts-nocheck
-const getDB = require('../../config/getDB');
+            <pre class="prettyprint source linenums"><code>const Joi = require('joi');
 /**
- *
- * @module Helpers
+ * @module Schemas
  */
+
 /**
- * Middleware para verificar la existencia de un usuario en la base de datos.
- * @param {*} req Como "request", se obtiene el id del usuario a verificar y comprobamos si existe posteriormente.
- * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Esquema de contraseña para validación de datos.
+ * @name PassSchema
  */
-const userExists = async (req, res, next) => {
-  let connection;
+const passSchema = Joi.object().keys({
+  password: Joi.string()
+    .required()
+    .min(8)
+    .max(100)
+    .error((errors) => {
+      switch (errors[0].code) {
+        case 'any.required':
+          return new Error('Se requiere una contraseña');
 
-  try {
-    connection = await getDB();
+        case 'string.empty':
+          return new Error('Se requiere una contraseña');
 
-    // Obtenemos el id del usuario.
-    const { idUser } = req.params;
+        default:
+          return new Error('La contraseña debe tener entre 8 y 100 caracteres');
+      }
+    }),
+});
 
-    // Obtenemos el usuario.
-    const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE idUser = ? AND deleted = false`,
-      [idUser]
-    );
-
-    // Si el usuario no existe lanzamos un error.
-    if (user.length &lt; 1) {
-      const error = new Error('El usuario no existe');
-      error.httpStatus = 404;
-      throw error;
-    }
-
-    next();
-  } catch (error) {
-    next(error);
-  } finally {
-    if (connection) connection.release();
-  }
+module.exports = {
+  passSchema,
 };
-
-module.exports = userExists;
 </code></pre>
         </article>
     </section>

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>libs/middlewares/userExists.js - Documentation</title>
+    <title>controllers/users/listUsers.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">libs/middlewares/userExists.js</h1>
+    <h1 class="page-title">controllers/users/listUsers.js</h1>
     
 
     
@@ -42,41 +42,81 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// @ts-nocheck
-const getDB = require('../../config/getDB');
+            <pre class="prettyprint source linenums"><code>const getDB = require('../../config/getDB');
 /**
- *
- * @module Helpers
+ * @module Users
  */
 /**
- * Middleware para verificar la existencia de un usuario en la base de datos.
- * @param {*} req Como "request", se obtiene el id del usuario a verificar y comprobamos si existe posteriormente.
- * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware para listar usuarios
+ * @param {*} req Puede tener parámetros de entrada como los orden o dirección
+ * @param {*} res Como respuesta, se listan los datos básicos de todos los usuarios normales
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
+ * @returns {Promise} Devuelve una lista objetos con los datos
  */
-const userExists = async (req, res, next) => {
+const listUsers = async (req, res, next) => {
   let connection;
-
   try {
     connection = await getDB();
 
-    // Obtenemos el id del usuario.
-    const { idUser } = req.params;
+    // Obtenemos los queryParams en caso de que haya.
+    const { search, order, direction } = req.query;
 
-    // Obtenemos el usuario.
-    const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE idUser = ? AND deleted = false`,
-      [idUser]
-    );
+    // Establecemos opciones de validación de orden.
+    const validOrderOptions = ['city', 'votes', 'birthDate'];
 
-    // Si el usuario no existe lanzamos un error.
-    if (user.length &lt; 1) {
-      const error = new Error('El usuario no existe');
-      error.httpStatus = 404;
-      throw error;
+    // Establecemos opciones de valicadión de dirección
+    const validDirectionOptions = ['DESC', 'ASC'];
+
+    // Establecemos un orden por defecto
+    const orderBy = validOrderOptions.includes(order) ? order : 'votes';
+
+    // Establecemos una dirección por defecto
+    const orderDirection = validDirectionOptions.includes(direction)
+      ? direction
+      : 'ASC';
+
+    let users;
+    // Obtenemos los datos de todos los usuarios
+    if (!search &amp;&amp; order === 'birthDate') {
+      // Filtrado por fecha de nacimiento.
+      console.log('Ordenado por fecha de nacimiento.');
+      [users] = await connection.query(
+        `SELECT users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
+        FROM users
+        LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idVoted)
+        group by users.idUser
+        ORDER BY users.birthDate ${orderDirection}
+        `
+      );
+    } else if (search) {
+      // Filtrado por ciudad
+      console.log('Filtrado por ciudad.');
+      [users] = await connection.query(
+        `SELECT users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
+      FROM users
+      LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idVoted)
+      WHERE city LIKE ?
+      group by users.idUser
+      ORDER BY ${orderBy} ${orderDirection}
+      `,
+        [`%${search}%`]
+      );
+    } else {
+      console.log('Ordenado por votos');
+      [users] = await connection.query(
+        `SELECT users.name, users.lastName,users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
+      FROM users
+      LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idVoted)
+      group by users.idUser
+      order by votes ${orderDirection}
+      `
+      );
     }
 
-    next();
+    res.send({
+      status: 'ok',
+      users,
+    });
   } catch (error) {
     next(error);
   } finally {
@@ -84,7 +124,7 @@ const userExists = async (req, res, next) => {
   }
 };
 
-module.exports = userExists;
+module.exports = listUsers;
 </code></pre>
         </article>
     </section>

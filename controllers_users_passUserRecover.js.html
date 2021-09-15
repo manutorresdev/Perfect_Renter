@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>libs/middlewares/userExists.js - Documentation</title>
+    <title>controllers/users/passUserRecover.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">libs/middlewares/userExists.js</h1>
+    <h1 class="page-title">controllers/users/passUserRecover.js</h1>
     
 
     
@@ -44,39 +44,58 @@
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-nocheck
 const getDB = require('../../config/getDB');
+const { validate, formatDate } = require('../../libs/helpers');
+const { passSchema } = require('../../models/passSchema');
 /**
- *
- * @module Helpers
+ * @module Users
  */
 /**
- * Middleware para verificar la existencia de un usuario en la base de datos.
- * @param {*} req Como "request", se obtiene el id del usuario a verificar y comprobamos si existe posteriormente.
- * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware que genera un enlace de cambio de contraseña y lo envía al correo
+ * @param {*} req Como "requests", se requiere un email válido, de no ser así, se lanza un error
+ * @param {*} res El servidor lanza como respuesta un correo para el correcto cambio de la contraseña
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const userExists = async (req, res, next) => {
+const passUserRecover = async (req, res, next) => {
   let connection;
-
   try {
     connection = await getDB();
 
-    // Obtenemos el id del usuario.
-    const { idUser } = req.params;
+    // Validamos la contraseña obtenida
+    await validate(passSchema, req.body);
 
-    // Obtenemos el usuario.
+    // Obtenemos el email del usuario.
+    const { idUser, recoverCode } = req.params;
+
+    // Obtenemos la nueva contraseña del usuario.
+    const { password } = req.body;
+
+    // Comprobamos que el código de recuperación proporcionado sea el mismo que el de la base de datos.
     const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE idUser = ? AND deleted = false`,
+      `
+    SELECT recoverCode FROM users WHERE idUser = ?
+    `,
       [idUser]
     );
 
-    // Si el usuario no existe lanzamos un error.
-    if (user.length &lt; 1) {
-      const error = new Error('El usuario no existe');
+    // Si el código es diferente, enviamos un error.
+    if (user[0].recoverCode !== recoverCode) {
+      const error = new Error('El enlace no existe.');
       error.httpStatus = 404;
       throw error;
     }
+    // Cambiamos el código de recuperación y la contraseña al usuario en la base de datos. Desactivamos al usuario mientras no confirme el cambio de contraseña.
+    await connection.query(
+      `
+    UPDATE users SET recoverCode = NULL, password = SHA2(?, 512), modifiedAt = ?, renterActive = false WHERE idUser = ?
+    `,
+      [password, formatDate(new Date()), idUser]
+    );
 
-    next();
+    res.send({
+      status: 'ok',
+      message:
+        'Contraseña cambiada con éxito. Confirma el cambio haciendo click en el enlace que te hemos enviado al correo electónico.',
+    });
   } catch (error) {
     next(error);
   } finally {
@@ -84,7 +103,7 @@ const userExists = async (req, res, next) => {
   }
 };
 
-module.exports = userExists;
+module.exports = passUserRecover;
 </code></pre>
         </article>
     </section>

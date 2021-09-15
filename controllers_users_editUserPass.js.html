@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>libs/middlewares/userExists.js - Documentation</title>
+    <title>controllers/users/editUserPass.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">libs/middlewares/userExists.js</h1>
+    <h1 class="page-title">controllers/users/editUserPass.js</h1>
     
 
     
@@ -43,40 +43,112 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-nocheck
+require('dotenv').config();
 const getDB = require('../../config/getDB');
+const {
+  validate,
+  formatDate,
+  sendMail,
+  generateRandomString,
+} = require('../../libs/helpers');
+const { passSchema } = require('../../models/passSchema');
 /**
- *
- * @module Helpers
+ * @module Users
  */
 /**
- * Middleware para verificar la existencia de un usuario en la base de datos.
- * @param {*} req Como "request", se obtiene el id del usuario a verificar y comprobamos si existe posteriormente.
- * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware para editar la contraseña de un usuario
+ * @param {*} req Como "requests", se requiere el id del usuario a editar id obtenido por el token.
+ * @param {*} res El servidor lanza como respuesta el cambio correcto de contraseña y la confirmación por email.
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const userExists = async (req, res, next) => {
+const editUserPass = async (req, res, next) => {
   let connection;
 
   try {
     connection = await getDB();
 
-    // Obtenemos el id del usuario.
+    // Obtenemos id del usuario a cambiar la contraseña.
     const { idUser } = req.params;
 
-    // Obtenemos el usuario.
-    const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE idUser = ? AND deleted = false`,
-      [idUser]
-    );
+    // Obtenemos la antigua contraseña y la nueva.
+    const { oldPass, newPass } = req.body;
 
-    // Si el usuario no existe lanzamos un error.
-    if (user.length &lt; 1) {
-      const error = new Error('El usuario no existe');
-      error.httpStatus = 404;
+    // Validamos la contraseña.
+    const verify = { password: newPass };
+    await validate(passSchema, verify);
+
+    // Si el usuario a editar no coincide con el usuario editando, mandamos error.
+    if (req.userAuth.idUser !== Number(idUser)) {
+      const error = new Error(
+        'No puedes cambiar la contraseña de otro usuario.'
+      );
+      error.httpStatus = 403;
       throw error;
     }
 
-    next();
+    // Comprobamos que la contraseña antigua sea correcta.
+    const [user] = await connection.query(
+      `
+    SELECT idUser, email FROM users WHERE idUser = ? AND password = SHA2(?,512)
+    `,
+      [idUser, oldPass]
+    );
+
+    // Lanzamos error si la contrasña no es la misma.
+    if (user.length &lt; 1) {
+      const error = new Error('Contraseña incorrecta.');
+      error.httpStatus = 401;
+      throw error;
+    }
+
+    // Generamos un código de verificación
+    const regCode = generateRandomString(20);
+
+    // Cambiamos la contraseña en la base de datos y "desactivamos" al usuario hasta que lo verifique.
+    await connection.query(
+      `
+    UPDATE users SET password = SHA2(?,512), modifiedAt = ?, renterActive = false, registrationCode = ? WHERE idUser = ?
+    `,
+      [newPass, formatDate(new Date()), regCode, idUser]
+    );
+
+    // Creamos el cuerpo del email.
+    const emailBody = `
+    &lt;table>
+        &lt;thead>
+            &lt;th>Cambio de contraseña&lt;/th>
+        &lt;/thead>
+        &lt;tbody>
+            &lt;td>
+                Se ha solicitado un cambio de contraseña para el usuario registrado
+                con este email en Perfect Renter.
+                &lt;br />
+                Haz click en el botón para verificar el cambio.
+                &lt;br />
+            &lt;/td>
+        &lt;/tbody>
+        &lt;tfoot>
+            &lt;th>
+                &lt;button>
+                &lt;a href="http://localhost:4000/users/validate/${regCode}"
+                >VERIFICAR CONTRASEÑA&lt;/a>&lt;/button>
+            &lt;/th>
+        &lt;/tfoot>
+    &lt;/table>
+    `;
+
+    // Envío de email.
+    await sendMail({
+      to: user[0].email,
+      subject: 'Cambio de contraseña Perfect Renter',
+      body: emailBody,
+    });
+
+    res.send({
+      status: 'ok',
+      message:
+        'Contraseña cambiada con éxito. Confirma el cambio haciendo click en el enlace que te hemos enviado al correo electónico.',
+    });
   } catch (error) {
     next(error);
   } finally {
@@ -84,7 +156,7 @@ const userExists = async (req, res, next) => {
   }
 };
 
-module.exports = userExists;
+module.exports = editUserPass;
 </code></pre>
         </article>
     </section>

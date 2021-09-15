@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li></ul></li><li></li><li></li><li></li></ul>
+    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
 </nav>
 
 <div id="main">
@@ -66,13 +66,26 @@ const newUser = async (req, res, next) => {
 
   try {
     connection = await getDB();
-    console.log(req.body.email);
-    //validamos los datos del body
+
+    // Validamos los datos recibidos.
     await validate(userSchema, req.body);
 
     // Obtenemos los campos necesarios.
-    const { name, lastname, email, password, bio } = req.body;
-
+    const { name, lastname, email, password, bio, city, birthDate } = req.body;
+    // Comprobamos que no faltan campos a rellenar.
+    if (
+      !name ||
+      !lastname ||
+      !email ||
+      !password ||
+      !bio ||
+      !city ||
+      !birthDate
+    ) {
+      const error = new Error('Debes rellenar todos los campos.');
+      error.httpStatus = 400;
+      throw error;
+    }
     // Comprobamos si el email existe en la base de datos.
     const [user] = await connection.query(
       `SELECT idUser FROM users WHERE email = ?`,
@@ -91,7 +104,7 @@ const newUser = async (req, res, next) => {
 
     // Guardamos al usuario en la base de datos junto al código de registro.
     await connection.query(
-      `INSERT INTO users (name, lastname, email, password, bio, registrationCode, createdAt) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?)`,
+      `INSERT INTO users (name, lastname, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)`,
       [
         name,
         lastname,
@@ -100,6 +113,8 @@ const newUser = async (req, res, next) => {
         bio,
         registrationCode,
         formatDate(new Date()),
+        birthDate,
+        city,
       ]
     );
 
@@ -117,11 +132,11 @@ const newUser = async (req, res, next) => {
             &lt;/td>
         &lt;/tbody>
         &lt;tfoot>
-            &lt;td>
+            &lt;th>
               &lt;button>
               &lt;a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR&lt;/a>
               &lt;/button>
-            &lt;/td>
+            &lt;/th>
         &lt;/tfoot>
       &lt;/table>
     `;
@@ -163,7 +178,7 @@ module.exports = newUser;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Sep 15 2021 15:55:16 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Sep 16 2021 00:57:09 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

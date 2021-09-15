@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>libs/middlewares/userExists.js - Documentation</title>
+    <title>controllers/users/validateUser.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">libs/middlewares/userExists.js</h1>
+    <h1 class="page-title">controllers/users/validateUser.js</h1>
     
 
     
@@ -45,38 +45,50 @@
             <pre class="prettyprint source linenums"><code>// @ts-nocheck
 const getDB = require('../../config/getDB');
 /**
- *
- * @module Helpers
+ * @module Users
  */
 /**
- * Middleware para verificar la existencia de un usuario en la base de datos.
- * @param {*} req Como "request", se obtiene el id del usuario a verificar y comprobamos si existe posteriormente.
- * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware que valida un usuario a traves de un enlace previamente proporcionado
+ * @param {*} req Como "requests", se requiere el código que viene en la URL
+ * @param {*} res El servidor confirma la validación si no hay errores
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const userExists = async (req, res, next) => {
+const validateUser = async (req, res, next) => {
   let connection;
 
   try {
     connection = await getDB();
 
-    // Obtenemos el id del usuario.
-    const { idUser } = req.params;
+    // Obtenemos el codigo de registro de los path params.
+    const { registrationCode: regCode } = req.params;
 
-    // Obtenemos el usuario.
+    // Comprobamos que el usuario a validar, esté pendiente de validar.
     const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE idUser = ? AND deleted = false`,
-      [idUser]
+      `
+    SELECT idUser FROM users WHERE registrationCode = ?
+    `,
+      [regCode]
     );
 
-    // Si el usuario no existe lanzamos un error.
+    // Si no hay usuario a validar, lanzamos error.
     if (user.length &lt; 1) {
-      const error = new Error('El usuario no existe');
+      const error = new Error('No hay usuarios pendientes de validar.');
       error.httpStatus = 404;
       throw error;
     }
 
-    next();
+    // Editamos el valor de activo/inactivo del usuario y cambiamos el codigo de registro a NULL
+    await connection.query(
+      `
+    UPDATE users SET renterActive = true, registrationCode = NULL WHERE registrationCode = ?
+    `,
+      [regCode]
+    );
+
+    res.send({
+      status: 'ok',
+      message: 'Verificación completada',
+    });
   } catch (error) {
     next(error);
   } finally {
@@ -84,7 +96,7 @@ const userExists = async (req, res, next) => {
   }
 };
 
-module.exports = userExists;
+module.exports = validateUser;
 </code></pre>
         </article>
     </section>

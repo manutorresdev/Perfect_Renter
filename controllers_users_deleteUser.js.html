@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>libs/middlewares/userExists.js - Documentation</title>
+    <title>controllers/users/deleteUser.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">libs/middlewares/userExists.js</h1>
+    <h1 class="page-title">controllers/users/deleteUser.js</h1>
     
 
     
@@ -44,39 +44,71 @@
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-nocheck
 const getDB = require('../../config/getDB');
+const {
+  /* deletePhoto, */
+  generateRandomString,
+  formatDate,
+} = require('../../libs/helpers');
 /**
- *
- * @module Helpers
+ * @module Users
  */
 /**
- * Middleware para verificar la existencia de un usuario en la base de datos.
- * @param {*} req Como "request", se obtiene el id del usuario a verificar y comprobamos si existe posteriormente.
- * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware para eliminar un usuario de la base de datos
+ * @param {*} req Como "requests", se requiere el id del usuario que solicita la petición y el id del usuario que se quiere eliminar
+ * @param {*} res El servidor lanza como respuesta que el usuario ha sido eliminado
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const userExists = async (req, res, next) => {
+const deleteUser = async (req, res, next) => {
   let connection;
 
   try {
     connection = await getDB();
 
-    // Obtenemos el id del usuario.
+    // Obtenemos id del usuario que queremos borrar
     const { idUser } = req.params;
 
-    // Obtenemos el usuario.
-    const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE idUser = ? AND deleted = false`,
-      [idUser]
-    );
-
-    // Si el usuario no existe lanzamos un error.
-    if (user.length &lt; 1) {
-      const error = new Error('El usuario no existe');
-      error.httpStatus = 404;
+    // Importante lo primero es que no se pueda eliminar el administrador
+    if (Number(idUser) === 1) {
+      const error = new Error(
+        'El administrador principal no se puede eliminar'
+      );
+      error.httpStatus = 403;
       throw error;
     }
 
-    next();
+    /*
+     * Si el usuario que realiza la petición no es el dueño de la cuenta o no es
+     * administrador lanzamos error
+     */
+    if (
+      req.userAuth.idUser !== Number(idUser) &amp;&amp;
+      req.userAuth.role !== 'admin'
+    ) {
+      const error = new Error('No tienes permisos');
+      error.httpStatus = 403;
+      throw error;
+    }
+
+    // Obtenemos el nombre del avatar
+    const [user] = await connection.query(
+      `SELECT avatar FROM users WHERE idUser = ?`,
+      [idUser]
+    );
+
+    // Si el usuario tiene avatar lo borramos del disco
+    if (user[0].avatar) {
+      await deletePhoto(user[0].avatar);
+    }
+
+    // Anonimizamos al usuario
+    await connection.query(
+      `UPDATE users SET password = ?, name = "[deleted]", avatar = NULL, renterActive = false, deleted = true, modifiedAt = ? WHERE idUser = ?`,
+      [generateRandomString(40), formatDate(new Date()), idUser]
+    );
+    res.send({
+      status: 'ok',
+      message: 'Usuario eliminado',
+    });
   } catch (error) {
     next(error);
   } finally {
@@ -84,7 +116,7 @@ const userExists = async (req, res, next) => {
   }
 };
 
-module.exports = userExists;
+module.exports = deleteUser;
 </code></pre>
         </article>
     </section>

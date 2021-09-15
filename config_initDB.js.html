@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li></ul></li><li></li><li></li><li></li></ul>
+    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
 </nav>
 
 <div id="main">
@@ -59,7 +59,6 @@ async function main() {
 
   try {
     connection = await getDB();
-
     //Eliminación de tablas existentes
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
@@ -79,10 +78,12 @@ async function main() {
             name VARCHAR(100),
             lastName VARCHAR(100),
             tel VARCHAR(20),
+            birthDate DATE NOT NULL,
             email VARCHAR(100) UNIQUE NOT NULL,
             password VARCHAR(512) NOT NULL,
             avatar VARCHAR(50),
             bio TEXT,
+            city VARCHAR(50) NOT NULL,
             renterActive BOOLEAN DEFAULT false,
             tenatActive BOOLEAN DEFAULT false,
             deleted BOOLEAN DEFAULT false,
@@ -152,7 +153,7 @@ async function main() {
 
     // Insertar el usuario administrador.
     await connection.query(`
-    INSERT INTO users (nif, name, lastName, tel, email, password, role, createdAt)
+    INSERT INTO users (nif, name, lastName, tel, email, password, role, createdAt, city, birthDate)
     VALUES (
         "123456789A",
         "david",
@@ -161,7 +162,9 @@ async function main() {
         "david1935@gmail.com",
         SHA2("123456", 512),
         "admin",
-        "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}"
+        "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}",
+        "A coruña",
+        "1900-01-30 02:30:23"
     )
 `);
     // Nº de usuarios que queremos introducir.
@@ -176,13 +179,18 @@ async function main() {
       const phone = faker.phone.phoneNumber();
       const email = faker.internet.email();
       const password = faker.internet.password();
+      const city = faker.address.cityName();
+      const birthDate = format(
+        faker.datatype.datetime(),
+        'yyyy-MM-dd HH:mm:ss'
+      );
 
       // Fecha de cración.
       const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
       await connection.query(`
-        INSERT INTO users (nif, name, lastName, tel, email, password, createdAt)
-        VALUES ("${nif}", "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}" )
+        INSERT INTO users (nif, name, lastName, tel, email, password, createdAt, city, birthDate)
+        VALUES ("${nif}", "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
     `);
     }
 
@@ -210,7 +218,7 @@ main();
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Sep 15 2021 15:55:16 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Sep 16 2021 00:57:09 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
