@@ -18,7 +18,13 @@ app.use(fileUpload());
  * ## LIBS MIDDLEWARES ##
  * ######################
  */
+/**
+ * @private
+ */
 const userExists = require('./libs/middlewares/userExists');
+/**
+ * @private
+ */
 const authUser = require('./libs/middlewares/authUser');
 
 /**
@@ -32,6 +38,9 @@ const authUser = require('./libs/middlewares/authUser');
  * ## FLATS ENDPOINTS ##
  * #####################
  */
+/**
+ * @module Routes
+ */
 
 /**
  * ######################
@@ -39,7 +48,12 @@ const authUser = require('./libs/middlewares/authUser');
  * ######################
  */
 
-const { recoverUserPass, newUser,getUser } = require('./controllers/users/index');
+const {
+  recoverUserPass,
+  newUser,
+  getUser,
+  loginUser,
+} = require('./controllers/users/index');
 
 /**
  * ####################
@@ -47,23 +61,68 @@ const { recoverUserPass, newUser,getUser } = require('./controllers/users/index'
  * ####################
  */
 
-
-// Obtener información de un usuario.
+/**
+ * Obtener usuario.
+ *
+ * @name getUser
+ * @path {GET} /users/:idUser
+ * @params {number} :idUser Número de usuario a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el usuario no existe
+ * @response {Object} Response Datos de usuario
+ */
 app.get('/users/:idUser', authUser, userExists, getUser);
 
-// Recuperación de contraseña.
+/**
+ * Obtener enlace de recuperación de contraseña.
+ *
+ * @name recoverUserPass
+ * @path {PUT} /users/password/recover
+ * @code {200} Si la respuesta es correcta
+ * @code {400} Si el correo electrónico no es valido
+ * @code {404} Si el usuario no existe
+ * @response {Object} Response Confirmación recuperación contraseña
+ */
+app.put('/users/password/recover', recoverUserPass);
 
-app.put('/users/recover-password', recoverUserPass);
-
-// Agregar un nuevo usuario.
+/**
+ * Agregar usuario.
+ *
+ * @name newUser
+ * @path {POST} /users
+ * @body {String} name Nombre del usuario
+ * @body {String} lastname Apellidos del usuario
+ * @body {String} email Correo electrónico del usuario
+ * @body {String} password Contraseña del usuario
+ * @body {String} bio Breve descripción del usuario
+ * @code {200} Si la respuesta es correcta
+ * @code {409} Si el correo electrónico ya existe en la base de datos
+ * @response {Object} Response Confirmación registro
+ */
 app.post('/users', newUser);
 
+/**
+ * Loguear usuario.
+ *
+ * @name loginUser
+ * @path {POST} /users/login
+ * @body {String} email Correo electrónico del usuario
+ * @body {String} password Contraseña del usuario
+ * @code {200} Si la respuesta es correcta
+ * @code {400} Si faltan campos a rellenar
+ * @code {401} Si el email o la contraseña son incorrectos
+ * @response {Object} Response Devuelve un token
+ */
+app.post('/users/login', loginUser);
 
 /**
  * ####################
  * ## ERROR LISTENER ##
  * ####################
  */
+
 app.use((error, req, res, next) => {
   console.error(error);
   res.status(error.httpStatus || 500).send({

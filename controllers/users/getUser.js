@@ -1,5 +1,14 @@
 const getDB = require('../../config/getDB');
-
+/**
+ * @module Users
+ */
+/**
+ * Middleware para listar un usuario en concreto.
+ * @param {*} req Necesaria la autenticación con un "token", en la que se encuentra el ID del usuario iniciado. Además del id del usuario a obtener información en los path params.
+ * @param {*} res Como respuesta, obtienes un objeto con los datos del usuario
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * @returns {Promise} Devuelve un objeto con los datos.
+ */
 const getUser = async (req, res, next) => {
   let connection;
   try {
@@ -14,7 +23,7 @@ const getUser = async (req, res, next) => {
     //Obtenemos los datos del usuario
     const [user] = await connection.query(
       `
-            SELECT nif, name, lastName, tel, email, avatar, role, createdAt FROM users WHERE idUser= ?`,
+            SELECT idUser, nif, name, lastName, tel, email, avatar, role, createdAt FROM users WHERE idUser = ?`,
       [idUser]
     );
 
@@ -24,9 +33,9 @@ const getUser = async (req, res, next) => {
       lastName: user[0].lastName,
       avatar: user[0].avatar,
     };
-
+    console.log(user[0]);
     //Usuario propietario
-    if (user[0].id === idReqUser || req.userAuth.role === 'admin') {
+    if (user[0].idUser === idReqUser || req.userAuth.role === 'admin') {
       userInfo.email = user[0].email;
       userInfo.role = user[0].role;
       userInfo.createdAt = user[0].createdAt;

@@ -38,9 +38,9 @@
 ## Endpoints del usuario
 
 - GET - [/users] - Listar los usuarios
-- GET - [/users/:idUser] - Obtener un usuario en concreto.
+- GET - [/users/:idUser] - Obtener un usuario en concreto.✅
 - POST - [/users] - Crea un usuario pendiente de activación.✅
-- POST - [/users/login] - Inicia sesión a un usuario y proporciona un token.
+- POST - [/users/login] - Inicia sesión a un usuario y proporciona un token.✅
 - GET - [/users/validate/:registrationCode] - Valida un usuario recién registrado o valida los cambios de email/contraseña.
 - PUT - [/users/:idUser] - Editar los datos del usuario.
 - PUT - [/users/:idUser/password] - Edita la contraseña de un usuario.

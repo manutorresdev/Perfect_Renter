@@ -1,5 +1,12 @@
 const Joi = require('joi');
+/**
+ * @module Schemas
+ */
 
+/**
+ * Esquema de usuario para validación de datos.
+ * @name UserSchema
+ */
 const userSchema = Joi.object().keys({
   email: Joi.string()
     .required()
