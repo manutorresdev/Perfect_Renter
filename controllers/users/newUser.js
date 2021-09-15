@@ -23,12 +23,25 @@ const newUser = async (req, res, next) => {
   try {
     connection = await getDB();
 
-    //validamos los datos del body
+    // Validamos los datos recibidos.
     await validate(userSchema, req.body);
 
     // Obtenemos los campos necesarios.
-    const { name, lastname, email, password, bio } = req.body;
-
+    const { name, lastname, email, password, bio, city, birthDate } = req.body;
+    // Comprobamos que no faltan campos a rellenar.
+    if (
+      !name ||
+      !lastname ||
+      !email ||
+      !password ||
+      !bio ||
+      !city ||
+      !birthDate
+    ) {
+      const error = new Error('Debes rellenar todos los campos.');
+      error.httpStatus = 400;
+      throw error;
+    }
     // Comprobamos si el email existe en la base de datos.
     const [user] = await connection.query(
       `SELECT idUser FROM users WHERE email = ?`,
@@ -47,7 +60,7 @@ const newUser = async (req, res, next) => {
 
     // Guardamos al usuario en la base de datos junto al código de registro.
     await connection.query(
-      `INSERT INTO users (name, lastname, email, password, bio, registrationCode, createdAt, renterActive) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false)`,
+      `INSERT INTO users (name, lastname, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)`,
       [
         name,
         lastname,
@@ -56,6 +69,8 @@ const newUser = async (req, res, next) => {
         bio,
         registrationCode,
         formatDate(new Date()),
+        birthDate,
+        city,
       ]
     );
 
@@ -73,11 +88,11 @@ const newUser = async (req, res, next) => {
             </td>
         </tbody>
         <tfoot>
-            <td>
+            <th>
               <button>
               <a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR</a>
               </button>
-            </td>
+            </th>
         </tfoot>
       </table>
     `;

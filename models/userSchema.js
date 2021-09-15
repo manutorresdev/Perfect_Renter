@@ -70,6 +70,8 @@ const userSchema = Joi.object().keys({
       return new Error('El apellido no es válido.');
     }),
   bio: Joi.string().min(0).max(255),
+  birthDate: Joi.date().required(),
+  city: Joi.string().min(0).max(50).required(),
 });
 
 module.exports = userSchema;

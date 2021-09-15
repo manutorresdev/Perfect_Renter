@@ -81,17 +81,20 @@ const {
  */
 app.get('/users/:idUser', authUser, userExists, getUser);
 
-/**Listar todos los usuarios
+/**
+ * Listar todos los usuarios
  *
  * @name getUsers
  * @path {GET} /users
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @query {string} OrderBy Orden en el cual se listan los usuarios. (city o birthDate o votes(por defecto) )
+ * @query {string} Direction Dirección en la cual se listan los usuarios. (ASC o DESC)
  * @code {200} Si la respuesta es correcta
  * @code {401} Si la autorización del usuario es errónea
  * @code {404} Si el usuario no existe
- * @response [{Object}] Response. Array de datos de todos los usuarios
+ * @response {Array} Response Array de datos de todos los usuarios
  */
-
-app.get('/users', listUsers);
+app.get('/users', authUser, listUsers);
 
 /**
  * Obtener enlace de recuperación de contraseña.
@@ -135,15 +138,49 @@ app.post('/users', newUser);
  */
 app.post('/users/login', loginUser);
 
+/**
+ * Validar usuario.
+ *
+ * @name validateUser
+ * @path {GET} /users/validate/:registrationCode
+ * @body {String} email Correo electrónico del usuario
+ * @body {String} password Contraseña del usuario
+ * @code {200} Si la respuesta es correcta
+ * @code {404} Si no hay usuarios pendientes a validar
+ * @response {Object} Response Envía un correo electrónico para la validación del usuario.
+ */
 app.get('/users/validate/:registrationCode', validateUser);
 
+/**
+ * Recuperar contraseña de usuario.
+ *
+ * @name passUserRecover
+ * @path {PUT} /users/password/recover/:idUser/:recoverCode
+ * @params {Number} idUser Número de usuario a mostrar
+ * @params {String} recoverCode Código de recuperación de contraseña
+ * @body {String} password Contraseña del usuario
+ * @code {200} Si la respuesta es correcta
+ * @code {404} Si el enlace es erróneo
+ * @response {Object} Response Cambia la contraseña del usuario
+ */
 app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
 
+/**
+ * Editar contraseña del usuario.
+ *
+ * @name editUserPass
+ * @path {PUT} /users/:idUser/pass
+ * @params {Number} idUser Número de usuario a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {403} Si se intenta cambiar la contraseña de otro usuario
+ * @code {401} Si la contraseña introducida es incorrecta
+ * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar.
+ */
 app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
 
-//Eliminar un usuario
 /**
  * Eliminar usuario.
+ *
  * @name deleteUser
  * @path {DELETE} /users/:idUser
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
@@ -152,7 +189,6 @@ app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
  * @response {Object} Response Confirmación de usuario eliminado.
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
-
 
 /**
  * ####################

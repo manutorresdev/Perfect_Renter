@@ -36,7 +36,6 @@ const authUser = async (req, res, next) => {
 
     // Inyectamos en el objeto "request" la info del token: id, role.
     req.userAuth = tokenInfo;
-    console.log(req.userAuth);
     next();
   } catch (error) {
     next(error);

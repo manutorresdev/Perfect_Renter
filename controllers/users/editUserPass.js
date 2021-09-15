@@ -7,8 +7,16 @@ const {
   sendMail,
   generateRandomString,
 } = require('../../libs/helpers');
-const { newPassSchema } = require('../../models/passSchema');
-
+const { passSchema } = require('../../models/passSchema');
+/**
+ * @module Users
+ */
+/**
+ * Middleware para editar la contraseña de un usuario
+ * @param {*} req Como "requests", se requiere el id del usuario a editar id obtenido por el token.
+ * @param {*} res El servidor lanza como respuesta el cambio correcto de contraseña y la confirmación por email.
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
+ */
 const editUserPass = async (req, res, next) => {
   let connection;
 
@@ -22,7 +30,8 @@ const editUserPass = async (req, res, next) => {
     const { oldPass, newPass } = req.body;
 
     // Validamos la contraseña.
-    await validate(newPassSchema, req.body);
+    const verify = { password: newPass };
+    await validate(passSchema, verify);
 
     // Si el usuario a editar no coincide con el usuario editando, mandamos error.
     if (req.userAuth.idUser !== Number(idUser)) {
@@ -61,27 +70,27 @@ const editUserPass = async (req, res, next) => {
 
     // Creamos el cuerpo del email.
     const emailBody = `
-        <table>
-            <thead>
-                <th>Cambio de contraseña</th>
-            </thead>
-            <tbody>
-                <td>
-                    Se ha solicitado un cambio de contraseña para el usuario registrado
-                    con este email en Perfect Renter.
-                    <br />
-                    Haz click en el botón verificar el cambio.
-                    <br />
-                </td>
-            </tbody>
-            <tfoot>
-                <td>
-                    <button>
-                    <a href="http://localhost:4000/users/validate/${regCode}"
-                    >VERIFICAR CONTRASEÑA</a></button>
+    <table>
+        <thead>
+            <th>Cambio de contraseña</th>
+        </thead>
+        <tbody>
+            <td>
+                Se ha solicitado un cambio de contraseña para el usuario registrado
+                con este email en Perfect Renter.
+                <br />
+                Haz click en el botón para verificar el cambio.
+                <br />
             </td>
-            </tfoot>
-        </table>
+        </tbody>
+        <tfoot>
+            <th>
+                <button>
+                <a href="http://localhost:4000/users/validate/${regCode}"
+                >VERIFICAR CONTRASEÑA</a></button>
+            </th>
+        </tfoot>
+    </table>
     `;
 
     // Envío de email.
