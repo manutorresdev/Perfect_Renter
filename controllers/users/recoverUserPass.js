@@ -5,10 +5,10 @@ const { sendMail, generateRandomString } = require('../../libs/helpers');
  * @module Users
  */
 /**
- * Middleware que genera un enlace de cambio de contraseña y lo envía al correo.
- * @param {*} req Como "requests", se requiere un email válido, de no ser así, se lanza un error.
- * @param {*} res El servidor lanza como respuesta un correo para el correcto cambio de la contraseña.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware que genera un enlace de cambio de contraseña y lo envía al correo
+ * @param {*} req Como "requests", se requiere un email válido, de no ser así, se lanza un error
+ * @param {*} res El servidor lanza como respuesta un correo para el correcto cambio de la contraseña
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const recoverUserPass = async (req, res, next) => {
   let connection;
@@ -63,7 +63,7 @@ const recoverUserPass = async (req, res, next) => {
             <tfoot>
                 <td>
                     <button>
-                    <a href="http://localhost:4000/users/reset-password/${user[0].idUser}/${recoverCode}"
+                    <a href="http://localhost:4000/users/password/recover/${user[0].idUser}/${recoverCode}"
                     >RECUPERAR CONTRASEÑA</a></button>
             </td>
             </tfoot>
@@ -89,7 +89,7 @@ const recoverUserPass = async (req, res, next) => {
       message: 'Email enviado con éxito.',
     });
   } catch (error) {
-    next();
+    next(error);
   } finally {
     if (connection) connection.release();
   }

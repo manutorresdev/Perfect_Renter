@@ -49,6 +49,7 @@ const loginUser = async (req, res, next) => {
     } */
 
     // Objeto con la información que le queramos pasar al token.
+
     const tokenInfo = {
       idUser: user[0].idUser,
       role: user[0].role,

@@ -37,16 +37,16 @@
 
 ## Endpoints del usuario
 
-- GET - [/users] - Listar los usuarios
+- GET - [/users] - Listar los usuarios ✅
 - GET - [/users/:idUser] - Obtener un usuario en concreto.✅
 - POST - [/users] - Crea un usuario pendiente de activación.✅
 - POST - [/users/login] - Inicia sesión a un usuario y proporciona un token.✅
-- GET - [/users/validate/:registrationCode] - Valida un usuario recién registrado o valida los cambios de email/contraseña.
+- GET - [/users/validate/:registrationCode] - Valida un usuario recién registrado o valida los cambios de email/contraseña. ✅
 - PUT - [/users/:idUser] - Editar los datos del usuario.
-- PUT - [/users/:idUser/password] - Edita la contraseña de un usuario.
-- PUT - [/users/recover-password] - Enviar un correo con el enlace de reseteo de la contraseña.
-- PUT - [users/reset-password/:idUser/:recoverCode] - Cambiar la contraseña de un usuario con el código de reseteo.
-- DELETE - [/users/:idUser] - Eliminar un usuario.
+- PUT - [/users/:idUser/password] - Edita la contraseña de un usuario. ✅
+- PUT - [/users/password/recover] - Enviar un correo con el enlace de reseteo de la contraseña. ✅
+- PUT - [users/password/recover/:idUser/:recoverCode] - Cambiar la contraseña de un usuario con el código de reseteo. ✅
+- DELETE - [/users/:idUser] - Eliminar un usuario. ✅
 
 ## AUTORES
 
