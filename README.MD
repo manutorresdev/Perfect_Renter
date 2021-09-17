@@ -27,7 +27,7 @@
 
 - GET - [/flats] - Obtener un listado de todos los alquileres.
 - GET - [/flats/:idFlat] - Obtener un alquiler en concreto.
-- POST - [/flats] - Crear un alquiler..
+- POST - [/flats] - Crear un alquiler. (Hare primero)
 - POST - [/flats/:idFlat/photos] - Agregar una foto a un alquiler.
 - POST - [/flats/:idFlat/votes] - Votar un alquiler.
 - POST - [/flats/:idFlat/contact] - Mandar mensaje a un alquiler.

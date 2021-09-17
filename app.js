@@ -34,11 +34,16 @@ const authUser = require('./libs/middlewares/authUser');
  * #######################
  */
 
+const { newFlat } = require('./controllers/flats');
+
 /**
  * #####################
  * ## FLATS ENDPOINTS ##
  * #####################
  */
+
+app.post('/flats', authUser, newFlat);
+
 /**
  * @module Routes
  */
