@@ -33,6 +33,7 @@ const authUser = require('./libs/middlewares/authUser');
  * ## FLATS CONTROLLERS ##
  * #######################
  */
+const { addFlatPhoto } = require('./controllers/flats/index');
 
 /**
  * #####################
@@ -42,7 +43,22 @@ const authUser = require('./libs/middlewares/authUser');
 /**
  * @module Routes
  */
-
+/**
+ * Agregar foto a los inmuebles
+ *
+ * @name addFlatPhoto
+ * @path {POST} /flats/:idFlat/photos
+ * @params {number} idFlat Número del inmueble a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el usuario no existe
+ * @code {400} Si no hay archivo o es incorrecto
+ * @code {403} Si supera el máximo de archivos permitidos
+ * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
+ *
+ */
+app.post('/flats/:idFlat/photos', addFlatPhoto);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -59,6 +75,7 @@ const {
   validateUser,
   deleteUser,
   listUsers,
+  editUser,
 } = require('./controllers/users/index');
 
 /**
@@ -169,14 +186,26 @@ app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
  * Editar contraseña del usuario.
  *
  * @name editUserPass
- * @path {PUT} /users/:idUser/pass
+ * @path {PUT} /users/:idUser/password
  * @params {Number} idUser Número de usuario a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {403} Si se intenta cambiar la contraseña de otro usuario
  * @code {401} Si la contraseña introducida es incorrecta
- * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar.
+ * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar
  */
-app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
+app.put('/users/:idUser/password', authUser, userExists, editUserPass);
+/**
+ * Editar usuario.
+ *
+ * @name editUser
+ * @path {PUT} /users/:idUser
+ * @params {Number} idUser Número de usuario a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {403} Si se intenta cambiar la contraseña de otro usuario
+ * @code {401} Si la contraseña introducida es incorrecta
+ * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar
+ */
+app.put('/users/:idUser/', authUser, userExists, editUser);
 
 /**
  * Eliminar usuario.

@@ -56,7 +56,7 @@ const newUser = async (req, res, next) => {
     }
 
     // Creamos un código de registro de un solo uso.
-    const registrationCode = generateRandomString(40);
+    const registrationCode = generateRandomString(20);
 
     // Guardamos al usuario en la base de datos junto al código de registro.
     await connection.query(
