@@ -1,6 +1,10 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-const { sendMail, generateRandomString } = require('../../libs/helpers');
+const {
+  sendMail,
+  generateRandomString,
+  formatDate,
+} = require('../../libs/helpers');
 /**
  * @module Users
  */
@@ -79,9 +83,9 @@ const recoverUserPass = async (req, res, next) => {
     // Agregamos el código de recuperación al usuario en la base de datos.
     await connection.query(
       `
-    UPDATE users SET recoverCode = ? WHERE email = ?
+    UPDATE users SET recoverCode = ?, modifiedAt = ? WHERE email = ?
     `,
-      [recoverCode, email]
+      [recoverCode, formatDate(new Date()), email]
     );
 
     res.send({
