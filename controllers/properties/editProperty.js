@@ -1,300 +1,474 @@
-// // @ts-nocheck
-// const getDB = require('../../config/getDB');
-// const {
-//   deletePhoto,
-//   savePhoto,
-//   formatDate,
-//   generateRandomString,
-//   sendMail,
-//   validate,
-// } = require('../../libs/helpers');
-// const { flatSchema } = require('../../models/flatSchema');
+// @ts-nocheck
+const getDB = require('../../config/getDB');
+const { savePhoto, formatDate, validate } = require('../../libs/helpers');
+const { editPropertySchema } = require('../../models/propertySchema');
 
-// /**
-//  * @module Entries
-//  */
-// /**
-//  * Middleware para editar los datos de un alquiler
-//  * @param {*} req Como "requests", se requiere el id del usuario que solicita la petición y el id del usuario que se quiere editar, si no coincide se lanza un error
-//  * @param {*} res El servidor lanza como respuesta que los datos han sido actualizados
-//  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
-//  */
+/**
+ * @module Entries
+ */
+/**
+ * Middleware para editar los datos de un alquiler
+ * @param {*} req Como "requests", se requiere el id del usuario que solicita la petición y el id del usuario que se quiere editar, si no coincide se lanza un error
+ * @param {*} res El servidor lanza como respuesta que los datos han sido actualizados
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
+ */
 
-// const editFlat = async (req, res, next) => {
-//   let connection;
+const editProperty = async (req, res, next) => {
+  let connection;
 
-//   try {
-//     connection = await getDB();
+  try {
+    connection = await getDB();
 
-//     // Obtenemos el id de la propiedad que queremos modificar.
-//     const { idUser } = req.params;
+    // Obtenemos el id de la propiedad que queremos modificar.
+    const { idProperty } = req.params;
 
-//     // Obtenemos el id del usuario que hace la request.
-//     const idReqUser = req.userAuth.idUser;
+    // Obtenemos el id del usuario que hace la request.
+    const idReqUser = req.userAuth.idUser;
 
-//     // Obtenemos los datos editables
-//     const { name, email, lastName, tel, bio, city, birthDate } = req.body;
+    // Obtenemos los datos editables
+    const {
+      city,
+      province,
+      address,
+      zipCode,
+      number,
+      type,
+      stair,
+      flat,
+      gate,
+      mts,
+      bedrooms,
+      garage,
+      terrace,
+      toilets,
+      energyCertificate,
+      availabilityDate,
+      price,
+      estate,
+    } = req.body;
 
-//     // Validamos los datos recibidos.
-//     await validate(userSchema, req.body);
+    // Obtenemos los datos de la vivienda a editar.
+    const [property] = await connection.query(
+      `
+      SELECT * FROM properties
+      WHERE idProperty = ?
+      `,
+      [idProperty]
+    );
 
-//     console.log(req.body);
+    console.log(property);
+    let validateData;
 
-//     // Lanzamos un error en caso de que no seamos dueños de este usuario.
-//     if (Number(idUser) !== idReqUser) {
-//       const error = new Error('No tienes permisos para editar este usuario');
-//       error.httpStatus = 403;
-//       throw error;
-//     }
+    // Obtenemos la fecha de modificación.
+    const modifiedAt = formatDate(new Date());
 
-//     // Si no llega ningún dato lanzamos un error.
-//     if (
-//       !name &&
-//       !email &&
-//       !lastName &&
-//       !tel &&
-//       !bio &&
-//       !city &&
-//       birthDate &&
-//       !(req.files && req.files.avatar)
-//     ) {
-//       const error = new Error('Faltan campos');
-//       error.httpStatus = 400;
-//       throw error;
-//     }
+    /**
+     * ###########
+     * ## FOTOS ##
+     * ###########
+     *
+     * Actualizamos Fotos.
+     *
+     */
+    if (req.files && req.files.photo) {
+      // Recorremos las fotos recibidas para subirlas.
+      for (const photo of Object.values(req.files)) {
+        // Obtenemos la cantidad de fotos que tiene esa propiedad.
+        const [photos] = await connection.query(
+          `
+      SELECT idPhoto FROM photos WHERE idProperty = ?
+      `,
+          [idProperty]
+        );
 
-//     // Obtenemos los datos del usuario actual.
-//     const [user] = await connection.query(
-//       `SELECT email, name, lastName, tel, bio, city, birthDate, avatar FROM users WHERE idUser = ?`,
-//       [idUser]
-//     );
+        // Comprobamos que no haya más de 30 fotos.
 
-//     let validateData;
+        if (photos.length > 29) {
+          const error = new Error('Solo puedes subir un máximo de 30 fotos.');
+          error.httpStatus = 403;
+          throw error;
+        }
+        let photoName;
+        try {
+          photoName = await savePhoto(photo);
+        } catch (_) {
+          const error = new Error('Formato incorrecto');
+          error.httpStatus = 400;
+          throw error;
+        }
+        await connection.query(
+          `
+      INSERT INTO photos (name,idProperty,createdAt)
+      VALUES (?,?,?)
+      `,
+          [photoName, idProperty, formatDate(new Date())]
+        );
+      }
+    }
+    /**
+     * ##########
+     * ## City ##
+     * ##########
+     *
+     * Actualizamos el nombre de la ciudad.
+     *
+     */
+    if (city && property[0].city !== city) {
+      // Validamos la información recibida.
+      validateData = { city };
+      await validate(editPropertySchema, validateData);
 
-//     // Obtenemos la fecha de modificación.
-//     const modifiedAt = formatDate(new Date());
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET city = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [city, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ##############
+     * ## PROVINCE ##
+     * ##############
+     *
+     * Actualizamos el nombre de la provincia.
+     *
+     */
+    if (province && property[0].province !== province) {
+      // Validamos la información recibida.
+      validateData = { province };
+      await validate(editPropertySchema, validateData);
 
-//     /**
-//      * ############
-//      * ## Avatar ##
-//      * ############
-//      *
-//      * Actualizamos Avatar.
-//      *
-//      */
-//     if (req.files && req.files.avatar) {
-//       // Comprobamos si el usuario ya tiene un avatar previo.
-//       // De ser así eliminamos el avatar del disco.
-//       if (user[0].avatar) await deletePhoto(user[0].avatar);
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET province = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [province, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ############
+     * ## ADRESS ##
+     * ############
+     *
+     * Actualizamos la dirección de la vivienda.
+     *
+     */
+    if (address && property[0].address !== address) {
+      // Validamos la información recibida.
+      validateData = { address };
+      await validate(editPropertySchema, validateData);
 
-//       // Guardamos la foto el disco y obtenemos su nombre.
-//       const avatarName = await savePhoto(req.files.avatar);
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET address = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [address, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * #############
+     * ## ZIPCODE ##
+     * #############
+     *
+     * Actualizamos el codigo postal de la vivienda.
+     *
+     */
+    if (zipCode && property[0].zipCode !== zipCode) {
+      // Validamos la información recibida.
+      validateData = { zipCode };
+      await validate(editPropertySchema, validateData);
 
-//       // Guardamos el avatar en la base de datos.
-//       await connection.query(
-//         `UPDATE users SET avatar = ?, modifiedAt = ? WHERE idUser = ?`,
-//         [avatarName, modifiedAt, idUser]
-//       );
-//     }
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET zipCode = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [zipCode, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ############
+     * ## NUMBER ##
+     * ############
+     *
+     * Actualizamos el número de la vivienda.
+     *
+     */
+    if (number && property[0].number !== number) {
+      // Validamos la información recibida.
+      validateData = { number };
+      await validate(editPropertySchema, validateData);
 
-//     /**
-//      * ##########
-//      * ## Name ##
-//      * ##########
-//      *
-//      * Actualizamos el nombre.
-//      *
-//      */
-//     if (name && user[0].name !== name) {
-//       // Validamos la información recibida.
-//       validateData = { name };
-//       await validate(editUserSchema, validateData);
-//       await connection.query(
-//         `UPDATE users SET name = ?, modifiedAt = ? WHERE idUser = ?`,
-//         [name, modifiedAt, idUser]
-//       );
-//     }
-//     {
-//       /**
-//        * ###########
-//        * ## Email ##
-//        * ###########
-//        *
-//        * Actualizamos email.
-//        *
-//        */
-//       if (email && email !== user[0].email) {
-//         // Validamos la información recibida.
-//         validateData = { email };
-//         await validate(editUserSchema, validateData);
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET number = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [number, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ##########
+     * ## TYPE ##
+     * ##########
+     *
+     * Actualizamos el tipo de vivienda.
+     *
+     */
+    if (type && property[0].type !== type) {
+      // Validamos que el tipo sea los especificados en la base de datos. Si no, lanzamos error.
+      if (type !== 'duplex' && type !== 'casa' && type !== 'piso') {
+        const error = new Error('El tipo de vivienda no es válido.');
+        error.httpStatus = 403;
+        throw error;
+      }
 
-//         // Comprobamos que el nuevo email no exista en la base de datos.
-//         const [existingEmail] = await connection.query(
-//           `SELECT idUser FROM users WHERE email = ?`,
-//           [email]
-//         );
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET type = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [type, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ###########
+     * ## STAIR ##
+     * ###########
+     *
+     * Actualizamos la escalera de la vivienda.
+     *
+     */
+    if (stair && property[0].stair !== stair) {
+      // Validamos la información recibida.
+      validateData = { stair };
+      await validate(editPropertySchema, validateData);
 
-//         // Si el email ya existe lanzamos un error.
-//         if (existingEmail.length > 0) {
-//           const error = new Error(
-//             'Ya existe un usuario con ese email en la base de datos'
-//           );
-//           error.httpStatus = 409;
-//           throw error;
-//         }
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET stair = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [stair, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ##########
+     * ## FLAT ##
+     * ##########
+     *
+     * Actualizamos el numero de piso de la vivienda.
+     *
+     */
+    if (flat && property[0].flat !== flat) {
+      // Validamos la información recibida.
+      validateData = { flat };
+      await validate(editPropertySchema, validateData);
 
-//         // Creamos un código de registro de un solo uso.
-//         const registrationCode = generateRandomString(20);
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET flat = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [flat, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ##########
+     * ## GATE ##
+     * ##########
+     *
+     * Actualizamos el numero de puerta de la vivienda.
+     *
+     */
+    if (gate && property[0].gate !== gate) {
+      // Validamos la información recibida.
+      validateData = { gate };
+      await validate(editPropertySchema, validateData);
 
-//         /**
-//          * Enviamos un mensaje de verificación al nuevo email del usuario.
-//          * Mensaje que enviaremos al usuario.
-//          */
-//         const emailBody = `
-//         <table>
-//           <thead>
-//               <th>Verificación de usuario</th>
-//           </thead>
-//           <tbody>
-//               <td>
-//                 Hola ${name}.
-//                 Acabas de modificar el email en Perfect Renter
-//                 ¡Pulsa el botón para verificar el nuevo correo!
-//               </td>
-//           </tbody>
-//           <tfoot>
-//               <th>
-//                 <button>
-//                 <a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR</a>
-//                 </button>
-//               </th>
-//           </tfoot>
-//         </table>
-//         `;
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET gate = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [gate, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ########
+     * ## M2 ##
+     * ########
+     *
+     * Actualizamos los metros al cuadrado de la vivienda.
+     *
+     */
+    if (mts && property[0].mts !== mts) {
+      // Validamos la información recibida.
+      validateData = { mts };
+      await validate(editPropertySchema, validateData);
 
-//         try {
-//           // Enviamos el mensaje al correo del usuario.
-//           await sendMail({
-//             to: email,
-//             subject: 'Activa tu usuario de Perfect Renter',
-//             body: emailBody,
-//           });
-//         } catch (error) {
-//           throw new Error('Error enviando el mensaje de verificación');
-//         }
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET mts = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [mts, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ###############
+     * ## BEEDROOMS ##
+     * ###############
+     *
+     * Actualizamos las habitaciones de la vivienda.
+     *
+     */
+    if (bedrooms && property[0].bedrooms !== bedrooms) {
+      // Validamos la información recibida.
+      validateData = { bedrooms };
+      await validate(editPropertySchema, validateData);
 
-//         // Actualizamos el usuario en la base de datos junto al código de registro.
-//         await connection.query(
-//           `UPDATE users SET email = ?, registrationCode = ?, renterActive = false, createdAt = ? WHERE idUser = ?`,
-//           [email, registrationCode, modifiedAt, idUser]
-//         );
-//       }
-//     }
-//     /**
-//      * ##############
-//      * ## Lastname ##
-//      * ##############
-//      *
-//      * Actualizamos apellido.
-//      *
-//      */
-//     if (lastName && user[0].lastName !== lastName) {
-//       // Validamos la información recibida.
-//       validateData = { lastName };
-//       await validate(editUserSchema, validateData);
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET bedrooms = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [bedrooms, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ############
+     * ## GARAGE ##
+     * ############
+     *
+     * Actualizamos si la vivienda tiene garaje.
+     *
+     */
+    if (garage && property[0].garage !== garage) {
+      // Validamos la información recibida.
+      validateData = { garage };
+      await validate(editPropertySchema, validateData);
 
-//       // Insertamos la información recibida en la base de datos.
-//       await connection.query(
-//         `UPDATE users SET lastName = ?, modifiedAt = ? WHERE idUser = ?`,
-//         [lastName, modifiedAt, idUser]
-//       );
-//     }
-//     /**
-//      * ##############
-//      * ## Teléfono ##
-//      * ##############
-//      *
-//      * Actualizamos teléfono.
-//      *
-//      */
-//     if (tel && user[0].tel !== tel) {
-//       // Validamos la información recibida.
-//       validateData = { tel };
-//       await validate(editUserSchema, validateData);
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET garage = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [garage, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * #############
+     * ## TERRACE ##
+     * #############
+     *
+     * Actualizamos si la vivienda tiene terraza.
+     *
+     */
+    if (terrace && property[0].terrace !== terrace) {
+      // Validamos la información recibida.
+      validateData = { terrace };
+      await validate(editPropertySchema, validateData);
 
-//       // Insertamos la información recibida en la base de datos.
-//       await connection.query(
-//         `UPDATE users SET tel = ?, modifiedAt = ? WHERE idUser = ?`,
-//         [tel, modifiedAt, idUser]
-//       );
-//     }
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET terrace = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [terrace, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * #############
+     * ## TOILETS ##
+     * #############
+     *
+     * Actualizamos cuantos baños tiene la vivienda.
+     *
+     */
+    if (toilets && property[0].toilets !== toilets) {
+      // Validamos la información recibida.
+      validateData = { toilets };
+      await validate(editPropertySchema, validateData);
 
-//     /**
-//      * ##############
-//      * ## Biografía ##
-//      * ##############
-//      *
-//      * Actualizamos la biografía.
-//      *
-//      */
-//     if (bio && user[0].bio !== bio) {
-//       // Validamos la información recibida.
-//       validateData = { bio };
-//       await validate(editUserSchema, validateData);
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET toilets = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [toilets, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * #######################
+     * ## energyCertificate ##
+     * #######################
+     *
+     * Actualizamos si la vivienda tiene certificado energético.
+     *
+     */
+    if (
+      energyCertificate &&
+      property[0].energyCertificate !== energyCertificate
+    ) {
+      // Validamos la información recibida.
+      validateData = { energyCertificate };
+      await validate(editPropertySchema, validateData);
 
-//       // Insertamos la información recibida en la base de datos.
-//       await connection.query(
-//         `UPDATE users SET bio = ?, modifiedAt = ? WHERE idUser = ?`,
-//         [bio, modifiedAt, idUser]
-//       );
-//     }
-//     /**
-//      * ##############
-//      * ##  Ciudad  ##
-//      * ##############
-//      *
-//      * Actualizamos ciudad.
-//      *
-//      */
-//     if (city && user[0].city !== city) {
-//       // Validamos la información recibida.
-//       validateData = { city };
-//       await validate(editUserSchema, validateData);
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET energyCertificate = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [energyCertificate, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ######################
+     * ## AVAILABILITYDATE ##
+     * ######################
+     *
+     * Actualizamos la disponibilidad de la vivienda.
+     *
+     */
+    if (availabilityDate && property[0].availabilityDate !== availabilityDate) {
+      // Validamos la información recibida.
 
-//       // Insertamos la información recibida en la base de datos.
-//       await connection.query(
-//         `UPDATE users SET city = ?, modifiedAt = ? WHERE idUser = ?`,
-//         [city, modifiedAt, idUser]
-//       );
-//     }
-//     /**
-//      * ########################
-//      * ##  Fecha nacimiento  ##
-//      * ########################
-//      *
-//      * Actualizamos la fecha.
-//      *
-//      */
-//     if (birthDate && user[0].birthDate !== birthDate) {
-//       // Validamos la información recibida.
-//       validateData = { birthDate };
-//       await validate(editUserSchema, validateData);
+      const date = format(availabilityDate, 'yyyy-MM-dd');
 
-//       // Insertamos la información recibida en la base de datos.
-//       await connection.query(
-//         `UPDATE users SET birthDate = ?, modifiedAt = ? WHERE idUser = ?`,
-//         [birthDate, modifiedAt, idUser]
-//       );
-//     }
-//     res.send({
-//       status: 'ok',
-//       message: 'Datos de usuario actualizados',
-//     });
-//   } catch (error) {
-//     next(error);
-//   } finally {
-//     if (connection) connection.release();
-//   }
-// };
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET availabilityDate = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [date, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ###########
+     * ## PRICE ##
+     * ###########
+     *
+     * Actualizamos el precio de la vivienda.
+     *
+     */
+    if (price && property[0].price !== price) {
+      // Validamos la información recibida.
+      validateData = { price };
+      await validate(editPropertySchema, validateData);
 
-// module.exports = editFlat;
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET price = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [price, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * ############
+     * ## ESTATE ##
+     * ############
+     *
+     * Actualizamos el estado de la vivienda.
+     *
+     */
+    if (estate && property[0].estate !== estate) {
+      // Validamos que el tipo sea los especificados en la base de datos. Si no, lanzamos error.
+      if (
+        estate !== 'reservado' &&
+        estate !== 'alquilado' &&
+        estate !== 'disponible'
+      ) {
+        const error = new Error('El estado de la vivienda no es válido.');
+        error.httpStatus = 403;
+        throw error;
+      }
+
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET estate = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [estate, modifiedAt, idProperty]
+      );
+    }
+    res.send({
+      status: 'ok',
+      message: 'Vivienda actualizada.',
+    });
+  } catch (error) {
+    next(error);
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+module.exports = editProperty;
