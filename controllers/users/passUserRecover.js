@@ -19,7 +19,7 @@ const passUserRecover = async (req, res, next) => {
     // Validamos la contraseña obtenida
     await validate(passSchema, req.body);
 
-    // Obtenemos el email del usuario.
+    // Obtenemos el id del usuario y el código de recuperación.
     const { idUser, recoverCode } = req.params;
 
     // Obtenemos la nueva contraseña del usuario.

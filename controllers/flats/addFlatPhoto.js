@@ -1,7 +1,8 @@
+// @ts-nocheck
 const getDB = require('../../config/getDB');
 const { savePhoto, formatDate } = require('../../libs/helpers');
 /**
- * @module Users
+ * @module Entries
  */
 /**
  * Middleware que guarda las fotos de los inmuebles.

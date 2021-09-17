@@ -13,13 +13,15 @@ app.use(morgan('dev'));
 app.use(express.json());
 // FORM-DATA DESERIALIZER
 app.use(fileUpload());
-
 /**
+ * @module Routes
+ */
+/**
+ *
  * ######################
  * ## LIBS MIDDLEWARES ##
  * ######################
- */
-/**
+ *
  * @private
  */
 const userExists = require('./libs/middlewares/userExists');
@@ -33,16 +35,14 @@ const authUser = require('./libs/middlewares/authUser');
  * ## FLATS CONTROLLERS ##
  * #######################
  */
-const { addFlatPhoto } = require('./controllers/flats/index');
+const { addFlatPhoto, contactFlat } = require('./controllers/flats/index');
 
 /**
  * #####################
  * ## FLATS ENDPOINTS ##
  * #####################
  */
-/**
- * @module Routes
- */
+
 /**
  * Agregar foto a los inmuebles
  *
@@ -59,6 +59,8 @@ const { addFlatPhoto } = require('./controllers/flats/index');
  *
  */
 app.post('/flats/:idFlat/photos', addFlatPhoto);
+
+app.post('/flats/:idFlat/contact', authUser, contactFlat);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -76,6 +78,7 @@ const {
   deleteUser,
   listUsers,
   editUser,
+  contactUser,
 } = require('./controllers/users/index');
 
 /**
@@ -219,6 +222,7 @@ app.put('/users/:idUser/', authUser, userExists, editUser);
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
 
+app.post('/users/:idUser/contact', authUser, contactUser);
 /**
  * ####################
  * ## ERROR LISTENER ##
@@ -232,6 +236,7 @@ app.use((error, req, res, next) => {
     message: error.message,
   });
 });
+
 /**
  * ##########################
  * ## NOT FOUND MIDDLEWARE ##
@@ -243,6 +248,7 @@ app.use((req, res) => {
     message: 'Not found',
   });
 });
+
 /**
  * ####################
  * ## SERVER ON PORT ##

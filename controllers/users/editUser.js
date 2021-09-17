@@ -1,3 +1,4 @@
+// @ts-nocheck
 const getDB = require('../../config/getDB');
 const {
   deletePhoto,
@@ -7,7 +8,7 @@ const {
   sendMail,
   validate,
 } = require('../../libs/helpers');
-const userSchema = require('../../models/userSchema');
+const { userSchema, editUserSchema } = require('../../models/userSchema');
 
 /**
  * @module Users
@@ -32,7 +33,7 @@ const editUser = async (req, res, next) => {
     const idReqUser = req.userAuth.idUser;
 
     // Obtenemos los datos editables
-    const { name, email, lastname, tel, bio, city, birthDate } = req.body;
+    const { name, email, lastName, tel, bio, city, birthDate } = req.body;
 
     // Validamos los datos recibidos.
     await validate(userSchema, req.body);
@@ -50,7 +51,7 @@ const editUser = async (req, res, next) => {
     if (
       !name &&
       !email &&
-      !lastname &&
+      !lastName &&
       !tel &&
       !bio &&
       !city &&
@@ -64,9 +65,11 @@ const editUser = async (req, res, next) => {
 
     // Obtenemos los datos del usuario actual.
     const [user] = await connection.query(
-      `SELECT email, name, lastname, tel, bio, city, birthDate, avatar FROM users WHERE idUser = ?`,
+      `SELECT email, name, lastName, tel, bio, city, birthDate, avatar FROM users WHERE idUser = ?`,
       [idUser]
     );
+
+    let validateData;
 
     // Obtenemos la fecha de modificación.
     const modifiedAt = formatDate(new Date());
@@ -103,6 +106,9 @@ const editUser = async (req, res, next) => {
      *
      */
     if (name && user[0].name !== name) {
+      // Validamos la información recibida.
+      validateData = { name };
+      await validate(editUserSchema, validateData);
       await connection.query(
         `UPDATE users SET name = ?, modifiedAt = ? WHERE idUser = ?`,
         [name, modifiedAt, idUser]
@@ -118,6 +124,10 @@ const editUser = async (req, res, next) => {
        *
        */
       if (email && email !== user[0].email) {
+        // Validamos la información recibida.
+        validateData = { email };
+        await validate(editUserSchema, validateData);
+
         // Comprobamos que el nuevo email no exista en la base de datos.
         const [existingEmail] = await connection.query(
           `SELECT idUser FROM users WHERE email = ?`,
@@ -136,29 +146,31 @@ const editUser = async (req, res, next) => {
         // Creamos un código de registro de un solo uso.
         const registrationCode = generateRandomString(20);
 
-        // Enviamos un mensaje de verificación al nuevo email del usuario.
-        // Mensaje que enviaremos al usuario.
+        /**
+         * Enviamos un mensaje de verificación al nuevo email del usuario.
+         * Mensaje que enviaremos al usuario.
+         */
         const emailBody = `
-    <table>
-      <thead>
-          <th>Verificación de usuario</th>
-      </thead>
-      <tbody>
-          <td>
-            Hola ${name}.
-            Acabas de modificar el email en Perfect Renter
-            ¡Pulsa el botón para verificar el nuevo correo!
-          </td>
-      </tbody>
-      <tfoot>
-          <th>
-            <button>
-            <a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR</a>
-            </button>
-          </th>
-      </tfoot>
-    </table>
-      `;
+        <table>
+          <thead>
+              <th>Verificación de usuario</th>
+          </thead>
+          <tbody>
+              <td>
+                Hola ${name}.
+                Acabas de modificar el email en Perfect Renter
+                ¡Pulsa el botón para verificar el nuevo correo!
+              </td>
+          </tbody>
+          <tfoot>
+              <th>
+                <button>
+                <a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR</a>
+                </button>
+              </th>
+          </tfoot>
+        </table>
+        `;
 
         try {
           // Enviamos el mensaje al correo del usuario.
@@ -186,10 +198,15 @@ const editUser = async (req, res, next) => {
      * Actualizamos apellido.
      *
      */
-    if (lastname && user[0].lastname !== lastname) {
+    if (lastName && user[0].lastName !== lastName) {
+      // Validamos la información recibida.
+      validateData = { lastName };
+      await validate(editUserSchema, validateData);
+
+      // Insertamos la información recibida en la base de datos.
       await connection.query(
-        `UPDATE users SET lastname = ?, modifiedAt = ? WHERE idUser = ?`,
-        [lastname, modifiedAt, idUser]
+        `UPDATE users SET lastName = ?, modifiedAt = ? WHERE idUser = ?`,
+        [lastName, modifiedAt, idUser]
       );
     }
     /**
@@ -201,6 +218,11 @@ const editUser = async (req, res, next) => {
      *
      */
     if (tel && user[0].tel !== tel) {
+      // Validamos la información recibida.
+      validateData = { tel };
+      await validate(editUserSchema, validateData);
+
+      // Insertamos la información recibida en la base de datos.
       await connection.query(
         `UPDATE users SET tel = ?, modifiedAt = ? WHERE idUser = ?`,
         [tel, modifiedAt, idUser]
@@ -216,6 +238,11 @@ const editUser = async (req, res, next) => {
      *
      */
     if (bio && user[0].bio !== bio) {
+      // Validamos la información recibida.
+      validateData = { bio };
+      await validate(editUserSchema, validateData);
+
+      // Insertamos la información recibida en la base de datos.
       await connection.query(
         `UPDATE users SET bio = ?, modifiedAt = ? WHERE idUser = ?`,
         [bio, modifiedAt, idUser]
@@ -230,6 +257,11 @@ const editUser = async (req, res, next) => {
      *
      */
     if (city && user[0].city !== city) {
+      // Validamos la información recibida.
+      validateData = { city };
+      await validate(editUserSchema, validateData);
+
+      // Insertamos la información recibida en la base de datos.
       await connection.query(
         `UPDATE users SET city = ?, modifiedAt = ? WHERE idUser = ?`,
         [city, modifiedAt, idUser]
@@ -244,6 +276,11 @@ const editUser = async (req, res, next) => {
      *
      */
     if (birthDate && user[0].birthDate !== birthDate) {
+      // Validamos la información recibida.
+      validateData = { birthDate };
+      await validate(editUserSchema, validateData);
+
+      // Insertamos la información recibida en la base de datos.
       await connection.query(
         `UPDATE users SET birthDate = ?, modifiedAt = ? WHERE idUser = ?`,
         [birthDate, modifiedAt, idUser]

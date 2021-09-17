@@ -7,7 +7,7 @@ const {
   validate,
 } = require('../../libs/helpers');
 
-const userSchema = require('../../models/userSchema');
+const { userSchema } = require('../../models/userSchema');
 /**
  * @module Users
  */
@@ -27,11 +27,11 @@ const newUser = async (req, res, next) => {
     await validate(userSchema, req.body);
 
     // Obtenemos los campos necesarios.
-    const { name, lastname, email, password, bio, city, birthDate } = req.body;
+    const { name, lastName, email, password, bio, city, birthDate } = req.body;
     // Comprobamos que no faltan campos a rellenar.
     if (
       !name ||
-      !lastname ||
+      !lastName ||
       !email ||
       !password ||
       !bio ||
@@ -60,10 +60,10 @@ const newUser = async (req, res, next) => {
 
     // Guardamos al usuario en la base de datos junto al código de registro.
     await connection.query(
-      `INSERT INTO users (name, lastname, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)`,
+      `INSERT INTO users (name, lastName, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)`,
       [
         name,
-        lastname,
+        lastName,
         email,
         password,
         bio,
