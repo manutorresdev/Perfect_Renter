@@ -32,6 +32,7 @@ const listUsers = async (req, res, next) => {
       : 'ASC';
 
     let users;
+
     // Obtenemos los datos de todos los usuarios
     if (!search && order === 'birthDate') {
       // Filtrado por fecha de nacimiento.

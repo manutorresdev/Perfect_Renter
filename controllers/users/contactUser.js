@@ -52,6 +52,7 @@ const contactUser = async (req, res, next) => {
     );
 
     console.log(contactUser);
+    console.log(user);
 
     // Definimos el body del email
     const emailBody = `
