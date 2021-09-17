@@ -19,7 +19,7 @@ async function main() {
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
     await connection.query('DROP TABLE IF EXISTS history');
-    await connection.query('DROP TABLE IF EXISTS flats');
+    await connection.query('DROP TABLE IF EXISTS properties');
     await connection.query('DROP TABLE IF EXISTS users');
 
     console.log('Tablas Eliminadas');
@@ -49,10 +49,10 @@ async function main() {
         )
         `);
 
-    // Creamos la tabla flats  "Pisos en alquiler"
+    // Creamos la tabla property  "Pisos en alquiler"
     await connection.query(`
-        CREATE TABLE flats(
-            idFlat INT PRIMARY KEY AUTO_INCREMENT,
+        CREATE TABLE properties(
+            idProperty INT PRIMARY KEY AUTO_INCREMENT,
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
             city VARCHAR(100),
@@ -60,9 +60,9 @@ async function main() {
             address VARCHAR(100),
             zipCode TINYINT,
             number INT,
-            type ENUM("duplex","casa","piso")
+            type ENUM("duplex","casa","piso"),
             stair VARCHAR(50),
-            flat INT,
+            Property INT,
             gate VARCHAR(20),
             mts DECIMAL(5,2),
             bedrooms INT,
@@ -87,7 +87,7 @@ async function main() {
             comment VARCHAR(250),
             idVoted INT,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
-            idFlat INT,
+            idProperty INT,
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser),
             CONSTRAINT votes_CK1 CHECK (vote IN(1, 2, 3, 4, 5)),
@@ -98,8 +98,8 @@ async function main() {
     await connection.query(`
         CREATE TABLE photos (
             idPhoto INT PRIMARY KEY AUTO_INCREMENT,
-            idFlat INT NOT NULL,
-            FOREIGN KEY (idFlat) REFERENCES flats(idFlat),
+            idProperty INT NOT NULL,
+            FOREIGN KEY (idProperty) REFERENCES properties(idProperty),
             name VARCHAR(100),
             createdAt DATETIME NOT NULL
         )
@@ -109,9 +109,8 @@ async function main() {
 
     // Insertar el usuario administrador.
     await connection.query(`
-    INSERT INTO users (nif, name, lastName, tel, email, password, role, createdAt, city, birthDate)
+    INSERT INTO users ( name, lastName, tel, email, password, role, createdAt, city, birthDate)
     VALUES (
-        "123456789A",
         "david",
         "losas",
         "123456789",

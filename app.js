@@ -32,23 +32,26 @@ const authUser = require('./libs/middlewares/authUser');
 
 /**
  * #######################
- * ## FLATS CONTROLLERS ##
+ * ## PROPERTYS CONTROLLERS ##
  * #######################
  */
-const { addFlatPhoto, contactFlat } = require('./controllers/flats/index');
+const {
+  addPropertyPhoto,
+  contactProperty,
+} = require('./controllers/properties/index');
 
 /**
  * #####################
- * ## FLATS ENDPOINTS ##
+ * ## PROPERTIIES ENDPOINTS ##
  * #####################
  */
 
 /**
  * Agregar foto a los inmuebles
  *
- * @name addFlatPhoto
- * @path {POST} /flats/:idFlat/photos
- * @params {number} idFlat Número del inmueble a mostrar
+ * @name addPropertyPhoto
+ * @path {POST} /property/:idProperty/photos
+ * @params {number} idProperty Número del inmueble a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {200} Si la respuesta es correcta
  * @code {401} Si la autorización del usuario es errónea
@@ -58,9 +61,9 @@ const { addFlatPhoto, contactFlat } = require('./controllers/flats/index');
  * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
  *
  */
-app.post('/flats/:idFlat/photos', addFlatPhoto);
+app.post('/properties/:idProperty/photos', addPropertyPhoto);
 
-app.post('/flats/:idFlat/contact', authUser, contactFlat);
+app.post('/properties/:idProperty/contact', authUser, contactProperty);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -222,7 +225,7 @@ app.put('/users/:idUser/', authUser, userExists, editUser);
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
 
-app.post('/users/:idUser/contact', authUser, contactUser);
+app.post('/users/:idUser/contact', authUser, userExists, contactUser);
 /**
  * ####################
  * ## ERROR LISTENER ##

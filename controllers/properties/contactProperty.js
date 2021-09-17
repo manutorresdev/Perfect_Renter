@@ -10,31 +10,31 @@ const { sendMail } = require('../../libs/helpers');
  * @param {*} res El servidor lanza como respuesta un correo al usuario a contactar.
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const contactFlat = async (req, res, next) => {
+const contactProperty = async (req, res, next) => {
   let connection;
   try {
     connection = await getDB();
 
     // Obtenemos el id la vivienda a contactar.
-    const { idFlat } = req.params;
+    const { idProperty } = req.params;
 
     // Obtenemos los datos del usuario que contacta.
     let { name, lastName, email, tel, comentarios } = req.body;
 
     // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
-    const [flat] = await connection.query(
+    const [property] = await connection.query(
       `
-      SELECT photos.name,flats.city, users.name AS ownerName, flats.idUser, users.email
-      FROM flats
-      LEFT JOIN photos ON flats.idFlat = photos.idFlat
-      LEFT JOIN users ON users.idUser = flats.idUser
-      WHERE flats.idFlat = ?
+      SELECT photos.name,properties.city, users.name AS ownerName, properties.idUser, users.email
+      FROM properties
+      LEFT JOIN photos ON properties.idProperty = photos.idProperty
+      LEFT JOIN users ON users.idUser = properties.idUser
+      WHERE properties.idProperty = ?
         `,
-      [idFlat]
+      [idProperty]
     );
-
+    console.log(property);
     // Si el usuario es el dueño de la vivienda, lanzamos error.
-    if (req.userAuth.idUser === Number(flat[0].idUser)) {
+    if (req.userAuth.idUser === Number(property[0].idUser)) {
       const error = new Error(
         'No puedes contactar con una vivienda de tu propiedad.'
       );
@@ -93,8 +93,8 @@ const contactFlat = async (req, res, next) => {
     <table>
       <tbody>
         <td>
-          Hola ${flat[0].ownerName},
-          un inquilino está interesado en tu vivienda de ${flat[0].city}.
+          Hola ${property[0].ownerName},
+          un inquilino está interesado en tu vivienda de ${property[0].city}.
           <br/>
           Datos del inquilino:
           <ul>
@@ -113,7 +113,7 @@ const contactFlat = async (req, res, next) => {
 
     // Enviamos el correo del usuario que contacta, al usuario a contactar.
     await sendMail({
-      to: flat[0].email,
+      to: property[0].email,
       subject: 'Solicitud de alquiler',
       body: emailBody,
     });
@@ -128,4 +128,4 @@ const contactFlat = async (req, res, next) => {
   }
 };
 
-module.exports = contactFlat;
+module.exports = contactProperty;

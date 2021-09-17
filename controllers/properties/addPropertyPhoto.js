@@ -10,14 +10,14 @@ const { savePhoto, formatDate } = require('../../libs/helpers');
  * @param {*} res El servidor guarda la foto y obtenemos el nombre de la misma. Si no llega la foto o se supera el número máximo de fotos, lanza un error
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const addFlatPhoto = async (req, res, next) => {
+const addPropertyPhoto = async (req, res, next) => {
   let connection;
 
   try {
     connection = await getDB();
 
     //obtenemos id del inmueble
-    const { idFlat } = req.params;
+    const { idProperty } = req.params;
 
     //si no recibimos foto lanzamos error
     if (!req.files || !req.files.photo) {
@@ -28,8 +28,8 @@ const addFlatPhoto = async (req, res, next) => {
 
     //comprobamos las fotos de la entrada
     const [photos] = await connection.query(
-      `SELECT idPhoto FROM photos where idFlat = ?`,
-      [idFlat]
+      `SELECT idPhoto FROM photos where idProperty = ?`,
+      [idProperty]
     );
     //si hay 10 fotos lanzamos error
     if (photos.length >= 10) {
@@ -50,8 +50,8 @@ const addFlatPhoto = async (req, res, next) => {
 
     //guardamos foto
     await connection.query(
-      `INSERT INTO photos (name, idFlat, createdAt) VALUES (?, ?, ?)`,
-      [photoName, idFlat, formatDate(new Date())]
+      `INSERT INTO photos (name, idProperty, createdAt) VALUES (?, ?, ?)`,
+      [photoName, idProperty, formatDate(new Date())]
     );
     res.send({
       status: 'ok',
@@ -64,4 +64,4 @@ const addFlatPhoto = async (req, res, next) => {
   }
 };
 
-module.exports = addFlatPhoto;
+module.exports = addPropertyPhoto;
