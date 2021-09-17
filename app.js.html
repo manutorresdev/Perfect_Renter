@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Entries.html">Entries</a><ul class='methods'><li data-type='method'><a href="module-Entries.html#~addFlatPhoto">addFlatPhoto</a></li><li data-type='method'><a href="module-Entries.html#~contactFlat">contactFlat</a></li></ul></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~deletePhoto">deletePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~savePhoto">savePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~contactUser">contactUser</a></li><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUser">editUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Entries.html">Entries</a><ul class='methods'><li data-type='method'><a href="module-Entries.html#~addPropertyPhoto">addPropertyPhoto</a></li><li data-type='method'><a href="module-Entries.html#~contactProperty">contactProperty</a></li><li data-type='method'><a href="module-Entries.html#~deleteProperty">deleteProperty</a></li><li data-type='method'><a href="module-Entries.html#~editProperty">editProperty</a></li></ul></li><li></li><li></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~canEdit">canEdit</a></li><li data-type='method'><a href="module-Helpers.html#~deletePhoto">deletePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~savePhoto">savePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~contactUser">contactUser</a></li><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUser">editUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
 </nav>
 
 <div id="main">
@@ -59,40 +59,43 @@ app.use(express.json());
 app.use(fileUpload());
 
 /**
+ * @module Routes
+ */
+
+/**
+ *
  * ######################
  * ## LIBS MIDDLEWARES ##
  * ######################
- */
-/**
+ *
  * @private
  */
-const userExists = require('./libs/middlewares/userExists');
-/**
- * @private
- */
-const authUser = require('./libs/middlewares/authUser');
+const { authUser, userExists, canEdit } = require('./libs/middlewares/index');
 
 /**
- * #######################
- * ## FLATS CONTROLLERS ##
- * #######################
+ * ############################
+ * ## PROPERTIES CONTROLLERS ##
+ * ############################
  */
-const { addFlatPhoto, contactFlat } = require('./controllers/flats/index');
+const {
+  addPropertyPhoto,
+  contactProperty,
+  editProperty,
+  deleteProperty,
+} = require('./controllers/properties/index');
 
 /**
- * #####################
- * ## FLATS ENDPOINTS ##
- * #####################
+ * ##########################
+ * ## PROPERTIES ENDPOINTS ##
+ * ##########################
  */
-/**
- * @module Routes
- */
+
 /**
  * Agregar foto a los inmuebles
  *
- * @name addFlatPhoto
- * @path {POST} /flats/:idFlat/photos
- * @params {number} idFlat Número del inmueble a mostrar
+ * @name addPropertyPhoto
+ * @path {POST} /property/:idProperty/photos
+ * @params {number} idProperty Número del inmueble a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {200} Si la respuesta es correcta
  * @code {401} Si la autorización del usuario es errónea
@@ -102,9 +105,51 @@ const { addFlatPhoto, contactFlat } = require('./controllers/flats/index');
  * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
  *
  */
-app.post('/flats/:idFlat/photos', addFlatPhoto);
-
-app.post('/flats/:idFlat/contact', authUser, contactFlat);
+app.post('/properties/:idProperty/photos', authUser, canEdit, addPropertyPhoto);
+/**
+ * Solicitud a un inmueble
+ *
+ * @name contactProperty
+ * @path {POST} /property/:idProperty/contact
+ * @params {number} idProperty Número del inmueble a contactar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {400} Si falta algún dato a insertar
+ * @code {403} Si es el dueño de la vivienda
+ * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
+ *
+ */
+app.post('/properties/:idProperty/contact', authUser, contactProperty);
+/**
+ * Editar información de un inmueble
+ *
+ * @name editProperty
+ * @path {PUT} /properties/:idProperty
+ * @params {number} idProperty Número del inmueble a editar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el inmueble no existe
+ * @code {400} Si el archivo es de un formato incorrecto
+ * @code {403} Si supera el máximo de archivos permitidos
+ * @response {Object} Response Guarda la información cambiada en el servidor y base de datos
+ *
+ */
+app.put('/properties/:idProperty', authUser, canEdit, editProperty);
+/**
+ * Eliminar un inmueble
+ *
+ * @name deleteProperty
+ * @path {DELETE} /properties/:idProperty
+ * @params {number} idProperty Número del inmueble a eliminar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @response {Object} Response Elimina el inmueble del servidor (y sus fotos) y la base de datos
+ *
+ */
+app.delete('/properties/:idProperty', authUser, canEdit, deleteProperty);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -265,8 +310,21 @@ app.put('/users/:idUser/', authUser, userExists, editUser);
  * @response {Object} Response Confirmación de usuario eliminado.
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
-
-app.post('/users/:idUser/contact', authUser, contactUser);
+/**
+ * Contacto a un usuario.
+ *
+ * @name contactUser
+ * @path {POST} /users/:idUser/contact
+ * @params {number} idUser Número del usuario a contactar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {400} Si falta algún dato a insertar
+ * @code {403} Si el usuario a contactar y el usuario que solicita el contacto, son el mismo
+ * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
+ *
+ */
+app.post('/users/:idUser/contact', authUser, userExists, contactUser);
 /**
  * ####################
  * ## ERROR LISTENER ##
@@ -280,6 +338,7 @@ app.use((error, req, res, next) => {
     message: error.message,
   });
 });
+
 /**
  * ##########################
  * ## NOT FOUND MIDDLEWARE ##
@@ -291,6 +350,7 @@ app.use((req, res) => {
     message: 'Not found',
   });
 });
+
 /**
  * ####################
  * ## SERVER ON PORT ##
@@ -313,7 +373,7 @@ app.listen(PORT, () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Sep 17 2021 18:11:21 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sat Sep 18 2021 00:02:13 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

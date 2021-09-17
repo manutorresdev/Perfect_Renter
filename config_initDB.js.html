@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Entries.html">Entries</a><ul class='methods'><li data-type='method'><a href="module-Entries.html#~addFlatPhoto">addFlatPhoto</a></li><li data-type='method'><a href="module-Entries.html#~contactFlat">contactFlat</a></li></ul></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~deletePhoto">deletePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~savePhoto">savePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~contactUser">contactUser</a></li><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUser">editUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Entries.html">Entries</a><ul class='methods'><li data-type='method'><a href="module-Entries.html#~addPropertyPhoto">addPropertyPhoto</a></li><li data-type='method'><a href="module-Entries.html#~contactProperty">contactProperty</a></li><li data-type='method'><a href="module-Entries.html#~deleteProperty">deleteProperty</a></li><li data-type='method'><a href="module-Entries.html#~editProperty">editProperty</a></li></ul></li><li></li><li></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~canEdit">canEdit</a></li><li data-type='method'><a href="module-Helpers.html#~deletePhoto">deletePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~savePhoto">savePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~contactUser">contactUser</a></li><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUser">editUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
 </nav>
 
 <div id="main">
@@ -63,7 +63,7 @@ async function main() {
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
     await connection.query('DROP TABLE IF EXISTS history');
-    await connection.query('DROP TABLE IF EXISTS flats');
+    await connection.query('DROP TABLE IF EXISTS properties');
     await connection.query('DROP TABLE IF EXISTS users');
 
     console.log('Tablas Eliminadas');
@@ -74,7 +74,6 @@ async function main() {
     await connection.query(`
         CREATE TABLE users (
             idUser INT PRIMARY KEY AUTO_INCREMENT,
-            nif VARCHAR(10),
             name VARCHAR(100),
             lastName VARCHAR(100),
             tel VARCHAR(20),
@@ -85,9 +84,8 @@ async function main() {
             bio TEXT,
             city VARCHAR(50) NOT NULL,
             renterActive BOOLEAN DEFAULT false,
-            tenatActive BOOLEAN DEFAULT false,
             deleted BOOLEAN DEFAULT false,
-            role ENUM("admin", "normal") DEFAULT "normal" NOT NULL,
+            role ENUM("admin", "renter", "tenant") DEFAULT "tenant" NOT NULL,
             registrationCode VARCHAR(100),
             recoverCode VARCHAR(100),
             createdAt DATETIME NOT NULL,
@@ -95,28 +93,32 @@ async function main() {
         )
         `);
 
-    // Creamos la tabla flats  "Pisos en alquiler"
+    // Creamos la tabla property  "Pisos en alquiler"
     await connection.query(`
-        CREATE TABLE flats(
-            idFlat INT PRIMARY KEY AUTO_INCREMENT,
+        CREATE TABLE properties(
+            idProperty INT PRIMARY KEY AUTO_INCREMENT,
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
             city VARCHAR(100),
             province VARCHAR(100),
             address VARCHAR(100),
-            edifice VARCHAR(50),
-            stairs VARCHAR(50),
+            zipCode VARCHAR(5),
+            number INT,
+            type ENUM("duplex","casa","piso"),
+            stair VARCHAR(50),
             flat INT,
             gate VARCHAR(20),
-            duplex BOOLEAN,
             mts DECIMAL(5,2),
             bedrooms INT,
+            garage BOOLEAN,
             terrace BOOLEAN,
             toilets INT,
             energyCertificate BOOLEAN,
-            availabilityDate DATETIME,
+            availabilityDate DATE,
             price DECIMAL(6,2),
-            estate ENUM("reservado", "alquilado", "disponible")
+            estate ENUM("reservado", "alquilado", "disponible"),
+            modifiedAt DATETIME,
+            createdAt DATETIME NOT NULL
         )
     `);
 
@@ -126,12 +128,12 @@ async function main() {
 
     await connection.query(`
         CREATE TABLE votes (
-            id INT PRIMARY KEY AUTO_INCREMENT,
+            idVote INT PRIMARY KEY AUTO_INCREMENT,
             vote TINYINT NOT NULL,
-            idVoted INT NOT NULL,
+            comment VARCHAR(250),
+            idVoted INT,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
-            rolVoted VARCHAR(20),
-            idFlat INT,
+            idProperty INT,
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser),
             CONSTRAINT votes_CK1 CHECK (vote IN(1, 2, 3, 4, 5)),
@@ -142,8 +144,8 @@ async function main() {
     await connection.query(`
         CREATE TABLE photos (
             idPhoto INT PRIMARY KEY AUTO_INCREMENT,
-            idFlat INT NOT NULL,
-            FOREIGN KEY (idFlat) REFERENCES flats(idFlat),
+            idProperty INT NOT NULL,
+            FOREIGN KEY (idProperty) REFERENCES properties(idProperty) ON DELETE CASCADE,
             name VARCHAR(100),
             createdAt DATETIME NOT NULL
         )
@@ -153,18 +155,17 @@ async function main() {
 
     // Insertar el usuario administrador.
     await connection.query(`
-    INSERT INTO users (nif, name, lastName, tel, email, password, role, createdAt, city, birthDate)
+    INSERT INTO users ( name, lastName, tel, email, password, role, createdAt, city, birthDate)
     VALUES (
-        "123456789A",
         "david",
-        "lopez",
+        "losas",
         "123456789",
         "david1935@gmail.com",
         SHA2("123456", 512),
         "admin",
         "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}",
         "A coruña",
-        "1900-01-30 02:30:23"
+        "1900-01-30"
     )
 `);
     // Nº de usuarios que queremos introducir.
@@ -173,24 +174,21 @@ async function main() {
     // Insertamos los usuarios.
     for (let i = 0; i &lt; USERS; i++) {
       // Datos de faker.
-      const nif = faker.finance.routingNumber();
+
       const name = faker.name.findName();
       const lastName = faker.name.lastName();
       const phone = faker.phone.phoneNumber();
       const email = faker.internet.email();
       const password = faker.internet.password();
       const city = faker.address.cityName();
-      const birthDate = format(
-        faker.datatype.datetime(),
-        'yyyy-MM-dd HH:mm:ss'
-      );
+      const birthDate = format(faker.datatype.datetime(), 'yyyy-MM-dd');
 
       // Fecha de cración.
       const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
       await connection.query(`
-        INSERT INTO users (nif, name, lastName, tel, email, password, createdAt, city, birthDate)
-        VALUES ("${nif}", "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
+        INSERT INTO users ( name, lastName, tel, email, password, createdAt, city, birthDate)
+        VALUES ( "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
     `);
     }
 
@@ -218,7 +216,7 @@ main();
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Sep 17 2021 18:11:21 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sat Sep 18 2021 00:02:13 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>libs/middlewares/authUser.js - Documentation</title>
+    <title>controllers/properties/addPropertyPhoto.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">libs/middlewares/authUser.js</h1>
+    <h1 class="page-title">controllers/properties/addPropertyPhoto.js</h1>
     
 
     
@@ -43,50 +43,76 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-nocheck
-const jwt = require('jsonwebtoken');
+const getDB = require('../../config/getDB');
+const { savePhoto, formatDate } = require('../../libs/helpers');
 /**
- *
- * @module Helpers
+ * @module Entries
  */
 /**
- * Middleware para la correcta autorización de un usuario en el servidor.
- * @param {*} req Se obtiene la cabecera de autorización del token y desencriptamos el token para obtener el ID y el ROL del usuario en cuestión.
- * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware que guarda las fotos de los inmuebles.
+ * @param {*} req Como "requests", se requiere el id del inmueble
+ * @param {*} res El servidor guarda la foto y obtenemos el nombre de la misma. Si no llega la foto o se supera el número máximo de fotos, lanza un error
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const authUser = async (req, res, next) => {
+const addPropertyPhoto = async (req, res, next) => {
+  let connection;
+
   try {
-    // Obtenemos la cabecera de autorización.
-    const { authorization } = req.headers;
+    connection = await getDB();
 
-    // Si no existe la cabecera de autorización lanzamos un error.
-    if (!authorization) {
-      const error = new Error('Falta la cabecera de autorización');
-      error.httpStatus = 401;
+    // Obtenemos id del inmueble
+    const { idProperty } = req.params;
+
+    // Si no recibimos foto lanzamos error
+    if (!req.files || !req.files.photo) {
+      const error = new Error('No se ha encontrado el archivo');
+      error.httpStatus = 400;
       throw error;
     }
 
-    // Variable que almacenará la info del token.
-    let tokenInfo;
+    for (const photo of Object.values(req.files)) {
+      // Obtenemos la cantidad de fotos que tiene esa propiedad.
+      const [photos] = await connection.query(
+        `
+      SELECT idPhoto FROM photos WHERE idProperty = ?
+      `,
+        [idProperty]
+      );
 
-    try {
-      // Desencriptamos el token.
-      tokenInfo = jwt.verify(authorization, process.env.SECRET);
-    } catch (_) {
-      const error = new Error('El token no es válido');
-      error.httpStatus = 401;
-      throw error;
+      // Comprobamos que no haya más de 30 fotos.
+      if (photos.length > 29) {
+        const error = new Error('Solo puedes subir un máximo de 30 fotos.');
+        error.httpStatus = 403;
+        throw error;
+      }
+      let photoName;
+      try {
+        photoName = await savePhoto(photo);
+      } catch (_) {
+        const error = new Error('Formato incorrecto');
+        error.httpStatus = 400;
+        throw error;
+      }
+      await connection.query(
+        `
+      INSERT INTO photos (name,idProperty,createdAt)
+      VALUES (?,?,?)
+      `,
+        [photoName, idProperty, formatDate(new Date())]
+      );
     }
-
-    // Inyectamos en el objeto "request" la info del token: id, role.
-    req.userAuth = tokenInfo;
-    next();
+    res.send({
+      status: 'ok',
+      message: 'Las fotos han sido subidas',
+    });
   } catch (error) {
     next(error);
+  } finally {
+    if (connection) connection.release();
   }
 };
 
-module.exports = authUser;
+module.exports = addPropertyPhoto;
 </code></pre>
         </article>
     </section>

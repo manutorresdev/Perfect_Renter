@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>libs/middlewares/authUser.js - Documentation</title>
+    <title>controllers/properties/deleteProperty.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">libs/middlewares/authUser.js</h1>
+    <h1 class="page-title">controllers/properties/deleteProperty.js</h1>
     
 
     
@@ -43,50 +43,56 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-nocheck
-const jwt = require('jsonwebtoken');
+const getDB = require('../../config/getDB');
+const { deletePhoto, formatDate } = require('../../libs/helpers');
 /**
- *
- * @module Helpers
+ * @module Entries
  */
 /**
- * Middleware para la correcta autorización de un usuario en el servidor.
- * @param {*} req Se obtiene la cabecera de autorización del token y desencriptamos el token para obtener el ID y el ROL del usuario en cuestión.
- * @param {*} res No se obtiene respuesta del servidor en este middleware, a no ser que haya un error.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware para eliminar un alquiler de la base de datos
+ * @param {*} req Como "requests", se requiere el id del usuario que solicita la petición y el id del alquiler que se quiere eliminar
+ * @param {*} res El servidor lanza como respuesta que el alquiler ha sido eliminado
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const authUser = async (req, res, next) => {
+const deleteProperty = async (req, res, next) => {
+  let connection;
+
   try {
-    // Obtenemos la cabecera de autorización.
-    const { authorization } = req.headers;
+    connection = await getDB();
 
-    // Si no existe la cabecera de autorización lanzamos un error.
-    if (!authorization) {
-      const error = new Error('Falta la cabecera de autorización');
-      error.httpStatus = 401;
-      throw error;
+    // Obtenemos id del alquiler que queremos borrar
+    const { idProperty } = req.params;
+
+    // Obtenemos el nombre de las fotos
+    const [photos] = await connection.query(
+      `SELECT name FROM photos WHERE idProperty = ?`,
+      [idProperty]
+    );
+
+    // Eliminamos las fotos del servidor y la base de datos.
+    for (const photo of photos) {
+      deletePhoto(photo.name);
     }
 
-    // Variable que almacenará la info del token.
-    let tokenInfo;
-
-    try {
-      // Desencriptamos el token.
-      tokenInfo = jwt.verify(authorization, process.env.SECRET);
-    } catch (_) {
-      const error = new Error('El token no es válido');
-      error.httpStatus = 401;
-      throw error;
-    }
-
-    // Inyectamos en el objeto "request" la info del token: id, role.
-    req.userAuth = tokenInfo;
-    next();
+    // Eliminamos la propiedad de la base de datos.
+    await connection.query(
+      `
+    DELETE FROM properties WHERE idProperty = ?
+    `,
+      [idProperty]
+    );
+    res.send({
+      status: 'ok',
+      message: 'Propiedad eliminada',
+    });
   } catch (error) {
     next(error);
+  } finally {
+    if (connection) connection.release();
   }
 };
 
-module.exports = authUser;
+module.exports = deleteProperty;
 </code></pre>
         </article>
     </section>
