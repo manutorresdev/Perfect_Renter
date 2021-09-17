@@ -62,7 +62,7 @@ async function main() {
             number INT,
             type ENUM("duplex","casa","piso"),
             stair VARCHAR(50),
-            Property INT,
+            flat INT,
             gate VARCHAR(20),
             mts DECIMAL(5,2),
             bedrooms INT,
