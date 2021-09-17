@@ -18,6 +18,7 @@ const recoverUserPass = async (req, res, next) => {
   let connection;
   try {
     connection = await getDB();
+
     // Obtenemos el email del usuario.
     const { email } = req.body;
 

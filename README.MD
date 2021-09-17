@@ -27,11 +27,11 @@
 
 - GET - [/flats] - Obtener un listado de todos los alquileres.
 - GET - [/flats/:idFlat] - Obtener un alquiler en concreto.
-- POST - [/flats] - Crear un alquiler.
+- POST - [/flats] - Crear un alquiler. ✅
 - POST - [/flats/:idFlat/photos] - Agregar una foto a un alquiler.✅
 - POST - [/flats/:idFlat/votes] - Votar un alquiler.
-- POST - [/flats/:idFlat/contact] - Mandar mensaje a un alquiler.
-- PUT - [/entries/:idFlat] - Edita un alquiler
+- POST - [/flats/:idFlat/contact] - Mandar mensaje a un alquiler. ✅
+- PUT - [/entries/:idFlat] - Edita un alquiler.
 - DELETE - [/flats/:idFlat] - Borrar un alquiler.
 - DELETE - [/flats/:idFlat/photos/:idPhoto] - Eliminar una foto del alquiler.
 
@@ -41,7 +41,7 @@
 - GET - [/users/:idUser] - Obtener un usuario en concreto.✅
 - POST - [/users] - Crea un usuario pendiente de activación.✅
 - POST - [/users/login] - Inicia sesión a un usuario y proporciona un token.✅
-- POST - [/users/:idUser/contact] - Mandar mensaje a un renter.
+- POST - [/users/:idUser/contact] - Mandar mensaje a un renter. ✅
 - GET - [/users/validate/:registrationCode] - Valida un usuario recién registrado o valida los cambios de email/contraseña. ✅
 - PUT - [/users/:idUser] - Editar los datos del usuario.✅
 - PUT - [/users/:idUser/password] - Edita la contraseña de un usuario. ✅
