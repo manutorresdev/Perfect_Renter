@@ -32,7 +32,7 @@
 - POST - [/flats/:idFlat/votes] - Votar un alquiler.
 - POST - [/flats/:idFlat/contact] - Mandar mensaje a un alquiler. ✅
 - PUT - [/entries/:idFlat] - Edita un alquiler. ✅
-- DELETE - [/flats/:idFlat] - Borrar un alquiler.
+- DELETE - [/flats/:idFlat] - Borrar un alquiler.✅
 - DELETE - [/flats/:idFlat/photos/:idPhoto] - Eliminar una foto del alquiler.
 
 ## Endpoints del usuario
