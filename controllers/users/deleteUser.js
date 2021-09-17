@@ -1,7 +1,7 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
 const {
-  /* deletePhoto, */
+  deletePhoto,
   generateRandomString,
   formatDate,
 } = require('../../libs/helpers');
@@ -58,8 +58,8 @@ const deleteUser = async (req, res, next) => {
 
     // Anonimizamos al usuario
     await connection.query(
-      `UPDATE users SET password = ?, name = "[deleted]", avatar = NULL, renterActive = false, deleted = true, modifiedAt = ? WHERE idUser = ?`,
-      [generateRandomString(40), formatDate(new Date()), idUser]
+      `UPDATE users SET password = ?,nif = "[deleted]", name = "[deleted]",lastName = "[deleted]",tel = "[deleted]", avatar = NULL, renterActive = false, deleted = true, bio = "[deleted]", city = "[deleted]", birthDate = ? , modifiedAt = ? WHERE idUser = ?`,
+      [generateRandomString(20), formatDate(0), formatDate(new Date()), idUser]
     );
     res.send({
       status: 'ok',

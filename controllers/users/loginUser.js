@@ -41,12 +41,12 @@ const loginUser = async (req, res, next) => {
       throw error;
     }
 
-    /*   // Si el usuario existe pero no está activo lanzamos un error.
-    if (!user[0].active) {
+    // Si el usuario existe pero no está activo lanzamos un error.
+    if (!user[0].renterActive) {
       const error = new Error('Usuario pendiente de validar');
       error.httpStatus = 401;
       throw error;
-    } */
+    }
 
     // Objeto con la información que le queramos pasar al token.
 

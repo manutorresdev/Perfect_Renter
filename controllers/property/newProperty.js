@@ -2,9 +2,9 @@
 const getDB = require('../../config/getDB');
 const { formatDate, validate } = require('../../libs/helpers');
 
-const flatSchema = require('../../models/flatSchema');
+const propertychema = require('../../models/propertychema');
 /**
- * @module Flats
+ * @module property
  */
 /**
  * Middleware para generar un nuevo piso en la base de datos.
@@ -12,14 +12,14 @@ const flatSchema = require('../../models/flatSchema');
  * @param {*} res El servidor lanza como respuesta la confirmación de la creación de un nuevo piso.
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
  */
-const newFlat = async (req, res, next) => {
+const newProperty = async (req, res, next) => {
   let connection;
 
   try {
     connection = await getDB();
 
     // Validamos los datos recibidos.
-    await validate(flatSchema, req.body);
+    await validate(propertychema, req.body);
 
     // Obtenemos los campos necesarios.
     const {
@@ -27,8 +27,8 @@ const newFlat = async (req, res, next) => {
       province,
       address,
       edifice,
-      stairs,
-      flat,
+      stair,
+      Property,
       gate,
       duplex,
       mts,
@@ -58,8 +58,8 @@ const newFlat = async (req, res, next) => {
     }
     // Comprobamos si el email existe en la base de datos.
     const [rent] = await connection.query(
-      `SELECT idFlat FROM flats WHERE city = ? AND province = ? AND address = ? AND edifice = ? AND stairs = ? AND flat = ? AND gate = ?`,
-      [city, province, address, edifice, stairs, flat, gate]
+      `SELECT idProperty FROM property WHERE city = ? AND province = ? AND address = ? AND edifice = ? AND stair = ? AND Property = ? AND gate = ?`,
+      [city, province, address, edifice, stair, Property, gate]
     );
 
     // Si el email existe lanzamos un error.
@@ -71,13 +71,13 @@ const newFlat = async (req, res, next) => {
 
     // Guardamos al usuario en la base de datos junto al código de registro.
     await connection.query(
-      `INSERT INTO flats (idUser, 
+      `INSERT INTO property (idUser, 
         city,
         province,
         address,
         edifice,
-        stairs,
-        flat,
+        stair,
+        Property,
         gate,
         duplex,
         mts,
@@ -94,8 +94,8 @@ const newFlat = async (req, res, next) => {
         province,
         address,
         edifice,
-        stairs,
-        flat,
+        stair,
+        Property,
         gate,
         duplex,
         mts,
@@ -120,4 +120,4 @@ const newFlat = async (req, res, next) => {
   }
 };
 
-module.exports = newFlat;
+module.exports = newProperty;

@@ -2,7 +2,11 @@
 require('dotenv').config();
 const sgMail = require('@sendgrid/mail');
 const { format } = require('date-fns');
+const { ensureDir, unlink } = require('fs-extra');
+const sharp = require('sharp');
 const crypto = require('crypto');
+const uuid = require('uuid');
+const path = require('path');
 
 const {
   UPLOADS_DIRECTORY,
@@ -11,6 +15,7 @@ const {
 } = process.env;
 sgMail.setApiKey(api);
 
+const uploadsDir = path.join(__dirname, UPLOADS_DIRECTORY);
 /**
  * @module Helpers
  */
@@ -76,6 +81,59 @@ function getRandomValue(min, max) {
 }
 
 /**
+ * ###############
+ * ## savePhoto ##
+ * ###############
+ */
+/**
+ * Función que guarda una foto en el servidor y su nombre en la base de datos
+ * @param {file} image Entra como parámetro el archivo de imagen que introduce el usuario
+ * @returns Un nombre de imagen
+ */
+
+async function savePhoto(image) {
+  //comprabamos que directorio de salida de imagenes existe
+  await ensureDir(uploadsDir);
+
+  // Convertimos la imagen a un objeto sharp
+  const sharpImage = sharp(image.data);
+
+  //accedemos a los metadatos de la imagen para comprobar su anchura
+  const imageInfo = await sharpImage.metadata();
+
+  // definimos el ancho máximos
+  const IMAGE_MAX_WIDTH = 1000;
+  // si el ancho de la imagen supera el máximo redimensionamos la imagen
+  if (imageInfo.width > IMAGE_MAX_WIDTH) sharpImage.resize(IMAGE_MAX_WIDTH);
+
+  //generamos un nombre unico a la imagen
+  const imageName = `${uuid.v4()}.jpg`;
+  //creamos la ruta absoluta a la nueva ubicación de la imagen
+  const imagePath = path.join(uploadsDir, imageName);
+  //guardamos la imagen en el directorio uploads
+  await sharpImage.toFile(imagePath);
+  //retornamos el nombre del fichero
+  return imageName;
+}
+
+/**
+ * #################
+ * ## deletePhoto ##
+ * #################
+ */
+/**
+ * Función que elimina las fotos del disco
+ * @param {string} photoName Entra como parámetro el nombre de la imagen
+ */
+async function deletePhoto(photoName) {
+  // Creamos la ruta absoluta al archivo.
+  const photoPath = path.join(uploadsDir, photoName);
+
+  // Eliminamos la foto del disco.
+  await unlink(photoPath);
+}
+
+/**
  * ##########################
  * ## generateRandomString ##
  * ##########################
@@ -111,6 +169,8 @@ async function validate(schema, data) {
 module.exports = {
   formatDate,
   getRandomValue,
+  deletePhoto,
+  savePhoto,
   generateRandomString,
   validate,
   sendMail,

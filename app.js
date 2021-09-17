@@ -13,13 +13,15 @@ app.use(morgan('dev'));
 app.use(express.json());
 // FORM-DATA DESERIALIZER
 app.use(fileUpload());
-
 /**
+ * @module Routes
+ */
+/**
+ *
  * ######################
  * ## LIBS MIDDLEWARES ##
  * ######################
- */
-/**
+ *
  * @private
  */
 const userExists = require('./libs/middlewares/userExists');
@@ -30,24 +32,42 @@ const authUser = require('./libs/middlewares/authUser');
 
 /**
  * #######################
- * ## FLATS CONTROLLERS ##
+ * ## property CONTROLLERS ##
  * #######################
  */
+const {
+  addPropertyPhoto,
+  contactProperty,
+} = require('./controllers/property/index');
 
-const { newFlat } = require('./controllers/flats');
+const { newProperty } = require('./controllers/property');
 
 /**
  * #####################
- * ## FLATS ENDPOINTS ##
+ * ## property ENDPOINTS ##
  * #####################
  */
 
-app.post('/flats', authUser, newFlat);
+app.post('/property', authUser, newProperty);
 
 /**
- * @module Routes
+ * Agregar foto a los inmuebles
+ *
+ * @name addPropertyPhoto
+ * @path {POST} /property/:idProperty/photos
+ * @params {number} idProperty Número del inmueble a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el usuario no existe
+ * @code {400} Si no hay archivo o es incorrecto
+ * @code {403} Si supera el máximo de archivos permitidos
+ * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
+ *
  */
+app.post('/property/:idProperty/photos', addPropertyPhoto);
 
+app.post('/property/:idProperty/contact', authUser, contactProperty);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -64,6 +84,8 @@ const {
   validateUser,
   deleteUser,
   listUsers,
+  editUser,
+  contactUser,
 } = require('./controllers/users/index');
 
 /**
@@ -174,14 +196,26 @@ app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
  * Editar contraseña del usuario.
  *
  * @name editUserPass
- * @path {PUT} /users/:idUser/pass
+ * @path {PUT} /users/:idUser/password
  * @params {Number} idUser Número de usuario a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {403} Si se intenta cambiar la contraseña de otro usuario
  * @code {401} Si la contraseña introducida es incorrecta
- * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar.
+ * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar
  */
-app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
+app.put('/users/:idUser/password', authUser, userExists, editUserPass);
+/**
+ * Editar usuario.
+ *
+ * @name editUser
+ * @path {PUT} /users/:idUser
+ * @params {Number} idUser Número de usuario a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {403} Si se intenta cambiar la contraseña de otro usuario
+ * @code {401} Si la contraseña introducida es incorrecta
+ * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar
+ */
+app.put('/users/:idUser/', authUser, userExists, editUser);
 
 /**
  * Eliminar usuario.
@@ -195,6 +229,7 @@ app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
 
+app.post('/users/:idUser/contact', authUser, contactUser);
 /**
  * ####################
  * ## ERROR LISTENER ##
@@ -208,6 +243,7 @@ app.use((error, req, res, next) => {
     message: error.message,
   });
 });
+
 /**
  * ##########################
  * ## NOT FOUND MIDDLEWARE ##
@@ -219,6 +255,7 @@ app.use((req, res) => {
     message: 'Not found',
   });
 });
+
 /**
  * ####################
  * ## SERVER ON PORT ##

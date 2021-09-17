@@ -4,7 +4,7 @@ const Joi = require('joi');
  */
 /**
  * Esquema de usuario para validación de datos.
- * @name FlatSchema
+ * @name propertychema
  */
 
 /*************************************************************************/
@@ -12,7 +12,7 @@ const Joi = require('joi');
 /**Libreria para hacer seleccionables las provincias y ciudades de españa */
 /************************************************************************* */
 
-const flatSchema = Joi.object().keys({
+const propertychema = Joi.object().keys({
   city: Joi.string()
     .required()
     .error((errors) => {
@@ -55,6 +55,10 @@ const flatSchema = Joi.object().keys({
         return new Error('Indique si es un edificio o casa.');
       return new Error('Datos no validos edificio');
     }),
+
+  stair: Joi.string(),
+  Property: 
+
   mts: Joi.number()
     .required()
     .error((errors) => {
@@ -88,4 +92,4 @@ const flatSchema = Joi.object().keys({
   stairs: Joi.string().max(50),
 });
 
-module.exports = flatSchema;
+module.exports = propertychema;

@@ -19,7 +19,7 @@ async function main() {
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
     await connection.query('DROP TABLE IF EXISTS history');
-    await connection.query('DROP TABLE IF EXISTS flats');
+    await connection.query('DROP TABLE IF EXISTS property');
     await connection.query('DROP TABLE IF EXISTS users');
 
     console.log('Tablas Eliminadas');
@@ -30,7 +30,6 @@ async function main() {
     await connection.query(`
         CREATE TABLE users (
             idUser INT PRIMARY KEY AUTO_INCREMENT,
-            nif VARCHAR(10),
             name VARCHAR(100),
             lastName VARCHAR(100),
             tel VARCHAR(20),
@@ -41,9 +40,8 @@ async function main() {
             bio TEXT,
             city VARCHAR(50) NOT NULL,
             renterActive BOOLEAN DEFAULT false,
-            tenatActive BOOLEAN DEFAULT false,
             deleted BOOLEAN DEFAULT false,
-            role ENUM("admin", "normal") DEFAULT "normal" NOT NULL,
+            role ENUM("admin", "renter", "tenant") DEFAULT "tenant" NOT NULL,
             registrationCode VARCHAR(100),
             recoverCode VARCHAR(100),
             createdAt DATETIME NOT NULL,
@@ -51,26 +49,28 @@ async function main() {
         )
         `);
 
-    // Creamos la tabla flats  "Pisos en alquiler"
+    // Creamos la tabla property  "Pisos en alquiler"
     await connection.query(`
-        CREATE TABLE flats(
-            idFlat INT PRIMARY KEY AUTO_INCREMENT,
+        CREATE TABLE property(
+            idProperty INT PRIMARY KEY AUTO_INCREMENT,
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
             city VARCHAR(100),
             province VARCHAR(100),
             address VARCHAR(100),
-            edifice VARCHAR(50),
-            stairs VARCHAR(50),
-            flat INT,
+            zipCode TINYINT,
+            number INT,
+            type ENUM("duplex","casa","piso")
+            stair VARCHAR(50),
+            Property INT,
             gate VARCHAR(20),
-            duplex BOOLEAN,
             mts DECIMAL(5,2),
             bedrooms INT,
+            garage BOOLEAN,
             terrace BOOLEAN,
             toilets INT,
             energyCertificate BOOLEAN,
-            availabilityDate DATETIME,
+            availabilityDate DATE,
             price DECIMAL(6,2),
             estate ENUM("reservado", "alquilado", "disponible")
         )
@@ -82,12 +82,12 @@ async function main() {
 
     await connection.query(`
         CREATE TABLE votes (
-            id INT PRIMARY KEY AUTO_INCREMENT,
+            idVote INT PRIMARY KEY AUTO_INCREMENT,
             vote TINYINT NOT NULL,
-            idVoted INT NOT NULL,
+            comment VARCHAR(250),
+            idVoted INT,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
-            rolVoted VARCHAR(20),
-            idFlat INT,
+            idProperty INT,
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser),
             CONSTRAINT votes_CK1 CHECK (vote IN(1, 2, 3, 4, 5)),
@@ -98,8 +98,8 @@ async function main() {
     await connection.query(`
         CREATE TABLE photos (
             idPhoto INT PRIMARY KEY AUTO_INCREMENT,
-            idFlat INT NOT NULL,
-            FOREIGN KEY (idFlat) REFERENCES flats(idFlat),
+            idProperty INT NOT NULL,
+            FOREIGN KEY (idProperty) REFERENCES property(idProperty),
             name VARCHAR(100),
             createdAt DATETIME NOT NULL
         )
@@ -109,18 +109,17 @@ async function main() {
 
     // Insertar el usuario administrador.
     await connection.query(`
-    INSERT INTO users (nif, name, lastName, tel, email, password, role, createdAt, city, birthDate)
+    INSERT INTO users (name, lastName, tel, email, password, role, createdAt, city, birthDate)
     VALUES (
-        "123456789A",
         "david",
-        "lopez",
+        "losas",
         "123456789",
         "david1935@gmail.com",
         SHA2("123456", 512),
         "admin",
         "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}",
         "A coruña",
-        "1900-01-30 02:30:23"
+        "1900-01-30"
     )
 `);
     // Nº de usuarios que queremos introducir.
@@ -129,24 +128,21 @@ async function main() {
     // Insertamos los usuarios.
     for (let i = 0; i < USERS; i++) {
       // Datos de faker.
-      const nif = faker.finance.routingNumber();
+
       const name = faker.name.findName();
       const lastName = faker.name.lastName();
       const phone = faker.phone.phoneNumber();
       const email = faker.internet.email();
       const password = faker.internet.password();
       const city = faker.address.cityName();
-      const birthDate = format(
-        faker.datatype.datetime(),
-        'yyyy-MM-dd HH:mm:ss'
-      );
+      const birthDate = format(faker.datatype.datetime(), 'yyyy-MM-dd');
 
       // Fecha de cración.
       const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
       await connection.query(`
-        INSERT INTO users (nif, name, lastName, tel, email, password, createdAt, city, birthDate)
-        VALUES ("${nif}", "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
+        INSERT INTO users ( name, lastName, tel, email, password, createdAt, city, birthDate)
+        VALUES ( "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
     `);
     }
 
