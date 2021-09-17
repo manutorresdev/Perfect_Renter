@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Entries.html">Entries</a><ul class='methods'><li data-type='method'><a href="module-Entries.html#~addFlatPhoto">addFlatPhoto</a></li><li data-type='method'><a href="module-Entries.html#~contactFlat">contactFlat</a></li></ul></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~deletePhoto">deletePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~savePhoto">savePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~contactUser">contactUser</a></li><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUser">editUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
 </nav>
 
 <div id="main">
@@ -77,6 +77,7 @@ const authUser = require('./libs/middlewares/authUser');
  * ## FLATS CONTROLLERS ##
  * #######################
  */
+const { addFlatPhoto, contactFlat } = require('./controllers/flats/index');
 
 /**
  * #####################
@@ -86,7 +87,24 @@ const authUser = require('./libs/middlewares/authUser');
 /**
  * @module Routes
  */
+/**
+ * Agregar foto a los inmuebles
+ *
+ * @name addFlatPhoto
+ * @path {POST} /flats/:idFlat/photos
+ * @params {number} idFlat Número del inmueble a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el usuario no existe
+ * @code {400} Si no hay archivo o es incorrecto
+ * @code {403} Si supera el máximo de archivos permitidos
+ * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
+ *
+ */
+app.post('/flats/:idFlat/photos', addFlatPhoto);
 
+app.post('/flats/:idFlat/contact', authUser, contactFlat);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -103,6 +121,8 @@ const {
   validateUser,
   deleteUser,
   listUsers,
+  editUser,
+  contactUser,
 } = require('./controllers/users/index');
 
 /**
@@ -213,14 +233,26 @@ app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
  * Editar contraseña del usuario.
  *
  * @name editUserPass
- * @path {PUT} /users/:idUser/pass
+ * @path {PUT} /users/:idUser/password
  * @params {Number} idUser Número de usuario a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {403} Si se intenta cambiar la contraseña de otro usuario
  * @code {401} Si la contraseña introducida es incorrecta
- * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar.
+ * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar
  */
-app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
+app.put('/users/:idUser/password', authUser, userExists, editUserPass);
+/**
+ * Editar usuario.
+ *
+ * @name editUser
+ * @path {PUT} /users/:idUser
+ * @params {Number} idUser Número de usuario a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {403} Si se intenta cambiar la contraseña de otro usuario
+ * @code {401} Si la contraseña introducida es incorrecta
+ * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar
+ */
+app.put('/users/:idUser/', authUser, userExists, editUser);
 
 /**
  * Eliminar usuario.
@@ -234,6 +266,7 @@ app.put('/users/:idUser/pass', authUser, userExists, editUserPass);
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
 
+app.post('/users/:idUser/contact', authUser, contactUser);
 /**
  * ####################
  * ## ERROR LISTENER ##
@@ -280,7 +313,7 @@ app.listen(PORT, () => {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Sep 16 2021 00:57:09 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Sep 17 2021 18:11:21 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

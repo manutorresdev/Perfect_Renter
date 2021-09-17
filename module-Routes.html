@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Entries.html">Entries</a><ul class='methods'><li data-type='method'><a href="module-Entries.html#~addFlatPhoto">addFlatPhoto</a></li><li data-type='method'><a href="module-Entries.html#~contactFlat">contactFlat</a></li></ul></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~deletePhoto">deletePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~savePhoto">savePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~contactUser">contactUser</a></li><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUser">editUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
 </nav>
 
 <div id="main">
@@ -76,6 +76,177 @@
 
         
             
+<h4 class="name" id="addFlatPhoto"><span class="type-signature">(route) </span>addFlatPhoto<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line46">line 46</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h5>Route:</h5>
+                            <table class="params">
+                            <thead><tr><th>Method</th><th class="last">Path</th></tr></thead>
+                            <tr>
+                            <td class="type">POST</td>
+                            <td class="name last">/flats/:idFlat/photos</td>
+                            </tr>
+                            </table>
+                            Agregar foto a los inmuebles
+                            <h5>Header Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">Authorization</td>
+            <td class="type"></td>
+            
+            
+            <td class="description last">Es la identificación utlizada para llevar a cabo la request</td>
+          </tr>
+          </table>
+                            <h5>Route Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">idFlat</td>
+            <td class="type">number</td>
+            
+            
+            <td class="description last">Número del inmueble a mostrar</td>
+          </tr>
+          </table>
+                            <h5>Response:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">Response</td>
+            <td class="type">Object</td>
+            
+            
+            <td class="description last">guardando la foto en el servidor y el nombre en la base de datos</td>
+          </tr>
+          </table>
+                            <h5>Response Code:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            
+            <td class="type">200</td>
+            
+            
+            <td class="description last">Si la respuesta es correcta</td>
+          </tr><tr>
+            
+            <td class="type">401</td>
+            
+            
+            <td class="description last">Si la autorización del usuario es errónea</td>
+          </tr><tr>
+            
+            <td class="type">404</td>
+            
+            
+            <td class="description last">Si el usuario no existe</td>
+          </tr><tr>
+            
+            <td class="type">400</td>
+            
+            
+            <td class="description last">Si no hay archivo o es incorrecto</td>
+          </tr><tr>
+            
+            <td class="type">403</td>
+            
+            
+            <td class="description last">Si supera el máximo de archivos permitidos</td>
+          </tr>
+          </table>
+</div>
+
+
+
+
+
+
+
+
+        
+            
 <h4 class="name" id="deleteUser"><span class="type-signature">(route) </span>deleteUser<span class="type-signature"></span></h4>
 
 
@@ -87,7 +258,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line181">line 181</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -210,7 +381,7 @@
 
         
             
-<h4 class="name" id="editUserPass"><span class="type-signature">(route) </span>editUserPass<span class="type-signature"></span></h4>
+<h4 class="name" id="editUser"><span class="type-signature">(route) </span>editUser<span class="type-signature"></span></h4>
 
 
 
@@ -221,7 +392,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line168">line 168</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line200">line 200</a>
     </li></ul></dd>
     
 
@@ -266,7 +437,160 @@
                             <thead><tr><th>Method</th><th class="last">Path</th></tr></thead>
                             <tr>
                             <td class="type">PUT</td>
-                            <td class="name last">/users/:idUser/pass</td>
+                            <td class="name last">/users/:idUser</td>
+                            </tr>
+                            </table>
+                            Editar usuario.
+                            <h5>Header Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">Authorization</td>
+            <td class="type"></td>
+            
+            
+            <td class="description last">Es la identificación utlizada para llevar a cabo la request</td>
+          </tr>
+          </table>
+                            <h5>Route Parameters:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">idUser</td>
+            <td class="type">Number</td>
+            
+            
+            <td class="description last">Número de usuario a mostrar</td>
+          </tr>
+          </table>
+                            <h5>Response:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            <td class="name">Response</td>
+            <td class="type">Object</td>
+            
+            
+            <td class="description last">Edita la contraseña del usuario y envía un email para verificar</td>
+          </tr>
+          </table>
+                            <h5>Response Code:</h5>
+          <table class="params">
+            <thead>
+              <tr>
+                
+                <th>Type</th>
+                
+                
+                <th class="last">Description</th>
+              </tr>
+            </thead>
+            <tr>
+            
+            <td class="type">403</td>
+            
+            
+            <td class="description last">Si se intenta cambiar la contraseña de otro usuario</td>
+          </tr><tr>
+            
+            <td class="type">401</td>
+            
+            
+            <td class="description last">Si la contraseña introducida es incorrecta</td>
+          </tr>
+          </table>
+</div>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="editUserPass"><span class="type-signature">(route) </span>editUserPass<span class="type-signature"></span></h4>
+
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line188">line 188</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <h5>Route:</h5>
+                            <table class="params">
+                            <thead><tr><th>Method</th><th class="last">Path</th></tr></thead>
+                            <tr>
+                            <td class="type">PUT</td>
+                            <td class="name last">/users/:idUser/password</td>
                             </tr>
                             </table>
                             Editar contraseña del usuario.
@@ -324,7 +648,7 @@
             <td class="type">Object</td>
             
             
-            <td class="description last">Edita la contraseña del usuario y envía un email para verificar.</td>
+            <td class="description last">Edita la contraseña del usuario y envía un email para verificar</td>
           </tr>
           </table>
                             <h5>Response Code:</h5>
@@ -374,7 +698,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line70">line 70</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -533,7 +857,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line84">line 84</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line104">line 104</a>
     </li></ul></dd>
     
 
@@ -698,7 +1022,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line127">line 127</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line147">line 147</a>
     </li></ul></dd>
     
 
@@ -844,7 +1168,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line111">line 111</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line131">line 131</a>
     </li></ul></dd>
     
 
@@ -1002,7 +1326,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line154">line 154</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line174">line 174</a>
     </li></ul></dd>
     
 
@@ -1161,7 +1485,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line99">line 99</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -1282,7 +1606,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="app.js.html">app.js</a>, <a href="app.js.html#line141">line 141</a>
+        <a href="app.js.html">app.js</a>, <a href="app.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -1431,7 +1755,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Sep 16 2021 00:57:09 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Sep 17 2021 18:11:21 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+    <h2><a href="index.html">Inicio</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Entries.html">Entries</a><ul class='methods'><li data-type='method'><a href="module-Entries.html#~addFlatPhoto">addFlatPhoto</a></li><li data-type='method'><a href="module-Entries.html#~contactFlat">contactFlat</a></li></ul></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~deletePhoto">deletePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~savePhoto">savePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~contactUser">contactUser</a></li><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUser">editUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
 </nav>
 
 <div id="main">
@@ -46,7 +46,11 @@
 require('dotenv').config();
 const sgMail = require('@sendgrid/mail');
 const { format } = require('date-fns');
+const { ensureDir, unlink } = require('fs-extra');
+const sharp = require('sharp');
 const crypto = require('crypto');
+const uuid = require('uuid');
+const path = require('path');
 
 const {
   UPLOADS_DIRECTORY,
@@ -55,6 +59,7 @@ const {
 } = process.env;
 sgMail.setApiKey(api);
 
+const uploadsDir = path.join(__dirname, UPLOADS_DIRECTORY);
 /**
  * @module Helpers
  */
@@ -120,6 +125,59 @@ function getRandomValue(min, max) {
 }
 
 /**
+ * ###############
+ * ## savePhoto ##
+ * ###############
+ */
+/**
+ * Función que guarda una foto en el servidor y su nombre en la base de datos
+ * @param {file} image Entra como parámetro el archivo de imagen que introduce el usuario
+ * @returns Un nombre de imagen
+ */
+
+async function savePhoto(image) {
+  //comprabamos que directorio de salida de imagenes existe
+  await ensureDir(uploadsDir);
+
+  // Convertimos la imagen a un objeto sharp
+  const sharpImage = sharp(image.data);
+
+  //accedemos a los metadatos de la imagen para comprobar su anchura
+  const imageInfo = await sharpImage.metadata();
+
+  // definimos el ancho máximos
+  const IMAGE_MAX_WIDTH = 1000;
+  // si el ancho de la imagen supera el máximo redimensionamos la imagen
+  if (imageInfo.width > IMAGE_MAX_WIDTH) sharpImage.resize(IMAGE_MAX_WIDTH);
+
+  //generamos un nombre unico a la imagen
+  const imageName = `${uuid.v4()}.jpg`;
+  //creamos la ruta absoluta a la nueva ubicación de la imagen
+  const imagePath = path.join(uploadsDir, imageName);
+  //guardamos la imagen en el directorio uploads
+  await sharpImage.toFile(imagePath);
+  //retornamos el nombre del fichero
+  return imageName;
+}
+
+/**
+ * #################
+ * ## deletePhoto ##
+ * #################
+ */
+/**
+ * Función que elimina las fotos del disco
+ * @param {string} photoName Entra como parámetro el nombre de la imagen
+ */
+async function deletePhoto(photoName) {
+  // Creamos la ruta absoluta al archivo.
+  const photoPath = path.join(uploadsDir, photoName);
+
+  // Eliminamos la foto del disco.
+  await unlink(photoPath);
+}
+
+/**
  * ##########################
  * ## generateRandomString ##
  * ##########################
@@ -155,6 +213,8 @@ async function validate(schema, data) {
 module.exports = {
   formatDate,
   getRandomValue,
+  deletePhoto,
+  savePhoto,
   generateRandomString,
   validate,
   sendMail,
@@ -173,7 +233,7 @@ module.exports = {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Sep 16 2021 00:57:09 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Sep 17 2021 18:11:21 GMT+0200 (Central European Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
