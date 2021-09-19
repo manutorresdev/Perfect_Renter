@@ -13,9 +13,11 @@ app.use(morgan('dev'));
 app.use(express.json());
 // FORM-DATA DESERIALIZER
 app.use(fileUpload());
+
 /**
  * @module Routes
  */
+
 /**
  *
  * ######################
@@ -24,26 +26,24 @@ app.use(fileUpload());
  *
  * @private
  */
-const userExists = require('./libs/middlewares/userExists');
-/**
- * @private
- */
-const authUser = require('./libs/middlewares/authUser');
+const { authUser, userExists, canEdit } = require('./libs/middlewares/index');
 
 /**
- * #######################
- * ## PROPERTYS CONTROLLERS ##
- * #######################
+ * ############################
+ * ## PROPERTIES CONTROLLERS ##
+ * ############################
  */
 const {
   addPropertyPhoto,
   contactProperty,
+  editProperty,
+  deleteProperty,
 } = require('./controllers/properties/index');
 
 /**
- * #####################
- * ## PROPERTIIES ENDPOINTS ##
- * #####################
+ * ##########################
+ * ## PROPERTIES ENDPOINTS ##
+ * ##########################
  */
 
 /**
@@ -61,9 +61,51 @@ const {
  * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
  *
  */
-app.post('/properties/:idProperty/photos', addPropertyPhoto);
-
+app.post('/properties/:idProperty/photos', authUser, canEdit, addPropertyPhoto);
+/**
+ * Solicitud a un inmueble
+ *
+ * @name contactProperty
+ * @path {POST} /property/:idProperty/contact
+ * @params {number} idProperty Número del inmueble a contactar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {400} Si falta algún dato a insertar
+ * @code {403} Si es el dueño de la vivienda
+ * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
+ *
+ */
 app.post('/properties/:idProperty/contact', authUser, contactProperty);
+/**
+ * Editar información de un inmueble
+ *
+ * @name editProperty
+ * @path {PUT} /properties/:idProperty
+ * @params {number} idProperty Número del inmueble a editar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el inmueble no existe
+ * @code {400} Si el archivo es de un formato incorrecto
+ * @code {403} Si supera el máximo de archivos permitidos
+ * @response {Object} Response Guarda la información cambiada en el servidor y base de datos
+ *
+ */
+app.put('/properties/:idProperty', authUser, canEdit, editProperty);
+/**
+ * Eliminar un inmueble
+ *
+ * @name deleteProperty
+ * @path {DELETE} /properties/:idProperty
+ * @params {number} idProperty Número del inmueble a eliminar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @response {Object} Response Elimina el inmueble del servidor (y sus fotos) y la base de datos
+ *
+ */
+app.delete('/properties/:idProperty', authUser, canEdit, deleteProperty);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -224,7 +266,20 @@ app.put('/users/:idUser/', authUser, userExists, editUser);
  * @response {Object} Response Confirmación de usuario eliminado.
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
-
+/**
+ * Contacto a un usuario.
+ *
+ * @name contactUser
+ * @path {POST} /users/:idUser/contact
+ * @params {number} idUser Número del usuario a contactar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {400} Si falta algún dato a insertar
+ * @code {403} Si el usuario a contactar y el usuario que solicita el contacto, son el mismo
+ * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
+ *
+ */
 app.post('/users/:idUser/contact', authUser, userExists, contactUser);
 /**
  * ####################

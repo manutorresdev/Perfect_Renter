@@ -6,9 +6,9 @@ const { passSchema } = require('../../models/passSchema');
  * @module Users
  */
 /**
- * Middleware que genera un enlace de cambio de contraseña y lo envía al correo
- * @param {*} req Como "requests", se requiere un email válido, de no ser así, se lanza un error
- * @param {*} res El servidor lanza como respuesta un correo para el correcto cambio de la contraseña
+ * Middleware que a traves de un enlace, edita la contraseña del usuario que la ha solicitado
+ * @param {*} req Como "requests", se requiere una contraseña válida, de no ser así, se lanza un error
+ * @param {*} res El servidor lanza como respuesta una confirmación con el cambio
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const passUserRecover = async (req, res, next) => {
@@ -49,8 +49,7 @@ const passUserRecover = async (req, res, next) => {
 
     res.send({
       status: 'ok',
-      message:
-        'Contraseña cambiada con éxito. Confirma el cambio haciendo click en el enlace que te hemos enviado al correo electónico.',
+      message: 'Contraseña cambiada con éxito.',
     });
   } catch (error) {
     next(error);
