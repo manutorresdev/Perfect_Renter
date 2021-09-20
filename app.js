@@ -34,11 +34,14 @@ const { authUser, userExists, canEdit } = require('./libs/middlewares/index');
  * ############################
  */
 const {
+  newProperty,
+  getProperty,
   addPropertyPhoto,
   contactProperty,
   editProperty,
   deleteProperty,
   deletePropertyPhoto,
+  listProperties,
 } = require('./controllers/properties/index');
 
 /**
@@ -46,6 +49,10 @@ const {
  * ## PROPERTIES ENDPOINTS ##
  * ##########################
  */
+
+app.post('/property', authUser, newProperty);
+app.get('/property/:idProperty', getProperty);
+app.get('/properties', listProperties);
 
 /**
  * Agregar foto a los inmuebles

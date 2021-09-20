@@ -23,8 +23,33 @@
 4. Models
    - Contiene los schemas de las diferentes páginas dónde el usuario debe insertar datos.
 
+<<<<<<< HEAD
+## Endpoints property
+
+- GET - [/property] - Obtener un listado de todos los alquileres.
+- GET - [/property/:idFlat] - Obtener un alquiler en concreto.
+- POST - [/property] - Crear un alquiler. ✅
+- POST - [/property/:idFlat/photos] - Agregar una foto a un alquiler.✅
+- POST - [/property/:idFlat/votes] - Votar un alquiler.
+- POST - [/property/:idFlat/contact] - Mandar mensaje a un alquiler. ✅
+- PUT - [/entries/:idFlat] - Edita un alquiler.
+- DELETE - [/property/:idFlat] - Borrar un alquiler.
+- DELETE - [/property/:idFlat/photos/:idPhoto] - Eliminar una foto del alquiler.
+=======
 ## Endpoints Flats
 
+<<<<<<< HEAD
+- GET - [/flats] - Obtener un listado de todos los alquileres. ✅
+- GET - [/flats/:idFlat] - Obtener un alquiler en concreto. ✅
+- POST - [/flats] - Crear un alquiler. ✅
+- POST - [/flats/:idFlat/photos] - Agregar una foto a un alquiler.✅
+- POST - [/flats/:idFlat/votes] - Votar un alquiler.
+- POST - [/flats/:idFlat/contact] - Mandar mensaje a un alquiler. ✅
+- PUT - [/entries/:idFlat] - Edita un alquiler. ✅
+- DELETE - [/flats/:idFlat] - Borrar un alquiler.
+- DELETE - [/flats/:idFlat/photos/:idPhoto] - Eliminar una foto del alquiler.
+>>>>>>> origin
+=======
 - GET - [/properties] - Obtener un listado de todos los alquileres. ✅
 - GET - [/properties/:idProperty] - Obtener un alquiler en concreto. ✅
 - POST - [/properties] - Crear un alquiler. ✅
@@ -34,6 +59,7 @@
 - PUT - [/properties/:idProperty] - Edita un alquiler. ✅
 - DELETE - [/properties/:idProperty] - Borrar un alquiler.✅
 - DELETE - [/properties/:idProperty/photos/:idPhoto] - Eliminar una foto del alquiler.✅
+>>>>>>> origin
 
 ## Endpoints del usuario
 
