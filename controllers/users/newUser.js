@@ -28,6 +28,7 @@ const newUser = async (req, res, next) => {
 
     // Obtenemos los campos necesarios.
     const { name, lastName, email, password, bio, city, birthDate } = req.body;
+
     // Comprobamos que no faltan campos a rellenar.
     if (
       !name ||
@@ -42,6 +43,7 @@ const newUser = async (req, res, next) => {
       error.httpStatus = 400;
       throw error;
     }
+
     // Comprobamos si el email existe en la base de datos.
     const [user] = await connection.query(
       `SELECT idUser FROM users WHERE email = ?`,

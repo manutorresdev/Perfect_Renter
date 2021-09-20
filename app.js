@@ -32,19 +32,18 @@ const authUser = require('./libs/middlewares/authUser');
 
 /**
  * #######################
- * ## property CONTROLLERS ##
+ * ## PROPERTYS CONTROLLERS ##
  * #######################
  */
 const {
   addPropertyPhoto,
   contactProperty,
-} = require('./controllers/property/index');
-
-const { newProperty } = require('./controllers/property');
+  newProperty,
+} = require('./controllers/properties/index');
 
 /**
  * #####################
- * ## property ENDPOINTS ##
+ * ## PROPERTIIES ENDPOINTS ##
  * #####################
  */
 
@@ -65,9 +64,9 @@ app.post('/property', authUser, newProperty);
  * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
  *
  */
-app.post('/property/:idProperty/photos', addPropertyPhoto);
+app.post('/properties/:idProperty/photos', addPropertyPhoto);
 
-app.post('/property/:idProperty/contact', authUser, contactProperty);
+app.post('/properties/:idProperty/contact', authUser, contactProperty);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -229,7 +228,7 @@ app.put('/users/:idUser/', authUser, userExists, editUser);
  */
 app.delete('/users/:idUser', authUser, userExists, deleteUser);
 
-app.post('/users/:idUser/contact', authUser, contactUser);
+app.post('/users/:idUser/contact', authUser, userExists, contactUser);
 /**
  * ####################
  * ## ERROR LISTENER ##

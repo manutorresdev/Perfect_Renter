@@ -22,19 +22,19 @@ const contactProperty = async (req, res, next) => {
     let { name, lastName, email, tel, comentarios } = req.body;
 
     // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
-    const [Property] = await connection.query(
+    const [property] = await connection.query(
       `
-      SELECT photos.name,property.city, users.name AS ownerName, property.idUser, users.email
-      FROM property
-      LEFT JOIN photos ON property.idProperty = photos.idProperty
-      LEFT JOIN users ON users.idUser = property.idUser
-      WHERE property.idProperty = ?
+      SELECT photos.name,properties.city, users.name AS ownerName, properties.idUser, users.email
+      FROM properties
+      LEFT JOIN photos ON properties.idProperty = photos.idProperty
+      LEFT JOIN users ON users.idUser = properties.idUser
+      WHERE properties.idProperty = ?
         `,
       [idProperty]
     );
-
+    console.log(property);
     // Si el usuario es el dueño de la vivienda, lanzamos error.
-    if (req.userAuth.idUser === Number(Property[0].idUser)) {
+    if (req.userAuth.idUser === Number(property[0].idUser)) {
       const error = new Error(
         'No puedes contactar con una vivienda de tu propiedad.'
       );
@@ -93,8 +93,8 @@ const contactProperty = async (req, res, next) => {
     <table>
       <tbody>
         <td>
-          Hola ${Property[0].ownerName},
-          un inquilino está interesado en tu vivienda de ${Property[0].city}.
+          Hola ${property[0].ownerName},
+          un inquilino está interesado en tu vivienda de ${property[0].city}.
           <br/>
           Datos del inquilino:
           <ul>
@@ -113,7 +113,7 @@ const contactProperty = async (req, res, next) => {
 
     // Enviamos el correo del usuario que contacta, al usuario a contactar.
     await sendMail({
-      to: Property[0].email,
+      to: property[0].email,
       subject: 'Solicitud de alquiler',
       body: emailBody,
     });

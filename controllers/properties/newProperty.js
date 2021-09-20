@@ -2,7 +2,7 @@
 const getDB = require('../../config/getDB');
 const { formatDate, validate } = require('../../libs/helpers');
 
-const propertychema = require('../../models/propertychema');
+const propertySchema = require('../../models/propertySchema');
 /**
  * @module property
  */
@@ -19,20 +19,22 @@ const newProperty = async (req, res, next) => {
     connection = await getDB();
 
     // Validamos los datos recibidos.
-    await validate(propertychema, req.body);
+    await validate(propertySchema, req.body);
 
     // Obtenemos los campos necesarios.
     const {
       city,
       province,
       address,
-      edifice,
+      zipCode,
+      number,
+      type,
       stair,
-      Property,
+      flat,
       gate,
-      duplex,
       mts,
       bedrooms,
+      garage,
       terrace,
       toilets,
       energyCertificate,
@@ -46,7 +48,9 @@ const newProperty = async (req, res, next) => {
       !city ||
       !province ||
       !address ||
-      !edifice ||
+      !number ||
+      !type ||
+      !zipCode ||
       !mts ||
       !bedrooms ||
       !price ||
@@ -56,50 +60,68 @@ const newProperty = async (req, res, next) => {
       error.httpStatus = 400;
       throw error;
     }
-    // Comprobamos si el email existe en la base de datos.
-    const [rent] = await connection.query(
-      `SELECT idProperty FROM property WHERE city = ? AND province = ? AND address = ? AND edifice = ? AND stair = ? AND Property = ? AND gate = ?`,
-      [city, province, address, edifice, stair, Property, gate]
-    );
 
-    // Si el email existe lanzamos un error.
-    if (rent.length > 0) {
-      const error = new Error('Ya existe un piso');
-      error.httpStatus = 409;
-      throw error;
+    // Comprobamos si el piso ya existe en la base de datos.
+    if (!gate) {
+      const [rent] = await connection.query(
+        `SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate is null`,
+        [city, province, address, number, type, zipCode, stair, flat]
+      );
+      // Si el email existe lanzamos un error.
+      if (rent.length > 0) {
+        const error = new Error('Ya existe un piso con los datos ingresados');
+        error.httpStatus = 409;
+        throw error;
+      }
+    } else {
+      const [rent] = await connection.query(
+        `SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate = ?`,
+        [city, province, address, number, type, zipCode, stair, flat, gate]
+      );
+      // Si el email existe lanzamos un error.
+      if (rent.length > 0) {
+        const error = new Error('Ya existe un piso con los datos ingresados');
+        error.httpStatus = 409;
+        throw error;
+      }
     }
-
+    const userId = req.userAuth.idUser;
     // Guardamos al usuario en la base de datos junto al código de registro.
     await connection.query(
-      `INSERT INTO property (idUser, 
-        city,
-        province,
-        address,
-        edifice,
-        stair,
-        Property,
-        gate,
-        duplex,
-        mts,
-        bedrooms,
-        terrace,
-        toilets,
-        energyCertificate,
-        availabilityDate,
-        price,
-        estate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO properties (
+      idUser, 
+      city,
+      province,
+      address,
+      zipCode,
+      number,
+      type,
+      stair,
+      flat,
+      gate,
+      mts,
+      bedrooms,
+      garage,
+      terrace,
+      toilets,
+      energyCertificate,
+      availabilityDate,
+      price,
+      estate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        req.userAuth.idUser,
+        userId,
         city,
         province,
         address,
-        edifice,
+        zipCode,
+        number,
+        type,
         stair,
-        Property,
+        flat,
         gate,
-        duplex,
         mts,
         bedrooms,
+        garage,
         terrace,
         toilets,
         energyCertificate,

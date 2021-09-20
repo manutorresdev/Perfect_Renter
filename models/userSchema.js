@@ -55,7 +55,7 @@ const userSchema = Joi.object().keys({
 
       return new Error('El nombre no es válido.');
     }),
-  lastname: Joi.string()
+  lastName: Joi.string()
     .required()
     .alphanum()
     .min(3)
@@ -120,7 +120,7 @@ const editUserSchema = Joi.object().keys({
 
       return new Error('El nombre no es válido.');
     }),
-  lastname: Joi.string()
+  lastName: Joi.string()
     .alphanum()
     .min(3)
     .max(30)

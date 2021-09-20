@@ -19,7 +19,7 @@ async function main() {
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
     await connection.query('DROP TABLE IF EXISTS history');
-    await connection.query('DROP TABLE IF EXISTS property');
+    await connection.query('DROP TABLE IF EXISTS properties');
     await connection.query('DROP TABLE IF EXISTS users');
 
     console.log('Tablas Eliminadas');
@@ -51,18 +51,18 @@ async function main() {
 
     // Creamos la tabla property  "Pisos en alquiler"
     await connection.query(`
-        CREATE TABLE property(
+        CREATE TABLE properties(
             idProperty INT PRIMARY KEY AUTO_INCREMENT,
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
             city VARCHAR(100),
             province VARCHAR(100),
             address VARCHAR(100),
-            zipCode TINYINT,
+            zipCode VARCHAR(5),
             number INT,
-            type ENUM("duplex","casa","piso")
+            type ENUM("duplex","casa","piso"),
             stair VARCHAR(50),
-            Property INT,
+            flat INT,
             gate VARCHAR(20),
             mts DECIMAL(5,2),
             bedrooms INT,
@@ -99,7 +99,7 @@ async function main() {
         CREATE TABLE photos (
             idPhoto INT PRIMARY KEY AUTO_INCREMENT,
             idProperty INT NOT NULL,
-            FOREIGN KEY (idProperty) REFERENCES property(idProperty),
+            FOREIGN KEY (idProperty) REFERENCES properties(idProperty),
             name VARCHAR(100),
             createdAt DATETIME NOT NULL
         )
@@ -109,7 +109,7 @@ async function main() {
 
     // Insertar el usuario administrador.
     await connection.query(`
-    INSERT INTO users (name, lastName, tel, email, password, role, createdAt, city, birthDate)
+    INSERT INTO users ( name, lastName, tel, email, password, role, createdAt, city, birthDate)
     VALUES (
         "david",
         "losas",
