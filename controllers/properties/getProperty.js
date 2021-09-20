@@ -5,7 +5,7 @@ const getDB = require('../../config/getDB');
 /**
  * Middleware para listar una propiedad en concreto
  * @param {*} req Se encuentra el id de la propiedad a obtener información en los path params
- * @param {*} res Como respuesta, obtienes un objeto con los datos de la propiedad si existe o mensaje si no se encuentra.
+ * @param {*} res Como respuesta, obtienes un objeto con los datos de la propiedad si existe o mensaje si no se encuentra
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  * @returns {Promise} Devuelve un objeto con los datos
  */
@@ -19,9 +19,9 @@ const getProperty = async (req, res, next) => {
 
     //Obtenemos los datos de la propiedad
     const [property] = await connection.query(
-      `     SELECT 
+      `     SELECT
             idProperty,
-            idUser, 
+            idUser,
             city,
             province,
             address,
@@ -43,18 +43,10 @@ const getProperty = async (req, res, next) => {
       [idProperty]
     );
 
-    //Validamos que la propiedad exista y si existe la retornamos.
-    if (property.length === 0) {
-      res.send({
-        status: 'ok',
-        message: 'La propiedad no existe',
-      });
-    } else {
-      res.send({
-        status: 'ok',
-        property,
-      });
-    }
+    res.send({
+      status: 'ok',
+      property,
+    });
   } catch (error) {
     next(error);
   } finally {

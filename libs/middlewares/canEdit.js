@@ -26,6 +26,8 @@ const canEdit = async (req, res, next) => {
     `,
       [idProperty]
     );
+
+    console.log(owner[0]);
     // Comparamos los id y si son diferentes lanzamos error ó si el usuario no es admin y no coinciden también.
     if (
       owner[0].idUser !== req.userAuth.idUser &&

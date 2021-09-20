@@ -65,14 +65,14 @@ async function main() {
             flat INT,
             gate VARCHAR(20),
             mts DECIMAL(5,2),
-            bedrooms INT,
+            rooms INT,
             garage BOOLEAN,
             terrace BOOLEAN,
             toilets INT,
             energyCertificate BOOLEAN,
             availabilityDate DATE,
             price DECIMAL(6,2),
-            estate ENUM("reservado", "alquilado", "disponible"),
+            state ENUM("reservado", "alquilado", "disponible"),
             modifiedAt DATETIME,
             createdAt DATETIME NOT NULL
         )
@@ -81,22 +81,43 @@ async function main() {
     // Creamos la tabla votes.
     //   ---idVoted hace referencia a quien esta siendo calificado.
     //   ---idUser hace referencia a quien realiza el voto.
-
     await connection.query(`
         CREATE TABLE votes (
             idVote INT PRIMARY KEY AUTO_INCREMENT,
-            vote TINYINT NOT NULL,
-            comment VARCHAR(250),
+            voteValue TINYINT NOT NULL DEFAULT 3,
+            voteValueRenter TINYINT NOT NULL DEFAULT 3,
+            commentProperty VARCHAR(250),
+            commentRenter VARCHAR(250),
             idVoted INT,
-            FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
+            FOREIGN KEY (idVoted) REFERENCES users(idUser) ON DELETE CASCADE,
             idProperty INT,
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser),
-            CONSTRAINT votes_CK1 CHECK (vote IN(1, 2, 3, 4, 5)),
-            createdAt DATETIME NOT NULL
+            CONSTRAINT votes_CK1 CHECK (voteValue IN(1, 2, 3, 4, 5)),
+            createdAt DATETIME NOT NULL,
+            modifiedAt DATETIME
         )
     `);
 
+    // Creamos la tabla de reservas.
+    await connection.query(`
+        CREATE TABLE bookings (
+            idBooking INT PRIMARY KEY AUTO_INCREMENT,
+            idRenter INT,
+            FOREIGN KEY (idRenter) REFERENCES users(idUser) ON DELETE CASCADE,
+            idTenant INT,
+            FOREIGN KEY (idTenant) REFERENCES users(idUser) ON DELETE CASCADE,
+            idProperty INT,
+            FOREIGN KEY (idProperty) REFERENCES properties(idProperty) ON DELETE CASCADE,
+            createdAt DATETIME NOT NULL,
+            startBookingDate DATE,
+            endBookingDate DATE,
+            state ENUM("reservado", "alquilado", "finalizado", "peticion") NOT NULL DEFAULT "peticion",
+            bookingCode VARCHAR(20)
+            )
+    `);
+
+    // Creamos la tabla fotos
     await connection.query(`
         CREATE TABLE photos (
             idPhoto INT PRIMARY KEY AUTO_INCREMENT,

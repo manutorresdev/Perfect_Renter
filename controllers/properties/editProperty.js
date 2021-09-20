@@ -44,7 +44,7 @@ const editProperty = async (req, res, next) => {
       energyCertificate,
       availabilityDate,
       price,
-      estate,
+      state: state,
     } = req.body;
 
     // Obtenemos los datos de la vivienda a editar.
@@ -56,7 +56,6 @@ const editProperty = async (req, res, next) => {
       [idProperty]
     );
 
-    console.log(property);
     let validateData;
 
     // Obtenemos la fecha de modificación.
@@ -435,19 +434,19 @@ const editProperty = async (req, res, next) => {
       );
     }
     /**
-     * ############
-     * ## ESTATE ##
-     * ############
+     * ###########
+     * ## STATE ##
+     * ###########
      *
      * Actualizamos el estado de la vivienda.
      *
      */
-    if (estate && property[0].estate !== estate) {
+    if (state && property[0].state !== state) {
       // Validamos que el tipo sea los especificados en la base de datos. Si no, lanzamos error.
       if (
-        estate !== 'reservado' &&
-        estate !== 'alquilado' &&
-        estate !== 'disponible'
+        state !== 'reservado' &&
+        state !== 'alquilado' &&
+        state !== 'disponible'
       ) {
         const error = new Error('El estado de la vivienda no es válido.');
         error.httpStatus = 403;
@@ -456,8 +455,8 @@ const editProperty = async (req, res, next) => {
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET estate = ?, modifiedAt = ? WHERE idProperty = ?`,
-        [estate, modifiedAt, idProperty]
+        `UPDATE properties SET state = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [state, modifiedAt, idProperty]
       );
     }
     res.send({

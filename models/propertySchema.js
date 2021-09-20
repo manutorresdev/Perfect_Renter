@@ -39,7 +39,6 @@ const editPropertySchema = Joi.object({
   city: Joi.string(),
   estate: Joi.string(),
 });
-
 module.exports = {
   propertySchema,
   editPropertySchema,

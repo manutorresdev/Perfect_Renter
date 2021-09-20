@@ -38,11 +38,10 @@ const newProperty = async (req, res, next) => {
       terrace,
       toilets,
       energyCertificate,
-      availabilityDate,
       price,
       estate,
     } = req.body;
-    console.log(req.userAuth);
+
     // Comprobamos que no faltan campos a rellenar.
     if (
       !city ||
@@ -63,51 +62,58 @@ const newProperty = async (req, res, next) => {
 
     // Comprobamos si el piso ya existe en la base de datos.
     if (!gate) {
-      const [rent] = await connection.query(
+      const [property] = await connection.query(
         `SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate is null`,
         [city, province, address, number, type, zipCode, stair, flat]
       );
-      // Si el email existe lanzamos un error.
-      if (rent.length > 0) {
+      // Si el inmueble ya existe lanzamos un error.
+      if (property.length > 0) {
         const error = new Error('Ya existe un piso con los datos ingresados');
         error.httpStatus = 409;
         throw error;
       }
     } else {
-      const [rent] = await connection.query(
+      const [property] = await connection.query(
         `SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate = ?`,
         [city, province, address, number, type, zipCode, stair, flat, gate]
       );
-      // Si el email existe lanzamos un error.
-      if (rent.length > 0) {
+      // Si el inmueble ya existe lanzamos un error.
+      if (property.length > 0) {
         const error = new Error('Ya existe un piso con los datos ingresados');
         error.httpStatus = 409;
         throw error;
       }
     }
     const userId = req.userAuth.idUser;
-    // Guardamos al usuario en la base de datos junto al código de registro.
+
+    // Generamos la fecha de creación
+    const createdAt = formatDate(new Date());
+
+    // Guardamos la propiedad en la base de datos.
     await connection.query(
       `INSERT INTO properties (
-      idUser, 
-      city,
-      province,
-      address,
-      zipCode,
-      number,
-      type,
-      stair,
-      flat,
-      gate,
-      mts,
-      bedrooms,
-      garage,
-      terrace,
-      toilets,
-      energyCertificate,
-      availabilityDate,
-      price,
-      estate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        idUser,
+        city,
+        province,
+        address,
+        zipCode,
+        number,
+        type,
+        stair,
+        flat,
+        gate,
+        mts,
+        bedrooms,
+        garage,
+        terrace,
+        toilets,
+        energyCertificate,
+        availabilityDate,
+        price,
+        estate,
+        createdAt
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
         city,
@@ -128,9 +134,38 @@ const newProperty = async (req, res, next) => {
         formatDate(new Date()),
         price,
         estate,
+        createdAt,
       ]
     );
 
+    // Comprobamos si hay fotos y las subimos
+    if (req.files && req.files.photo) {
+      const [property] = await connection.query(
+        `
+      SELECT idProperty FROM properties WHERE idUser = ? AND createdAt = ?
+      `,
+        [userId, createdAt]
+      );
+
+      // Recorremos las fotos recibidas para subirlas, solo cogemos 30.
+      for (const photo of Object.values(req.files).slice(0, 29)) {
+        let photoName;
+        try {
+          photoName = await savePhoto(photo);
+        } catch (_) {
+          const error = new Error('Formato incorrecto');
+          error.httpStatus = 400;
+          throw error;
+        }
+        await connection.query(
+          `
+          INSERT INTO photos (name,idProperty,createdAt)
+          VALUES (?,?,?)
+          `,
+          [photoName, property[0].idProperty, createdAt]
+        );
+      }
+    }
     res.send({
       status: 'ok',
       message: 'El piso se ha creado correctamente',

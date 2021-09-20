@@ -56,8 +56,6 @@ const listProperties = async (req, res, next) => {
     const toilets = filtToilets ? filtToilets : 1;
     const mts = filtMts ? filtMts : 0;
 
-    let properties;
-
     // Obtenemos los datos de todas las propiedades
     // Filtrado por fecha de creación.
     console.log(
@@ -71,9 +69,9 @@ const listProperties = async (req, res, next) => {
       toilets,
       mts
     );
-    [properties] = await connection.query(
+    const [properties] = await connection.query(
       `SELECT properties.idProperty,
-        properties.idUser, 
+        properties.idUser,
         city,
         province,
         address,
@@ -94,7 +92,7 @@ const listProperties = async (req, res, next) => {
         estate, AVG(IFNULL(property_vote.vote, 0)) AS votes, properties.createdAt
         FROM properties
         LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
-        WHERE city LIKE ? AND province LIKE ? AND "type" LIKE ? AND (price BETWEEN ? 
+        WHERE city LIKE ? AND province LIKE ? AND "type" LIKE ? AND (price BETWEEN ?
         AND ?) AND bedrooms >= ? AND garage >= ? AND toilets >= ?  AND mts >= ?
         group by properties.idProperty
         ORDER BY properties.${orderBy} ${orderDirection}

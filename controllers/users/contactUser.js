@@ -51,9 +51,6 @@ const contactUser = async (req, res, next) => {
       [req.userAuth.idUser]
     );
 
-    console.log(contactUser);
-    console.log(user);
-
     // Definimos el body del email
     const emailBody = `
     <table>
