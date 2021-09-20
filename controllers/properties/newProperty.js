@@ -2,7 +2,7 @@
 const getDB = require('../../config/getDB');
 const { formatDate, validate } = require('../../libs/helpers');
 
-const propertySchema = require('../../models/propertySchema');
+const { propertySchema } = require('../../models/propertySchema');
 /**
  * @module property
  */

@@ -16,46 +16,50 @@ const addPropertyPhoto = async (req, res, next) => {
   try {
     connection = await getDB();
 
-    //obtenemos id del inmueble
+    // Obtenemos id del inmueble
     const { idProperty } = req.params;
 
-    //si no recibimos foto lanzamos error
+    // Si no recibimos foto lanzamos error
     if (!req.files || !req.files.photo) {
       const error = new Error('No se ha encontrado el archivo');
       error.httpStatus = 400;
       throw error;
     }
 
-    //comprobamos las fotos de la entrada
-    const [photos] = await connection.query(
-      `SELECT idPhoto FROM photos where idProperty = ?`,
-      [idProperty]
-    );
-    //si hay 10 fotos lanzamos error
-    if (photos.length >= 10) {
-      const error = new Error('Esta entrada ya tiene diez fotos');
-      error.httpStatus = 403;
-      throw error;
-    }
+    for (const photo of Object.values(req.files)) {
+      // Obtenemos la cantidad de fotos que tiene esa propiedad.
+      const [photos] = await connection.query(
+        `
+      SELECT idPhoto FROM photos WHERE idProperty = ?
+      `,
+        [idProperty]
+      );
 
-    let photoName;
-    try {
-      //guardamos la foto en el servidor y obtenemos el nombre de la misma
-      photoName = await savePhoto(req.files.photo);
-    } catch (_) {
-      const error = new Error('Formato de archivo incorrecto');
-      error.httpStatus = 400;
-      throw error;
+      // Comprobamos que no haya más de 30 fotos.
+      if (photos.length > 29) {
+        const error = new Error('Solo puedes subir un máximo de 30 fotos.');
+        error.httpStatus = 403;
+        throw error;
+      }
+      let photoName;
+      try {
+        photoName = await savePhoto(photo);
+      } catch (_) {
+        const error = new Error('Formato incorrecto');
+        error.httpStatus = 400;
+        throw error;
+      }
+      await connection.query(
+        `
+      INSERT INTO photos (name,idProperty,createdAt)
+      VALUES (?,?,?)
+      `,
+        [photoName, idProperty, formatDate(new Date())]
+      );
     }
-
-    //guardamos foto
-    await connection.query(
-      `INSERT INTO photos (name, idProperty, createdAt) VALUES (?, ?, ?)`,
-      [photoName, idProperty, formatDate(new Date())]
-    );
     res.send({
       status: 'ok',
-      message: 'La foto ha sido guardada',
+      message: 'Las fotos han sido subidas',
     });
   } catch (error) {
     next(error);

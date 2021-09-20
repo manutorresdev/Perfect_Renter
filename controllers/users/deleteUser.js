@@ -51,11 +51,38 @@ const deleteUser = async (req, res, next) => {
       [idUser]
     );
 
-    // Si el usuario tiene avatar lo borramos del disco
+    // Si el usuario tiene avatar lo borramos del servidor
     if (user[0].avatar) {
       await deletePhoto(user[0].avatar);
     }
 
+    // Si el usuario tiene inmuebles en su perfil, los eliminamos.
+    const [properties] = await connection.query(
+      `
+    SELECT idProperty FROM properties WHERE idUser = ?
+    `,
+      [idUser]
+    );
+
+    if (properties.length > 0) {
+      // Obtenemos el nombre de las fotos
+      const [photos] = await connection.query(
+        `SELECT name FROM photos WHERE idProperty = ?`,
+        [properties[0].idProperty]
+      );
+      // Eliminamos las fotos del servidor y la base de datos.
+      for (const photo of photos) {
+        deletePhoto(photo.name);
+      }
+
+      // Eliminamos la propiedad de la base de datos.
+      await connection.query(
+        `
+      DELETE FROM properties WHERE idProperty = ?
+      `,
+        [idProperty]
+      );
+    }
     // Anonimizamos al usuario
     await connection.query(
       `UPDATE users SET password = ?, name = "[deleted]",lastName = "[deleted]",tel = "[deleted]", avatar = NULL, renterActive = false, deleted = true, bio = "[deleted]", city = "[deleted]", birthDate = ? , modifiedAt = ? WHERE idUser = ?`,

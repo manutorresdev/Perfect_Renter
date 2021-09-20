@@ -72,7 +72,9 @@ async function main() {
             energyCertificate BOOLEAN,
             availabilityDate DATE,
             price DECIMAL(6,2),
-            estate ENUM("reservado", "alquilado", "disponible")
+            estate ENUM("reservado", "alquilado", "disponible"),
+            modifiedAt DATETIME,
+            createdAt DATETIME NOT NULL
         )
     `);
 
@@ -99,7 +101,7 @@ async function main() {
         CREATE TABLE photos (
             idPhoto INT PRIMARY KEY AUTO_INCREMENT,
             idProperty INT NOT NULL,
-            FOREIGN KEY (idProperty) REFERENCES properties(idProperty),
+            FOREIGN KEY (idProperty) REFERENCES properties(idProperty) ON DELETE CASCADE,
             name VARCHAR(100),
             createdAt DATETIME NOT NULL
         )
