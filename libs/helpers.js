@@ -140,11 +140,12 @@ async function deletePhoto(photoName) {
  */
 /**
  * Función que genera un UUID.
- * @param {number} lenght Cantidad de carácteres.
+ * @param {number} length Cantidad de carácteres.
  * @returns {string} Devuelve un UUID
  */
-function generateRandomString(lenght) {
-  return crypto.randomBytes(lenght).toString('hex');
+function generateRandomString(length) {
+  console.log(`Length del randomString ${length}`);
+  return crypto.randomBytes(length).toString('hex');
 }
 
 /**

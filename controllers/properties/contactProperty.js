@@ -1,6 +1,10 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-const { sendMail } = require('../../libs/helpers');
+const {
+  sendMail,
+  generateRandomString,
+  formatDate,
+} = require('../../libs/helpers');
 /**
  * @module Entries
  */
@@ -15,81 +19,127 @@ const contactProperty = async (req, res, next) => {
   try {
     connection = await getDB();
 
-    // Obtenemos el id la vivienda a contactar.
+    // Obtenemos el id de la vivienda a contactar.
     const { idProperty } = req.params;
 
+    // Obtenemos el id del usuario que contacta.
+    const { idUser: idReqUser } = req.userAuth;
+
     // Obtenemos los datos del usuario que contacta.
-    let { name, lastName, email, tel, comentarios } = req.body;
+    let { name, lastName, email, tel, comentarios, startDate, endDate } =
+      req.body;
 
     // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
     const [property] = await connection.query(
       `
-      SELECT photos.name,properties.city, users.name AS ownerName, properties.idUser, users.email
-      FROM properties
-      LEFT JOIN photos ON properties.idProperty = photos.idProperty
-      LEFT JOIN users ON users.idUser = properties.idUser
-      WHERE properties.idProperty = ?
+        SELECT photos.name,properties.city, users.name AS ownerName, properties.idUser, users.email
+        FROM properties
+        LEFT JOIN photos ON properties.idProperty = photos.idProperty
+        LEFT JOIN users ON users.idUser = properties.idUser
+        WHERE properties.idProperty = ?
         `,
       [idProperty]
     );
-    console.log(property);
-    // Si el usuario es el dueño de la vivienda, lanzamos error.
-    if (req.userAuth.idUser === Number(property[0].idUser)) {
-      const error = new Error(
-        'No puedes contactar con una vivienda de tu propiedad.'
-      );
-      error.httpStatus = 403;
-      throw error;
-    }
 
-    // Seleccionamos el nombre completo, el email, el teléfono del usuario que contacta. (PARA EL FRONTEND)
-    const [contactUser] = await connection.query(
+    // Comprobamos que no haya una solicitud en proceso de aceptar.
+    const [petition] = await connection.query(
       `
-      SELECT name,lastName,tel,email FROM users WHERE idUser = ?
-      `,
-      [req.userAuth.idUser]
+        SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ?
+        `,
+      [idReqUser, property[0].idUser, idProperty]
     );
 
-    console.log(contactUser);
+    // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
+    if (petition.length > 0) {
+      res.send({
+        status: 'ok',
+        Estado_de_la_peticion: `${petition[0].state}`,
+        message:
+          'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.',
+      });
+    } else {
+      // Si el usuario es el dueño de la vivienda, lanzamos error.
+      if (idReqUser === Number(property[0].idUser)) {
+        const error = new Error(
+          'No puedes contactar con una vivienda de tu propiedad.'
+        );
+        error.httpStatus = 403;
+        throw error;
+      }
 
-    // Comprobamos que los campos obligatorios tengan contenido.
-    if (!name) {
-      name = contactUser[0].name;
-      if (!name) {
-        const error = new Error('Falta el nombre.');
-        error.httpStatus = 400;
-        throw error;
-      }
-    }
-    if (!lastName) {
-      lastName = contactUser[0].lastName;
-      if (!lastName) {
-        const error = new Error('Falta el apellido.');
-        error.httpStatus = 400;
-        throw error;
-      }
-    }
-    if (!email) {
-      email = contactUser[0].email;
-      if (!email) {
-        const error = new Error('Falta el email.');
-        error.httpStatus = 400;
-        throw error;
-      }
-    }
-    if (!tel) {
-      tel = contactUser[0].tel;
-      if (!tel) {
-        tel = 'No especificado.';
-      }
-    }
-    if (!comentarios) {
-      const error = new Error(
-        'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
+      // Seleccionamos el nombre completo, el email, el teléfono del usuario que contacta. (PARA EL FRONTEND)
+      const [contactUser] = await connection.query(
+        `
+      SELECT name,lastName,tel,email FROM users WHERE idUser = ?
+      `,
+        [idReqUser]
       );
-    }
-    // Definimos el body del email
-    const emailBody = `
+
+      // Comprobamos que los campos obligatorios tengan contenido.
+      if (!name) {
+        name = contactUser[0].name;
+        if (!name) {
+          const error = new Error('Falta el nombre.');
+          error.httpStatus = 400;
+          throw error;
+        }
+      }
+      if (!lastName) {
+        lastName = contactUser[0].lastName;
+        if (!lastName) {
+          const error = new Error('Falta el apellido.');
+          error.httpStatus = 400;
+          throw error;
+        }
+      }
+      if (!email) {
+        email = contactUser[0].email;
+        if (!email) {
+          const error = new Error('Falta el email.');
+          error.httpStatus = 400;
+          throw error;
+        }
+      }
+      if (!tel) {
+        tel = contactUser[0].tel;
+        if (!tel) {
+          tel = 'No especificado.';
+        }
+      }
+      if (!comentarios) {
+        const error = new Error(
+          'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
+        );
+        error.httpStatus = 400;
+        throw error;
+      }
+
+      // Si la fecha reservada es menor a la fecha actual, lanzamos error.
+      if (
+        new Date(startDate).getMilliseconds < new Date().getMilliseconds ||
+        new Date(endDate).getMilliseconds < new Date().getMilliseconds
+      ) {
+        const error = new Error('No puedes reservar en el pasado.');
+        error.httpStatus = 403;
+        throw error;
+      }
+
+      // Si la fecha end es menor a la fecha start, lanzamos error.
+      if (
+        new Date(endDate).getMilliseconds < new Date(startDate).getMilliseconds
+      ) {
+        const error = new Error(
+          'Hay un error en las fechas, la fecha reservada debe ser posterior a la fecha actual.'
+        );
+        error.httpStatus = 403;
+        throw error;
+      }
+
+      // Generamos el codigo de reserva,
+      const bookingCode = generateRandomString(10);
+      console.log(`Este es el length del random ${bookingCode.length}`);
+      // Definimos el body del email
+      const emailBody = `
     <table>
       <tbody>
         <td>
@@ -103,30 +153,62 @@ const contactProperty = async (req, res, next) => {
             <li><b>Teléfono:</b> ${tel}</li>
           </ul>
           <br/>
+          <b>Información adicional:</b>
           ${comentarios}
-          <br/>
-            Tienes a tu disposición el teléfono y el correo electrónico del interesado si deseas responder.
-        </td>
       </tbody>
+      <tbody>
+          <td>
+            <br/>
+            Tienes a tu disposición el teléfono y el correo electrónico del interesado si deseas responder.
+            <br/>
+            Si quieres aceptar su solicitud de reserva, pulsa en el botón de aceptar reserva.
+            <br/>
+            Si por el contrario no está interesado, pulse el botón de cancelar.
+          </td>
+      </tbody>
+      <tfoot>
+        <th>
+            <button>
+              <a href="http://localhost:4000/properties/${idProperty}/${bookingCode}"
+            >ACEPTAR RESERVA</a></button>
+            <span><span/>
+            <span><span/>
+            <button>
+              <a href="http://localhost:4000/properties/${idProperty}/${bookingCode}/cancel"
+            >CANCELAR RESERVA</a></button>
+        </th>
+      </tfoot>
     </table>
     `;
 
-    // Enviamos el correo del usuario que contacta, al usuario a contactar.
-    await sendMail({
-      to: property[0].email,
-      subject: 'Solicitud de alquiler',
-      body: emailBody,
-    });
-    // Enviamos el correo del usuario que contacta, al usuario a contactar.
-    await sendMail({
-      to: email,
-      subject: '[COPIA] Solicitud de alquiler',
-      body: emailBody,
-    });
-    res.send({
-      status: 'ok',
-      message: 'Correo electrónico enviado con éxito.',
-    });
+      // Enviamos el correo del usuario que contacta, al usuario a contactar.
+      await sendMail({
+        to: property[0].email,
+        subject: 'Solicitud de alquiler',
+        body: emailBody,
+      });
+
+      // Agregamos el código de reserva en la base de datos junto a la posible reserva.
+      await connection.query(
+        `
+      INSERT INTO bookings(bookingCode, idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
+      `,
+        [
+          bookingCode,
+          idReqUser,
+          property[0].idUser,
+          formatDate(new Date()),
+          idProperty,
+          startDate,
+          endDate,
+        ]
+      );
+
+      res.send({
+        status: 'ok',
+        message: 'Correo electrónico enviado con éxito.',
+      });
+    }
   } catch (error) {
     next(error);
   } finally {

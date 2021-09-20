@@ -19,10 +19,10 @@ const listBookedProperties = async (req, res, next) => {
     const { idUser } = req.params;
 
     // Obtenemos el id del usuario que hace la request
-    const idReqUser = req.userAuth.id;
+    const idReqUser = req.userAuth.idUser;
 
     // Comprobamos que el usuario logueado es el dueño del usuario a listar reservas
-    if (idUser !== idReqUser) {
+    if (Number(idUser) !== idReqUser) {
       const error = new Error('No tienes permisos.');
       error.httpStatus = 403;
       throw error;
@@ -31,18 +31,27 @@ const listBookedProperties = async (req, res, next) => {
     // Obtenemos los alquileres en reserva o alquilados actualmente del usuario
     const [bookedProperties] = await connection.query(
       `
-            SELECT city, province, type, mts, price FROM properties
-            LEFT JOIN votes ON properties.idProperty = votes.idProperty
-            WHERE votes.idUser = ? AND (votes.estate = "reservado" OR votes.estate = "alquilado")
-        `,
+      SELECT city, province, type, mts, price, bookings.state FROM properties
+      LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
+      WHERE bookings.idRenter = ? AND (bookings.state = "reservado" OR bookings.state = "alquilado");
+      `,
       [idUser]
     );
 
-    console.log(bookedProperties);
+    // Seleccionamos las reservas en petición.
+    const [petitionProterties] = await connection.query(
+      `
+    SELECT city, province, type, mts, price, bookings.state FROM properties
+    LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
+    WHERE bookings.idRenter = ? AND (bookings.state = "peticion");
+    `,
+      [idReqUser]
+    );
 
     res.send({
       status: 'ok',
-      bookedProperties,
+      Alquileres_reservados: bookedProperties,
+      Peticiones_en_proceso: petitionProterties,
     });
   } catch (error) {
     next(error);

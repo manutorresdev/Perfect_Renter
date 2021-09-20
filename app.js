@@ -181,6 +181,7 @@ const {
   listUsers,
   editUser,
   contactUser,
+  listBookedProperties,
 } = require('./controllers/users/index');
 
 /**
@@ -352,6 +353,20 @@ app.post('/users/:idUser/contact', authUser, userExists, contactUser);
  *
  */
 app.post('/users/:idUser/votes', authUser, userExists, newVote);
+/**
+ * Votar un usuario
+ *
+ * @name listBookedProperties
+ * @path {GET} /users/:idUser/bookings
+ * @params {number} idUser Número del usuario del que se quiere visualizar las reservas
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {403} Si no se tienen los permisos suficientes
+ * @response {Object} Response Lista de los alquileres reservados/alquilados
+ *
+ */
+app.get('/users/:idUser/bookings', authUser, listBookedProperties);
 /**
  * ####################
  * ## ERROR LISTENER ##
