@@ -7,7 +7,7 @@ const { deletePhoto } = require('../../libs/helpers');
 /**
  * Middleware para eliminar una foto de un alquiler
  * @param {*} req Como "requests", se requiere el id del usuario que solicita la petición y el id de la foto que se quiere eliminar
- * @param {*} res El servidor lanza como respuesta que la foto ha sido eliminado
+ * @param {*} res El servidor lanza como respuesta que la foto ha sido eliminada
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const deletePropertyPhoto = async (req, res, next) => {
@@ -15,29 +15,30 @@ const deletePropertyPhoto = async (req, res, next) => {
 
   try {
     connection = await getDB();
-    //obtener id de la propiedad y de la photo
+
+    // Se obteniene id de la propiedad y de la photo
     const { idProperty } = req.params;
     const { idPhoto } = req.params;
 
-    //comprobamos que la foto existe
+    // Comprobamos que la foto existe
 
     const [photo] = await connection.query(
       `SELECT name FROM photos WHERE idPhoto = ? AND idProperty = ?`,
       [idPhoto, idProperty]
     );
 
-    // Si la foto no existe lanzamos un error.
+    // Si la foto no existe, lanzamos un error
     if (photo.length < 1) {
       const error = new Error('La foto no existe');
       error.httpStatus = 404;
       throw error;
     }
 
-    //Borar la foto del servidor con la función deletePhoto de helpers
+    // Borramos la foto del servidor con la función deletePhoto de helpers
 
     await deletePhoto(photo[0].name);
 
-    //Borramos la foto de la base de datos.
+    // Borramos la foto de la base de datos
 
     await connection.query(
       `DELETE FROM photos WHERE idPhoto = ? AND idProperty = ?`,

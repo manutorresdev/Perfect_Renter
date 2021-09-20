@@ -117,6 +117,12 @@ const contactProperty = async (req, res, next) => {
       subject: 'Solicitud de alquiler',
       body: emailBody,
     });
+    // Enviamos el correo del usuario que contacta, al usuario a contactar.
+    await sendMail({
+      to: email,
+      subject: '[COPIA] Solicitud de alquiler',
+      body: emailBody,
+    });
     res.send({
       status: 'ok',
       message: 'Correo electrónico enviado con éxito.',

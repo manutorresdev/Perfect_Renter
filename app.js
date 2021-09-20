@@ -24,9 +24,13 @@ app.use(fileUpload());
  * ## LIBS MIDDLEWARES ##
  * ######################
  *
- * @private
  */
-const { authUser, userExists, canEdit } = require('./libs/middlewares/index');
+const {
+  authUser,
+  userExists,
+  canEdit,
+  propertyExists,
+} = require('./libs/middlewares/index');
 
 /**
  * ############################
@@ -39,6 +43,7 @@ const {
   editProperty,
   deleteProperty,
   deletePropertyPhoto,
+  newVote,
 } = require('./controllers/properties/index');
 
 /**
@@ -62,7 +67,13 @@ const {
  * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
  *
  */
-app.post('/properties/:idProperty/photos', authUser, canEdit, addPropertyPhoto);
+app.post(
+  '/properties/:idProperty/photos',
+  authUser,
+  propertyExists,
+  canEdit,
+  addPropertyPhoto
+);
 /**
  * Solicitud a un inmueble
  *
@@ -77,7 +88,12 @@ app.post('/properties/:idProperty/photos', authUser, canEdit, addPropertyPhoto);
  * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
  *
  */
-app.post('/properties/:idProperty/contact', authUser, contactProperty);
+app.post(
+  '/properties/:idProperty/contact',
+  authUser,
+  propertyExists,
+  contactProperty
+);
 /**
  * Editar información de un inmueble
  *
@@ -93,7 +109,13 @@ app.post('/properties/:idProperty/contact', authUser, contactProperty);
  * @response {Object} Response Guarda la información cambiada en el servidor y base de datos
  *
  */
-app.put('/properties/:idProperty', authUser, canEdit, editProperty);
+app.put(
+  '/properties/:idProperty',
+  authUser,
+  propertyExists,
+  canEdit,
+  editProperty
+);
 /**
  * Eliminar un inmueble
  *
@@ -127,6 +149,20 @@ app.delete(
   canEdit,
   deletePropertyPhoto
 );
+/**
+ * Votar un inmueble
+ *
+ * @name newVote
+ * @path {POST} /properties/:idProperty/votes
+ * @params {number} idProperty Número del inmueble del que se quiere votar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {403} Si se intenta votar a uno mismo
+ * @response {Object} Response Cambia el valor del voto y el comentario en la base de datos
+ *
+ */
+app.post('/properties/:idProperty/votes', authUser, propertyExists, newVote);
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -302,6 +338,20 @@ app.delete('/users/:idUser', authUser, userExists, deleteUser);
  *
  */
 app.post('/users/:idUser/contact', authUser, userExists, contactUser);
+/**
+ * Votar un usuario
+ *
+ * @name newUserVote
+ * @path {POST} /users/:idUser/votes
+ * @params {number} idUser Número del usuario del que se quiere votar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {403} Si se intenta votar a uno mismo
+ * @response {Object} Response Cambia el valor del voto y el comentario en la base de datos
+ *
+ */
+app.post('/users/:idUser/votes', authUser, userExists, newVote);
 /**
  * ####################
  * ## ERROR LISTENER ##

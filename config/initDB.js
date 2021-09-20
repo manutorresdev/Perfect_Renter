@@ -65,7 +65,7 @@ async function main() {
             flat INT,
             gate VARCHAR(20),
             mts DECIMAL(5,2),
-            bedrooms INT,
+            rooms INT,
             garage BOOLEAN,
             terrace BOOLEAN,
             toilets INT,
@@ -85,15 +85,20 @@ async function main() {
     await connection.query(`
         CREATE TABLE votes (
             idVote INT PRIMARY KEY AUTO_INCREMENT,
-            vote TINYINT NOT NULL,
-            comment VARCHAR(250),
+            voteValue TINYINT NOT NULL DEFAULT 3,
+            voteValueRenter TINYINT NOT NULL DEFAULT 3,
+            commentProperty VARCHAR(250),
+            commentRenter VARCHAR(250),
             idVoted INT,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
             idProperty INT,
+            bookingCode VARCHAR(20),
+            estate ENUM("reservado", "alquilado", "finalizado") NOT NULL DEFAULT "reservado",
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser),
             CONSTRAINT votes_CK1 CHECK (vote IN(1, 2, 3, 4, 5)),
-            createdAt DATETIME NOT NULL
+            createdAt DATETIME NOT NULL,
+            modifiedAt DATETIME
         )
     `);
 

@@ -29,16 +29,23 @@
 - GET - [/properties/:idProperty] - Obtener un alquiler en concreto. ✅
 - POST - [/properties] - Crear un alquiler. ✅
 - POST - [/properties/:idProperty/photos] - Agregar una foto a un alquiler.✅
-- POST - [/properties/:idProperty/votes] - Votar un alquiler.
-- POST - [/properties/:idProperty/contact] - Mandar mensaje a un alquiler. ✅
+- POST - [/properties/:idProperty/votes] - Votar un alquiler. ✅
+- POST - [/properties/:idProperty/contact] - Mandar mensaje al casero de un alquiler. ✅
 - PUT - [/properties/:idProperty] - Edita un alquiler. ✅
 - DELETE - [/properties/:idProperty] - Borrar un alquiler.✅
 - DELETE - [/properties/:idProperty/photos/:idPhoto] - Eliminar una foto del alquiler.✅
 
+  <-- FUNCIONES AVANZADAS -->
+
+- POST - [/properties/:idProperty/:bookingCode] - Aceptar solicitud de reserva. -- Acepta la reserva de un inquilino, cambiando el estado de la vivienda a ocupado/reservado.
+- POST - [/properties/:idProperty/:bookingCode/cancel] - Rechazar reserva. --Rechaza la reserva del alquiler (puede hacerlo el inquilino que ha reservado o el casero).
+
+  <-- FUNCIONES AVANZADAS -->
+
 ## Endpoints del usuario
 
 - GET - [/users] - Listar los usuarios ✅
-- GET - [/users/:idUser] - Obtener un usuario en concreto.✅
+- GET - [/users/:idUser] - Obtener un usuario en concreto.✅ <-- AÑADIR FUNCION PARA QUE LISTE LOS VOTOS INDIVIDUALMENTE -->>
 - POST - [/users] - Crea un usuario pendiente de activación.✅
 - POST - [/users/login] - Inicia sesión a un usuario y proporciona un token.✅
 - POST - [/users/:idUser/contact] - Mandar mensaje a un renter. ✅
@@ -48,6 +55,13 @@
 - PUT - [/users/password/recover] - Enviar un correo con el enlace de reseteo de la contraseña. ✅
 - PUT - [users/password/recover/:idUser/:recoverCode] - Cambiar la contraseña de un usuario con el código de reseteo. ✅
 - DELETE - [/users/:idUser] - Eliminar un usuario. ✅
+
+  <-- FUNCIONES AVANZADAS -->
+
+- GET- [/users/:idUser/booked] - Listar alquileres reservados.
+- GET - [/users/:idUser] - Obtener un usuario en concreto.✅ <-- AÑADIR FUNCION PARA QUE LISTE LOS VOTOS INDIVIDUALMENTE -->>
+
+  <-- FUNCIONES AVANZADAS -->
 
 ## AUTORES
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-const { deletePhoto, formatDate } = require('../../libs/helpers');
+const { deletePhoto } = require('../../libs/helpers');
 /**
  * @module Entries
  */
