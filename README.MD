@@ -25,15 +25,15 @@
 
 ## Endpoints Flats
 
-- GET - [/flats] - Obtener un listado de todos los alquileres. ✅
-- GET - [/flats/:idFlat] - Obtener un alquiler en concreto. ✅
-- POST - [/flats] - Crear un alquiler. ✅
-- POST - [/flats/:idFlat/photos] - Agregar una foto a un alquiler.✅
-- POST - [/flats/:idFlat/votes] - Votar un alquiler.
-- POST - [/flats/:idFlat/contact] - Mandar mensaje a un alquiler. ✅
-- PUT - [/entries/:idFlat] - Edita un alquiler. ✅
-- DELETE - [/flats/:idFlat] - Borrar un alquiler.✅
-- DELETE - [/flats/:idFlat/photos/:idPhoto] - Eliminar una foto del alquiler.
+- GET - [/properties] - Obtener un listado de todos los alquileres. ✅
+- GET - [/properties/:idProperty] - Obtener un alquiler en concreto. ✅
+- POST - [/properties] - Crear un alquiler. ✅
+- POST - [/properties/:idProperty/photos] - Agregar una foto a un alquiler.✅
+- POST - [/properties/:idProperty/votes] - Votar un alquiler.
+- POST - [/properties/:idProperty/contact] - Mandar mensaje a un alquiler. ✅
+- PUT - [/properties/:idProperty] - Edita un alquiler. ✅
+- DELETE - [/properties/:idProperty] - Borrar un alquiler.✅
+- DELETE - [/properties/:idProperty/photos/:idPhoto] - Eliminar una foto del alquiler.✅
 
 ## Endpoints del usuario
 

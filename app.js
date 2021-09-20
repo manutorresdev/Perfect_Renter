@@ -38,6 +38,7 @@ const {
   contactProperty,
   editProperty,
   deleteProperty,
+  deletePropertyPhoto,
 } = require('./controllers/properties/index');
 
 /**
@@ -106,6 +107,26 @@ app.put('/properties/:idProperty', authUser, canEdit, editProperty);
  *
  */
 app.delete('/properties/:idProperty', authUser, canEdit, deleteProperty);
+/**
+ * Eliminar una foto de un inmueble
+ *
+ * @name deletePropertyPhoto
+ * @path {DELETE} /properties/:idProperty/photos/:idPhoto
+ * @params {number} idProperty Número del inmueble del que se quiere eliminar una foto
+ * @params {number} idPhoto Número de la foto a eliminar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si la foto no existe
+ * @response {Object} Response Elimina la foto del servidor y la base de datos
+ *
+ */
+app.delete(
+  '/properties/:idProperty/photos/:idPhoto',
+  authUser,
+  canEdit,
+  deletePropertyPhoto
+);
 /**
  * ######################
  * ## USER CONTROLLERS ##
