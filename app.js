@@ -38,11 +38,14 @@ const {
  * ############################
  */
 const {
+  newProperty,
+  getProperty,
   addPropertyPhoto,
   contactProperty,
   editProperty,
   deleteProperty,
   deletePropertyPhoto,
+  listProperties,
   newVote,
 } = require('./controllers/properties/index');
 
@@ -51,6 +54,42 @@ const {
  * ## PROPERTIES ENDPOINTS ##
  * ##########################
  */
+/**
+ * Agregar foto a los inmuebles
+ *
+ * @name newProperty
+ * @path {POST} /property
+ * @params {number} idProperty Número del inmueble a mostrar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {404} Si el usuario no existe
+ * @code {400} Si no hay archivo o es incorrecto
+ * @code {403} Si supera el máximo de archivos permitidos
+ * @response {Object} Response Guarda los datos en la base de datos
+ */
+app.post('/property', authUser, newProperty);
+/**
+ * Obtener información de una propiedad en concreto
+ *
+ * @name getProperty
+ * @path {GET} /property/:idProperty
+ * @params {number} idProperty Número del inmueble a mostrar
+ * @code {200} Si la respuesta es correcta
+ * @code {404} Si la propiedad no existe
+ * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
+ */
+app.get('/property/:idProperty', propertyExists, getProperty);
+/**
+ * Obtener información de una propiedad en concreto
+ *
+ * @name listProperties
+ * @path {GET} /properties
+ * @code {200} Si la respuesta es correcta
+ * @code {404} Si la propiedad no existe
+ * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
+ */
+app.get('/properties', listProperties);
 
 /**
  * Agregar foto a los inmuebles
@@ -65,7 +104,6 @@ const {
  * @code {400} Si no hay archivo o es incorrecto
  * @code {403} Si supera el máximo de archivos permitidos
  * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
- *
  */
 app.post(
   '/properties/:idProperty/photos',

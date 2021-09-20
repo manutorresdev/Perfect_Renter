@@ -56,7 +56,6 @@ const editProperty = async (req, res, next) => {
       [idProperty]
     );
 
-    console.log(property);
     let validateData;
 
     // Obtenemos la fecha de modificación.
