@@ -18,7 +18,7 @@ async function main() {
     //Eliminación de tablas existentes
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
-    await connection.query('DROP TABLE IF EXISTS history');
+    await connection.query('DROP TABLE IF EXISTS bookings');
     await connection.query('DROP TABLE IF EXISTS properties');
     await connection.query('DROP TABLE IF EXISTS users');
 
@@ -73,11 +73,11 @@ async function main() {
             availabilityDate DATE,
             price DECIMAL(6,2),
             state ENUM("reservado", "alquilado", "disponible"),
-            modifiedAt DATETIME,
-            createdAt DATETIME NOT NULL
+            modifiedAt DATETIME
+            
         )
     `);
-
+    /* createdAt DATETIME NOT NULL */
     // Creamos la tabla votes.
     //   ---idVoted hace referencia a quien esta siendo calificado.
     //   ---idUser hace referencia a quien realiza el voto.
