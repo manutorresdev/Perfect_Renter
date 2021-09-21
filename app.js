@@ -47,6 +47,7 @@ const {
   deletePropertyPhoto,
   listProperties,
   newVote,
+  bookingCodeProperty,
   listPropertyVotes,
 } = require('./controllers/properties/index');
 
@@ -132,6 +133,18 @@ app.post(
   propertyExists,
   contactProperty
 );
+/**
+ * Aceptar reserva.
+ *
+ * @name bookingCodeProperty
+ * @path {PUT} /properties/:bookingCode
+ * @params {String} bookingCode Código de la reserva
+ * @code {200} Si la respuesta es correcta
+ * @code {404} Si no hay reserva pendiente de aceptar o si no existe la viviendo o el inquilino
+ * @response {Object} Response El servidor envía un correo electrónico al inquilino y al dueño de la vivienda conforme la reserva se ha realizado con éxito
+ */
+app.get('/properties/:bookingCode', bookingCodeProperty);
+
 /**
  * Editar información de un inmueble
  *
