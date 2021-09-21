@@ -37,7 +37,9 @@ const bookingCodeProperty = async (req, res, next) => {
       error.httpStatus = 404;
       throw error;
     }
-    // Definimos el body del email
+    // Una vez aceptada enviammos email a ambos usuarios
+
+    // Email para el inquilino
     let emailBody = `
     <table>
       <tbody>
@@ -49,12 +51,14 @@ const bookingCodeProperty = async (req, res, next) => {
     </table>
     `;
 
-    // Enviamos el correo del usuario que contacta, al usuario a contactar.
+    // Enviamos el correo al inquilino
     await sendMail({
       to: booking[0].RenterEmail,
       subject: 'Reserva de alquiler',
       body: emailBody,
     });
+
+    //Email para el dueño que aceptó la reserva
     emailBody = `
     <table>
       <tbody>
@@ -66,7 +70,7 @@ const bookingCodeProperty = async (req, res, next) => {
     </table>
     `;
 
-    // Enviamos el correo del usuario que contacta, al usuario a contactar.
+    // Enviamos el correo al dueño de la viviendo
     await sendMail({
       to: booking[0].TenantEmail,
       subject: 'Reserva de alquiler',

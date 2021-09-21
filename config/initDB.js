@@ -73,11 +73,11 @@ async function main() {
             availabilityDate DATE,
             price DECIMAL(6,2),
             state ENUM("reservado", "alquilado", "disponible"),
-            modifiedAt DATETIME
-            
+            modifiedAt DATETIME,
+            createdAt DATETIME NOT NULL
         )
     `);
-    /* createdAt DATETIME NOT NULL */
+
     // Creamos la tabla votes.
     //   ---idVoted hace referencia a quien esta siendo calificado.
     //   ---idUser hace referencia a quien realiza el voto.

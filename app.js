@@ -141,7 +141,7 @@ app.post(
  * @params {String} bookingCode Código de la reserva
  * @code {200} Si la respuesta es correcta
  * @code {404} Si no hay reserva pendiente de aceptar
- * @response {Object} Response El servidor envía un correo electrónico al usuario conforme su reserva ha sido aceptada por el propietario del inmueble
+ * @response {Object} Response El servidor envía un correo electrónico al inquilino y al dueño de la vivienda conforme la reserva se ha realizado con éxito
  */
 app.get('/properties/:bookingCode', bookingCodeProperty);
 
