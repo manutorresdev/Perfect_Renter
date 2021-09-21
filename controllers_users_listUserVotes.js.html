@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>controllers/users/newUser.js - Documentation</title>
+    <title>controllers/users/listUserVotes.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">controllers/users/newUser.js</h1>
+    <h1 class="page-title">controllers/users/listUserVotes.js</h1>
     
 
     
@@ -44,119 +44,45 @@
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-nocheck
 const getDB = require('../../config/getDB');
-const {
-  generateRandomString,
-  formatDate,
-  sendMail,
-  validate,
-} = require('../../libs/helpers');
-
-const { userSchema } = require('../../models/userSchema');
 /**
  * @module Users
  */
 /**
- * Middleware para generar un nuevo usuario en la base de datos.
- * @param {*} req Como "requests", se requieren cinco datos del usuario.
- * @param {*} res El servidor lanza como respuesta la confirmación de la creación de un nuevo usuario con el envío del email para validarlo.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Middleware para listar las valoraciones de un usuario
+ * @param {*} req Necesaria la autenticación con un "token", en la que se encuentra el ID del usuario iniciado. Además del id del usuario a obtener información en los path params
+ * @param {*} res Como respuesta, obtienes un objeto con los datos del usuario
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
+ * @returns {Promise} Devuelve un objeto con los votos
  */
-const newUser = async (req, res, next) => {
+const listUserVotes = async (req, res, next) => {
   let connection;
-
   try {
     connection = await getDB();
 
-    // Validamos los datos recibidos.
-    await validate(userSchema, req.body);
+    // Obtenemos el id del usuario.
+    const { idUser } = req.params;
 
-    // Obtenemos los campos necesarios.
-    const { name, lastName, email, password, bio, city, birthDate } = req.body;
+    // Obtenemos el id del usuario que hace la request
+    const idReqUser = req.userAuth.idUser;
 
-    // Comprobamos que no faltan campos a rellenar.
-    if (
-      !name ||
-      !lastName ||
-      !email ||
-      !password ||
-      !bio ||
-      !city ||
-      !birthDate
-    ) {
-      const error = new Error('Debes rellenar todos los campos.');
-      error.httpStatus = 400;
-      throw error;
-    }
-
-    // Comprobamos si el email existe en la base de datos.
-    const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE email = ?`,
-      [email]
+    // Obtenemos los votos del usuario a visualizar
+    let [votes] = await connection.query(
+      `
+      SELECT voteValueRenter, commentRenter
+      FROM votes
+      WHERE idRenter = ?
+      `,
+      [idUser]
     );
 
-    // Si el email existe lanzamos un error.
-    if (user.length > 0) {
-      const error = new Error('Ya existe un usuario registrado con ese email');
-      error.httpStatus = 409;
-      throw error;
-    }
-
-    // Creamos un código de registro de un solo uso.
-    const registrationCode = generateRandomString(20);
-
-    // Guardamos al usuario en la base de datos junto al código de registro.
-    await connection.query(
-      `INSERT INTO users (name, lastName, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)`,
-      [
-        name,
-        lastName,
-        email,
-        password,
-        bio,
-        registrationCode,
-        formatDate(new Date()),
-        birthDate,
-        city,
-      ]
-    );
-
-    // Mensaje que enviaremos al usuario.
-    const emailBody = `
-      &lt;table>
-        &lt;thead>
-            &lt;th>Verificación de usuario&lt;/th>
-        &lt;/thead>
-        &lt;tbody>
-            &lt;td>
-              Bienvenido/a ${name}
-              Te acabas de registrar en Perfect Renter
-              ¡Pulsa el botón para verificar tu cuenta!
-            &lt;/td>
-        &lt;/tbody>
-        &lt;tfoot>
-            &lt;th>
-              &lt;button>
-              &lt;a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR&lt;/a>
-              &lt;/button>
-            &lt;/th>
-        &lt;/tfoot>
-      &lt;/table>
-    `;
-
-    try {
-      // Enviamos el mensaje al correo del usuario.
-      await sendMail({
-        to: email,
-        subject: 'Activa tu usuario de Perfect Renter',
-        body: emailBody,
-      });
-    } catch (error) {
-      throw new Error('Error enviando el mensaje de verificación');
+    // Si no hay votos, damos un valor vacío.
+    if (votes.length &lt; 1) {
+      votes = 'Aún no tiene valoraciones.';
     }
 
     res.send({
       status: 'ok',
-      message: 'Usuario registrado, comprueba tu email para activarlo',
+      Valoraciones: votes,
     });
   } catch (error) {
     next(error);
@@ -165,7 +91,7 @@ const newUser = async (req, res, next) => {
   }
 };
 
-module.exports = newUser;
+module.exports = listUserVotes;
 </code></pre>
         </article>
     </section>

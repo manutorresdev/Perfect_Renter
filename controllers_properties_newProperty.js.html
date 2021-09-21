@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>controllers/users/newUser.js - Documentation</title>
+    <title>controllers/properties/newProperty.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">controllers/users/newUser.js</h1>
+    <h1 class="page-title">controllers/properties/newProperty.js</h1>
     
 
     
@@ -44,119 +44,197 @@
         <article>
             <pre class="prettyprint source linenums"><code>// @ts-nocheck
 const getDB = require('../../config/getDB');
-const {
-  generateRandomString,
-  formatDate,
-  sendMail,
-  validate,
-} = require('../../libs/helpers');
+const getPRDB = require('../../config/getPRDB');
+const { formatDate, validate } = require('../../libs/helpers');
 
-const { userSchema } = require('../../models/userSchema');
+const { propertySchema } = require('../../models/propertySchema');
 /**
- * @module Users
+ * @module Entries
  */
 /**
- * Middleware para generar un nuevo usuario en la base de datos.
- * @param {*} req Como "requests", se requieren cinco datos del usuario.
- * @param {*} res El servidor lanza como respuesta la confirmación de la creación de un nuevo usuario con el envío del email para validarlo.
+ * Middleware para generar un nuevo piso en la base de datos.
+ * @param {*} req Como "requests", se requieren todos los datos relevantes del piso, como minimo ciudad, provinvia, dirección y edificio, mts,bedrooms, precio, estado
+ * @param {*} res El servidor lanza como respuesta la confirmación de la creación de un nuevo piso.
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
  */
-const newUser = async (req, res, next) => {
+const newProperty = async (req, res, next) => {
   let connection;
 
   try {
     connection = await getDB();
+    connectionPR = await getPRDB();
 
     // Validamos los datos recibidos.
-    await validate(userSchema, req.body);
+    await validate(propertySchema, req.body);
 
     // Obtenemos los campos necesarios.
-    const { name, lastName, email, password, bio, city, birthDate } = req.body;
+    let {
+      city,
+      province,
+      address,
+      zipCode,
+      number,
+      type,
+      stair,
+      flat,
+      gate,
+      mts,
+      rooms,
+      garage,
+      terrace,
+      toilets,
+      energyCertificate,
+      price,
+      state,
+    } = req.body;
 
     // Comprobamos que no faltan campos a rellenar.
     if (
-      !name ||
-      !lastName ||
-      !email ||
-      !password ||
-      !bio ||
       !city ||
-      !birthDate
+      !province ||
+      !address ||
+      !number ||
+      !type ||
+      !zipCode ||
+      !mts ||
+      !rooms ||
+      !price ||
+      !state
     ) {
-      const error = new Error('Debes rellenar todos los campos.');
+      const error = new Error('Debes rellenar todos los campos requeridos.');
       error.httpStatus = 400;
       throw error;
     }
 
-    // Comprobamos si el email existe en la base de datos.
-    const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE email = ?`,
-      [email]
+    // Comprobamos si el piso ya existe en la base de datos.
+    if (!gate) {
+      const [property] = await connection.query(
+        `SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate is null`,
+        [city, province, address, number, type, zipCode, stair, flat]
+      );
+      // Si el inmueble ya existe lanzamos un error.
+      if (property.length > 0) {
+        const error = new Error('Ya existe un piso con los datos ingresados');
+        error.httpStatus = 409;
+        throw error;
+      }
+    } else {
+      const [property] = await connection.query(
+        `SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate = ?`,
+        [city, province, address, number, type, zipCode, stair, flat, gate]
+      );
+      // Si el inmueble ya existe lanzamos un error.
+      if (property.length > 0) {
+        const error = new Error('Ya existe un piso con los datos ingresados');
+        error.httpStatus = 409;
+        throw error;
+      }
+    }
+    const userId = req.userAuth.idUser;
+
+    // Comprobamos que la ciudad pertenece a la provincia correcta
+    const [verify] = await connectionPR.query(
+      `
+    SELECT cp,provincia,poblacion FROM municipios WHERE poblacion = ? AND provincia = ?
+    `,
+      [city, province]
     );
 
-    // Si el email existe lanzamos un error.
-    if (user.length > 0) {
-      const error = new Error('Ya existe un usuario registrado con ese email');
-      error.httpStatus = 409;
+    if (verify.length &lt; 0) {
+      const error = new Error(
+        'Hay un error en la ciudad o la provincia, revisa los datos de nuevo.'
+      );
+      error.httpStatus = 403;
       throw error;
     }
 
-    // Creamos un código de registro de un solo uso.
-    const registrationCode = generateRandomString(20);
+    if (verify[0].cp.length &lt; 5) {
+      zipCode = `0${verify[0].cp}`;
+    }
 
-    // Guardamos al usuario en la base de datos junto al código de registro.
+    // Generamos la fecha de creación
+    const createdAt = formatDate(new Date());
+
+    // Guardamos la propiedad en la base de datos.
     await connection.query(
-      `INSERT INTO users (name, lastName, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)`,
-      [
-        name,
-        lastName,
-        email,
-        password,
-        bio,
-        registrationCode,
-        formatDate(new Date()),
-        birthDate,
+      `INSERT INTO properties (
+        idUser,
         city,
+        province,
+        address,
+        zipCode,
+        number,
+        type,
+        stair,
+        flat,
+        gate,
+        mts,
+        rooms,
+        garage,
+        terrace,
+        toilets,
+        energyCertificate,
+        availabilityDate,
+        price,
+        state,
+        createdAt
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        userId,
+        city,
+        province,
+        address,
+        zipCode,
+        number,
+        type,
+        stair,
+        flat,
+        gate,
+        mts,
+        rooms,
+        garage,
+        terrace,
+        toilets,
+        energyCertificate,
+        formatDate(new Date()),
+        price,
+        state,
+        createdAt,
       ]
     );
 
-    // Mensaje que enviaremos al usuario.
-    const emailBody = `
-      &lt;table>
-        &lt;thead>
-            &lt;th>Verificación de usuario&lt;/th>
-        &lt;/thead>
-        &lt;tbody>
-            &lt;td>
-              Bienvenido/a ${name}
-              Te acabas de registrar en Perfect Renter
-              ¡Pulsa el botón para verificar tu cuenta!
-            &lt;/td>
-        &lt;/tbody>
-        &lt;tfoot>
-            &lt;th>
-              &lt;button>
-              &lt;a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR&lt;/a>
-              &lt;/button>
-            &lt;/th>
-        &lt;/tfoot>
-      &lt;/table>
-    `;
+    // Comprobamos si hay fotos y las subimos
+    if (req.files &amp;&amp; req.files.photo) {
+      const [property] = await connection.query(
+        `
+      SELECT idProperty FROM properties WHERE idUser = ? AND createdAt = ?
+      `,
+        [userId, createdAt]
+      );
 
-    try {
-      // Enviamos el mensaje al correo del usuario.
-      await sendMail({
-        to: email,
-        subject: 'Activa tu usuario de Perfect Renter',
-        body: emailBody,
-      });
-    } catch (error) {
-      throw new Error('Error enviando el mensaje de verificación');
+      // Recorremos las fotos recibidas para subirlas, solo cogemos 30.
+      for (const photo of Object.values(req.files).slice(0, 29)) {
+        let photoName;
+        try {
+          photoName = await savePhoto(photo);
+        } catch (_) {
+          const error = new Error('Formato incorrecto');
+          error.httpStatus = 400;
+          throw error;
+        }
+        await connection.query(
+          `
+          INSERT INTO photos (name,idProperty,createdAt)
+          VALUES (?,?,?)
+          `,
+          [photoName, property[0].idProperty, createdAt]
+        );
+      }
     }
-
     res.send({
       status: 'ok',
-      message: 'Usuario registrado, comprueba tu email para activarlo',
+      message: 'El piso se ha creado correctamente',
     });
   } catch (error) {
     next(error);
@@ -165,7 +243,7 @@ const newUser = async (req, res, next) => {
   }
 };
 
-module.exports = newUser;
+module.exports = newProperty;
 </code></pre>
         </article>
     </section>

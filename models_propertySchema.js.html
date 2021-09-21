@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>controllers/users/newUser.js - Documentation</title>
+    <title>models/propertySchema.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">controllers/users/newUser.js</h1>
+    <h1 class="page-title">models/propertySchema.js</h1>
     
 
     
@@ -42,130 +42,58 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>// @ts-nocheck
-const getDB = require('../../config/getDB');
-const {
-  generateRandomString,
-  formatDate,
-  sendMail,
-  validate,
-} = require('../../libs/helpers');
-
-const { userSchema } = require('../../models/userSchema');
+            <pre class="prettyprint source linenums"><code>const Joi = require('joi');
 /**
- * @module Users
+ * @module Schemas
  */
+
 /**
- * Middleware para generar un nuevo usuario en la base de datos.
- * @param {*} req Como "requests", se requieren cinco datos del usuario.
- * @param {*} res El servidor lanza como respuesta la confirmación de la creación de un nuevo usuario con el envío del email para validarlo.
- * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
+ * Esquema de propiedades para validación de datos.
+ * @name PropertySchema
  */
-const newUser = async (req, res, next) => {
-  let connection;
+const propertySchema = Joi.object({
+  province: Joi.string().required(),
+  address: Joi.string().required(),
+  zipCode: Joi.string().required().max(5),
+  number: Joi.number().required(),
+  type: Joi.string().required(),
+  stair: Joi.string().required(),
+  flat: Joi.number().required(),
+  gate: Joi.string().required(),
+  mts: Joi.number().required(),
+  garage: Joi.number().required(),
+  rooms: Joi.number().required(),
+  terrace: Joi.number().required(),
+  toilets: Joi.number().required(),
+  energyCertificate: Joi.number().required(),
+  price: Joi.number().required(),
+  city: Joi.string().required(),
+  state: Joi.string().required(),
+});
 
-  try {
-    connection = await getDB();
-
-    // Validamos los datos recibidos.
-    await validate(userSchema, req.body);
-
-    // Obtenemos los campos necesarios.
-    const { name, lastName, email, password, bio, city, birthDate } = req.body;
-
-    // Comprobamos que no faltan campos a rellenar.
-    if (
-      !name ||
-      !lastName ||
-      !email ||
-      !password ||
-      !bio ||
-      !city ||
-      !birthDate
-    ) {
-      const error = new Error('Debes rellenar todos los campos.');
-      error.httpStatus = 400;
-      throw error;
-    }
-
-    // Comprobamos si el email existe en la base de datos.
-    const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE email = ?`,
-      [email]
-    );
-
-    // Si el email existe lanzamos un error.
-    if (user.length > 0) {
-      const error = new Error('Ya existe un usuario registrado con ese email');
-      error.httpStatus = 409;
-      throw error;
-    }
-
-    // Creamos un código de registro de un solo uso.
-    const registrationCode = generateRandomString(20);
-
-    // Guardamos al usuario en la base de datos junto al código de registro.
-    await connection.query(
-      `INSERT INTO users (name, lastName, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)`,
-      [
-        name,
-        lastName,
-        email,
-        password,
-        bio,
-        registrationCode,
-        formatDate(new Date()),
-        birthDate,
-        city,
-      ]
-    );
-
-    // Mensaje que enviaremos al usuario.
-    const emailBody = `
-      &lt;table>
-        &lt;thead>
-            &lt;th>Verificación de usuario&lt;/th>
-        &lt;/thead>
-        &lt;tbody>
-            &lt;td>
-              Bienvenido/a ${name}
-              Te acabas de registrar en Perfect Renter
-              ¡Pulsa el botón para verificar tu cuenta!
-            &lt;/td>
-        &lt;/tbody>
-        &lt;tfoot>
-            &lt;th>
-              &lt;button>
-              &lt;a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR&lt;/a>
-              &lt;/button>
-            &lt;/th>
-        &lt;/tfoot>
-      &lt;/table>
-    `;
-
-    try {
-      // Enviamos el mensaje al correo del usuario.
-      await sendMail({
-        to: email,
-        subject: 'Activa tu usuario de Perfect Renter',
-        body: emailBody,
-      });
-    } catch (error) {
-      throw new Error('Error enviando el mensaje de verificación');
-    }
-
-    res.send({
-      status: 'ok',
-      message: 'Usuario registrado, comprueba tu email para activarlo',
-    });
-  } catch (error) {
-    next(error);
-  } finally {
-    if (connection) connection.release();
-  }
+const editPropertySchema = Joi.object({
+  province: Joi.string(),
+  address: Joi.string(),
+  zipCode: Joi.string().max(5),
+  number: Joi.number(),
+  type: Joi.string(),
+  stair: Joi.string(),
+  flat: Joi.number(),
+  gate: Joi.string(),
+  mts: Joi.number(),
+  garage: Joi.number(),
+  rooms: Joi.number(),
+  terrace: Joi.number(),
+  toilets: Joi.number(),
+  energyCertificate: Joi.number(),
+  price: Joi.number(),
+  city: Joi.string(),
+  state: Joi.string(),
+});
+module.exports = {
+  propertySchema,
+  editPropertySchema,
 };
-
-module.exports = newUser;
 </code></pre>
         </article>
     </section>
