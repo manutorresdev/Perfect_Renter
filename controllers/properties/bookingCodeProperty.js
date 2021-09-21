@@ -18,6 +18,21 @@ const bookingCodeProperty = async (req, res, next) => {
     // Obtenemos el codigo de registro de los path params.
     const { bookingCode: regCode } = req.params;
 
+    //Verificamos que la propiedad y el inquilino existen
+    const [property] = await connection.query(
+      `SELECT b.idProperty, b.idRenter
+      FROM bookings b
+      WHERE bookingCode = ?`,
+      [idProperty, idRenter]
+    );
+
+    // si la propiedad no existe enviamos error
+    if (property.length < 1) {
+      const error = new Error('La vivienda no existe');
+      error.httpStatus = 404;
+      throw error;
+    }
+
     // Comprobamos que la reserva a validar, está pendiente de aceptar.
     const [booking] = await connection.query(
       `
