@@ -24,7 +24,8 @@ const authUser = async (req, res, next) => {
 
     // Variable que almacenará la info del token.
     let tokenInfo;
-
+    console.log(authorization);
+    console.log(process.env.SECRET);
     try {
       // Desencriptamos el token.
       tokenInfo = jwt.verify(authorization, process.env.SECRET);

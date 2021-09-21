@@ -40,7 +40,7 @@ const listUsers = async (req, res, next) => {
       [users] = await connection.query(
         `SELECT users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
         FROM users
-        LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idVoted)
+        LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
         group by users.idUser
         ORDER BY users.birthDate ${orderDirection}
         `
@@ -51,7 +51,7 @@ const listUsers = async (req, res, next) => {
       [users] = await connection.query(
         `SELECT users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
       FROM users
-      LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idVoted)
+      LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
       WHERE city LIKE ?
       group by users.idUser
       ORDER BY ${orderBy} ${orderDirection}
@@ -63,7 +63,7 @@ const listUsers = async (req, res, next) => {
       [users] = await connection.query(
         `SELECT users.name, users.lastName,users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
       FROM users
-      LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idVoted)
+      LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
       group by users.idUser
       order by votes ${orderDirection}
       `
