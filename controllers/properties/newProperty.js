@@ -1,10 +1,11 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
+const getPRDB = require('../../config/getPRDB');
 const { formatDate, validate } = require('../../libs/helpers');
 
 const { propertySchema } = require('../../models/propertySchema');
 /**
- * @module property
+ * @module Entries
  */
 /**
  * Middleware para generar un nuevo piso en la base de datos.
@@ -17,12 +18,13 @@ const newProperty = async (req, res, next) => {
 
   try {
     connection = await getDB();
+    connectionPR = await getPRDB();
 
     // Validamos los datos recibidos.
     await validate(propertySchema, req.body);
 
     // Obtenemos los campos necesarios.
-    const {
+    let {
       city,
       province,
       address,
@@ -33,13 +35,13 @@ const newProperty = async (req, res, next) => {
       flat,
       gate,
       mts,
-      bedrooms,
+      rooms,
       garage,
       terrace,
       toilets,
       energyCertificate,
       price,
-      estate,
+      state,
     } = req.body;
 
     // Comprobamos que no faltan campos a rellenar.
@@ -51,9 +53,9 @@ const newProperty = async (req, res, next) => {
       !type ||
       !zipCode ||
       !mts ||
-      !bedrooms ||
+      !rooms ||
       !price ||
-      !estate
+      !state
     ) {
       const error = new Error('Debes rellenar todos los campos requeridos.');
       error.httpStatus = 400;
@@ -86,6 +88,26 @@ const newProperty = async (req, res, next) => {
     }
     const userId = req.userAuth.idUser;
 
+    // Comprobamos que la ciudad pertenece a la provincia correcta
+    const [verify] = await connectionPR.query(
+      `
+    SELECT cp,provincia,poblacion FROM municipios WHERE poblacion = ? AND provincia = ?
+    `,
+      [city, province]
+    );
+
+    if (verify.length < 0) {
+      const error = new Error(
+        'Hay un error en la ciudad o la provincia, revisa los datos de nuevo.'
+      );
+      error.httpStatus = 403;
+      throw error;
+    }
+
+    if (verify[0].cp.length < 5) {
+      zipCode = `0${verify[0].cp}`;
+    }
+
     // Generamos la fecha de creación
     const createdAt = formatDate(new Date());
 
@@ -103,14 +125,14 @@ const newProperty = async (req, res, next) => {
         flat,
         gate,
         mts,
-        bedrooms,
+        rooms,
         garage,
         terrace,
         toilets,
         energyCertificate,
         availabilityDate,
         price,
-        estate,
+        state,
         createdAt
         )
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -126,14 +148,14 @@ const newProperty = async (req, res, next) => {
         flat,
         gate,
         mts,
-        bedrooms,
+        rooms,
         garage,
         terrace,
         toilets,
         energyCertificate,
         formatDate(new Date()),
         price,
-        estate,
+        state,
         createdAt,
       ]
     );

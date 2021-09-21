@@ -10,6 +10,7 @@ const listUsers = require('./listUsers');
 const editUser = require('./editUser');
 const contactUser = require('./contactUser');
 const listBookedProperties = require('./listBookedProperties');
+const listUserVotes = require('./listUserVotes');
 
 module.exports = {
   recoverUserPass,
@@ -24,4 +25,5 @@ module.exports = {
   editUser,
   contactUser,
   listBookedProperties,
+  listUserVotes,
 };

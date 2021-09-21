@@ -48,6 +48,7 @@ const {
   listProperties,
   newVote,
   bookingCodeProperty,
+  listPropertyVotes,
 } = require('./controllers/properties/index');
 
 /**
@@ -59,7 +60,7 @@ const {
  * Agregar foto a los inmuebles
  *
  * @name newProperty
- * @path {POST} /property
+ * @path {POST} /properties
  * @params {number} idProperty Número del inmueble a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {200} Si la respuesta es correcta
@@ -69,18 +70,18 @@ const {
  * @code {403} Si supera el máximo de archivos permitidos
  * @response {Object} Response Guarda los datos en la base de datos
  */
-app.post('/property', authUser, newProperty);
+app.post('/properties', authUser, newProperty);
 /**
  * Obtener información de una propiedad en concreto
  *
  * @name getProperty
- * @path {GET} /property/:idProperty
+ * @path {GET} /properties/:idProperty
  * @params {number} idProperty Número del inmueble a mostrar
  * @code {200} Si la respuesta es correcta
  * @code {404} Si la propiedad no existe
  * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
  */
-app.get('/property/:idProperty', propertyExists, getProperty);
+app.get('/properties/:idProperty', propertyExists, getProperty);
 /**
  * Obtener información de una propiedad en concreto
  *
@@ -96,7 +97,7 @@ app.get('/properties', listProperties);
  * Agregar foto a los inmuebles
  *
  * @name addPropertyPhoto
- * @path {POST} /property/:idProperty/photos
+ * @path {POST} /properties/:idProperty/photos
  * @params {number} idProperty Número del inmueble a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {200} Si la respuesta es correcta
@@ -117,7 +118,7 @@ app.post(
  * Solicitud a un inmueble
  *
  * @name contactProperty
- * @path {POST} /property/:idProperty/contact
+ * @path {POST} /properties/:idProperty/contact
  * @params {number} idProperty Número del inmueble a contactar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {200} Si la respuesta es correcta
@@ -125,7 +126,6 @@ app.post(
  * @code {400} Si falta algún dato a insertar
  * @code {403} Si es el dueño de la vivienda
  * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
- *
  */
 app.post(
   '/properties/:idProperty/contact',
@@ -158,7 +158,6 @@ app.get('/properties/:bookingCode', bookingCodeProperty);
  * @code {400} Si el archivo es de un formato incorrecto
  * @code {403} Si supera el máximo de archivos permitidos
  * @response {Object} Response Guarda la información cambiada en el servidor y base de datos
- *
  */
 app.put(
   '/properties/:idProperty',
@@ -177,7 +176,6 @@ app.put(
  * @code {200} Si la respuesta es correcta
  * @code {401} Si la autorización del usuario es errónea
  * @response {Object} Response Elimina el inmueble del servidor (y sus fotos) y la base de datos
- *
  */
 app.delete('/properties/:idProperty', authUser, canEdit, deleteProperty);
 /**
@@ -192,7 +190,6 @@ app.delete('/properties/:idProperty', authUser, canEdit, deleteProperty);
  * @code {401} Si la autorización del usuario es errónea
  * @code {404} Si la foto no existe
  * @response {Object} Response Elimina la foto del servidor y la base de datos
- *
  */
 app.delete(
   '/properties/:idProperty/photos/:idPhoto',
@@ -211,9 +208,21 @@ app.delete(
  * @code {401} Si la autorización del usuario es errónea
  * @code {403} Si se intenta votar a uno mismo
  * @response {Object} Response Cambia el valor del voto y el comentario en la base de datos
- *
  */
 app.post('/properties/:idProperty/votes', authUser, propertyExists, newVote);
+/**
+ * Listar las valoraciones de un alquiler
+ *
+ * @name listPropertyVotes
+ * @path {GET} /properties/:idProperty/votes
+ * @params {number} idProperty Número del inmueble del que se quiere visualizar las valoraciones
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @response {Object} Response Lista de las valoraciones
+ */
+app.get('/properties/:idProperty/votes', propertyExists, listPropertyVotes);
+
 /**
  * ######################
  * ## USER CONTROLLERS ##
@@ -233,6 +242,7 @@ const {
   editUser,
   contactUser,
   listBookedProperties,
+  listUserVotes,
 } = require('./controllers/users/index');
 
 /**
@@ -258,7 +268,7 @@ app.get('/users/:idUser', authUser, userExists, getUser);
 /**
  * Listar todos los usuarios
  *
- * @name getUsers
+ * @name listUsers
  * @path {GET} /users
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @query {string} OrderBy Orden en el cual se listan los usuarios. (city o birthDate o votes(por defecto) )
@@ -405,7 +415,7 @@ app.post('/users/:idUser/contact', authUser, userExists, contactUser);
  */
 app.post('/users/:idUser/votes', authUser, userExists, newVote);
 /**
- * Lista de alquileres
+ * Listar alquileres en reserva, en petición o alquilados.
  *
  * @name listBookedProperties
  * @path {GET} /users/:idUser/bookings
@@ -418,6 +428,20 @@ app.post('/users/:idUser/votes', authUser, userExists, newVote);
  *
  */
 app.get('/users/:idUser/bookings', authUser, listBookedProperties);
+/**
+ * Listar las valoraciones de un usuario
+ *
+ * @name listUserVotes
+ * @path {GET} /users/:idUser/votes
+ * @params {number} idUser Número del usuario del que se quiere visualizar las valoraciones
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {403} Si no se tienen los permisos suficientes
+ * @response {Object} Response Lista de los alquileres reservados/alquilados
+ *
+ */
+app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
 /**
  * ####################
  * ## ERROR LISTENER ##

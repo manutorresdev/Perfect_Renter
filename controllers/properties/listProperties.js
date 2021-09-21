@@ -1,6 +1,6 @@
 const getDB = require('../../config/getDB');
 /**
- * @module Properties
+ * @module Entries
  */
 /**
  * Middleware para listar propiedades
