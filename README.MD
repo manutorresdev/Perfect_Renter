@@ -81,6 +81,12 @@
 
   <-- FUNCIONES AVANZADAS -->
 
+## FUNCIONES A AÑADIR
+
+- [ ] Geolocalizar usuario
+- [ ] Avisar subida o bajada de precio de un alquiler por email al usuario que se suscriba
+- [ ] Añadir API idealista
+
 ## AUTORES
 
 ### JULIAN RENDON
