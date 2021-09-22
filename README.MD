@@ -6,10 +6,14 @@
 - En ella se pueden encontrar los inmuebles disponibles con la persona encargada
   de arrendarlo, como también los futuros inquilinos.
 
-# Metodología SCRUM:
+## Documentación
 
-  - Sprint de Backend: [Tabla horas trabajadas.](https://github.com/manutowersdev/Perfect_Renter/blob/01ac551f8aaf83095e96a887ba5eb4e016b54b75/Sprint%20BACKEND%20-%20SCRUM.pdf) 
+  - Sprint de Backend: [Tabla horas trabajadas.](https://github.com/manutowersdev/Perfect_Renter/blob/01ac551f8aaf83095e96a887ba5eb4e016b54b75/Sprint%20BACKEND%20-%20SCRUM.pdf)
+  
   - Sprint de Frontend:
+
+  - JavascriptDocumentation(JSDOC): [JSDOC PerfectRenter](https://manutowersdev.github.io/Perfect_Renter/)
+
 
 ## Directorios
 
