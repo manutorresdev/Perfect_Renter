@@ -1,5 +1,12 @@
 const Joi = require('joi');
+/**
+ * @module Schemas
+ */
 
+/**
+ * Esquema de propiedades para validación de datos.
+ * @name PropertySchema
+ */
 const propertySchema = Joi.object({
   province: Joi.string().required(),
   address: Joi.string().required(),

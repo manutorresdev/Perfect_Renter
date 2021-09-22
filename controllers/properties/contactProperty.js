@@ -169,12 +169,12 @@ const contactProperty = async (req, res, next) => {
       <tfoot>
         <th>
             <button>
-              <a href="http://localhost:4000/properties/${idProperty}/${bookingCode}"
+              <a href="http://localhost:4000/properties/${bookingCode}"
             >ACEPTAR RESERVA</a></button>
             <span><span/>
             <span><span/>
             <button>
-              <a href="http://localhost:4000/properties/${idProperty}/${bookingCode}/cancel"
+              <a href="http://localhost:4000/properties/${bookingCode}/cancel"
             >CANCELAR RESERVA</a></button>
         </th>
       </tfoot>

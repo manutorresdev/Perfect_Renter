@@ -18,7 +18,6 @@ async function main() {
     //Eliminación de tablas existentes
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
-    await connection.query('DROP TABLE IF EXISTS history');
     await connection.query('DROP TABLE IF EXISTS bookings');
     await connection.query('DROP TABLE IF EXISTS properties');
     await connection.query('DROP TABLE IF EXISTS users');

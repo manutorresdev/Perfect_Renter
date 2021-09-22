@@ -1,6 +1,6 @@
 const getDB = require('../../config/getDB');
 /**
- * @module Properties
+ * @module Entries
  */
 /**
  * Middleware para listar propiedades
@@ -28,9 +28,6 @@ const listProperties = async (req, res, next) => {
       filtToilets,
       filtMts,
     } = req.query;
-
-    console.log(order, direction);
-
     // Establecemos opciones de validación de orden.
     const validOrderOptions = ['votes', 'createdAt', 'price'];
 
@@ -56,39 +53,78 @@ const listProperties = async (req, res, next) => {
     const toilets = filtToilets ? filtToilets : 1;
     const mts = filtMts ? filtMts : 0;
 
-    // Obtenemos los datos de todas las propiedades
+    let properties;
+    console.log(req.params.idUser);
+    /***** Verificamos si la peticion viene de un usuario Propietario *****/
+    if (req.params.idUser) {
+      // Obtenemos el id del usuario que hace la peticion.
+      const { idUser } = req.params;
 
-    const [properties] = await connection.query(
-      `SELECT properties.idProperty,
-        properties.idUser,
-        city,
-        province,
-        address,
-        zipCode,
-        number,
-        type,
-        stair,
-        flat,
-        gate,
-        mts,
-        rooms,
-        garage,
-        terrace,
-        toilets,
-        energyCertificate,
-        availabilityDate,
-        price,
-        state, AVG(IFNULL(property_vote.voteValue, 0)) AS votes, properties.createdAt
-        FROM properties
-        LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
-        WHERE city LIKE ? AND province LIKE ? AND "type" LIKE ? AND (price BETWEEN ?
-        AND ?) AND rooms >= ? AND garage >= ? AND toilets >= ?  AND mts >= ?
-        group by properties.idProperty
-        ORDER BY properties.${orderBy} ${orderDirection}
-        `,
-      [city, province, type, pmin, pmax, rooms, garage, toilets, mts]
-    );
+      [properties] = await connection.query(
+        `
+      SELECT properties.idProperty,
+      properties.idUser,
+      city,
+      province,
+      address,
+      zipCode,
+      number,
+      type,
+      stair,
+      flat,
+      gate,
+      mts,
+      rooms,
+      garage,
+      terrace,
+      toilets,
+      energyCertificate,
+      availabilityDate,
+      price,
+      state, AVG(IFNULL(property_vote.voteValue, 0)) AS votes, properties.createdAt
+      FROM properties
+      LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
+      WHERE properties.idUser = ?
+      group by properties.idProperty
+      ORDER BY properties.${orderBy} ${orderDirection}
+      `,
+        [idUser]
+      );
+    } else {
+      /*********** Final usuario propietario *****************/
+      // Obtenemos los datos de todas las propiedades
 
+      [properties] = await connection.query(
+        `SELECT properties.idProperty,
+          properties.idUser,
+          city,
+          province,
+          address,
+          zipCode,
+          number,
+          type,
+          stair,
+          flat,
+          gate,
+          mts,
+          rooms,
+          garage,
+          terrace,
+          toilets,
+          energyCertificate,
+          availabilityDate,
+          price,
+          state, AVG(IFNULL(property_vote.voteValue, 0)) AS votes, properties.createdAt
+          FROM properties
+          LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
+          WHERE city LIKE ? AND province LIKE ? AND "type" LIKE ? AND (price BETWEEN ?
+          AND ?) AND rooms >= ? AND garage >= ? AND toilets >= ?  AND mts >= ?
+          group by properties.idProperty
+          ORDER BY properties.${orderBy} ${orderDirection}
+          `,
+        [city, province, type, pmin, pmax, rooms, garage, toilets, mts]
+      );
+    }
     //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
     if (properties.length === 0) {
       res.send({
