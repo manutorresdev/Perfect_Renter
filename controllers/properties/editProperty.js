@@ -37,7 +37,7 @@ const editProperty = async (req, res, next) => {
       flat,
       gate,
       mts,
-      bedrooms,
+      rooms,
       garage,
       terrace,
       toilets,
@@ -305,15 +305,15 @@ const editProperty = async (req, res, next) => {
      * Actualizamos las habitaciones de la vivienda.
      *
      */
-    if (bedrooms && property[0].bedrooms !== bedrooms) {
+    if (rooms && property[0].rooms !== rooms) {
       // Validamos la información recibida.
-      validateData = { bedrooms };
+      validateData = { rooms };
       await validate(editPropertySchema, validateData);
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET bedrooms = ?, modifiedAt = ? WHERE idProperty = ?`,
-        [bedrooms, modifiedAt, idProperty]
+        `UPDATE properties SET rooms = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [rooms, modifiedAt, idProperty]
       );
     }
     /**

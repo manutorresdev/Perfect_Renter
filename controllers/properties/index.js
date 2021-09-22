@@ -8,6 +8,7 @@ const getProperty = require('./getProperty');
 const listProperties = require('./listProperties');
 const newVote = require('./newVote');
 const acceptBooking = require('./acceptBooking');
+const cancelBooking = require('./cancelBooking');
 const listPropertyVotes = require('./listPropertyVotes');
 
 module.exports = {
@@ -21,5 +22,6 @@ module.exports = {
   listProperties,
   newVote,
   acceptBooking,
+  cancelBooking,
   listPropertyVotes,
 };
