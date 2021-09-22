@@ -80,17 +80,16 @@ app.post('/properties', authUser, newProperty);
  * @params {number} idProperty Número del inmueble a mostrar
  * @code {200} Si la respuesta es correcta
  * @code {404} Si la propiedad no existe
- * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
+ * @response {Object} devuelve la propiedad en concreto o error de existir
  */
 app.get('/properties/:idProperty', propertyExists, getProperty);
 /**
- * Obtener información de una propiedad en concreto
+ * Obtener información de todas las propiedades disponibles
  *
  * @name listProperties
  * @path {GET} /properties
  * @code {200} Si la respuesta es correcta
- * @code {404} Si la propiedad no existe
- * @response {Object} Response guardando la foto en el servidor y el nombre en la base de datos
+ * @response {Object} Response listando las propiedades disponibles
  */
 app.get('/properties', listProperties);
 
@@ -454,6 +453,14 @@ app.get('/users/:idUser/bookings', authUser, listBookedProperties);
  */
 app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
 
+/**
+ * Obtener información de todas las propiedades de un usuario en concreto
+ *
+ * @name listProperties
+ * @path {GET} /users/:idUser/properties
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response listando las propiedades de ese renter
+ */
 app.get('/users/:idUser/properties', userExists, listProperties);
 
 /**
