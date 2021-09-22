@@ -135,6 +135,8 @@ app.post(
 );
 
 /**
+ * Cancelar una reserva
+ *
  * @name cancelBooking
  * @path {POST} /properties/:bookingCode/cancel
  * @params {string} bookingCode Codigo de reserva
