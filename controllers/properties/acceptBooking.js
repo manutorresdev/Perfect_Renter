@@ -1,6 +1,6 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-const { sendMail } = require('../../libs/helpers');
+const { sendMail, formatDate } = require('../../libs/helpers');
 /**
  * @module Entries */
 /**
@@ -15,20 +15,23 @@ const acceptBooking = async (req, res, next) => {
   try {
     connection = await getDB();
 
-    // Obtenemos el codigo de registro de los path params.
-    const { bookingCode: regCode } = req.params;
+    // Obtenemos el codigo de reserva de los path params.
+    const { bookingCode } = req.params;
+
+    // Obtenemos el id del usuario que acepta. Debe ser el del casero
+    const { idUser: idTenant } = req.userAuth;
 
     //Verificamos que la propiedad y el inquilino existen
     const [property] = await connection.query(
       `SELECT b.idProperty, b.idRenter
       FROM bookings b
-      WHERE bookingCode = ?`,
-      [idProperty, idRenter]
+      WHERE bookingCode = ? AND idTenant = ?`,
+      [bookingCode, idTenant]
     );
 
     // si la propiedad no existe enviamos error
     if (property.length < 1) {
-      const error = new Error('La vivienda no existe');
+      const error = new Error('La vivienda no existe o no tienes permisos.');
       error.httpStatus = 404;
       throw error;
     }
@@ -43,7 +46,7 @@ const acceptBooking = async (req, res, next) => {
       LEFT JOIN users as u2 ON b.idTenant = u2.idUser
       WHERE bookingCode = ?
     `,
-      [regCode]
+      [bookingCode]
     );
 
     // Si no hay reserva para aceptar, lanzamos error.
@@ -60,7 +63,7 @@ const acceptBooking = async (req, res, next) => {
       <tbody>
         <td>
           Hola ${booking[0].RenterName},
-          la reserva de la vivienda de ${booking[0].city} ha sido aceptada .
+          la reserva de la vivienda de ${booking[0].city} ha sido aceptada.
         </td>
       </tbody>
     </table>
@@ -79,7 +82,7 @@ const acceptBooking = async (req, res, next) => {
       <tbody>
         <td>
           Hola ${booking[0].TenantName},
-          la reserva de la vivienda de ${booking[0].city} ha sido realizada .
+          la reserva de la vivienda de ${booking[0].city} ha sido realizada.
         </td>
       </tbody>
     </table>
@@ -95,9 +98,9 @@ const acceptBooking = async (req, res, next) => {
     // Aceptada la reserva, cambiamos el estado de la reserva de "petición" a "reservado"
     await connection.query(
       `
-    UPDATE bookings SET state = "reservado" WHERE bookingCode = ?
+    UPDATE bookings SET state = "reservado", modifiedAt = ? WHERE bookingCode = ?
     `,
-      [regCode]
+      [bookingCode, formatDate(new Date())]
     );
 
     res.send({

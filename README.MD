@@ -25,20 +25,20 @@
 
 ## Endpoints Flats
 
-- GET - [/properties] - Obtener un listado de todos los alquileres.
-- GET - [/properties/:idProperty] - Obtener un alquiler en concreto.
+- GET - [/properties] - Obtener un listado de todos los alquileres. ✅
+- GET - [/properties/:idProperty] - Obtener un alquiler en concreto. ✅
 - POST - [/properties] - Crear un alquiler. ✅
-- POST - [/properties/:idProperty/photos] - Agregar una foto a un alquiler.
-- POST - [/properties/:idProperty/votes] - Votar un alquiler.
-- PUT - [/properties/:idProperty] - Edita un alquiler.
-- DELETE - [/properties/:idProperty] - Borrar un alquiler.
-- DELETE - [/properties/:idProperty/photos/:idPhoto] - Eliminar una foto del alquiler.
+- POST - [/properties/:idProperty/photos] - Agregar una foto a un alquiler. ✅
+- POST - [/properties/:idProperty/votes] - Votar un alquiler. ✅
+- PUT - [/properties/:idProperty] - Edita un alquiler. ✅
+- DELETE - [/properties/:idProperty] - Borrar un alquiler. ✅
+- DELETE - [/properties/:idProperty/photos/:idPhoto] - Eliminar una foto del alquiler. ✅
 
   <-- FUNCIONES AVANZADAS -->
 
-- POST - [/properties/:idProperty/contact] - Mandar mensaje al casero de un alquiler.
-- POST - [/properties/:idProperty/:bookingCode] - Aceptar solicitud de reserva.
-- POST - [/properties/:idProperty/:bookingCode/cancel] - Rechazar reserva.
+- POST - [/properties/:idProperty/contact] - Mandar mensaje al casero de un alquiler. ✅
+- POST - [/properties/:idProperty/:bookingCode] - Aceptar solicitud de reserva. ✅
+- POST - [/properties/:idProperty/:bookingCode/cancel] - Rechazar reserva. ✅
 
   <-- FUNCIONES AVANZADAS -->
 

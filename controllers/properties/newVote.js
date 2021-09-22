@@ -68,7 +68,6 @@ const newVote = async (req, res, next) => {
       `,
         [idReqUser, idProperty]
       );
-      console.log(votes);
 
       // Si existe un voto, editamos el contenido
       if (votes[0].quantity > 0) {
