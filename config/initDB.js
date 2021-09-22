@@ -89,10 +89,10 @@ async function main() {
             commentProperty VARCHAR(250),
             commentRenter VARCHAR(250),
             idTenant INT,
-            FOREIGN KEY (idVoted) REFERENCES users(idUser) ON DELETE CASCADE,
+            FOREIGN KEY (idTenant) REFERENCES users(idUser) ON DELETE CASCADE,
             idProperty INT,
             idRenter INT NOT NULL,
-            FOREIGN KEY (idUser) REFERENCES users(idUser),
+            FOREIGN KEY (idRenter) REFERENCES users(idUser),
             CONSTRAINT votes_CK1 CHECK (voteValue IN(1, 2, 3, 4, 5)),
             createdAt DATETIME NOT NULL,
             modifiedAt DATETIME
