@@ -47,8 +47,8 @@ const {
   deletePropertyPhoto,
   listProperties,
   newVote,
+  acceptBooking,
   cancelBooking,
-  bookingCodeProperty,
   listPropertyVotes,
 } = require('./controllers/properties/index');
 
@@ -141,19 +141,19 @@ app.post(
  * @params {number} idReqUser Id de quien realiza la cancelación
  * @response {Object} Response - Se notifica por pantalla y email que la reserva se cancela
  */
-app.post('/properties/:bookingCode/cancel', authUser, cancelBooking);
+app.get('/properties/:bookingCode/cancel', authUser, cancelBooking);
 
 /**
  * Aceptar reserva.
  *
- * @name bookingCodeProperty
+ * @name acceptBooking
  * @path {PUT} /properties/:bookingCode
  * @params {String} bookingCode Código de la reserva
  * @code {200} Si la respuesta es correcta
  * @code {404} Si no hay reserva pendiente de aceptar o si no existe la viviendo o el inquilino
  * @response {Object} Response El servidor envía un correo electrónico al inquilino y al dueño de la vivienda conforme la reserva se ha realizado con éxito
  */
-app.get('/properties/:bookingCode', bookingCodeProperty);
+app.get('/properties/:bookingCode/accept', authUser, acceptBooking);
 
 /**
  * Editar información de un inmueble
@@ -187,7 +187,13 @@ app.put(
  * @code {401} Si la autorización del usuario es errónea
  * @response {Object} Response Elimina el inmueble del servidor (y sus fotos) y la base de datos
  */
-app.delete('/properties/:idProperty', authUser, canEdit, deleteProperty);
+app.delete(
+  '/properties/:idProperty',
+  propertyExists,
+  authUser,
+  canEdit,
+  deleteProperty
+);
 /**
  * Eliminar una foto de un inmueble
  *

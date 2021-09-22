@@ -30,6 +30,14 @@ const deleteProperty = async (req, res, next) => {
       deletePhoto(photo.name);
     }
 
+    // Eliminamos las reservas asociadas a esa propiedad.
+    await connection.query(
+      `
+    DELETE FROM bookings WHERE idProperty = ?
+    `,
+      [idProperty]
+    );
+
     // Eliminamos la propiedad de la base de datos.
     await connection.query(
       `

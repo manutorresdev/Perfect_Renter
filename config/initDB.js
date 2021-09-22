@@ -72,7 +72,7 @@ async function main() {
             energyCertificate BOOLEAN,
             availabilityDate DATE,
             price DECIMAL(6,2),
-            state ENUM("reservado", "alquilado", "disponible"),
+            state ENUM("reservado", "alquilado", "disponible") NOT NULL DEFAULT "disponible",
             modifiedAt DATETIME,
             createdAt DATETIME NOT NULL
         )
@@ -88,10 +88,10 @@ async function main() {
             voteValueRenter TINYINT NOT NULL DEFAULT 3,
             commentProperty VARCHAR(250),
             commentRenter VARCHAR(250),
-            idVoted INT,
+            idTenant INT,
             FOREIGN KEY (idVoted) REFERENCES users(idUser) ON DELETE CASCADE,
             idProperty INT,
-            idUser INT NOT NULL,
+            idRenter INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser),
             CONSTRAINT votes_CK1 CHECK (voteValue IN(1, 2, 3, 4, 5)),
             createdAt DATETIME NOT NULL,
@@ -110,9 +110,10 @@ async function main() {
             idProperty INT,
             FOREIGN KEY (idProperty) REFERENCES properties(idProperty) ON DELETE CASCADE,
             createdAt DATETIME NOT NULL,
+            modifiedAt DATETIME,
             startBookingDate DATE,
             endBookingDate DATE,
-            state ENUM("reservado", "alquilado", "finalizado", "peticion", "cancelado-renter", "cancelado-tenant") NOT NULL DEFAULT "peticion",
+            state ENUM("reservado", "alquilada", "finalizada", "peticion", "cancelada-renter", "cancelada-tenant") NOT NULL DEFAULT "peticion",
             bookingCode VARCHAR(20)
             )
     `);

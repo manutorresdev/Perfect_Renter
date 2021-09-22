@@ -1,7 +1,7 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
 const getPRDB = require('../../config/getPRDB');
-const { formatDate, validate } = require('../../libs/helpers');
+const { formatDate, validate, savePhoto } = require('../../libs/helpers');
 
 const { propertySchema } = require('../../models/propertySchema');
 /**
@@ -62,6 +62,27 @@ const newProperty = async (req, res, next) => {
       throw error;
     }
 
+    // Comprobamos que la ciudad pertenece a la provincia correcta
+    const [verify] = await connectionPR.query(
+      `
+    SELECT cp,provincia,poblacion FROM municipios WHERE poblacion = ? AND provincia = ?
+    `,
+      [city, province]
+    );
+
+    if (verify.length < 1) {
+      const error = new Error(
+        'Hay un error en la ciudad o la provincia, revisa los datos de nuevo.'
+      );
+      error.httpStatus = 403;
+      throw error;
+    }
+
+    // Cambiamos el CP
+    if (verify[0].cp.length < 5) {
+      zipCode = `0${verify[0].cp}`;
+    }
+
     // Comprobamos si el piso ya existe en la base de datos.
     if (!gate) {
       const [property] = await connection.query(
@@ -86,27 +107,9 @@ const newProperty = async (req, res, next) => {
         throw error;
       }
     }
+
+    // Obtenemos el usuario que sube el inmueble
     const userId = req.userAuth.idUser;
-
-    // Comprobamos que la ciudad pertenece a la provincia correcta
-    const [verify] = await connectionPR.query(
-      `
-    SELECT cp,provincia,poblacion FROM municipios WHERE poblacion = ? AND provincia = ?
-    `,
-      [city, province]
-    );
-
-    if (verify.length < 0) {
-      const error = new Error(
-        'Hay un error en la ciudad o la provincia, revisa los datos de nuevo.'
-      );
-      error.httpStatus = 403;
-      throw error;
-    }
-
-    if (verify[0].cp.length < 5) {
-      zipCode = `0${verify[0].cp}`;
-    }
 
     // Generamos la fecha de creación
     const createdAt = formatDate(new Date());

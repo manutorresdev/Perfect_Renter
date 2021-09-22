@@ -44,9 +44,9 @@ const contactProperty = async (req, res, next) => {
     // Comprobamos que no haya una solicitud en proceso de aceptar.
     const [petition] = await connection.query(
       `
-        SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ?
+        SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ? AND startBookingDate = ? AND endBookingDate = ?
         `,
-      [idReqUser, property[0].idUser, idProperty]
+      [idReqUser, property[0].idUser, idProperty, startDate, endDate]
     );
 
     // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
@@ -113,7 +113,11 @@ const contactProperty = async (req, res, next) => {
         error.httpStatus = 400;
         throw error;
       }
-
+      if (!startDate || !endDate) {
+        const error = new Error('Falta definir la fecha de la reserva.');
+        error.httpStatus = 400;
+        throw error;
+      }
       // Si la fecha reservada es menor a la fecha actual, lanzamos error.
       if (
         new Date(startDate).getMilliseconds < new Date().getMilliseconds ||
@@ -169,7 +173,7 @@ const contactProperty = async (req, res, next) => {
       <tfoot>
         <th>
             <button>
-              <a href="http://localhost:4000/properties/${bookingCode}"
+              <a href="http://localhost:4000/properties/${bookingCode}/accept"
             >ACEPTAR RESERVA</a></button>
             <span><span/>
             <span><span/>

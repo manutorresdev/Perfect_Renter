@@ -33,7 +33,7 @@ const listBookedProperties = async (req, res, next) => {
       `
       SELECT city, province, type, mts, price, bookings.state FROM properties
       LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
-      WHERE bookings.idRenter = ? AND (bookings.state = "reservado" OR bookings.state = "alquilado");
+      WHERE bookings.idRenter = ? AND (bookings.state = "reservado" OR bookings.state = "alquilada");
       `,
       [idUser]
     );
