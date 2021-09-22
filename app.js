@@ -136,10 +136,10 @@ app.post(
 
 /**
  * @name cancelBooking
- * @path {POST} /properties/:idProperty/:bookingCode/cancel
+ * @path {POST} /properties/:bookingCode/cancel
  * @params {string} bookingCode Codigo de reserva
  * @params {number} idReqUser Id de quien realiza la cancelación
- * @response {Object} Response - Se notifica por pantalla que la reserva se cancela
+ * @response {Object} Response - Se notifica por pantalla y email que la reserva se cancela
  */
 app.post('/properties/:bookingCode/cancel', authUser, cancelBooking);
 

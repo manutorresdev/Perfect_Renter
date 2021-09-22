@@ -1,5 +1,5 @@
 const getDB = require('../../config/getDB');
-const { sendMail, formatDate } = require('../..//libs/helpers');
+const { sendMail } = require('../..//libs/helpers');
 
 const cancelBooking = async (req, res, next) => {
   let connection;
