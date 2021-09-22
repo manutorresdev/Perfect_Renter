@@ -47,6 +47,7 @@ const {
   deletePropertyPhoto,
   listProperties,
   newVote,
+  cancelBooking,
   bookingCodeProperty,
   listPropertyVotes,
 } = require('./controllers/properties/index');
@@ -133,6 +134,16 @@ app.post(
   propertyExists,
   contactProperty
 );
+
+/**
+ * @name cancelBooking
+ * @path {POST} /properties/:bookingCode/cancel
+ * @params {string} bookingCode Codigo de reserva
+ * @params {number} idReqUser Id de quien realiza la cancelación
+ * @response {Object} Response - Se notifica por pantalla y email que la reserva se cancela
+ */
+app.post('/properties/:bookingCode/cancel', authUser, cancelBooking);
+
 /**
  * Aceptar reserva.
  *
@@ -442,6 +453,9 @@ app.get('/users/:idUser/bookings', authUser, listBookedProperties);
  *
  */
 app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
+
+app.get('/users/:idUser/properties', userExists, listProperties);
+
 /**
  * ####################
  * ## ERROR LISTENER ##

@@ -9,7 +9,7 @@ const { propertySchema } = require('../../models/propertySchema');
  */
 /**
  * Middleware para generar un nuevo piso en la base de datos.
- * @param {*} req Como "requests", se requieren todos los datos relevantes del piso, como minimo ciudad, provinvia, dirección y edificio, mts,bedrooms, precio, estado
+ * @param {*} req Como "requests", se requieren todos los datos relevantes del piso, como minimo ciudad, provinvia, dirección y edificio, mts,rooms, precio, estado
  * @param {*} res El servidor lanza como respuesta la confirmación de la creación de un nuevo piso.
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
  */

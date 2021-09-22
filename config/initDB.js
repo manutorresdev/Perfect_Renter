@@ -112,7 +112,7 @@ async function main() {
             createdAt DATETIME NOT NULL,
             startBookingDate DATE,
             endBookingDate DATE,
-            state ENUM("reservado", "alquilado", "finalizado", "peticion") NOT NULL DEFAULT "peticion",
+            state ENUM("reservado", "alquilado", "finalizado", "peticion", "cancelado-renter", "cancelado-tenant") NOT NULL DEFAULT "peticion",
             bookingCode VARCHAR(20)
             )
     `);

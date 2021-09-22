@@ -7,9 +7,9 @@ const deletePropertyPhoto = require('./deletePropertyPhoto');
 const getProperty = require('./getProperty');
 const listProperties = require('./listProperties');
 const newVote = require('./newVote');
+const cancelBooking = require('./cancelBooking');
 const bookingCodeProperty = require('./bookingCodeProperty');
 const listPropertyVotes = require('./listPropertyVotes');
-
 
 module.exports = {
   addPropertyPhoto,
@@ -21,6 +21,7 @@ module.exports = {
   getProperty,
   listProperties,
   newVote,
+  cancelBooking,
   bookingCodeProperty,
   listPropertyVotes,
 };
