@@ -25,20 +25,20 @@
 
 ## Endpoints Flats
 
-- GET - [/properties] - Obtener un listado de todos los alquileres. ✅
-- GET - [/properties/:idProperty] - Obtener un alquiler en concreto. ✅
+- GET - [/properties] - Obtener un listado de todos los alquileres.
+- GET - [/properties/:idProperty] - Obtener un alquiler en concreto.
 - POST - [/properties] - Crear un alquiler. ✅
-- POST - [/properties/:idProperty/photos] - Agregar una foto a un alquiler.✅
-- POST - [/properties/:idProperty/votes] - Votar un alquiler. ✅
-- PUT - [/properties/:idProperty] - Edita un alquiler. ✅
-- DELETE - [/properties/:idProperty] - Borrar un alquiler.✅
-- DELETE - [/properties/:idProperty/photos/:idPhoto] - Eliminar una foto del alquiler.✅
+- POST - [/properties/:idProperty/photos] - Agregar una foto a un alquiler.
+- POST - [/properties/:idProperty/votes] - Votar un alquiler.
+- PUT - [/properties/:idProperty] - Edita un alquiler.
+- DELETE - [/properties/:idProperty] - Borrar un alquiler.
+- DELETE - [/properties/:idProperty/photos/:idPhoto] - Eliminar una foto del alquiler.
 
   <-- FUNCIONES AVANZADAS -->
 
-- POST - [/properties/:idProperty/contact] - Mandar mensaje al casero de un alquiler. ✅
-- POST - [/properties/:idProperty/:bookingCode] - Aceptar solicitud de reserva. -- Acepta la reserva de un inquilino, cambiando el estado de la vivienda a ocupado/reservado.
-- POST - [/properties/:idProperty/:bookingCode/cancel] - Rechazar reserva. --Rechaza la reserva del alquiler (puede hacerlo el inquilino que ha reservado o el casero).
+- POST - [/properties/:idProperty/contact] - Mandar mensaje al casero de un alquiler.
+- POST - [/properties/:idProperty/:bookingCode] - Aceptar solicitud de reserva.
+- POST - [/properties/:idProperty/:bookingCode/cancel] - Rechazar reserva.
 
   <-- FUNCIONES AVANZADAS -->
 
@@ -60,7 +60,7 @@
 
 - POST - [/users/:idUser/contact] - Mandar mensaje a un renter. ✅
 - GET- [/users/:idUser/booked] - Listar alquileres reservados.✅
-- GET - [/users/:idUser/votes] - Obtener votos de un usuario en concreto.✅ <-- AÑADIR FUNCION PARA QUE LISTE LOS VOTOS INDIVIDUALMENTE -->>
+- GET - [/users/:idUser/votes] - Obtener votos de un usuario en concreto.✅
 
   <-- FUNCIONES AVANZADAS -->
 

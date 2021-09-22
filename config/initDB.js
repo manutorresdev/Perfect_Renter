@@ -72,7 +72,7 @@ async function main() {
             energyCertificate BOOLEAN,
             availabilityDate DATE,
             price DECIMAL(6,2),
-            state ENUM("reservado", "alquilado", "disponible"),
+            state ENUM("reservado", "alquilado", "disponible") NOT NULL DEFAULT "disponible",
             modifiedAt DATETIME,
             createdAt DATETIME NOT NULL
         )

@@ -9,7 +9,7 @@ const { sendMail } = require('../../libs/helpers');
  * @param {*} res El servidor confirma la validación si no hay errores
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const bookingCodeProperty = async (req, res, next) => {
+const acceptBooking = async (req, res, next) => {
   let connection;
 
   try {
@@ -111,4 +111,4 @@ const bookingCodeProperty = async (req, res, next) => {
   }
 };
 
-module.exports = bookingCodeProperty;
+module.exports = acceptBooking;
