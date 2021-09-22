@@ -4,7 +4,7 @@ const getDB = require('../../config/getDB');
  */
 /**
  * Middleware para listar propiedades
- * @param {*} req Puede tener parámetros de entrada como los orden o dirección
+ * @param {*} req Puede tener request de query como los de orden o dirección y params como id de usuario a consultar
  * @param {*} res Como respuesta, se listan los datos básicos de todos las propiedades
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  * @returns {Promise} Devuelve una lista objetos con los datos
