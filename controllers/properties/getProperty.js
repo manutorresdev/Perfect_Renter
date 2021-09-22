@@ -32,14 +32,14 @@ const getProperty = async (req, res, next) => {
             flat,
             gate,
             mts,
-            bedrooms,
+            rooms,
             garage,
             terrace,
             toilets,
             energyCertificate,
             availabilityDate,
             price,
-            estate FROM properties WHERE idProperty = ?`,
+            state FROM properties WHERE idProperty = ?`,
       [idProperty]
     );
 

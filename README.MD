@@ -38,7 +38,8 @@
   <-- FUNCIONES AVANZADAS -->
 
 - POST - [/properties/:idProperty/:bookingCode] - Aceptar solicitud de reserva. -- Acepta la reserva de un inquilino, cambiando el estado de la vivienda a ocupado/reservado.
-- POST - [/properties/:idProperty/:bookingCode/cancel] - Rechazar reserva. --Rechaza la reserva del alquiler (puede hacerlo el inquilino que ha reservado o el casero).
+  (Se debe generar un codigo de reserva consegutivo a partir de la PK de la tabla ahora es ta con generateString)
+- POST - [/properties/:bookingCode/cancel] - Rechazar reserva. --Rechaza la reserva del alquiler (puede hacerlo el inquilino que ha reservado o el casero y se modifica la reserva en su state por cancelado-[renter o tenant]).
 
   <-- FUNCIONES AVANZADAS -->
 

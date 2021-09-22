@@ -47,6 +47,7 @@ const {
   deletePropertyPhoto,
   listProperties,
   newVote,
+  cancelBooking,
 } = require('./controllers/properties/index');
 
 /**
@@ -132,6 +133,16 @@ app.post(
   propertyExists,
   contactProperty
 );
+
+/**
+ * @name cancelBooking
+ * @path {POST} /properties/:idProperty/:bookingCode/cancel
+ * @params {string} bookingCode Codigo de reserva
+ * @params {number} idReqUser Id de quien realiza la cancelación
+ * @response {Object} Response - Se notifica por pantalla que la reserva se cancela
+ */
+app.post('/properties/:bookingCode/cancel', authUser, cancelBooking);
+
 /**
  * Editar información de un inmueble
  *

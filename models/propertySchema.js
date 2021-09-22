@@ -11,13 +11,13 @@ const propertySchema = Joi.object({
   gate: Joi.string().required(),
   mts: Joi.number().required(),
   garage: Joi.number().required(),
-  bedrooms: Joi.number().required(),
+  rooms: Joi.number().required(),
   terrace: Joi.number().required(),
   toilets: Joi.number().required(),
   energyCertificate: Joi.number().required(),
   price: Joi.number().required(),
   city: Joi.string().required(),
-  estate: Joi.string().required(),
+  state: Joi.string().required(),
 });
 
 const editPropertySchema = Joi.object({
@@ -31,13 +31,13 @@ const editPropertySchema = Joi.object({
   gate: Joi.string(),
   mts: Joi.number(),
   garage: Joi.number(),
-  bedrooms: Joi.number(),
+  rooms: Joi.number(),
   terrace: Joi.number(),
   toilets: Joi.number(),
   energyCertificate: Joi.number(),
   price: Joi.number(),
   city: Joi.string(),
-  estate: Joi.string(),
+  state: Joi.string(),
 });
 module.exports = {
   propertySchema,
