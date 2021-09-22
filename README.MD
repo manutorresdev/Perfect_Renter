@@ -6,6 +6,9 @@
 - En ella se pueden encontrar los inmuebles disponibles con la persona encargada
   de arrendarlo, como también los futuros inquilinos.
 
+[a relative link](Sprint Backend - Scrum.pdf)
+
+
 ## Directorios
 
 1. Documentación
