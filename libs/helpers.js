@@ -7,6 +7,7 @@ const sharp = require('sharp');
 const crypto = require('crypto');
 const uuid = require('uuid');
 const path = require('path');
+const fs = require('fs').promises;
 
 const {
   UPLOADS_DIRECTORY,
@@ -167,6 +168,7 @@ async function validate(schema, data) {
     throw error;
   }
 }
+
 module.exports = {
   formatDate,
   getRandomValue,

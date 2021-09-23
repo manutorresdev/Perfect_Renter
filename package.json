@@ -1,7 +1,7 @@
 {
   "name": "perfect_renter",
   "version": "1.0.0",
-  "description": "",
+  "description": "- Perfect Renter es una aplicación web destinada a la búsqueda de pisos en   alquiler.",
   "main": "app.js",
   "scripts": {
     "docs": "jsdoc -c jsdoc.json -r",
@@ -35,13 +35,17 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "docdash": "^1.2.0",
     "eslint": "^7.32.0",
     "faker": "^5.5.3",
-    "docdash": "^1.2.0",
-    "prettier": "^2.4.0",
-    "nodemon": "^2.0.12",
     "gh-pages": "^3.2.3",
     "jsdoc": "^3.6.7",
-    "jsdoc-http-plugin": "^0.3.2"
+    "jsdoc-http-plugin": "^0.3.2",
+    "mysql-import": "^5.0.21",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.4.0"
+  },
+  "directories": {
+    "doc": "docs"
   }
 }

@@ -1,7 +1,13 @@
 const getDB = require('./getDB');
 const faker = require('faker/locale/es');
 const { format } = require('date-fns');
-const mail = require('@sendgrid/mail');
+const fs = require('fs').promises;
+const mysql = require('mysql2');
+const path = require('path');
+
+const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD } = process.env;
+let connection;
+
 /**
  * @module Database
  */
@@ -11,16 +17,96 @@ const mail = require('@sendgrid/mail');
  * @returns {Promise} Crea la base de datos con los datos proporcionados por la dependencia Faker.
  */
 async function main() {
-  let connection;
-
   try {
+    // Creamos una conexión al servidor de SQL
+    connection = await mysql.createConnection({
+      multipleStatements: true,
+      host: MYSQL_HOST,
+      user: MYSQL_USER,
+      password: MYSQL_PASSWORD,
+      timezone: 'Z',
+    });
+
+    // Obtenemos los datos de la base de datos
+    const municipiosPath = path.join(__dirname, 'municipios.sql');
+    const municipios = fs.readFile(municipiosPath, 'utf-8');
+    const provinciasPath = path.join(__dirname, 'provincias.sql');
+    const provincias = fs.readFile(provinciasPath, 'utf-8');
+
+    // Creamos las base de datos necesarias.
+    await connection.connect(async function (error) {
+      if (error) {
+        const error = new Error(
+          'Ha habido un error en la creación de la base de datos.'
+        );
+        throw error;
+      }
+      console.log('- Conectado a SQL:');
+
+      connection.query('DROP DATABASE IF EXISTS perfect_renter');
+      connection.query('CREATE DATABASE IF NOT EXISTS perfect_renter');
+
+      console.log('Base de datos: perfect_renter, creada');
+
+      connection.query('DROP DATABASE IF EXISTS provincias');
+      connection.query('CREATE DATABASE IF NOT EXISTS provincias');
+
+      console.log('Base de datos: provincias, creada');
+
+      // Insertamos las querys del archivo SQL en la base de datos creada.
+      connection.query(
+        `
+      USE provincias;
+      SET FOREIGN_KEY_CHECKS = 0;
+      DROP TABLE IF EXISTS municipios;
+      CREATE TABLE municipios (
+        internalid int unsigned NOT NULL,
+        cp decimal(5,0) unsigned NOT NULL,
+        calle varchar(100) DEFAULT NULL,
+        poblacion varchar(100) NOT NULL,
+        provinciaid decimal(2,0) unsigned NOT NULL,
+        provincia varchar(100) DEFAULT NULL,
+        paisid char(2) NOT NULL,
+        pais varchar(100) DEFAULT NULL,
+        KEY fk_provinciaid_municipios_provincia (provinciaid),
+        CONSTRAINT fk_provinciaid_municipios_provincia FOREIGN KEY (provinciaid) REFERENCES provincia (provinciaid)
+      );
+
+      LOCK TABLE municipios WRITE;
+
+      ${await municipios}
+
+      UNLOCK TABLES;
+
+      DROP TABLE IF EXISTS provincia;
+      CREATE TABLE provincia (
+        provinciaid decimal(2, 0) unsigned NOT NULL,
+        provincia varchar(50) NOT NULL,
+        PRIMARY KEY (provinciaid),
+        KEY ix_provinciaid (provinciaid)
+      );
+
+      LOCK TABLE provincia WRITE;
+
+      ${await provincias}
+
+      UNLOCK TABLES;
+      SET FOREIGN_KEY_CHECKS = 1;
+      `,
+        (err) => {
+          if (err) throw err.message;
+        }
+      );
+    });
+
     connection = await getDB();
+
     //Eliminación de tablas existentes
     await connection.query('DROP TABLE IF EXISTS photos');
     await connection.query('DROP TABLE IF EXISTS votes');
     await connection.query('DROP TABLE IF EXISTS bookings');
     await connection.query('DROP TABLE IF EXISTS properties');
-    await connection.query('DROP TABLE IF EXISTS users');
+    await connection.query('DROP TABLE IF  EXISTS users');
 
     console.log('Tablas Eliminadas');
 
@@ -173,6 +259,11 @@ async function main() {
     console.log('Usuarios creados');
   } catch (error) {
     console.error(error.message);
+    if (error.message === "Unknown database 'perfect_renter'") {
+      return console.log(
+        'La base de datos perfect_renter no existe, debes crearla previamente.'
+      );
+    }
   } finally {
     if (connection) connection.release();
     process.exit(0);
