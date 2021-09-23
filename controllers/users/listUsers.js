@@ -38,7 +38,7 @@ const listUsers = async (req, res, next) => {
       // Filtrado por fecha de nacimiento.
       console.log('Ordenado por fecha de nacimiento.');
       [users] = await connection.query(
-        `SELECT users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
+        `SELECT users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
         FROM users
         LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
         group by users.idUser
@@ -49,7 +49,7 @@ const listUsers = async (req, res, next) => {
       // Filtrado por ciudad
       console.log('Filtrado por ciudad.');
       [users] = await connection.query(
-        `SELECT users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
+        `SELECT users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
       FROM users
       LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
       WHERE city LIKE ?
@@ -61,7 +61,7 @@ const listUsers = async (req, res, next) => {
     } else {
       console.log('Ordenado por votos');
       [users] = await connection.query(
-        `SELECT users.name, users.lastName,users.city, users.avatar, AVG(IFNULL(user_vote.vote, 0)) AS votes, users.birthDate
+        `SELECT users.name, users.lastName,users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
       FROM users
       LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
       group by users.idUser

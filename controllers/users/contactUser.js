@@ -56,7 +56,7 @@ const contactUser = async (req, res, next) => {
     <table>
       <tbody>
         <td>
-          Hola, ${user[0].name},
+          Hola ${user[0].name},
           un propietario ha contactado contigo.
           <br/>
           Datos del usuario:
