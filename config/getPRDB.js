@@ -2,13 +2,8 @@ require('dotenv').config();
 
 const mysql = require('mysql2/promise');
 
-const {
-  MYSQL_DATABASEPROVINCES,
-  MYSQL_HOSTPROVINCES,
-  MYSQL_USERPROVINCES,
-  MYSQL_PASSWORDPROVINCES,
-} = process.env;
-
+const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASEPROVINCES } =
+  process.env;
 let pool;
 /**
  * @module Database
@@ -22,9 +17,9 @@ const getPRDB = async () => {
   if (!pool) {
     pool = mysql.createPool({
       connectionLimit: 10,
-      host: MYSQL_HOSTPROVINCES,
-      user: MYSQL_USERPROVINCES,
-      password: MYSQL_PASSWORDPROVINCES,
+      host: MYSQL_HOST,
+      user: MYSQL_USER,
+      password: MYSQL_PASSWORD,
       database: MYSQL_DATABASEPROVINCES,
       timezone: 'Z',
     });

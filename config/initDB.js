@@ -29,11 +29,9 @@ async function main() {
 
     // Obtenemos los datos de la base de datos
     const municipiosPath = path.join(__dirname, 'municipios.sql');
-    const municipios = await fs.readFile(municipiosPath, 'utf-8');
+    const municipios = fs.readFile(municipiosPath, 'utf-8');
     const provinciasPath = path.join(__dirname, 'provincias.sql');
-    const provincias = await fs.readFile(provinciasPath, 'utf-8');
-
-    console.log(provincias);
+    const provincias = fs.readFile(provinciasPath, 'utf-8');
 
     // Creamos las base de datos necesarias.
     await connection.connect(async function (error) {
@@ -76,7 +74,7 @@ async function main() {
 
       LOCK TABLE municipios WRITE;
 
-      ${municipios}
+      ${await municipios}
 
       UNLOCK TABLES;
 
@@ -90,7 +88,7 @@ async function main() {
 
       LOCK TABLE provincia WRITE;
 
-      ${provincias}
+      ${await provincias}
 
       UNLOCK TABLES;
       SET FOREIGN_KEY_CHECKS = 1;
