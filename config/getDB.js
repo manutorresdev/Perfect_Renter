@@ -24,6 +24,7 @@ const getDB = async () => {
       timezone: 'Z',
     });
   }
+
   return await pool.getConnection();
 };
 
