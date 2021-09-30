@@ -18,47 +18,34 @@ let connection;
  */
 async function main() {
   try {
-    // Creamos una conexión al servidor de SQL
-    connection = await mysql.createConnection({
-      multipleStatements: true,
-      host: MYSQL_HOST,
-      user: MYSQL_USER,
-      password: MYSQL_PASSWORD,
-      timezone: 'Z',
-    });
+    connection = await getDB();
 
-    // Obtenemos los datos de la base de datos
-    const municipiosPath = path.join(__dirname, 'municipios.sql');
-    const municipios = fs.readFile(municipiosPath, 'utf-8');
-    const provinciasPath = path.join(__dirname, 'provincias.sql');
-    const provincias = fs.readFile(provinciasPath, 'utf-8');
+    //Eliminación de tablas existentes
+    await connection.query('DROP TABLE IF EXISTS photos');
+    await connection.query('DROP TABLE IF EXISTS votes');
+    await connection.query('DROP TABLE IF EXISTS bookings');
+    await connection.query('DROP TABLE IF EXISTS properties');
+    await connection.query('DROP TABLE IF EXISTS users');
+    await connection.query('DROP TABLE IF EXISTS municipios');
+    await connection.query('DROP TABLE IF EXISTS provincias');
+    console.log('Tablas Eliminadas');
 
-    // Creamos las base de datos necesarias.
-    await connection.connect(async function (error) {
-      if (error) {
-        const error = new Error(
-          'Ha habido un error en la creación de la base de datos.'
-        );
-        throw error;
-      }
-      console.log('- Conectado a SQL:');
+    /* Crearemos las tablas necesarias */
 
-      connection.query('DROP DATABASE IF EXISTS perfect_renter');
-      connection.query('CREATE DATABASE IF NOT EXISTS perfect_renter');
+    /* Creamos la tabla provincias */
+    await connection.query(
+      `
+    CREATE TABLE provincias (
+      provinciaid decimal(2, 0) unsigned NOT NULL,
+      provincia varchar(50) NOT NULL,
+      PRIMARY KEY (provinciaid)
+      );
+      `
+    );
 
-      console.log('Base de datos: perfect_renter, creada');
-
-      connection.query('DROP DATABASE IF EXISTS provincias');
-      connection.query('CREATE DATABASE IF NOT EXISTS provincias');
-
-      console.log('Base de datos: provincias, creada');
-
-      // Insertamos las querys del archivo SQL en la base de datos creada.
-      connection.query(
-        `
-      USE provincias;
-      SET FOREIGN_KEY_CHECKS = 0;
-      DROP TABLE IF EXISTS municipios;
+    /* Creamos la tabla municipios */
+    await connection.query(
+      `
       CREATE TABLE municipios (
         internalid int unsigned NOT NULL,
         cp decimal(5,0) unsigned NOT NULL,
@@ -67,50 +54,10 @@ async function main() {
         provinciaid decimal(2,0) unsigned NOT NULL,
         provincia varchar(100) DEFAULT NULL,
         paisid char(2) NOT NULL,
-        pais varchar(100) DEFAULT NULL,
-        KEY fk_provinciaid_municipios_provincia (provinciaid),
-        CONSTRAINT fk_provinciaid_municipios_provincia FOREIGN KEY (provinciaid) REFERENCES provincia (provinciaid)
-      );
-
-      LOCK TABLE municipios WRITE;
-
-      ${await municipios}
-
-      UNLOCK TABLES;
-
-      DROP TABLE IF EXISTS provincia;
-      CREATE TABLE provincia (
-        provinciaid decimal(2, 0) unsigned NOT NULL,
-        provincia varchar(50) NOT NULL,
-        PRIMARY KEY (provinciaid),
-        KEY ix_provinciaid (provinciaid)
-      );
-
-      LOCK TABLE provincia WRITE;
-
-      ${await provincias}
-
-      UNLOCK TABLES;
-      SET FOREIGN_KEY_CHECKS = 1;
-      `,
-        (err) => {
-          if (err) throw err.message;
-        }
-      );
-    });
-
-    connection = await getDB();
-
-    //Eliminación de tablas existentes
-    await connection.query('DROP TABLE IF EXISTS photos');
-    await connection.query('DROP TABLE IF EXISTS votes');
-    await connection.query('DROP TABLE IF EXISTS bookings');
-    await connection.query('DROP TABLE IF EXISTS properties');
-    await connection.query('DROP TABLE IF  EXISTS users');
-
-    console.log('Tablas Eliminadas');
-
-    /* Crearemos las tablas necesarias */
+        pais varchar(100) DEFAULT NULL
+        );
+        `
+    );
 
     /* Creamos la tabla users */
     await connection.query(`
@@ -215,9 +162,21 @@ async function main() {
         )
     `);
 
+    // Obtenemos los datos de provincias y municipios
+    const municipiosPath = path.join(__dirname, 'municipios.sql');
+    const municipios = fs.readFile(municipiosPath, 'utf-8');
+    const provinciasPath = path.join(__dirname, 'provincias.sql');
+    const provincias = fs.readFile(provinciasPath, 'utf-8');
+    // Insertamos datos
+    await connection.query(`
+    ${await municipios}
+    `);
+    await connection.query(`
+    ${await provincias}
+    `);
     console.log('Tablas creadas');
 
-    // Insertar el usuario administrador.
+    // Insertamos el usuario administrador.
     await connection.query(`
     INSERT INTO users ( name, lastName, tel, email, password, role, createdAt, city, birthDate)
     VALUES (
@@ -238,7 +197,6 @@ async function main() {
     // Insertamos los usuarios.
     for (let i = 0; i < USERS; i++) {
       // Datos de faker.
-
       const name = faker.name.findName();
       const lastName = faker.name.lastName();
       const phone = faker.phone.phoneNumber();
