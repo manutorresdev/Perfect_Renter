@@ -1,12 +1,15 @@
 console.clear();
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
 
 const app = express();
 const { PORT } = process.env;
 
+// CORS
+app.use(cors());
 // LOGGER
 app.use(morgan('dev'));
 // BODY DESERIALIZER

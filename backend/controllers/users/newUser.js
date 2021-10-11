@@ -18,6 +18,7 @@ const { userSchema } = require('../../models/userSchema');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
  */
 const newUser = async (req, res, next) => {
+  console.log('estoy funcionando');
   let connection;
 
   try {
