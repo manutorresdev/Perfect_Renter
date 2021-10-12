@@ -1,5 +1,4 @@
 import React from 'react';
-import Logo from './global/Logo';
 
 /**
  * Componente que construye el header.
@@ -9,9 +8,12 @@ import Logo from './global/Logo';
  * @returns Header de la página re-utilizable.
  */
 export default function Header() {
+
+  
+
   return (
     <>
-      <header className='flex justify-between items-center w-screen h-28 p-2 bg-gray-200'>
+      {/* <header className='flex justify-between items-center w-screen h-28 p-2 bg-gray-200'>
         <Logo />
         <h2 className='bg-gray-500 rounded text-white px-20'>TITLE</h2>
         <div className='gap-5 flex'>
@@ -22,7 +24,10 @@ export default function Header() {
             ≡
           </button>
         </div>
-      </header>
+      </header> */}
+
+
+
     </>
   );
 }
