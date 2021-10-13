@@ -6,6 +6,10 @@ module.exports = {
       height: {
         custom: '100px',
       },
+      backgroundColor: {
+        'gray-Primary': 'rgba(49, 47, 47, 0.84)',
+        'button-color': 'rgba(237,203,84,1)',
+      },
     },
   },
   variants: {

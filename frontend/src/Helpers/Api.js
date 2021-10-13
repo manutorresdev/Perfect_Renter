@@ -1,10 +1,10 @@
-export const post = (url, body, callback, errorCallback, token) => {
+export const post = (url, body, onSuccess, onError, token) => {
   console.log('Enviado.');
   fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: token,
     },
     body: JSON.stringify(body),
   })
@@ -14,45 +14,39 @@ export const post = (url, body, callback, errorCallback, token) => {
     })
     .then((data) => {
       if (data.status !== 'error') {
-        callback(data);
+        onSuccess(data);
       } else {
         console.log('Data de api.js/fetch', data);
-        errorCallback(data);
+        onError(data);
       }
       return data;
-    });
+    })
+    .catch((e) => console.error(e));
 };
 
-export const get = (url, onSuccess, token) => {
+export const get = (url, onSuccess, onError, token) => {
   fetch(url, {
     method: 'GET',
     headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: token,
     },
   })
     .then((res) => {
-      if (res.ok) {
-        return res.json();
-      } else if (res.statusText === 'Unauthorized') {
-        throw new Error('Debes iniciar sesión para cargar los mensajes.');
-      } else {
-        window.alert(
-          res.json().then((text) => {
-            return text;
-          })
-        );
-        return res.json().then((text) => {
-          throw new Error(text);
-        });
-      }
+      console.log('Respuesta de api.js/fetch', res);
+      return res.json();
     })
-    .then((data) => onSuccess(data))
-    .catch((e) => {
-      console.error(e);
-    });
+    .then((data) => {
+      if (data.status !== 'error') {
+        onSuccess(data);
+      } else {
+        console.log('Data de api.js/fetch', data);
+        onError(data);
+      }
+      return data;
+    })
+    .catch((e) => console.error(e));
 };
-// Do something with the successful response
+
 export function parseJwt(token) {
   if (!token) {
     return;

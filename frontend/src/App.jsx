@@ -1,19 +1,15 @@
 import React from 'react';
-import NavBar from './Components/global/NavBar';
-import {Home} from './Components/global/Home';
+import NavBar from './Components/Global/NavBar';
+import { TokenContext } from './Helpers/Hooks/TokenProvider';
 
-// import LoadingSkeleton from './Components/Users/LoadingSkeleton';
+// import { Home } from './Components/Global/Home';
 
 function App() {
-  // const users = Array(15).fill(null);
-
   return (
-  <>
-    <NavBar/>
-     
-  </>
+    <>
+      <NavBar />
+    </>
   );
 }
-
 
 export default App;
