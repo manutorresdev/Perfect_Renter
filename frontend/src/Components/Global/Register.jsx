@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Redirect } from 'react-router';
-import { post } from '../Api';
+import { post } from '../../Helpers/Api';
 
 export default function Register() {
   // States
@@ -21,7 +21,7 @@ export default function Register() {
       console.error('Faltan campos.');
     } else {
       console.log('Enviando...');
- 
+
       post(
         'http://localhost:4000/users',
         {
@@ -48,7 +48,7 @@ export default function Register() {
 
   return (
     <>
-      <div className='mt-10 flex flex-col items-center gap-5 m-0 p-0'>
+      <div className='mt-20 flex flex-col items-center gap-5 m-0 p-0'>
         <div className='title underline text-5xl m-0 p-0'>
           <h2>REGISTER</h2>
         </div>
