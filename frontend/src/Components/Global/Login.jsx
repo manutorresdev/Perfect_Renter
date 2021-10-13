@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect } from 'react-router-dom';
 import { post } from '../../Helpers/Api';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 
@@ -31,7 +31,6 @@ export default function Login() {
           console.log('Success');
           alert(data.message);
           <Redirect to='/home' />;
-          window.location.reload();
         },
         (data) => {
           setError(data.message);

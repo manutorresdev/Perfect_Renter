@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect } from 'react-router-dom';
 import { post } from '../../Helpers/Api';
 
 export default function Register() {
@@ -37,7 +37,6 @@ export default function Register() {
           console.log('Success');
           alert(data.message);
           <Redirect to='/' />;
-          // window.location.reload();
         },
         (data) => {
           setError(data.message);
