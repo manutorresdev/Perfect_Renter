@@ -20,11 +20,7 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-header {
-  /* position: sticky;
-  top: 0;
-  width: 100%; */
-}
+/* header { position: sticky; top: 0; width: 100%; } */
 
 .navbar {
   background-color: var(--main-bg-color);
@@ -37,6 +33,7 @@ header {
   position: fixed;
   top: 0;
   width: 100%;
+  z-index: 100;
 }
 
 .navbar .logo {
@@ -64,6 +61,8 @@ header {
 .navbar .menu a:hover {
   color: white;
   font-weight: 400;
+  font-size: larger;
+  transition: 0.5 ease-in-out;
 }
 
 .navbar .menu-bar {
@@ -116,7 +115,7 @@ header {
       rgba(16, 16, 16, 0.3),
       rgba(16, 16, 16, 0.9)
     ),
-    url('./bgheader.jpg');
+    url('./Images/bgheader.jpg');
   background-size: cover;
   background-position: center;
   max-width: 100%;
@@ -184,7 +183,7 @@ header {
       rgba(16, 16, 16, 0.9),
       rgba(16, 16, 16, 0.3)
     ),
-    url('./fondo-gris2.jpeg');
+    url('./Images/fondo-gris2.jpeg');
   background-color: var(--main-bg-color);
   background-position: center;
   background-attachment: cover;

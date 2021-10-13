@@ -8,9 +8,6 @@ import React from 'react';
  * @returns Header de la página re-utilizable.
  */
 export default function Header() {
-
-  
-
   return (
     <>
       {/* <header className='flex justify-between items-center w-screen h-28 p-2 bg-gray-200'>
@@ -25,9 +22,6 @@ export default function Header() {
           </button>
         </div>
       </header> */}
-
-
-
     </>
   );
 }
