@@ -21,7 +21,7 @@ export default function Register() {
       console.error('Faltan campos.');
     } else {
       console.log('Enviando...');
-
+ 
       post(
         'http://localhost:4000/users',
         {
