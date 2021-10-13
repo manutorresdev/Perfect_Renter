@@ -6,7 +6,6 @@ import Tenants from './Components/Users/Tenants';
 import Properties from './Components/Properties/Properties';
 import Register from './Components/Global/Register';
 import { Home } from './Components/Global/Home';
-// import { TokenContext } from './Helpers/Hooks/TokenProvider';
 
 function App() {
   return (

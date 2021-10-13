@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Redirect } from 'react-router-dom';
 import { post } from '../../Helpers/Api';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
@@ -6,37 +7,25 @@ import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 export default function Login() {
   const [, setToken] = useLocalStorage('Token', '');
   // States
-  const [email, setEmail] = useState('');
-  const [password, setPass] = useState('');
+  const { register, handleSubmit } = useForm();
   const [Error, setError] = useState('');
 
   // Enviar datos a backend
-  function onSubmit(e) {
-    e.preventDefault();
-
-    if (!email || !password) {
-      console.error('Faltan campos.');
-    } else {
-      console.log('Enviando...');
-
-      post(
-        'http://localhost:4000/users/login',
-        {
-          email,
-          password,
-        },
-        (data) => {
-          console.log(data);
-          setToken(data.token);
-          console.log('Success');
-          alert(data.message);
-          <Redirect to='/home' />;
-        },
-        (data) => {
-          setError(data.message);
-        }
-      );
-    }
+  function onSubmit(body) {
+    post(
+      'http://localhost:4000/users/login',
+      body,
+      (data) => {
+        console.log(data);
+        setToken(data.token);
+        console.log('Success');
+        alert(data.message);
+        <Redirect to='/home' />;
+      },
+      (data) => {
+        setError(data.message);
+      }
+    );
   }
 
   return (
@@ -45,24 +34,20 @@ export default function Login() {
         <div className='title underline text-5xl m-0 p-0'>
           <h2>LOGIN</h2>
         </div>
-        <form className='flex flex-col gap-3' onSubmit={onSubmit}>
+        <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
           <input
             type='email'
             name='email'
             placeholder='Email'
             required
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            {...register('email')}
           />
           <input
             type='password'
             name='password'
             placeholder='Password'
             required
-            onChange={(e) => {
-              setPass(e.target.value);
-            }}
+            {...register('password')}
           />
 
           {Error ? <div>{Error}</div> : ''}
