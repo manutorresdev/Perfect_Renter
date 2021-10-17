@@ -43,7 +43,6 @@ const userSchema = Joi.object().keys({
     }),
   name: Joi.string()
     .required()
-    .alphanum()
     .min(3)
     .max(30)
     .error((errors) => {

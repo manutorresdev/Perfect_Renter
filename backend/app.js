@@ -265,6 +265,7 @@ const {
   listBookedProperties,
   listUserVotes,
 } = require('./controllers/users/index');
+const contactUs = require('./controllers/contactUs');
 
 /**
  * ####################
@@ -473,6 +474,18 @@ app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
  * @response {Object} Response listando las propiedades de ese renter
  */
 app.get('/users/:idUser/properties', userExists, listProperties);
+
+/**
+ * Contacto a nuestra empresa.
+ *
+ * @name contactUs
+ * @path {POST} /contact
+ * @code {200} Si la respuesta es correcta
+ * @code {400} Si falta algún dato a insertar
+ * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
+ *
+ */
+app.post('/contact', contactUs);
 
 /**
  * ####################
