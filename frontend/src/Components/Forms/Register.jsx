@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Redirect } from 'react-router-dom';
 import { post } from '../../Helpers/Api';
 
+// Import inputs controlados
+import Email from './Inputs/Email';
+import Password from './Inputs/Password';
+import FirstName from './Inputs/FirstName';
+
 export default function Register() {
-  const [ShowPass, setShowPass] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const formFunctions = { register, errors };
 
   // States
   const [Error, setError] = useState('');
@@ -43,94 +47,14 @@ export default function Register() {
           <h2>REGISTER</h2>
         </div>
         <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
-          <input
-            className='p-2'
-            type='email'
-            placeholder='Email*'
-            {...register('email', {
-              required: 'Debes escribir un email.',
-              maxLength: {
-                value: 200,
-                message: 'El email no puede contener más de 200 carácteres.',
-              },
-            })}
-          />
-          {errors.email && (
-            <p className='text-red-500'>{errors.email.message}</p>
-          )}
-          <div className='flex relative items-center'>
-            <input
-              className='w-full p-2 pr-6'
-              type={ShowPass ? 'text' : 'password'}
-              name='password'
-              placeholder='Password*'
-              {...register('password', {
-                required: 'Debes escribir una contraseña.',
-                minLength: {
-                  value: 8,
-                  message: 'La contraseña debe contener mínimo 8 carácteres',
-                },
-                maxLength: {
-                  value: 100,
-                  message:
-                    'La contraseña no puede tener más de 100 carácteres.',
-                },
-                pattern: {
-                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d].{8,}$/,
-                  message:
-                    'La contraseña debe contener una letra minúscula, una letra mayúscula y un numero.',
-                },
-              })}
-            />
-            {ShowPass ? (
-              <FaEye
-                className='absolute right-1'
-                onClick={() => {
-                  setShowPass(!ShowPass);
-                }}
-              />
-            ) : (
-              <FaEyeSlash
-                className='absolute right-1'
-                onClick={() => {
-                  setShowPass(!ShowPass);
-                }}
-              />
-            )}
-          </div>
-          {errors.password && (
-            <p className='text-red-500'>{errors.password.message}</p>
-          )}
-          <input
-            className='p-2'
-            type='text'
-            name='name'
-            placeholder='First Name*'
-            {...register('name', {
-              required: 'Debes escribir un nombre.',
-              pattern: {
-                value:
-                  /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
-                message:
-                  'El nombre no puede contener carácteres especiales ni números.',
-              },
-              minLength: {
-                value: 3,
-                message: 'El nombre debe contener como mínimo 3 carácteres.',
-              },
-              maxLength: {
-                value: 30,
-                message: 'El nombre no puede tener más de 30 carácteres.',
-              },
-            })}
-          />
-          {errors.name && <p className='text-red-500'>{errors.name.message}</p>}
+          <Email className='p-2' {...formFunctions} />
+          <Password {...formFunctions} />
+          <FirstName {...formFunctions} />
           <input
             className='p-2'
             type='text'
             name='lastName'
             placeholder='Last Name*'
-            // required
             {...register('lastName', {
               required: 'Debes escribir un apellido.',
               pattern: {
@@ -157,7 +81,6 @@ export default function Register() {
             type='text'
             name='city'
             placeholder='City*'
-            // required
             {...register('city', {
               required: 'Debes escribir la ciudad donde resides.',
               pattern: {
@@ -207,7 +130,7 @@ export default function Register() {
           {Error ? <div>{Error}</div> : ''}
 
           <input
-            className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
+            className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
             type='submit'
             value='Register'
           />

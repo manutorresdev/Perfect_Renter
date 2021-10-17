@@ -26,7 +26,17 @@ export default function Properties() {
         <h1 className='text-2xl'>Alquileres</h1>
         {Loaded ? (
           Properties.map((property) => (
-            <Property key={property.idProperty} property={property} />
+            <Property key={property.idProperty} property={property}>
+              <div className='my-5 border border-black'>
+                <div>
+                  {property.city}
+                  <br />
+                  {property.province}
+                  <br />
+                  {property.adress}
+                </div>
+              </div>
+            </Property>
           ))
         ) : (
           <div>Cargando alquileres...</div>
