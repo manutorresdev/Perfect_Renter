@@ -23,6 +23,9 @@ export default function UsersList() {
       Token
     );
   }, [Token]);
+  console.log(Token);
+  console.log(Users);
+  
 
   return (
     <section className='w-full flex flex-col gap-5 justify-center items-center mt-14'>

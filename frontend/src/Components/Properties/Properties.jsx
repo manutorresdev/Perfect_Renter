@@ -11,10 +11,13 @@ export default function Properties() {
       'http://localhost:4000/properties',
       (data) => {
         console.log('data', data);
-        setTimeout(() => {
-          setProperties(data.properties);
-          setLoaded(true);
-        }, 500);
+        if (data.message!=='No hay conicidencias para su busqueda') {
+          setTimeout(() => {
+            setProperties(data.properties);
+            setLoaded(true);
+          }, 500);
+        }
+        setProperties([]);
       },
       (error) => console.log(error)
     );

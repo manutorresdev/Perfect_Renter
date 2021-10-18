@@ -22,7 +22,7 @@ export default function Tenant({ user }) {
           }
           alt={'perfil ' + user.name + user.lastName}
         />
-        <div className='flex text-xs self-center'>
+        <div className='flex text-xs self-center' id='calification'>
           <FaStar />
           <FaStar />
           <FaStar />

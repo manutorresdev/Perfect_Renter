@@ -18,7 +18,6 @@ const newProperty = async (req, res, next) => {
 
   try {
     connection = await getDB();
-    connectionPR = await getPRDB();
 
     // Validamos los datos recibidos.
     await validate(propertySchema, req.body);
@@ -63,7 +62,7 @@ const newProperty = async (req, res, next) => {
     }
 
     // Comprobamos que la ciudad pertenece a la provincia correcta
-    const [verify] = await connectionPR.query(
+    const [verify] = await connection.query(
       `
     SELECT cp,provincia,poblacion FROM municipios WHERE poblacion = ? AND provincia = ?
     `,

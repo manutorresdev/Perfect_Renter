@@ -61,7 +61,7 @@ body {
 .navbar .menu a:hover {
   color: white;
   font-weight: 400;
-  font-size: larger;
+  /* font-size: larger; */
   transition: 0.5 ease-in-out;
 }
 
