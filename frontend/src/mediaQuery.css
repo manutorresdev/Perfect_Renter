@@ -52,6 +52,10 @@
     justify-content: center;
     width: 100%;
   }
+
+  .description-section {
+    width: 90%;
+  }
 }
 @media only screen and (max-width: 380px) {
   .box-container-grid {

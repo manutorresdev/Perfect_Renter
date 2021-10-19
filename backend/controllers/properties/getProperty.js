@@ -18,7 +18,7 @@ const getProperty = async (req, res, next) => {
     const { idProperty } = req.params;
 
     //Obtenemos los datos de la propiedad
-    const [property] = await connection.query(
+    const [[property]] = await connection.query(
       `     SELECT
             idProperty,
             idUser,

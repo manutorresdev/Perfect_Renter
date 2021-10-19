@@ -12,6 +12,7 @@ import NavBar from './Components/Global/NavBar';
 import Tenants from './Components/Users/Tenants';
 // Properties comps
 import Properties from './Components/Properties/Properties';
+import PropertyInfo from './Components/Properties/PropertyInfo';
 // Form comps
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
@@ -24,6 +25,7 @@ import Profile from './Components/Users/Profile';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
+
   return (
     <>
       <Router>
@@ -36,6 +38,7 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
+          <Route path='/properties/:idProperty' component={PropertyInfo}/>
           <Route path='/alquileres'>
             <Properties />
           </Route>
@@ -62,5 +65,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;
