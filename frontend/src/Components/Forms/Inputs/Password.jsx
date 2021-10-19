@@ -11,7 +11,7 @@ export default function Password({ register, errors }) {
           className='w-full p-2 pr-6'
           type={ShowPass ? 'text' : 'password'}
           name='password'
-          placeholder='Password*'
+          placeholder='Contraseña*'
           {...register('password', {
             required: 'Debes escribir una contraseña.',
             minLength: {

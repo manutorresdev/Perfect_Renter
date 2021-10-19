@@ -1,11 +1,12 @@
 import { React } from 'react';
+import { Link } from 'react-router-dom';
 import '../../index.css';
 import '../../mediaQuery.css';
 // import * as FaIcons from "react-icons/fa";
 
 export function Home(props) {
   return (
-    <main className='main'>
+    <>
       <Banner />
       <div className='main-body'>
         <HomeRenteresList />
@@ -42,7 +43,7 @@ export function Home(props) {
           </p>
         </section>
       </div>
-    </main>
+    </>
   );
 }
 
@@ -56,7 +57,9 @@ function HomeFlatList(props) {
         <PropertyDescription />
         <PropertyDescription />
       </div>
-      <button className='btn-more-bgw'>Ver Mas</button>
+      <Link to='/alquileres' className='btn-more-bgw'>
+        <button>Ver Mas</button>
+      </Link>
     </div>
   );
 }
@@ -85,7 +88,9 @@ function Banner() {
           eligendi, dolores officia quos consequuntur facere, impedit aliquid
           blanditiis dolorum voluptates laudantium.
         </p>
-        <button className='btn-more'>Read More</button>
+        <Link to='/nosotros' className='btn-more'>
+          Leer más
+        </Link>
       </div>
     </div>
   );
@@ -101,7 +106,9 @@ function HomeRenteresList(props) {
         <RenterDescription />
         <RenterDescription />
       </div>
-      <button className='btn-more-bgw'>Ver Mas</button>
+      <Link to='/inquilinos' className='btn-more-bgw'>
+        Ver Mas
+      </Link>
     </div>
   );
 }

@@ -27,7 +27,7 @@ body {
   display: grid;
   grid-template-columns: repeat(9, 1fr);
   align-items: center;
-  justify-content: left;
+  /* justify-content: left; */
   font-weight: 300;
   height: 50px;
   position: fixed;
@@ -55,7 +55,7 @@ body {
 
 .navbar .menu a {
   text-decoration: none;
-  color: var(--principal-1);
+  /* color: var(--principal-1); */
   cursor: pointer;
 }
 .navbar .menu a:hover {

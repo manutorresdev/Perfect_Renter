@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Redirect } from 'react-router-dom';
 import { post } from '../../Helpers/Api';
 
 // Import inputs controlados
@@ -32,7 +31,6 @@ export default function Register() {
         console.log('Success');
         alert(data.message);
         e.target.reset();
-        <Redirect to='/login' />;
       },
       (data) => {
         setError(data.message);

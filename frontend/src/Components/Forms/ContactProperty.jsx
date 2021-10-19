@@ -6,6 +6,7 @@ import FirstName from './Inputs/FirstName';
 
 export default function ContactProperty() {
   const [, setOverlay] = useState({ shown: false, propertyInfo: {} });
+
   const {
     handleSubmit,
     register,

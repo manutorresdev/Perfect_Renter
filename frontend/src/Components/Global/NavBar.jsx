@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import '../../index.css';
 import '../../mediaQuery.css';
 
-export default function NavBar() {
+export default function NavBar({ token }) {
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const showMenu = () => setMostrarMenu(!mostrarMenu);
 
@@ -20,22 +20,45 @@ export default function NavBar() {
       </Link>
       <ul className={mostrarMenu ? 'menu menu-toggle' : 'menu'} id='menu'>
         {MenuElements.map((item) => {
-          return (
-            <li key={item.id}>
-              <Link to={item.path}>{item.title}</Link>
-            </li>
-          );
+          if (item.id === 3 && !token) {
+            return (
+              <li
+                key={item.id}
+                className='text-gray-400 select-none pointer-events-none cursor-default'
+              >
+                <Link to={item.path}>{item.title}</Link>
+              </li>
+            );
+          } else {
+            return (
+              <li key={item.id} className='text-principal-1'>
+                <Link to={item.path}>{item.title}</Link>
+              </li>
+            );
+          }
         })}
       </ul>
       <div className='menu-bar' id='menu-bar'>
         <FaIcons.FaBars onClick={showMenu} />
       </div>
-      <Link className='user' to='/login'>
-        Login
-      </Link>
-      <Link className='register' to='/register'>
-        Register
-      </Link>
+      {token ? (
+        <>
+          <Link to='/perfil' className='user flex items-center justify-around'>
+            <FaIcons.FaUser />
+            <span>Perfil</span>
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link className='user' to='/login'>
+            Login
+          </Link>
+
+          <Link className='register' to='/register'>
+            Register
+          </Link>
+        </>
+      )}
     </nav>
   );
 }

@@ -315,6 +315,20 @@ app.get('/users', authUser, listUsers);
 app.put('/users/password/recover', recoverUserPass);
 
 /**
+ * Recuperar contraseña de usuario.
+ *
+ * @name passUserRecover
+ * @path {PUT} /users/password/recover/:idUser/:recoverCode
+ * @params {Number} idUser Número de usuario a mostrar
+ * @params {String} recoverCode Código de recuperación de contraseña
+ * @body {String} password Contraseña del usuario
+ * @code {200} Si la respuesta es correcta
+ * @code {404} Si el enlace es erróneo
+ * @response {Object} Response Cambia la contraseña del usuario
+ */
+app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
+
+/**
  * Agregar usuario.
  *
  * @name newUser
@@ -356,20 +370,6 @@ app.post('/users/login', loginUser);
  * @response {Object} Response Envía un correo electrónico para la validación del usuario.
  */
 app.get('/users/validate/:registrationCode', validateUser);
-
-/**
- * Recuperar contraseña de usuario.
- *
- * @name passUserRecover
- * @path {PUT} /users/password/recover/:idUser/:recoverCode
- * @params {Number} idUser Número de usuario a mostrar
- * @params {String} recoverCode Código de recuperación de contraseña
- * @body {String} password Contraseña del usuario
- * @code {200} Si la respuesta es correcta
- * @code {404} Si el enlace es erróneo
- * @response {Object} Response Cambia la contraseña del usuario
- */
-app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
 
 /**
  * Editar contraseña del usuario.

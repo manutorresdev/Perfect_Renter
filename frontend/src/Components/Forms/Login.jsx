@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { post } from '../../Helpers/Api';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 import Email from './Inputs/Email';
@@ -24,7 +24,7 @@ export default function Login() {
         setToken(data.token);
         console.log('Success');
         alert(data.message);
-        <Redirect to='/home' />;
+        window.location.reload();
       },
       (data) => {
         setError(data.message);
@@ -48,6 +48,7 @@ export default function Login() {
             value='Entrar'
           />
         </form>
+        <Link to='/recuperar'>Recuperar contraseña</Link>
       </section>
     </>
   );
