@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
-
+import { Link } from 'react-router-dom';
 export default function Tenant({ user, setOverlay }) {
   const [Votes] = useState(0);
 
@@ -12,15 +12,17 @@ export default function Tenant({ user, setOverlay }) {
   return (
     <article className='flex gap-2 text-xs '>
       <div className='w-48 flex flex-col relative'>
-        <div className='font-bold ml-1'>{user.name}</div>
-        <span className='ml-2'>{user.city}</span>
-        <img
-          className='w-32'
-          src={
-            user.avatar ? '' : require('../../Images/defProfile.png').default
-          }
-          alt={'perfil ' + user.name + user.lastName}
-        />
+        <Link to={`/inquilinos/${user.idUser}`} className='UserProfile'>
+          <div className='font-bold ml-1'>{user.name}</div>
+          <span className='ml-2'>{user.city}</span>
+          <img
+            className='w-32'
+            src={
+              user.avatar ? '' : require('../../Images/defProfile.png').default
+            }
+            alt={'perfil ' + user.name + user.lastName}
+          />
+        </Link>
         <div className='flex text-xs self-center'>
           <FaStar />
           <FaStar />

@@ -20,6 +20,7 @@ import RecoverPass from './Components/Forms/RecoverPass';
 import ResetPass from './Components/Forms/ResetPass';
 import { TokenContext } from './Helpers/Hooks/TokenProvider';
 import Footer from './Components/Global/Footer';
+import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
 
 function App() {
@@ -33,12 +34,16 @@ function App() {
             {Token ? <Redirect to='/' /> : <Register />}
           </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
-          <Route path='/inquilinos'>
-            {Token ? <Tenants /> : <Redirect to='/' />}
-          </Route>
+          <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
+          {
+            <Route path='/inquilinos'>
+              {Token ? <Tenants /> : <Redirect to='/' />}
+            </Route>
+          }
           <Route path='/alquileres'>
             <Properties />
           </Route>
+
           <Route path='/contacto'>
             <ContactUs />
           </Route>
