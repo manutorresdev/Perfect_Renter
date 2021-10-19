@@ -6,6 +6,8 @@ import Tenants from './Components/Users/Tenants';
 import Properties from './Components/Properties/Properties';
 import Register from './Components/Global/Register';
 import { Home } from './Components/Global/Home';
+import UserProfile from './Components/Users/UserProfile';
+import PropertyInfo from './Components/Properties/PropertyInfo';
 // import { TokenContext } from './Helpers/Hooks/TokenProvider';
 
 function App() {
@@ -22,9 +24,12 @@ function App() {
           <Route path='/login'>
             <Login />
           </Route>
+          <Route path='/inquilinos/:idUser' component={UserProfile}>  
+          </Route>
           <Route path='/inquilinos'>
             <Tenants />
           </Route>
+          <Route path='/properties/:idProperty' component={PropertyInfo}/>
           <Route path='/alquileres'>
             <Properties />
           </Route>
