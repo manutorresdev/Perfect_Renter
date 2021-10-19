@@ -43,7 +43,6 @@ const userSchema = Joi.object().keys({
     }),
   name: Joi.string()
     .required()
-    .alphanum()
     .min(3)
     .max(30)
     .error((errors) => {
@@ -68,7 +67,7 @@ const userSchema = Joi.object().keys({
 
       return new Error('El apellido no es válido.');
     }),
-  bio: Joi.string().min(0).max(255),
+  bio: Joi.string().allow('').min(0).max(255),
   birthDate: Joi.date().required(),
   city: Joi.string().min(0).max(50).required(),
 });

@@ -16,14 +16,14 @@ const passUserRecover = async (req, res, next) => {
   try {
     connection = await getDB();
 
-    // Validamos la contraseña obtenida
-    await validate(passSchema, req.body);
-
     // Obtenemos el id del usuario y el código de recuperación.
     const { idUser, recoverCode } = req.params;
 
     // Obtenemos la nueva contraseña del usuario.
     const { password } = req.body;
+
+    // Validamos la contraseña obtenida
+    await validate(passSchema, req.body);
 
     // Comprobamos que el código de recuperación proporcionado sea el mismo que el de la base de datos.
     const [user] = await connection.query(
@@ -39,10 +39,10 @@ const passUserRecover = async (req, res, next) => {
       error.httpStatus = 404;
       throw error;
     }
-    // Cambiamos el código de recuperación y la contraseña al usuario en la base de datos. Desactivamos al usuario mientras no confirme el cambio de contraseña.
+    // Cambiamos el código de recuperación y la contraseña al usuario en la base de datos.
     await connection.query(
       `
-    UPDATE users SET recoverCode = NULL, password = SHA2(?, 512), modifiedAt = ?, renterActive = false WHERE idUser = ?
+    UPDATE users SET recoverCode = NULL, password = SHA2(?, 512), modifiedAt = ? WHERE idUser = ?
     `,
       [password, formatDate(new Date()), idUser]
     );

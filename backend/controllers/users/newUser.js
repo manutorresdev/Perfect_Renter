@@ -31,15 +31,7 @@ const newUser = async (req, res, next) => {
     const { name, lastName, email, password, bio, city, birthDate } = req.body;
 
     // Comprobamos que no faltan campos a rellenar.
-    if (
-      !name ||
-      !lastName ||
-      !email ||
-      !password ||
-      !bio ||
-      !city ||
-      !birthDate
-    ) {
+    if (!name || !lastName || !email || !password || !city || !birthDate) {
       const error = new Error('Debes rellenar todos los campos.');
       error.httpStatus = 400;
       throw error;
