@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
 
+import { Link } from 'react-router-dom';
 
 export default function Tenant({ user, setOverlay }) {
   const [Votes] = useState(0);
@@ -25,7 +26,7 @@ export default function Tenant({ user, setOverlay }) {
           alt={'perfil ' + user.name + user.lastName}
         />
         <div className='flex text-xs self-center' id='calification'>
-          
+
           <FaStar />
           <FaStar />
           <FaStar />
