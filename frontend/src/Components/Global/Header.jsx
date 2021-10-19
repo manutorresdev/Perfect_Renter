@@ -1,4 +1,9 @@
-import React from 'react';
+import { React, useState } from 'react';
+import * as FaIcons from 'react-icons/fa';
+import { MenuElements } from './MenuElements';
+import { Link } from 'react-router-dom';
+import '../../index.css';
+import '../../mediaQuery.css';
 
 /**
  * Componente que construye el header.
@@ -8,20 +13,35 @@ import React from 'react';
  * @returns Header de la página re-utilizable.
  */
 export default function Header() {
+  const [mostrarMenu, setMostrarMenu] = useState(false);
+  const showMenu = () => setMostrarMenu(!mostrarMenu);
   return (
-    <>
-      {/* <header className='flex justify-between items-center w-screen h-28 p-2 bg-gray-200'>
-        <Logo />
-        <h2 className='bg-gray-500 rounded text-white px-20'>TITLE</h2>
-        <div className='gap-5 flex'>
-          <button className='perfil bg-gray-400 border-none text-white px-5 rounded'>
-            Perfil
-          </button>
-          <button className='menu p-2 bg-gray-200 border-none text-3xl'>
-            ≡
-          </button>
-        </div>
-      </header> */}
-    </>
+    <nav className='navbar'>
+      <Link to='/' className='logo'>
+        <img
+          src='/Images/logo-pr-amarillo.png'
+          alt='logo Perfect renter'
+          id='logo'
+        />
+      </Link>
+      <ul className={mostrarMenu ? 'menu menu-toggle' : 'menu'} id='menu'>
+        {MenuElements.map((item) => {
+          return (
+            <li key={item.id}>
+              <Link to={item.path}>{item.title}</Link>
+            </li>
+          );
+        })}
+      </ul>
+      <div className='menu-bar' id='menu-bar'>
+        <FaIcons.FaBars onClick={showMenu} />
+      </div>
+      <Link className='user' to='/login'>
+        Login
+      </Link>
+      <Link className='register' to='/register'>
+        Register
+      </Link>
+    </nav>
   );
 }

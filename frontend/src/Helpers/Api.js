@@ -47,6 +47,32 @@ export const get = (url, onSuccess, onError, token) => {
     .catch((e) => console.error(e));
 };
 
+export const put = (url, body, onSuccess, onError, token) => {
+  console.log('Enviado.');
+  fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token,
+    },
+    body: JSON.stringify(body),
+  })
+    .then((res) => {
+      console.log('Respuesta de api.js/fetch', res);
+      return res.json();
+    })
+    .then((data) => {
+      if (data.status !== 'error') {
+        onSuccess(data);
+      } else {
+        console.log('Data de api.js/fetch', data);
+        onError(data);
+      }
+      return data;
+    })
+    .catch((e) => console.error(e));
+};
+
 export function parseJwt(token) {
   if (!token) {
     return;

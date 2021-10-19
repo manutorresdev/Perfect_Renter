@@ -265,6 +265,7 @@ const {
   listBookedProperties,
   listUserVotes,
 } = require('./controllers/users/index');
+const contactUs = require('./controllers/contactUs');
 
 /**
  * ####################
@@ -314,6 +315,20 @@ app.get('/users', authUser, listUsers);
 app.put('/users/password/recover', recoverUserPass);
 
 /**
+ * Recuperar contraseña de usuario.
+ *
+ * @name passUserRecover
+ * @path {PUT} /users/password/recover/:idUser/:recoverCode
+ * @params {Number} idUser Número de usuario a mostrar
+ * @params {String} recoverCode Código de recuperación de contraseña
+ * @body {String} password Contraseña del usuario
+ * @code {200} Si la respuesta es correcta
+ * @code {404} Si el enlace es erróneo
+ * @response {Object} Response Cambia la contraseña del usuario
+ */
+app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
+
+/**
  * Agregar usuario.
  *
  * @name newUser
@@ -355,20 +370,6 @@ app.post('/users/login', loginUser);
  * @response {Object} Response Envía un correo electrónico para la validación del usuario.
  */
 app.get('/users/validate/:registrationCode', validateUser);
-
-/**
- * Recuperar contraseña de usuario.
- *
- * @name passUserRecover
- * @path {PUT} /users/password/recover/:idUser/:recoverCode
- * @params {Number} idUser Número de usuario a mostrar
- * @params {String} recoverCode Código de recuperación de contraseña
- * @body {String} password Contraseña del usuario
- * @code {200} Si la respuesta es correcta
- * @code {404} Si el enlace es erróneo
- * @response {Object} Response Cambia la contraseña del usuario
- */
-app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
 
 /**
  * Editar contraseña del usuario.
@@ -473,6 +474,18 @@ app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
  * @response {Object} Response listando las propiedades de ese renter
  */
 app.get('/users/:idUser/properties', userExists, listProperties);
+
+/**
+ * Contacto a nuestra empresa.
+ *
+ * @name contactUs
+ * @path {POST} /contact
+ * @code {200} Si la respuesta es correcta
+ * @code {400} Si falta algún dato a insertar
+ * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
+ *
+ */
+app.post('/contact', contactUs);
 
 /**
  * ####################

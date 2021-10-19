@@ -34,8 +34,7 @@ const getUser = async (req, res, next) => {
       avatar: user[0].avatar,
       bio: user[0].bio,
     };
-    console.log(user[0].idUser);
-    console.log(idReqUser);
+
     //Usuario propietario
     if (user[0].idUser === idReqUser || req.userAuth.role === 'admin') {
       userInfo.email = user[0].email;

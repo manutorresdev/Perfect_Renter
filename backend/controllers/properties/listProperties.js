@@ -49,7 +49,7 @@ const listProperties = async (req, res, next) => {
     const pmax = filtPmax ? filtPmax : 10000;
     const pmin = filtPmin ? filtPmin : 0;
     const rooms = filtRooms ? filtRooms : 1;
-    const garage = filtGarage ? filtGarage : 1;
+    const garage = filtGarage ? filtGarage : 0;
     const toilets = filtToilets ? filtToilets : 1;
     const mts = filtMts ? filtMts : 0;
 
@@ -125,6 +125,7 @@ const listProperties = async (req, res, next) => {
         [city, province, type, pmin, pmax, rooms, garage, toilets, mts]
       );
     }
+    console.log(properties);
     //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
     if (properties.length === 0) {
       res.send({

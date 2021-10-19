@@ -3,6 +3,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      textColor: {
+        'principal-1': 'rgba(237,203,84,1)',
+      },
       height: {
         custom: '100px',
       },

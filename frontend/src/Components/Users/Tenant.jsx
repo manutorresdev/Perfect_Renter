@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from 'react-icons/fa';
-export default function Tenant({ user }) {
-  const [Votes, setVotes] = useState(0);
 
-  console.log(user);
+export default function Tenant({ user, setOverlay }) {
+  const [Votes] = useState(0);
 
   useEffect(() => {
     if (Votes === 1) {
@@ -11,7 +10,7 @@ export default function Tenant({ user }) {
   }, [Votes]);
 
   return (
-    <article className='flex gap-2 w-full text-xs'>
+    <article className='flex gap-2 text-xs '>
       <div className='w-48 flex flex-col relative'>
         <div className='font-bold ml-1'>{user.name}</div>
         <span className='ml-2'>{user.city}</span>
@@ -34,7 +33,12 @@ export default function Tenant({ user }) {
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet
         natus eaque rem ad, minima iure.
       </p>
-      <button className='bg-button-color self-center px-2 py-1 '>
+      <button
+        className='bg-button-color self-center px-2 py-1 '
+        onClick={() => {
+          setOverlay({ shown: true, userInfo: user });
+        }}
+      >
         Contactar
       </button>
     </article>
