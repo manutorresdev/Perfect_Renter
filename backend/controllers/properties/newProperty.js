@@ -1,6 +1,5 @@
 // @ts-nocheck
 const getDB = require('../../config/getDB');
-const getPRDB = require('../../config/getPRDB');
 const { formatDate, validate, savePhoto } = require('../../libs/helpers');
 
 const { propertySchema } = require('../../models/propertySchema');

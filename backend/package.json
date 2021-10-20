@@ -8,7 +8,8 @@
     "initDB": "node config/initDB.js",
     "dev": "nodemon app.js",
     "deploy": "gh-pages -d docs",
-    "test": "jest --verbose --silent"
+    "test": "jest --verbose --silent ./app.test.js",
+    "test:watch": "npm run test -- --watch"
   },
   "repository": {
     "type": "git",

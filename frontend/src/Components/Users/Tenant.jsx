@@ -34,7 +34,7 @@ export default function Tenant({ user, setOverlay }) {
         natus eaque rem ad, minima iure.
       </p>
       <button
-        className='bg-button-color self-center px-2 py-1 '
+        className='bg-principal-1 self-center px-2 py-1 '
         onClick={() => {
           setOverlay({ shown: true, userInfo: user });
         }}

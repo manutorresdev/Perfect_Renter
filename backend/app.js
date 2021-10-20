@@ -61,11 +61,10 @@ const {
  * ##########################
  */
 /**
- * Agregar foto a los inmuebles
+ * Añadir un nuevo alquiler
  *
  * @name newProperty
  * @path {POST} /properties
- * @params {number} idProperty Número del inmueble a mostrar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {200} Si la respuesta es correcta
  * @code {401} Si la autorización del usuario es errónea
@@ -518,6 +517,8 @@ app.use((req, res) => {
  * ## SERVER ON PORT ##
  * ####################
  */
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server listening at http://localhost:${PORT}`);
 });
+
+module.exports = { server, app };

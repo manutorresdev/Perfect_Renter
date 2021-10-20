@@ -8,7 +8,7 @@ export default function Password({ register, errors }) {
     <>
       <div className='flex relative items-center'>
         <input
-          className='w-full p-2 pr-6'
+          className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full'
           type={ShowPass ? 'text' : 'password'}
           name='password'
           placeholder='Contraseña*'
