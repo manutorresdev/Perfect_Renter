@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa';
-import Email from './Inputs/Email';
-import FirstName from './Inputs/FirstName';
+import Email from '../Forms/Inputs/Email';
+import FirstName from '../Forms/Inputs/FirstName';
 
 export default function ContactProperty() {
   const [, setOverlay] = useState({ shown: false, propertyInfo: {} });

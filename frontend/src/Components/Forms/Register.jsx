@@ -7,7 +7,7 @@ import Email from './Inputs/Email';
 import Password from './Inputs/Password';
 import FirstName from './Inputs/FirstName';
 
-export default function Register() {
+export default function Register({ token }) {
   const {
     register,
     handleSubmit,
@@ -38,18 +38,21 @@ export default function Register() {
     );
   }
 
+  const inpStyle =
+    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full';
+
   return (
     <>
       <div className='mt-20 flex flex-col items-center gap-5 m-0 p-2'>
         <div className='title underline text-5xl m-0 p-0'>
-          <h2>REGISTER</h2>
+          {token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
         </div>
         <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
-          <Email className='p-2' {...formFunctions} />
+          <Email className={inpStyle} {...formFunctions} />
           <Password {...formFunctions} />
-          <FirstName {...formFunctions} />
+          <FirstName className={inpStyle} {...formFunctions} />
           <input
-            className='p-2'
+            className={inpStyle}
             type='text'
             name='lastName'
             placeholder='Last Name*'
@@ -75,7 +78,7 @@ export default function Register() {
             <p className='text-red-500'>{errors.lastName.message}</p>
           )}
           <input
-            className='p-2'
+            className={inpStyle}
             type='text'
             name='city'
             placeholder='City*'
@@ -96,7 +99,7 @@ export default function Register() {
           {errors.city && <p className='text-red-500'>{errors.city.message}</p>}
           <input
             defaultValue={''}
-            className='h-20 p-2'
+            className={inpStyle + ' h-20'}
             type='text'
             name='bio'
             placeholder='Bio'
@@ -110,7 +113,7 @@ export default function Register() {
             })}
           />
           <input
-            className='p-2'
+            className={inpStyle}
             type='date'
             name='birthDate'
             {...register('birthDate', {

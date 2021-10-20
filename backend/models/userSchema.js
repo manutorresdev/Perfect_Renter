@@ -69,7 +69,19 @@ const userSchema = Joi.object().keys({
     }),
   bio: Joi.string().allow('').min(0).max(255),
   birthDate: Joi.date().required(),
-  city: Joi.string().min(0).max(50).required(),
+  city: Joi.string()
+    .min(0)
+    .max(50)
+    .required()
+    .error((errors) => {
+      if (
+        errors[0].code === 'any.required' ||
+        errors[0].code === 'string.empty'
+      )
+        return new Error('Debes escribir una ciudad.');
+
+      return new Error('La ciudad no es válida.');
+    }),
 });
 
 const editUserSchema = Joi.object().keys({
