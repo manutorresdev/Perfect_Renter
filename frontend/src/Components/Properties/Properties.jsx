@@ -5,6 +5,7 @@ import Property from './Property';
 export default function Properties() {
   const [Properties, setProperties] = useState([]);
   const [Loaded, setLoaded] = useState(false);
+  const prueba=1;
 
   useEffect(() => {
     get(
