@@ -76,11 +76,13 @@ const recoverUserPass = async (req, res, next) => {
     `;
 
     // Envío de email.
-    await sendMail({
-      to: email,
-      subject: 'Cambio de contraseña Perfect Renter',
-      body: emailBody,
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: email,
+        subject: 'Cambio de contraseña Perfect Renter',
+        body: emailBody,
+      });
+    }
 
     // Agregamos el código de recuperación al usuario en la base de datos.
     await connection.query(
@@ -93,6 +95,7 @@ const recoverUserPass = async (req, res, next) => {
     res.send({
       status: 'ok',
       message: 'Email enviado con éxito.',
+      info: { recoverCode, idUser: user[0].idUser },
     });
   } catch (error) {
     next(error);

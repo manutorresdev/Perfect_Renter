@@ -7,7 +7,7 @@ import Email from './Inputs/Email';
 import Password from './Inputs/Password';
 import FirstName from './Inputs/FirstName';
 
-export default function Register() {
+export default function Register({ token }) {
   const {
     register,
     handleSubmit,
@@ -45,7 +45,7 @@ export default function Register() {
     <>
       <div className='mt-20 flex flex-col items-center gap-5 m-0 p-2'>
         <div className='title underline text-5xl m-0 p-0'>
-          <h2>REGISTER</h2>
+          {token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
         </div>
         <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
           <Email className={inpStyle} {...formFunctions} />

@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const mysql = require('mysql2');
 const path = require('path');
 
-const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD } = process.env;
+const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, NODE_ENV } = process.env;
 let connection;
 
 /**
@@ -224,8 +224,14 @@ async function main() {
     }
   } finally {
     if (connection) connection.release();
-    process.exit(0);
+    if (NODE_ENV !== 'test') {
+      process.exit(0);
+    }
   }
 }
 
-main();
+if (NODE_ENV !== 'test') {
+  main();
+}
+
+module.exports = { main };

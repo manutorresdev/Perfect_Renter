@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -26,22 +26,20 @@ import Profile from './Components/Users/Profile';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
-
   return (
     <>
       <Router>
         <NavBar token={Token} />
         <Switch>
           <Route path='/register'>
-            {Token ? <Redirect to='/' /> : <Register />}
+            {Token ? <Redirect to='/' /> : <Register token={Token} />}
           </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
-          
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/properties/:idProperty' component={PropertyInfo}/>
+          <Route path='/properties/:idProperty' component={PropertyInfo} />
           <Route path='/alquileres'>
             <Properties />
           </Route>
@@ -69,6 +67,5 @@ function App() {
     </>
   );
 }
-
 
 export default App;

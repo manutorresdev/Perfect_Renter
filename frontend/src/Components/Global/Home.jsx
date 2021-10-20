@@ -1,7 +1,5 @@
 import { React } from 'react';
 import { Link } from 'react-router-dom';
-import '../../index.css';
-import '../../mediaQuery.css';
 
 // Styles
 const sectionStyle =
@@ -87,7 +85,7 @@ function Banner() {
         </p>
         <Link
           to='/nosotros'
-          className='btn-more text-xl bg-none p-2 border-yellow-400 border-2 max-w-max hover:bg-principal-1 hover:border-white hover:text-gray-600'
+          className='btn-more text-xl bg-none p-2 border-yellow-400 border-2 max-w-max hover:bg-principal-1 hover:border-white hover:text-gray-600 duration-300'
         >
           Leer más
         </Link>
