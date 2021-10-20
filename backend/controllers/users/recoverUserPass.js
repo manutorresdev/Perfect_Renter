@@ -74,7 +74,6 @@ const recoverUserPass = async (req, res, next) => {
             </tfoot>
         </table>
     `;
-    // <a href="http://localhost:4000/users/password/recover/${user[0].idUser}/${recoverCode}"
 
     // Envío de email.
     await sendMail({
