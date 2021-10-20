@@ -12,6 +12,7 @@ import NavBar from './Components/Global/NavBar';
 import Tenants from './Components/Users/Tenants';
 // Properties comps
 import Properties from './Components/Properties/Properties';
+import PropertyInfo from './Components/Properties/PropertyInfo';
 // Form comps
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
@@ -20,10 +21,12 @@ import RecoverPass from './Components/Forms/RecoverPass';
 import ResetPass from './Components/Forms/ResetPass';
 import { TokenContext } from './Helpers/Hooks/TokenProvider';
 import Footer from './Components/Global/Footer';
+import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
+
   return (
     <>
       <Router>
@@ -33,12 +36,16 @@ function App() {
             {Token ? <Redirect to='/' /> : <Register />}
           </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
+          <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
+          
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
+          <Route path='/properties/:idProperty' component={PropertyInfo}/>
           <Route path='/alquileres'>
             <Properties />
           </Route>
+
           <Route path='/contacto'>
             <ContactUs />
           </Route>
@@ -62,5 +69,6 @@ function App() {
     </>
   );
 }
+
 
 export default App;
