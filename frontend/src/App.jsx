@@ -12,7 +12,6 @@ import NavBar from './Components/Global/NavBar';
 import Tenants from './Components/Users/Tenants';
 // Properties comps
 import Properties from './Components/Properties/Properties';
-import PropertyInfo from './Components/Properties/PropertyInfo';
 // Form comps
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
@@ -23,6 +22,7 @@ import { TokenContext } from './Helpers/Hooks/TokenProvider';
 import Footer from './Components/Global/Footer';
 import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
+import Property from './Components/Properties/Property';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
@@ -39,7 +39,9 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/properties/:idProperty' component={PropertyInfo} />
+
+          <Route path='/alquileres/:idProperty' component={Property}/>
+
           <Route path='/alquileres'>
             <Properties />
           </Route>
