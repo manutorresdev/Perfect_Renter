@@ -1,39 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { get } from "../../Helpers/Api";
+import useProperties from "../../Helpers/Hooks/useProperties";
 
 
 
 export default function PropertyInfo(props){
     const [property, setProperty]=useState({});
-    const [Properties, setProperties] = useState([]);
+    const [Properties] = useProperties();
 
-  
-    useEffect(() => {
-      get(
-        'http://localhost:4000/properties',
-        (data) => {
-          console.log('data', data);
-          if (data.message!=='No hay conicidencias para su busqueda') {
-            setTimeout(() => {
-              setProperties(data.properties);
-            
-            }, 500);
-          }
-          setProperties([]);
-        },
-        (error) => console.log(error)
-      );
-    }, []);
-
- 
-    console.log('properties: '+Properties.length);
-    console.log('match: ' + props.match.params.idProperty);
-    /**
-     * OOOjjjooooooooooooooooooooo
-     * He modificado el getProperty del Back para que no me devuelva un array sino un objeto
-     * hice doble destructurin en el select para obtenerlo directemente
-     */
     useEffect(()=>{
         if (Properties.length<=props.match.params.idProperty) {    
             get(`http://localhost:4000/properties/${props.match.params.idProperty}`,
@@ -46,7 +21,7 @@ export default function PropertyInfo(props){
             );
         }
     
-    },[props.match.params.idProperty]);
+    },[props.match.params.idProperty,property,Properties]);
 
   
     return (
@@ -69,7 +44,6 @@ export default function PropertyInfo(props){
             : <Link to={`/alquileres/${Number(props.match.params.idProperty)+1}`}className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'>Siguiente Link</Link> 
             }
             </button>
-            {/* <button onClick={sigProp}>Siguiente</button> */}
         </div>
      );
     
