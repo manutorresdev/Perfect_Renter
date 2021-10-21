@@ -50,7 +50,7 @@ const acceptBooking = async (req, res, next) => {
     );
 
     // Si no hay reserva para aceptar, lanzamos error.
-    if (booking.state !== 'peticion') {
+    if (booking[0].state !== 'peticion') {
       const error = new Error('No hay reserva pendiente de aceptar.');
       error.httpStatus = 404;
       throw error;
@@ -88,12 +88,14 @@ const acceptBooking = async (req, res, next) => {
     </table>
     `;
 
-    // Enviamos el correo al dueño de la viviendo
-    await sendMail({
-      to: booking[0].TenantEmail,
-      subject: 'Reserva de alquiler',
-      body: emailBody,
-    });
+    // Enviamos el correo al dueño de la vivienda
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: booking[0].TenantEmail,
+        subject: 'Reserva de alquiler',
+        body: emailBody,
+      });
+    }
 
     // Aceptada la reserva, cambiamos el estado de la reserva de "petición" a "reservado"
     await connection.query(

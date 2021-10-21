@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -39,13 +39,10 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-
-          <Route path='/alquileres/:idProperty' component={Property}/>
-
+          <Route path='/alquileres/:idProperty' component={Property} />
           <Route path='/alquileres'>
             <Properties />
           </Route>
-
           <Route path='/contacto'>
             <ContactUs />
           </Route>

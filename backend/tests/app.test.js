@@ -1,10 +1,12 @@
 const supertest = require('supertest');
-// const getDB = require('../config/getDB');
 const { main } = require('../config/initDB');
+const path = require('path');
+const fs = require('fs').promises;
 const { app, server } = require('../app');
 const api = supertest(app);
-const { getToken } = require('./helpers');
-
+const { getToken, getToken2, createProperty } = require('./helpers');
+const { deletePhoto } = require('../libs/helpers');
+const { get } = require('http');
 // let connection;
 
 beforeAll(async () => {
@@ -14,6 +16,7 @@ beforeAll(async () => {
 
 // testEmail@gmail.com ---- correo validado ---- USUARIO 13
 // testEmail1@gmail.com ---- correo no validado ---- USUARIO 12
+//     '\x1b[43m%\x1b[30m'
 
 // Users
 describe('User POST Endpoints', () => {
@@ -465,6 +468,7 @@ describe('User DELETE Endpoints', () => {
       birthDate: '1996-07-14',
     };
     const resReg = await api.post('/users').send(body);
+
     const resVal = await api.get(
       `/users/validate/${resReg.body.registrationCode}`
     );
@@ -478,20 +482,385 @@ describe('User DELETE Endpoints', () => {
     expect(resDel.body.message).toBe('No tienes permisos');
   });
 });
-// test('Subir un alquiler a la base de datos sin autorización.', async () => {
-//   await api
-//     .post('/properties')
-//     .expect(401)
-//     .expect('Content-Type', /application\/json/);
-// });
 
-// test('Obtener alquileres.', async () => {
-//   await api
-//     .get('/properties')
-//     .expect(200)
-//     .expect('Content-Type', /application\/json/);
-// });
+describe('Properties POST Endpoints', () => {
+  afterEach(async () => {
+    const uploadsDir = path.join(__dirname, '../static/uploads');
+    const files = await fs.readdir(uploadsDir);
+    files.forEach(async (file) => {
+      await deletePhoto(file);
+    });
+  });
 
+  test('Subir un alquiler sin fotos.', async () => {
+    const token = await getToken();
+    const body = {
+      city: "Ametlla del valles, L'",
+      province: 'Barcelona',
+      address: 'carrer del riu mogent',
+      zipCode: '08320',
+      number: '9',
+      type: 'piso',
+      stair: '0',
+      flat: '1',
+      gate: '3',
+      mts: '70',
+      rooms: '3',
+      garage: '0',
+      terrace: '0',
+      toilets: '1',
+      energyCertificate: '0',
+      //availabilityDate:2021-10-20
+      price: '650',
+      state: 'reservado',
+    };
+
+    const res = await api
+      .post('/properties')
+      .set({ authorization: token })
+      .send(body);
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('El piso se ha creado correctamente');
+  });
+
+  test('Subir un alquiler repetido sin fotos.', async () => {
+    const token = await getToken();
+    const body = {
+      city: "Ametlla del valles, L'",
+      province: 'Barcelona',
+      address: 'carrer del riu mogent',
+      zipCode: '08320',
+      number: '9',
+      type: 'piso',
+      stair: '0',
+      flat: '1',
+      gate: '3',
+      mts: '70',
+      rooms: '3',
+      garage: '0',
+      terrace: '0',
+      toilets: '1',
+      energyCertificate: '0',
+      //availabilityDate:2021-10-20
+      price: '650',
+      state: 'reservado',
+    };
+
+    const res = await api
+      .post('/properties')
+      .set({ authorization: token })
+      .send(body);
+
+    expect(res.statusCode).toEqual(409);
+    expect(res.body.message).toBe('Ya existe un piso con los datos ingresados');
+  });
+
+  test('Subir un alquiler sin fotos ni autorización.', async () => {
+    const body = {
+      city: "Ametlla del valles, L'",
+      province: 'Barcelona',
+      address: 'carrer del riu mogent',
+      zipCode: '08320',
+      number: '9',
+      type: 'piso',
+      stair: '0',
+      flat: '1',
+      gate: '3',
+      mts: '70',
+      rooms: '3',
+      garage: '0',
+      terrace: '0',
+      toilets: '1',
+      energyCertificate: '0',
+      //availabilityDate:2021-10-20
+      price: '650',
+      state: 'reservado',
+    };
+
+    const res = await api
+      .post('/properties')
+      .set({ authorization: '' })
+      .send(body);
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.message).toBe('Falta la cabecera de autorización');
+  });
+
+  test('Subir un alquiler sin fotos ni algún dato obligatorio.', async () => {
+    const token = await getToken();
+    const body = {
+      city: "Ametlla del valles, L'",
+      province: 'Barcelona',
+      address: 'carrer del riu mogent',
+      zipCode: '08320',
+      number: '9',
+      type: 'piso',
+      stair: '0',
+      flat: '',
+      gate: '',
+      mts: '70',
+      rooms: '3',
+      garage: '0',
+      terrace: '0',
+      toilets: '1',
+      energyCertificate: '0',
+      //availabilityDate:2021-10-20
+      price: '650',
+      state: 'reservado',
+    };
+
+    const res = await api
+      .post('/properties')
+      .set({ authorization: token })
+      .send(body);
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toBe('El piso no es válido.');
+  });
+
+  test('Subir un alquiler sin fotos y sin datos.', async () => {
+    const token = await getToken();
+    const body = {};
+
+    const res = await api
+      .post('/properties')
+      .set({ authorization: token })
+      .send(body);
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toBe('Se requiere una provincia.');
+  });
+
+  test('Subir foto a un alquiler.', async () => {
+    const token = await getToken();
+    const idProperty = await createProperty(2);
+
+    const resUplPhoto = await api
+      .post(`/properties/${idProperty}/photos`)
+      .set({ authorization: token })
+      .attach('photo', 'tests/images/piso1.jpeg');
+
+    expect(resUplPhoto.statusCode).toEqual(200);
+    expect(resUplPhoto.body.message).toBe('Las fotos han sido subidas');
+  });
+
+  test('Subir fotos a un alquiler.', async () => {
+    const token = await getToken();
+    const idProperty = await createProperty(3);
+
+    const files = [
+      'tests/images/piso1.jpeg',
+      'tests/images/piso2.jpeg',
+      'tests/images/piso3.jpeg',
+    ];
+
+    for (const file of files) {
+      const resUplPhoto = await api
+        .post(`/properties/${idProperty}/photos`)
+        .set({ authorization: token })
+        .attach('photo', file);
+
+      expect(resUplPhoto.statusCode).toEqual(200);
+      expect(resUplPhoto.body.message).toBe('Las fotos han sido subidas');
+    }
+  });
+
+  test('Hacer una reserva', async () => {
+    // Body registro usuario3
+    const body = {
+      name: 'Manu',
+      lastName: 'Torres Torres',
+      email: 'testEmail3@gmail.com',
+      password: 'manuTorres1',
+      bio: 'Empezando los tests con jest.',
+      city: 'Barcelona',
+      birthDate: '1996-07-14',
+    };
+    // Registro user3
+    const resReg = await api.post('/users').send(body);
+    // Validación user3
+    const resVal = await api.get(
+      `/users/validate/${resReg.body.registrationCode}`
+    );
+    const token2 = await getToken2();
+    const idProperty = await createProperty(4);
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2021-09-29',
+        endDate: '2021-10-03',
+      });
+
+    expect(resBook.statusCode).toEqual(200);
+    expect(resBook.body.message).toBe('Correo electrónico enviado con éxito.');
+  });
+
+  test('Hacer una reserva sin autorización', async () => {
+    const idProperty = await createProperty(5);
+    const resBook = await api.post(`/properties/${idProperty}/contact`).send({
+      comentarios:
+        'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+      startDate: '2021-09-29',
+      endDate: '2021-10-03',
+    });
+
+    expect(resBook.statusCode).toEqual(401);
+    expect(resBook.body.message).toBe('Falta la cabecera de autorización');
+  });
+
+  test('Hacer una reserva ya existente.', async () => {
+    const token2 = await getToken2();
+
+    const idProperty = await createProperty(6);
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2021-09-29',
+        endDate: '2021-10-03',
+      });
+
+    const resBook2 = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2021-09-29',
+        endDate: '2021-10-03',
+      });
+
+    expect(resBook2.statusCode).toEqual(200);
+    expect(resBook2.body.message).toBe(
+      'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.'
+    );
+  });
+
+  test('Hacer una reserva sin algún dato obligatorio.', async () => {
+    const token2 = await getToken2();
+
+    const idProperty = await createProperty(7);
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios: '',
+        startDate: '2021-09-29',
+        endDate: '2021-10-03',
+      });
+
+    expect(resBook.statusCode).toEqual(400);
+    expect(resBook.body.message).toBe(
+      'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
+    );
+  });
+});
+
+describe('Properties GET Endpoints', () => {
+  test('Hacer una reserva y acepta la reserva el dueño de la propiedad', async () => {
+    const token2 = await getToken2();
+    const token = await getToken();
+    const idProperty = await createProperty(8);
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios: 'Hola',
+        startDate: '2021-09-29',
+        endDate: '2021-10-03',
+      });
+
+    const resAccept = await api
+      .get(`/properties/${resBook.body.bookingCode}/accept`)
+      .set({ authorization: token });
+
+    expect(resAccept.statusCode).toEqual(200);
+    expect(resAccept.body.message).toBe('Reserva aceptada');
+  });
+
+  test('Hacer una reserva y cancela la reserva el dueño de la propiedad', async () => {
+    const token2 = await getToken2();
+    const token = await getToken();
+    const idProperty = await createProperty(9);
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios: 'Hola',
+        startDate: '2021-09-29',
+        endDate: '2021-10-03',
+      });
+
+    const resCancel = await api
+      .get(`/properties/${resBook.body.bookingCode}/cancel`)
+      .set({ authorization: token });
+
+    expect(resCancel.statusCode).toEqual(200);
+    expect(resCancel.body.message).toBe(
+      'La reserva ha sido cancelada Correctamente'
+    );
+  });
+
+  test('Hacer una reserva y cancela la reserva el inquilino', async () => {
+    const token2 = await getToken2();
+    const token = await getToken();
+    const idProperty = await createProperty(10);
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios: 'Hola',
+        startDate: '2021-09-29',
+        endDate: '2021-10-03',
+      });
+
+    const resAccept = await api
+      .get(`/properties/${resBook.body.bookingCode}/cancel`)
+      .set({ authorization: token2 });
+
+    expect(resAccept.statusCode).toEqual(200);
+    expect(resAccept.body.message).toBe(
+      'La reserva ha sido cancelada Correctamente'
+    );
+  });
+
+  test('Hacer una reserva y dueño e inquilino la cancelan.', async () => {
+    const token2 = await getToken2();
+    const token = await getToken();
+    const idProperty = await createProperty(11);
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios: 'Hola',
+        startDate: '2021-09-29',
+        endDate: '2021-10-03',
+      });
+
+    const resCancelOwner = await api
+      .get(`/properties/${resBook.body.bookingCode}/cancel`)
+      .set({ authorization: token });
+
+    const resCancelTenant = await api
+      .get(`/properties/${resBook.body.bookingCode}/cancel`)
+      .set({ authorization: token2 });
+
+    expect(resCancelTenant.statusCode).toEqual(400);
+    expect(resCancelTenant.body).toHaveProperty('message');
+  });
+});
 afterAll(async () => {
   try {
     server.close();
@@ -499,3 +868,22 @@ afterAll(async () => {
     console.log(error);
   }
 });
+
+// city:Ametlla del valles, L'
+// province:Barcelona
+// address:carrer del riu mogent
+// zipCode:08320
+// number:9
+// type:piso
+// stair:0
+// flat:1
+// gate:3
+// mts:70
+// rooms:3
+// garage:0
+// terrace:0
+// toilets:1
+// energyCertificate:0
+// //availabilityDate:2021-10-20
+// price:650
+// state:reservado

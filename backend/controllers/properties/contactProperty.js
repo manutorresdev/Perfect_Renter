@@ -106,13 +106,15 @@ const contactProperty = async (req, res, next) => {
           tel = 'No especificado.';
         }
       }
-      if (!comentarios) {
+
+      if (!comentarios || comentarios.length < 1) {
         const error = new Error(
           'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
         );
         error.httpStatus = 400;
         throw error;
       }
+
       if (!startDate || !endDate) {
         const error = new Error('Falta definir la fecha de la reserva.');
         error.httpStatus = 400;
@@ -141,7 +143,7 @@ const contactProperty = async (req, res, next) => {
 
       // Generamos el codigo de reserva,
       const bookingCode = generateRandomString(10);
-      console.log(`Este es el length del random ${bookingCode.length}`);
+
       // Definimos el body del email
       const emailBody = `
     <table>
@@ -186,11 +188,13 @@ const contactProperty = async (req, res, next) => {
     `;
 
       // Enviamos el correo del usuario que contacta, al usuario a contactar.
-      await sendMail({
-        to: property[0].email,
-        subject: 'Solicitud de alquiler',
-        body: emailBody,
-      });
+      if (process.env.NODE_ENV !== 'test') {
+        await sendMail({
+          to: property[0].email,
+          subject: 'Solicitud de alquiler',
+          body: emailBody,
+        });
+      }
 
       // Agregamos el código de reserva en la base de datos junto a la posible reserva.
       await connection.query(
@@ -211,6 +215,7 @@ const contactProperty = async (req, res, next) => {
       res.send({
         status: 'ok',
         message: 'Correo electrónico enviado con éxito.',
+        bookingCode,
       });
     }
   } catch (error) {
