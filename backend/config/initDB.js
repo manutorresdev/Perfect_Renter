@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const mysql = require('mysql2');
 const path = require('path');
 
-const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, NODE_ENV } = process.env;
+const { NODE_ENV, MYSQL_DATABASE } = process.env;
 let connection;
 
 /**
@@ -175,6 +175,25 @@ async function main() {
     ${await provincias}
     `);
     console.log('Tablas creadas');
+
+    // Borramos los eventos de la base de datos en caso de que haya.
+    const [events] = await connection.query(`
+    SELECT * FROM INFORMATION_SCHEMA.EVENTS WHERE EVENT_SCHEMA ="${MYSQL_DATABASE}";
+    `);
+
+    console.log('\x1b[43m%\x1b[30m', MYSQL_DATABASE);
+    events.forEach(async (event) => {
+      console.log('\x1b[43m%\x1b[30m', event);
+      await connection.query(
+        `
+      DROP EVENT ${event.EVENT_NAME};
+      `
+      );
+    });
+    // Habilitamos la creación de eventos en el servidor.
+    await connection.query(`
+    SET GLOBAL event_scheduler = ON;
+    `);
 
     // Insertamos el usuario administrador.
     await connection.query(`

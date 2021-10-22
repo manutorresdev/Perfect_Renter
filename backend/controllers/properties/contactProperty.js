@@ -121,19 +121,17 @@ const contactProperty = async (req, res, next) => {
         throw error;
       }
       // Si la fecha reservada es menor a la fecha actual, lanzamos error.
+
       if (
-        new Date(startDate).getMilliseconds < new Date().getMilliseconds ||
-        new Date(endDate).getMilliseconds < new Date().getMilliseconds
+        new Date(startDate).getTime() < new Date().getTime() ||
+        new Date(endDate).getTime() < new Date().getTime()
       ) {
         const error = new Error('No puedes reservar en el pasado.');
         error.httpStatus = 403;
         throw error;
       }
-
       // Si la fecha end es menor a la fecha start, lanzamos error.
-      if (
-        new Date(endDate).getMilliseconds < new Date(startDate).getMilliseconds
-      ) {
+      if (new Date(endDate).getTime() < new Date(startDate).getTime()) {
         const error = new Error(
           'Hay un error en las fechas, la fecha reservada debe ser posterior a la fecha actual.'
         );

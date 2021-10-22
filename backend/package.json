@@ -8,8 +8,7 @@
     "initDB": "NODE_ENV=dev node config/initDB.js",
     "dev": "NODE_ENV=dev nodemon app.js",
     "deploy": "gh-pages -d docs",
-    "initDBtest": "NODE_ENV=test node config/initDB.js",
-    "test": "NODE_ENV=test jest --verbose --silent --forceExit ./app.test.js",
+    "test": "NODE_ENV=test jest --forceExit ./app.test.js",
     "test:watch": "npm run test -- --watch"
   },
   "repository": {
