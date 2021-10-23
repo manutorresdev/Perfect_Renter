@@ -2,8 +2,6 @@ import { React, useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import { MenuElements } from './MenuElements';
 import { Link } from 'react-router-dom';
-import '../../index.css';
-import '../../mediaQuery.css';
 
 export default function NavBar({ token }) {
   const [mostrarMenu, setMostrarMenu] = useState(false);
