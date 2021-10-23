@@ -23,7 +23,7 @@ export default function UserProfile({ match }) {
       },
       Token
     );
-  }, [match.params.idUser]);
+  }, [match.params.idUser, Token]);
 
   console.log('info del get user: ' + user.name);
 

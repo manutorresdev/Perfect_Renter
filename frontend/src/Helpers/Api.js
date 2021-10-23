@@ -1,5 +1,5 @@
 export const post = (url, body, onSuccess, onError, token) => {
-  console.log('Enviado.');
+  console.log('Enviado.', token);
   fetch(url, {
     method: 'POST',
     headers: {

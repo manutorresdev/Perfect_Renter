@@ -16,6 +16,7 @@ import Properties from './Components/Properties/Properties';
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
 import ContactUs from './Components/Forms/ContactUs';
+import ContactProperty from './Components/Forms/ContactProperty';
 import RecoverPass from './Components/Forms/RecoverPass';
 import ResetPass from './Components/Forms/ResetPass';
 import { TokenContext } from './Helpers/Hooks/TokenProvider';
@@ -45,7 +46,6 @@ function App() {
           <Route path='/alquileres'>
             <Properties />
           </Route>
-
           <Route path='/contacto'>
             <ContactUs />
           </Route>
