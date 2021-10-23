@@ -15,24 +15,23 @@ export default function Tenant({ user, setOverlay }) {
     <article className='flex gap-2 text-xs '>
       <div className='w-48 flex flex-col relative'>
         <Link to={`/inquilinos/${user.idUser}`}>
-        <div className='font-bold ml-1'>{user.name}</div>
-        <span className='ml-2'>{user.city}</span>
-        <span>{user.idUser} kashfkjasdfkj</span>
-        <img
-          className='w-32'
-          src={
-            user.avatar ? '' : require('../../Images/defProfile.png').default
-          }
-          alt={'perfil ' + user.name + user.lastName}
-        />
-        <div className='flex text-xs self-center' id='calification'>
-
-          <FaStar />
-          <FaStar />
-          <FaStar />
-          <FaStar />
-          <FaStar />
-        </div>
+          <div className='font-bold ml-1'>{user.name}</div>
+          <span className='ml-2'>{user.city}</span>
+          <span>{user.idUser}</span>
+          <img
+            className='w-32'
+            src={
+              user.avatar ? '' : require('../../Images/defProfile.png').default
+            }
+            alt={'perfil ' + user.name + user.lastName}
+          />
+          <div className='flex text-xs self-center' id='calification'>
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStar />
+            <FaStar />
+          </div>
         </Link>
       </div>
       <p className='self-center '>
