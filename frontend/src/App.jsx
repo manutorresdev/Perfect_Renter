@@ -32,16 +32,16 @@ function App() {
       <Router>
         <NavBar token={Token} />
         <Switch>
-          <Route path='/register'>
-            {Token ? <Redirect to='/' /> : <Register />}
-          </Route>
+          <Route path='/register' component={Register} />
+          {/* {Token ? <Redirect to='/' /> : <Register />}
+          </Route> */}
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
-          
+
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/properties/:idProperty' component={PropertyInfo}/>
+          <Route path='/properties/:idProperty' component={PropertyInfo} />
           <Route path='/alquileres'>
             <Properties />
           </Route>
@@ -63,12 +63,14 @@ function App() {
           <Route path='/perfil'>
             {Token ? <Profile token={Token} /> : <Redirect to='/' />}
           </Route>
+          {/* <Route path='/editar'>
+            <Register token={Token} /> : <Redirect to='/' />
+          </Route> */}
         </Switch>
         <Footer token={Token} setToken={setToken} />
       </Router>
     </>
   );
 }
-
 
 export default App;
