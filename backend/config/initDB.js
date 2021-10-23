@@ -205,7 +205,7 @@ async function main() {
       const city = faker.address.cityName();
       const birthDate = format(faker.datatype.datetime(), 'yyyy-MM-dd');
 
-      // Fecha de cración.
+      // Fecha de creación.
       const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
       await connection.query(`
@@ -213,7 +213,6 @@ async function main() {
         VALUES ( "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
     `);
     }
-
     console.log('Usuarios creados');
 
     // Borramos los eventos de la base de datos en caso de que haya.
