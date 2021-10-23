@@ -4,21 +4,14 @@ const path = require('path');
 const fs = require('fs').promises;
 const { app, server } = require('../app');
 const api = supertest(app);
-const { getToken, getToken2, createProperty } = require('./helpers');
+const { getToken, getToken2, getToken3, createProperty } = require('./helpers');
 const { deletePhoto } = require('../libs/helpers');
-const { get } = require('http');
-// let connection;
 
 beforeAll(async () => {
   // connection = await getDB();
   await main();
 });
 
-// testEmail@gmail.com ---- correo validado ---- USUARIO 13
-// testEmail1@gmail.com ---- correo no validado ---- USUARIO 12
-//     '\x1b[43m%\x1b[30m'
-
-// Users
 describe('User POST Endpoints', () => {
   test('Registro un usuario.', async () => {
     const body = {
@@ -228,7 +221,89 @@ describe('User POST Endpoints', () => {
     expect(resContact.body.message).toBe('Faltan campos obligatorios.');
   });
 
-  // FALTA EL DE VOTAR
+  test('Votar un usuario con valores erróneos.', async () => {
+    // token
+    const token = await getToken();
+    const idProperty = await createProperty(6, 'Zaragoza', 'Zaragoza');
+    // token3
+    const { id: idUser, token: token3 } = await getToken3();
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token3 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-03',
+        endDate: '2022-10-29',
+      });
+
+    const res = await api
+      .post(`/users/${idUser}/votes`)
+      .set({ authorization: token })
+      .send({
+        voteValueRenter: 6,
+        commentary: 'Es muy sucio la verdad',
+        idProperty: idProperty,
+      });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toBe(
+      'El voto debe ser un valor entero entre 1 y 5.'
+    );
+  });
+
+  test('Votar un usuario sin relación entre ambos.', async () => {
+    // token
+    const token = await getToken();
+    const idProperty = await createProperty(8, 'Zaragoza', 'Zaragoza');
+    // token3
+    const { id: idUser, token: token3 } = await getToken3();
+
+    const res = await api
+      .post(`/users/${idUser}/votes`)
+      .set({ authorization: token })
+      .send({
+        voteValueRenter: 6,
+        commentary: 'Es muy sucio la verdad',
+        idProperty: idProperty,
+      });
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body.message).toBe(
+      'No puedes votar un usuario con el que no has tenido relación.'
+    );
+  });
+
+  test('Votar un usuario.', async () => {
+    // token
+    const token = await getToken();
+    const idProperty = await createProperty(8, 'Cadiz', 'Cadiz');
+    // token3
+    const { id: idUser, token: token3 } = await getToken3();
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token3 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-03',
+        endDate: '2022-10-29',
+      });
+
+    const res = await api
+      .post(`/users/${idUser}/votes`)
+      .set({ authorization: token })
+      .send({
+        voteValueRenter: 1,
+        commentary: 'Es muy sucio la verdad',
+        idProperty: idProperty,
+      });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('El voto ha sido creado con éxito.');
+  });
 });
 
 describe('User GET endpoints', () => {
@@ -237,7 +312,7 @@ describe('User GET endpoints', () => {
     const resList = await api.get('/users').set({ Authorization: token });
     expect(resList.statusCode).toEqual(200);
     expect(resList.body).toHaveProperty('users');
-    expect(resList.body.users).toHaveLength(13);
+    expect(resList.body.users).toHaveLength(resList.body.users.length);
   });
 
   test('Obtener una lista de usuarios sin autorización.', async () => {
@@ -259,7 +334,9 @@ describe('User GET endpoints', () => {
   test('Obtener un usuario inexistente.', async () => {
     const token = await getToken();
 
-    const resGetUser = await api.get('/users/14').set({ Authorization: token });
+    const resGetUser = await api
+      .get('/users/100')
+      .set({ Authorization: token });
     expect(resGetUser.statusCode).toEqual(404);
     expect(resGetUser.body.message).toBe('El usuario no existe');
   });
@@ -279,8 +356,6 @@ describe('User GET endpoints', () => {
     expect(resGetUser.body.userInfo.idUser).toBe(13);
     expect(resGetUser.body.userInfo).toHaveProperty('email');
   });
-
-  // LIST BOOKINGS
 
   test('Listar valoraciones de un usuario.', async () => {
     const token = await getToken();
@@ -303,6 +378,68 @@ describe('User GET endpoints', () => {
       .set({ Authorization: '' });
     expect(resListVotes.statusCode).toEqual(401);
     expect(resListVotes.body.message).toBe('Falta la cabecera de autorización');
+  });
+
+  test('Listar valoraciones de un usuario que no tiene ninguna.', async () => {
+    const { id: idUser, token: token3 } = await getToken3();
+    const idProperty = await createProperty(5, 'Madrid', 'Fuenlabrada');
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token3 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-03',
+        endDate: '2022-10-29',
+      });
+    const res = await api.get(`/users/1/votes`).set({ authorization: token3 });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('Valoraciones');
+    expect(res.body.Valoraciones).toBe('Aún no tiene valoraciones.');
+  });
+
+  test('Listar reservas de un usuario.', async () => {
+    const { id: idUser, token: token3 } = await getToken3();
+    const idProperty = await createProperty(12, 'Madrid', 'Fuenlabrada');
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token3 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-03',
+        endDate: '2022-10-29',
+      });
+    const res = await api
+      .get(`/users/${idUser}/bookings`)
+      .set({ authorization: token3 });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('Peticiones_en_proceso');
+    expect(res.body.Peticiones_en_proceso).toHaveLength(
+      res.body.Peticiones_en_proceso.length
+    );
+  });
+
+  test('Listar reservas de un usuario con otro id.', async () => {
+    const { id: idUser, token: token3 } = await getToken3();
+    const idProperty = await createProperty(18, 'Madrid', 'Fuenlabrada');
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token3 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-03',
+        endDate: '2022-10-29',
+      });
+
+    const res = await api
+      .get(`/users/1/bookings`)
+      .set({ authorization: token3 });
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body.message).toBe('No tienes permisos.');
   });
 });
 
@@ -424,7 +561,29 @@ describe('User PUT Endpoints', () => {
     expect(res.body.message).toBe('Contraseña incorrecta.');
   });
 
-  test('...', async () => {});
+  test('Cambio de algún dato del usuario.', async () => {
+    const { id: idUser, token: token3 } = await getToken3();
+
+    const res = await api
+      .put(`/users/${idUser}`)
+      .set({ authorization: token3 })
+      .send({ name: 'Juan José' });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('Datos de usuario actualizados');
+  });
+
+  test('Cambio de algún dato del usuario.', async () => {
+    const { id: idUser, token: token3 } = await getToken3();
+
+    const res = await api
+      .put(`/users/${idUser}`)
+      .set({ authorization: token3 })
+      .send({ birthDate: '1995-07-14' });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('Datos de usuario actualizados');
+  });
 });
 
 describe('User DELETE Endpoints', () => {
@@ -447,10 +606,11 @@ describe('User DELETE Endpoints', () => {
     const res = await api
       .post('/users/login')
       .send({ email: body.email, password: body.password });
-    const token = res.body.token;
-
+    const { token, idUser } = res.body;
     //Borrar usuario
-    const resDel = await api.delete('/users/14').set({ authorization: token });
+    const resDel = await api
+      .delete(`/users/${idUser}`)
+      .set({ authorization: token });
 
     expect(resDel.statusCode).toEqual(200);
     expect(resDel.body.message).toBe('Usuario eliminado');
@@ -476,10 +636,21 @@ describe('User DELETE Endpoints', () => {
     const token = await getToken();
 
     //Borrar usuario
-    const resDel = await api.delete('/users/15').set({ authorization: token });
+    const resDel = await api.delete('/users/3').set({ authorization: token });
 
     expect(resDel.statusCode).toEqual(403);
     expect(resDel.body.message).toBe('No tienes permisos');
+  });
+
+  test('Borrar usuario administrador.', async () => {
+    const token = await getToken();
+
+    const resDel = await api.delete(`/users/1`).set({ authorization: token });
+
+    expect(resDel.statusCode).toEqual(403);
+    expect(resDel.body.message).toBe(
+      'El administrador principal no se puede eliminar'
+    );
   });
 });
 
@@ -762,6 +933,69 @@ describe('Properties POST Endpoints', () => {
       'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
     );
   });
+
+  test('Usuario vota una propiedad.', async () => {
+    const idProperty = await createProperty(1, 'Zaragoza', 'Zaragoza');
+    const token2 = await getToken2();
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-03',
+        endDate: '2022-10-29',
+      });
+
+    const res = await api
+      .post(`/properties/${idProperty}/votes`)
+      .set({ authorization: token2 })
+      .send({ voteValue: 1, commentary: 'Hola que bonita casa tienes' });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('El voto ha sido creado con éxito.');
+  });
+
+  test('Usuario vota una propiedad en la que no ha tenido relación.', async () => {
+    const idProperty = await createProperty(2, 'Zaragoza', 'Zaragoza');
+    const token2 = await getToken2();
+
+    const res = await api
+      .post(`/properties/${idProperty}/votes`)
+      .set({ authorization: token2 })
+      .send({ voteValue: 1, commentary: 'Hola que bonita casa tienes' });
+
+    expect(res.statusCode).toEqual(403);
+    expect(res.body.message).toBe(
+      'No puedes votar un alquiler en el que no has estado.'
+    );
+  });
+
+  test('Usuario vota una propiedad con valores incorrectos.', async () => {
+    const idProperty = await createProperty(3, 'Zaragoza', 'Zaragoza');
+    const token2 = await getToken2();
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-03',
+        endDate: '2022-10-29',
+      });
+
+    const res = await api
+      .post(`/properties/${idProperty}/votes`)
+      .set({ authorization: token2 })
+      .send({ voteValue: 6, commentary: 'Hola que bonita casa tienes' });
+
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.message).toBe(
+      'El voto debe ser un valor entero entre 1 y 5.'
+    );
+  });
 });
 
 describe('Properties GET Endpoints', () => {
@@ -783,7 +1017,6 @@ describe('Properties GET Endpoints', () => {
       .get(`/properties/${resBook.body.bookingCode}/accept`)
       .set({ authorization: token });
 
-    console.log('\x1b[43m%\x1b[30m', resAccept.body);
     expect(resAccept.statusCode).toEqual(200);
     expect(resAccept.body.message).toBe('Reserva aceptada');
   });
@@ -861,7 +1094,129 @@ describe('Properties GET Endpoints', () => {
     expect(resCancelTenant.statusCode).toEqual(400);
     expect(resCancelTenant.body).toHaveProperty('message');
   });
+
+  test('Obtener una lista de alquileres', async () => {
+    const res = await api.get('/properties');
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.properties).toHaveLength(res.body.properties.length);
+  });
+
+  test('Obtener una lista de alquileres con filtro de ciudad', async () => {
+    const res = await api
+      .get('/properties')
+      .query({ filtCity: 'Montornes_del_valles' });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.properties).toHaveLength(10);
+    expect(res.body.properties[0].city).toBe('Montornes del valles');
+  });
+
+  test('Obtener una lista de alquileres con filtro de provincia', async () => {
+    const resProp = await createProperty(12, 'Girona', 'Girona');
+    const res = await api.get('/properties').query({ filtProvince: 'Girona' });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.properties).toHaveLength(1);
+  });
+
+  test('Obtener una propiedad en concreto.', async () => {
+    const resProp = await createProperty(1, 'Girona', 'Girona');
+
+    const res = await api.get(`/properties/${resProp}`);
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.property.idProperty).toEqual(resProp);
+  });
+
+  test('Obtener votos de una propiedad.', async () => {
+    const idProperty = await createProperty(4, 'Zaragoza', 'Zaragoza');
+    const token2 = await getToken2();
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/contact`)
+      .set({ authorization: token2 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-03',
+        endDate: '2022-10-29',
+      });
+
+    const resVote = await api
+      .post(`/properties/${idProperty}/votes`)
+      .set({ authorization: token2 })
+      .send({ voteValue: 1, commentary: 'Hola que bonita casa tienes' });
+
+    const res = await api
+      .get(`/properties/${idProperty}/votes`)
+      .set({ authorization: token2 });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body).toHaveProperty('Valoraciones');
+  });
 });
+
+describe('Properties PUT Endpoints', () => {
+  test('Editar información de un alquiler.', async () => {
+    const token = await getToken();
+    const idProp = await createProperty(2, 'Madrid', 'Fuenlabrada');
+
+    const res = await api
+      .put(`/properties/${idProp}`)
+      .set({ authorization: token })
+      .send({ city: 'Madrid' });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('Vivienda actualizada.');
+  });
+
+  test('Editar información de un alquiler sin ser el dueño del mismo.', async () => {
+    const token2 = await getToken2();
+    const idProp = await createProperty(3, 'Madrid', 'Fuenlabrada');
+
+    const res = await api
+      .put(`/properties/${idProp}`)
+      .set({ authorization: token2 })
+      .send({ city: 'Madrid' });
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.message).toBe('No tienes suficientes permisos.');
+  });
+
+  test('Editar información de un alquiler sin autorización.', async () => {
+    const idProp = await createProperty(4, 'Madrid', 'Fuenlabrada');
+
+    const res = await api
+      .put(`/properties/${idProp}`)
+      .set({ authorization: '' })
+      .send({ city: 'Madrid' });
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.message).toBe('Falta la cabecera de autorización');
+  });
+});
+
+describe('Properties DELETE Endpoints', () => {
+  test('Borrar una propiedad.', async () => {
+    const token = await getToken();
+    const idProp = await createProperty(4, 'Barcelona', 'Barcelona');
+
+    const res = await api
+      .delete(`/properties/${idProp}`)
+      .set({ authorization: token });
+
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.message).toBe('Propiedad eliminada');
+  });
+
+  test('Borrar una propiedad sin ser dueño de la misma.', async () => {
+    const token2 = await getToken2();
+    const idProp = await createProperty(5, 'Barcelona', 'Barcelona');
+
+    const res = await api
+      .delete(`/properties/${idProp}`)
+      .set({ authorization: token2 });
+
+    expect(res.statusCode).toEqual(401);
+    expect(res.body.message).toBe('No tienes suficientes permisos.');
+  });
+});
+
 afterAll(async () => {
   try {
     server.close();
@@ -869,22 +1224,3 @@ afterAll(async () => {
     console.log(error);
   }
 });
-
-// city:Ametlla del valles, L'
-// province:Barcelona
-// address:carrer del riu mogent
-// zipCode:08320
-// number:9
-// type:piso
-// stair:0
-// flat:1
-// gate:3
-// mts:70
-// rooms:3
-// garage:0
-// terrace:0
-// toilets:1
-// energyCertificate:0
-// //availabilityDate:2021-10-20
-// price:650
-// state:reservado

@@ -16,19 +16,43 @@ async function getToken2() {
     email: 'testEmail4@gmail.com',
     password: 'manuTorres1',
   };
-  const resLog3 = await api.post('/users/login').send(body);
-
   const res = await api.post('/users/login').send(body);
 
   return res.body.token;
 }
 
-async function createProperty(flat) {
+async function getToken3() {
+  const body = {
+    name: 'Manu',
+    lastName: 'Torres Torres',
+    email: 'testEmail5@gmail.com',
+    password: 'manuTorres1',
+    bio: 'Empezando los tests con jest.',
+    city: 'Barcelona',
+    birthDate: '1996-07-14',
+  };
+  const resReg = await api.post('/users').send(body);
+  const resVal = await api.get(
+    `/users/validate/${resReg.body.registrationCode}`
+  );
+
+  const res = await api
+    .post('/users/login')
+    .send({ email: body.email, password: body.password });
+
+  return { id: res.body.idUser, token: res.body.token };
+}
+
+async function createProperty(
+  flat,
+  province = 'Barcelona',
+  city = 'Montornes del valles'
+) {
   const token = await getToken();
   // Creación propiedad user1
   const bodyProp = {
-    city: 'Montornes del valles',
-    province: 'Barcelona',
+    city: city,
+    province: province,
     address: 'carrer del riu mogent',
     zipCode: '08170',
     number: '9',
@@ -54,4 +78,4 @@ async function createProperty(flat) {
   return resProp.body.property;
 }
 
-module.exports = { getToken, getToken2, createProperty };
+module.exports = { getToken, getToken2, createProperty, getToken3 };

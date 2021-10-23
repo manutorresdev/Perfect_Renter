@@ -54,7 +54,6 @@ const listProperties = async (req, res, next) => {
     const mts = filtMts ? filtMts : 0;
 
     let properties;
-    console.log(req.params.idUser);
     /***** Verificamos si la peticion viene de un usuario Propietario *****/
     if (req.params.idUser) {
       // Obtenemos el id del usuario que hace la peticion.
@@ -125,7 +124,6 @@ const listProperties = async (req, res, next) => {
         [city, province, type, pmin, pmax, rooms, garage, toilets, mts]
       );
     }
-    console.log(properties);
     //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
     if (properties.length === 0) {
       res.send({

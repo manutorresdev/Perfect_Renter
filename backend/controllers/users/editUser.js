@@ -36,7 +36,7 @@ const editUser = async (req, res, next) => {
     const { name, email, lastName, tel, bio, city, birthDate } = req.body;
 
     // Validamos los datos recibidos.
-    await validate(userSchema, req.body);
+    await validate(editUserSchema, req.body);
 
     console.log(req.body);
 
@@ -55,7 +55,7 @@ const editUser = async (req, res, next) => {
       !tel &&
       !bio &&
       !city &&
-      birthDate &&
+      !birthDate &&
       !(req.files && req.files.avatar)
     ) {
       const error = new Error('Faltan campos');
@@ -174,11 +174,13 @@ const editUser = async (req, res, next) => {
 
         try {
           // Enviamos el mensaje al correo del usuario.
-          await sendMail({
-            to: email,
-            subject: 'Activa tu usuario de Perfect Renter',
-            body: emailBody,
-          });
+          if (process.env.NODE_ENV !== 'test') {
+            await sendMail({
+              to: email,
+              subject: 'Activa tu usuario de Perfect Renter',
+              body: emailBody,
+            });
+          }
         } catch (error) {
           throw new Error('Error enviando el mensaje de verificación');
         }

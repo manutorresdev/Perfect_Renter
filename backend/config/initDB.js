@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const mysql = require('mysql2');
 const path = require('path');
 
-const { NODE_ENV, MYSQL_DATABASE } = process.env;
+const { NODE_ENV, MYSQL_DATABASE, MYSQL_DATABASE_TEST } = process.env;
 let connection;
 
 /**
@@ -176,25 +176,6 @@ async function main() {
     `);
     console.log('Tablas creadas');
 
-    // Borramos los eventos de la base de datos en caso de que haya.
-    const [events] = await connection.query(`
-    SELECT * FROM INFORMATION_SCHEMA.EVENTS WHERE EVENT_SCHEMA ="${MYSQL_DATABASE}";
-    `);
-
-    console.log('\x1b[43m%\x1b[30m', MYSQL_DATABASE);
-    events.forEach(async (event) => {
-      console.log('\x1b[43m%\x1b[30m', event);
-      await connection.query(
-        `
-      DROP EVENT ${event.EVENT_NAME};
-      `
-      );
-    });
-    // Habilitamos la creación de eventos en el servidor.
-    await connection.query(`
-    SET GLOBAL event_scheduler = ON;
-    `);
-
     // Insertamos el usuario administrador.
     await connection.query(`
     INSERT INTO users ( name, lastName, tel, email, password, role, createdAt, city, birthDate)
@@ -234,6 +215,24 @@ async function main() {
     }
 
     console.log('Usuarios creados');
+
+    // Borramos los eventos de la base de datos en caso de que haya.
+    const [events] = await connection.query(`
+        SELECT * FROM INFORMATION_SCHEMA.EVENTS WHERE EVENT_SCHEMA ="${
+          NODE_ENV === 'test' ? MYSQL_DATABASE_TEST : MYSQL_DATABASE
+        }";
+        `);
+    events.forEach(async (event) => {
+      await connection.query(
+        `
+      DROP EVENT ${event.EVENT_NAME};
+      `
+      );
+    });
+    // Habilitamos la creación de eventos en el servidor.
+    await connection.query(`
+        SET GLOBAL event_scheduler = ON;
+        `);
   } catch (error) {
     console.error(error.message);
     if (error.message === "Unknown database 'perfect_renter'") {

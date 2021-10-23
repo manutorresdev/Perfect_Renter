@@ -71,11 +71,13 @@ const acceptBooking = async (req, res, next) => {
     `;
 
     // Enviamos el correo al inquilino
-    await sendMail({
-      to: booking[0].RenterEmail,
-      subject: 'Reserva de alquiler',
-      body: emailBody,
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: booking[0].RenterEmail,
+        subject: 'Reserva de alquiler',
+        body: emailBody,
+      });
+    }
 
     //Email para el dueño que aceptó la reserva
     emailBody = `
@@ -106,10 +108,6 @@ const acceptBooking = async (req, res, next) => {
     );
 
     // Encargamos a SQL de hacer el cambio de "reservado" a "alquilado"
-    console.log(
-      '\x1b[43m%\x1b[30m',
-      format(booking[0].startBookingDate, 'yyyy-MM-dd')
-    );
     await connection.query(
       `
     CREATE EVENT ${bookingCode}_event_start

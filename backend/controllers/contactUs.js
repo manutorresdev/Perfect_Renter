@@ -40,11 +40,13 @@ const contactUs = async (req, res, next) => {
     `;
 
     // Enviamos el correo del usuario que contacta, al usuario a contactar.
-    await sendMail({
-      to: 'perfectrenterproject@gmail.com',
-      subject: asunto,
-      body: emailBody,
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: 'perfectrenterproject@gmail.com',
+        subject: asunto,
+        body: emailBody,
+      });
+    }
 
     res.send({
       status: 'ok',
