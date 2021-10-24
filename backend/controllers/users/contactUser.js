@@ -76,11 +76,14 @@ const contactUser = async (req, res, next) => {
     `;
 
     // Enviamos el correo del usuario que contacta, al usuario a contactar.
-    await sendMail({
-      to: user[0].email,
-      subject: 'Contacto de propietario.',
-      body: emailBody,
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: user[0].email,
+        subject: 'Contacto de propietario.',
+        body: emailBody,
+      });
+    }
+
     res.send({
       status: 'ok',
       message: 'Correo electrónico enviado con éxito.',

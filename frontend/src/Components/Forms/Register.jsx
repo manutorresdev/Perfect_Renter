@@ -8,10 +8,7 @@ import Password from './Inputs/Password';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 
-export default function Register({ usuario }) {
-  const [Token] = useContext(TokenContext);
-
-  console.log(usuario);
+export default function Register({ token }) {
 
   const {
     register,
@@ -84,7 +81,9 @@ export default function Register({ usuario }) {
     <>
       <div className='mt-20 flex flex-col items-center gap-5 m-0 p-2'>
         <div className='title underline text-5xl m-0 p-0'>
-          {Token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
+
+          {token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
+
         </div>
 
         <form

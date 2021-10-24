@@ -1,33 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { get } from '../../Helpers/Api';
+import React from 'react';
+import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from './Property';
 
 export default function Properties() {
-  const [Properties, setProperties] = useState([]);
-  const [Loaded, setLoaded] = useState(false);
-
-  useEffect(() => {
-    get(
-      'http://localhost:4000/properties',
-      (data) => {
-        console.log('data', data);
-        if (data.message!=='No hay conicidencias para su busqueda') {
-          setTimeout(() => {
-            setProperties(data.properties);
-            setLoaded(true);
-          }, 500);
-        }
-        setProperties([]);
-      },
-      (error) => console.log(error)
-    );
-  }, []);
+  const [Properties] = useProperties();
 
   return (
     <>
       <section className='flex flex-col items-center mt-14'>
         <h1 className='text-2xl'>Alquileres</h1>
-        {Loaded ? (
+        {Properties.length>0 ? (
           Properties.map((property) => (
             <Property key={property.idProperty} property={property}>
               <div className='my-5 border border-black'>

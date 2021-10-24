@@ -60,7 +60,7 @@ const listProperties = async (req, res, next) => {
       // Obtenemos el id del usuario que hace la peticion.
       const { idUser } = req.params;
 
-      [properties] = await connection.query(
+      [[properties]] = await connection.query(
         `
       SELECT properties.idProperty,
       properties.idUser,
