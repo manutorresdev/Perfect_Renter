@@ -17,22 +17,23 @@ export default function UsersList() {
       'http://localhost:4000/users',
       (data) => {
         setUsers(data.users);
-        setTimeout(() => {
-          setLoaded(true);
-        }, 500);
+        setLoaded(true);
       },
       (error) => console.log(error),
       Token
     );
   }, [Token]);
-  console.log('token'+Token);
-  console.log('Users'+ Users[0]);
-  
+  console.log('token' + Token);
+  console.log('Users' + Users[0]);
 
   return (
     <>
       {Overlay.shown ? (
-        <ContactTenant setOverlay={setOverlay} userInfo={Overlay.userInfo} />
+        <ContactTenant
+          setOverlay={setOverlay}
+          userInfo={Overlay.userInfo}
+          Token={Token}
+        />
       ) : (
         ''
       )}

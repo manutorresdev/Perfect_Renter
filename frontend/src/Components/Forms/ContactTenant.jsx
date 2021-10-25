@@ -1,14 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
-import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 import { FaPlus } from 'react-icons/fa';
 
-export default function ContactTenant({ userInfo, setOverlay }) {
-  const [Token] = useContext(TokenContext);
-  console.log('info de usuario overlay', userInfo);
+export default function ContactTenant({ userInfo, setOverlay, Token }) {
   const {
     register,
     handleSubmit,

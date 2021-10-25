@@ -1,7 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { parseJwt } from '../../../Helpers/Api';
-import { TokenContext } from '../../../Helpers/Hooks/TokenProvider';
-import { get } from '../../../Helpers/Api';
+import React from 'react';
 
 export default function Email({
   className,

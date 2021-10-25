@@ -7,7 +7,7 @@ import Email from './Inputs/Email';
 import Password from './Inputs/Password';
 import FirstName from './Inputs/FirstName';
 
-export default function Register() {
+export default function RegisterEdit() {
   const {
     register,
     handleSubmit,

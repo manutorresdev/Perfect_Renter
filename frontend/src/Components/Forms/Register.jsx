@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { post, put } from '../../Helpers/Api';
 
@@ -6,10 +6,9 @@ import { post, put } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import Password from './Inputs/Password';
 import FirstName from './Inputs/FirstName';
-import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
+import { FaPlus } from 'react-icons/fa';
 
-export default function Register({ token }) {
-
+export default function Register({ Token, usuario, setOverlay }) {
   const {
     register,
     handleSubmit,
@@ -24,7 +23,7 @@ export default function Register({ token }) {
             city: usuario.ciudad,
             tel: usuario.tel,
             bio: usuario.bio,
-            birthDate: usuario.birthDate,
+            birthDate: new Date(usuario.birthDate).toISOString().substr(0, 10),
           },
         }
       : ''
@@ -46,7 +45,7 @@ export default function Register({ token }) {
       (data) => {
         console.log('Success');
         alert(data.message);
-        e.target.reset();
+        // HAY QUE HACER ALGO PARA RELOAD
       },
       (data) => {
         setError(data.message);
@@ -58,15 +57,13 @@ export default function Register({ token }) {
   function onSubmitEdited(body, e) {
     e.preventDefault();
 
-    console.log(body.idUser);
-
     put(
       `http://localhost:4000/users/${usuario.idUser}`,
       body,
       (data) => {
         console.log('Success');
         alert(data.message);
-        /*  e.target.reset(); */
+        e.target.reset();
       },
       (data) => {
         setError(data.message);
@@ -77,134 +74,157 @@ export default function Register({ token }) {
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full';
 
+  const registerComponentStyle = Token
+    ? 'overlay z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'
+    : '';
   return (
     <>
-      <div className='mt-20 flex flex-col items-center gap-5 m-0 p-2'>
-        <div className='title underline text-5xl m-0 p-0'>
-
-          {token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
-
-        </div>
-
-        <form
-          className='flex flex-col gap-3'
-          onSubmit={
+      <div className={registerComponentStyle}>
+        <section
+          className={
             Token
-              ? handleSubmit(onSubmitEdited)
-              : handleSubmit(onSubmitRegister)
+              ? 'contact pt-2 p-20 border border-black flex flex-col gap-5  bg-white relative'
+              : 'mt-20 flex flex-col items-center gap-5 p-2'
           }
         >
-          <Email
-            {...register('email')}
-            className={inpStyle}
-            {...formFunctions}
-          />
-          <Password {...formFunctions} />
-          <FirstName
-            {...register('name')}
-            className={inpStyle}
-            {...formFunctions}
-          />
-
-          <input
-            className={inpStyle}
-            type='text'
-            name='lastName'
-            placeholder='Last Name*'
-            {...register('lastName', 'apellido', {
-              required: 'Debes escribir un apellido.',
-              pattern: {
-                value:
-                  /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
-                message:
-                  'El apellido no puede contener carácteres especiales ni números.',
-              },
-              minLength: {
-                value: 3,
-                message: 'El apellido debe contener como mínimo 3 carácteres.',
-              },
-              maxLength: {
-                value: 30,
-                message: 'El apellido no puede tener más de 30 carácteres.',
-              },
-            })}
-          />
-          {errors.lastName && (
-            <p className='text-red-500'>{errors.lastName.message}</p>
+          {Token ? (
+            <button
+              className='close-overlay absolute top-3 right-3'
+              onClick={() => {
+                setOverlay({ shown: false, userInfo: {} });
+              }}
+            >
+              <FaPlus className='transform rotate-45' />
+            </button>
+          ) : (
+            ''
           )}
-          <input
-            className={inpStyle}
-            type='text'
-            name='city'
-            placeholder='City*'
-            {...register('city', {
-              required: 'Debes escribir la ciudad donde resides.',
-              pattern: {
-                value:
-                  /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
-                message:
-                  'La ciudad no puede contener carácteres especiales ni números.',
-              },
-              maxLength: {
-                value: 30,
-                message: 'La ciudad no puede tener más de 50 carácteres.',
-              },
-            })}
-          />
-          {errors.city && <p className='text-red-500'>{errors.city.message}</p>}
-          <input
-            defaultValue={''}
-            className={inpStyle}
-            type='tel'
-            name='Teléfono'
-            placeholder='Tlf'
-            {...register('tel', {
-              pattern: {
-                value: /^\s?\+?\s?([0-9][\s]*){9,}$/,
-                message: 'Debes introducir un número de teléfono válido.',
-              },
-            })}
-          />
-          <input
-            defaultValue={''}
-            className={inpStyle + ' h-20'}
-            type='text'
-            name='bio'
-            placeholder='Bio'
-            {...register('bio', {
-              required: { value: false, message: 'Bio' },
-              minLength: 0,
-              maxLength: {
-                value: 255,
-                message: 'No puedes escribir más de 250 carácteres.',
-              },
-            })}
-          />
+          <div className='title underline text-5xl m-0 p-0'>
+            {Token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
+          </div>
 
-          <input
-            className={inpStyle}
-            type='date'
-            name='birthDate'
-            {...register('birthDate', {
-              required: 'Debes añadir la fecha de nacimiento.',
-              pattern: {
-                value: /^[0-9].*$/,
-                message: 'Debes añadir una fecha de nacimiento correcta.',
-              },
-            })}
-          />
-          {errors.birthDate && (
-            <p className='text-red-500'>{errors.birthDate.message}</p>
-          )}
+          <form
+            className='flex flex-col gap-3'
+            onSubmit={
+              Token
+                ? handleSubmit(onSubmitEdited)
+                : handleSubmit(onSubmitRegister)
+            }
+          >
+            <Email
+              {...register('email')}
+              className={inpStyle}
+              {...formFunctions}
+            />
+            <Password {...formFunctions} />
+            <FirstName
+              {...register('name')}
+              className={inpStyle}
+              {...formFunctions}
+            />
+            <input
+              className={inpStyle}
+              type='text'
+              name='lastName'
+              placeholder='Last Name*'
+              {...register('lastName', 'apellido', {
+                required: 'Debes escribir un apellido.',
+                pattern: {
+                  value:
+                    /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                  message:
+                    'El apellido no puede contener carácteres especiales ni números.',
+                },
+                minLength: {
+                  value: 3,
+                  message:
+                    'El apellido debe contener como mínimo 3 carácteres.',
+                },
+                maxLength: {
+                  value: 30,
+                  message: 'El apellido no puede tener más de 30 carácteres.',
+                },
+              })}
+            />
+            {errors.lastName && (
+              <p className='text-red-500'>{errors.lastName.message}</p>
+            )}
+            <input
+              className={inpStyle}
+              type='text'
+              name='city'
+              placeholder='City*'
+              {...register('city', {
+                required: 'Debes escribir la ciudad donde resides.',
+                pattern: {
+                  value:
+                    /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                  message:
+                    'La ciudad no puede contener carácteres especiales ni números.',
+                },
+                maxLength: {
+                  value: 30,
+                  message: 'La ciudad no puede tener más de 50 carácteres.',
+                },
+              })}
+            />
+            {errors.city && (
+              <p className='text-red-500'>{errors.city.message}</p>
+            )}
+            <input
+              defaultValue={''}
+              className={inpStyle}
+              type='tel'
+              name='Teléfono'
+              placeholder='Tlf'
+              {...register('tel', {
+                pattern: {
+                  value: /^\s?\+?\s?([0-9][\s]*){9,}$/,
+                  message: 'Debes introducir un número de teléfono válido.',
+                },
+              })}
+            />
+            <input
+              defaultValue={''}
+              className={inpStyle + ' h-20'}
+              type='text'
+              name='bio'
+              placeholder='Bio'
+              {...register('bio', {
+                required: { value: false, message: 'Bio' },
+                minLength: 0,
+                maxLength: {
+                  value: 255,
+                  message: 'No puedes escribir más de 250 carácteres.',
+                },
+              })}
+            />
 
-          {Error ? <div>{Error}</div> : ''}
+            <input
+              className={inpStyle}
+              type='date'
+              name='birthDate'
+              {...register('birthDate', {
+                required: 'Debes añadir la fecha de nacimiento.',
+                pattern: {
+                  value: /^[0-9].*$/,
+                  message: 'Debes añadir una fecha de nacimiento correcta.',
+                },
+              })}
+            />
+            {errors.birthDate && (
+              <p className='text-red-500'>{errors.birthDate.message}</p>
+            )}
 
-          <input
-            className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
-            type='submit'
-            value={Token ? 'Guardar' : 'Registrar'}
-          />
-        </form>
+            {Error ? <div>{Error}</div> : ''}
+
+            <input
+              className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+              type='submit'
+              value={Token ? 'Guardar' : 'Registrar'}
+            />
+          </form>
+        </section>
       </div>
     </>
   );
