@@ -37,13 +37,19 @@ export default function UsersList() {
       )}
       <section className='w-full flex flex-col gap-5 justify-center items-center mt-14 '>
         <h2 className='text-2xl'>Inquilinos</h2>
-        {Loaded
-          ? Users.map((user) => (
-              <Tenant user={user} key={user.idUser} setOverlay={setOverlay} />
-            ))
-          : Array(10)
-              .fill(null)
-              .map((el, i) => <LoadingSkeleton key={i} />)}
+
+        {!Loaded &&
+          Array(10)
+            .fill(null)
+            .map((el, i) => <LoadingSkeleton key={i} />)}
+
+        {Users.length ? (
+          Users.map((user) => (
+            <Tenant user={user} key={user.idUser} setOverlay={setOverlay} />
+          ))
+        ) : (
+          <div>No hay resultados.</div>
+        )}
       </section>
     </>
   );

@@ -57,6 +57,7 @@ export default function Register({ Token, usuario, setOverlay }) {
         alert(data.message);
         window.location.reload();
         reset();
+        setOverlay({ shown: false, userInfo: {} });
       },
       (data) => {
         setError(data.message);
@@ -67,17 +68,17 @@ export default function Register({ Token, usuario, setOverlay }) {
 
   function onSubmitEdited(body, e) {
     e.preventDefault();
-
+    console.log(body);
     put(
       `http://localhost:4000/users/${usuario.idUser}`,
       body,
       (data) => {
         console.log('Success');
         alert(data.message);
-        e.target.reset();
+        reset();
       },
-      (data) => {
-        setError(data.message);
+      (error) => {
+        setError(error.message);
       },
       Token
     );
@@ -132,9 +133,11 @@ export default function Register({ Token, usuario, setOverlay }) {
                   message: 'El email no puede contener más de 200 carácteres.',
                 },
               }}
-              render={({ field: { onChange, name, ref } }) => {
+              render={({ field: { onChange, name, ref, value } }) => {
                 return (
                   <Email
+                    value={value}
+                    defaultValue={Token ? usuario.email : ''}
                     onChange={onChange}
                     inputRef={ref}
                     name={name}
@@ -146,7 +149,7 @@ export default function Register({ Token, usuario, setOverlay }) {
             {errors.email && (
               <p className='text-red-500'>{errors.email.message}</p>
             )}
-            <Password {...formFunctions} />
+            {Token ? '' : <Password {...formFunctions} />}
             <Controller
               name='name'
               control={control}
@@ -167,9 +170,10 @@ export default function Register({ Token, usuario, setOverlay }) {
                   message: 'El nombre no puede tener más de 30 carácteres.',
                 },
               }}
-              render={({ field: { onChange, name, ref } }) => {
+              render={({ field: { onChange, name, ref, value } }) => {
                 return (
                   <FirstName
+                    value={value}
                     onChange={onChange}
                     inputRef={ref}
                     name={name}

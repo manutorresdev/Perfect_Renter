@@ -6,10 +6,12 @@ export default function FirstName({
   ref,
   className,
   placeHolder,
+  value,
 }) {
   return (
     <>
       <input
+        value={value}
         className={className}
         type='text'
         name={name}

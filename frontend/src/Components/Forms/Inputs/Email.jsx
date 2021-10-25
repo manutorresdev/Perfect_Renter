@@ -6,11 +6,13 @@ export default function Email({
   ref,
   className,
   placeHolder,
-  errors,
+  defaultValue,
+  value,
 }) {
   return (
     <>
       <input
+        value={value}
         className={className}
         name={name}
         type='email'
