@@ -24,7 +24,7 @@ import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
 import Property from './Components/Properties/Property';
 import VoteForm from './Components/ToDo/VoteForm';
-import RegisterEdit from './Components/Forms/RegisterEdit';
+// import RegisterEdit from './Components/Forms/RegisterEdit';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
@@ -34,7 +34,7 @@ function App() {
         <NavBar token={Token} />
         <Switch>
           <Route path='/register'>
-            {Token ? <Redirect to='/' /> : <RegisterEdit token={Token} />}
+            {Token ? <Redirect to='/' /> : <Register token={Token} />}
           </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>

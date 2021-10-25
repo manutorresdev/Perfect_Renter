@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { post, put } from '../../Helpers/Api';
 
 // Import inputs controlados
@@ -13,6 +13,8 @@ export default function Register({ Token, usuario, setOverlay }) {
     register,
     handleSubmit,
     formState: { errors },
+    control,
+    reset,
   } = useForm(
     Token
       ? {
@@ -26,7 +28,17 @@ export default function Register({ Token, usuario, setOverlay }) {
             birthDate: new Date(usuario.birthDate).toISOString().substr(0, 10),
           },
         }
-      : ''
+      : {
+          defaultValues: {
+            email: '',
+            name: '',
+            lastName: '',
+            city: '',
+            tel: '',
+            bio: '',
+            birthDate: '',
+          },
+        }
   );
   const formFunctions = { register, errors };
 
@@ -37,15 +49,14 @@ export default function Register({ Token, usuario, setOverlay }) {
   function onSubmitRegister(body, e) {
     e.preventDefault();
 
-    console.log(body);
-
     post(
       'http://localhost:4000/users',
       body,
       (data) => {
         console.log('Success');
         alert(data.message);
-        // HAY QUE HACER ALGO PARA RELOAD
+        window.location.reload();
+        reset();
       },
       (data) => {
         setError(data.message);
@@ -111,23 +122,71 @@ export default function Register({ Token, usuario, setOverlay }) {
                 : handleSubmit(onSubmitRegister)
             }
           >
-            <Email
-              {...register('email')}
-              className={inpStyle}
-              {...formFunctions}
+            <Controller
+              name='email'
+              control={control}
+              rules={{
+                required: 'Debes escribir un email.',
+                maxLength: {
+                  value: 200,
+                  message: 'El email no puede contener más de 200 carácteres.',
+                },
+              }}
+              render={({ field: { onChange, name, ref } }) => {
+                return (
+                  <Email
+                    onChange={onChange}
+                    inputRef={ref}
+                    name={name}
+                    className={inpStyle}
+                  />
+                );
+              }}
             />
+            {errors.email && (
+              <p className='text-red-500'>{errors.email.message}</p>
+            )}
             <Password {...formFunctions} />
-            <FirstName
-              {...register('name')}
-              className={inpStyle}
-              {...formFunctions}
+            <Controller
+              name='name'
+              control={control}
+              rules={{
+                required: 'Debes escribir un nombre.',
+                pattern: {
+                  value:
+                    /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                  message:
+                    'El nombre no puede contener carácteres especiales ni números.',
+                },
+                minLength: {
+                  value: 3,
+                  message: 'El nombre debe contener como mínimo 3 carácteres.',
+                },
+                maxLength: {
+                  value: 30,
+                  message: 'El nombre no puede tener más de 30 carácteres.',
+                },
+              }}
+              render={({ field: { onChange, name, ref } }) => {
+                return (
+                  <FirstName
+                    onChange={onChange}
+                    inputRef={ref}
+                    name={name}
+                    className={inpStyle}
+                  />
+                );
+              }}
             />
+            {errors.name && (
+              <p className='text-red-500'>{errors.name.message}</p>
+            )}
             <input
               className={inpStyle}
               type='text'
               name='lastName'
-              placeholder='Last Name*'
-              {...register('lastName', 'apellido', {
+              placeholder='Apellidos*'
+              {...register('lastName', {
                 required: 'Debes escribir un apellido.',
                 pattern: {
                   value:
@@ -172,7 +231,6 @@ export default function Register({ Token, usuario, setOverlay }) {
               <p className='text-red-500'>{errors.city.message}</p>
             )}
             <input
-              defaultValue={''}
               className={inpStyle}
               type='tel'
               name='Teléfono'
@@ -184,8 +242,8 @@ export default function Register({ Token, usuario, setOverlay }) {
                 },
               })}
             />
+            {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
             <input
-              defaultValue={''}
               className={inpStyle + ' h-20'}
               type='text'
               name='bio'
@@ -199,11 +257,11 @@ export default function Register({ Token, usuario, setOverlay }) {
                 },
               })}
             />
-
             <input
               className={inpStyle}
               type='date'
               name='birthDate'
+              placeholder='Fecha de nacimiento*'
               {...register('birthDate', {
                 required: 'Debes añadir la fecha de nacimiento.',
                 pattern: {

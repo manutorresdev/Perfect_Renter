@@ -23,8 +23,6 @@ export default function UsersList() {
       Token
     );
   }, [Token]);
-  console.log('token' + Token);
-  console.log('Users' + Users[0]);
 
   return (
     <>
