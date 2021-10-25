@@ -1,41 +1,25 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { post, put } from '../../Helpers/Api';
+import { post } from '../../Helpers/Api';
 
 // Import inputs controlados
 import Email from './Inputs/Email';
 import Password from './Inputs/Password';
 import FirstName from './Inputs/FirstName';
-import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 
-export default function Register({ token }) {
-
+export default function Register() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm(
-    Token
-      ? {
-          defaultValues: {
-            email: usuario.email,
-            name: usuario.name,
-            lastName: usuario.lastName,
-            city: usuario.ciudad,
-            tel: usuario.tel,
-            bio: usuario.bio,
-            birthDate: usuario.birthDate,
-          },
-        }
-      : ''
-  );
+  } = useForm();
   const formFunctions = { register, errors };
 
   // States
   const [Error, setError] = useState('');
 
   // Enviar datos a backend
-  function onSubmitRegister(body, e) {
+  function onSubmit(body, e) {
     e.preventDefault();
 
     console.log(body);
@@ -46,34 +30,14 @@ export default function Register({ token }) {
       (data) => {
         console.log('Success');
         alert(data.message);
-        e.target.reset();
+        /* e.target.reset(); */
       },
       (data) => {
         setError(data.message);
-      },
-      Token
+      }
     );
   }
 
-  function onSubmitEdited(body, e) {
-    e.preventDefault();
-
-    console.log(body.idUser);
-
-    put(
-      `http://localhost:4000/users/${usuario.idUser}`,
-      body,
-      (data) => {
-        console.log('Success');
-        alert(data.message);
-        /*  e.target.reset(); */
-      },
-      (data) => {
-        setError(data.message);
-      },
-      Token
-    );
-  }
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full';
 
@@ -81,37 +45,18 @@ export default function Register({ token }) {
     <>
       <div className='mt-20 flex flex-col items-center gap-5 m-0 p-2'>
         <div className='title underline text-5xl m-0 p-0'>
-
-          {token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
-
+          <h2>REGISTER</h2>
         </div>
-
-        <form
-          className='flex flex-col gap-3'
-          onSubmit={
-            Token
-              ? handleSubmit(onSubmitEdited)
-              : handleSubmit(onSubmitRegister)
-          }
-        >
-          <Email
-            {...register('email')}
-            className={inpStyle}
-            {...formFunctions}
-          />
+        <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
+          <Email className={inpStyle} {...formFunctions} />
           <Password {...formFunctions} />
-          <FirstName
-            {...register('name')}
-            className={inpStyle}
-            {...formFunctions}
-          />
-
+          <FirstName className={inpStyle} {...formFunctions} />
           <input
             className={inpStyle}
             type='text'
             name='lastName'
             placeholder='Last Name*'
-            {...register('lastName', 'apellido', {
+            {...register('lastName', {
               required: 'Debes escribir un apellido.',
               pattern: {
                 value:
@@ -154,19 +99,6 @@ export default function Register({ token }) {
           {errors.city && <p className='text-red-500'>{errors.city.message}</p>}
           <input
             defaultValue={''}
-            className={inpStyle}
-            type='tel'
-            name='Teléfono'
-            placeholder='Tlf'
-            {...register('tel', {
-              pattern: {
-                value: /^\s?\+?\s?([0-9][\s]*){9,}$/,
-                message: 'Debes introducir un número de teléfono válido.',
-              },
-            })}
-          />
-          <input
-            defaultValue={''}
             className={inpStyle + ' h-20'}
             type='text'
             name='bio'
@@ -180,7 +112,6 @@ export default function Register({ token }) {
               },
             })}
           />
-
           <input
             className={inpStyle}
             type='date'
@@ -202,7 +133,7 @@ export default function Register({ token }) {
           <input
             className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
             type='submit'
-            value={Token ? 'Guardar' : 'Registrar'}
+            value='Register'
           />
         </form>
       </div>

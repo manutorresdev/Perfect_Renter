@@ -65,7 +65,7 @@ const editUser = async (req, res, next) => {
 
     // Obtenemos los datos del usuario actual.
     const [user] = await connection.query(
-      `SELECT email, name, lastName, tel, bio, city, birthDate, avatar FROM users WHERE idUser = ?`,
+      `SELECT idUser, email, name, lastName, tel, bio, city, birthDate, avatar FROM users WHERE idUser = ?`,
       [idUser]
     );
 

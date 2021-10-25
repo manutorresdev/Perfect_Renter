@@ -64,6 +64,9 @@ function App() {
           <Route path='/voteForm'>
             <VoteForm />
           </Route>
+          {/* <Route path='/editar'>
+            <Register token={Token} /> : <Redirect to='/' />
+          </Route> */}
         </Switch>
         <Footer token={Token} setToken={setToken} />
       </Router>
