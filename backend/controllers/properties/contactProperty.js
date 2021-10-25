@@ -173,12 +173,12 @@ const contactProperty = async (req, res, next) => {
       <tfoot>
         <th>
             <button>
-              <a href="http://localhost:4000/properties/${bookingCode}/accept"
+              <a href="http://localhost:3000/alquileres/${bookingCode}/aceptar"
             >ACEPTAR RESERVA</a></button>
             <span><span/>
             <span><span/>
             <button>
-              <a href="http://localhost:4000/properties/${bookingCode}/cancel"
+              <a href="http://localhost:3000/alquieres/${bookingCode}/cancelar"
             >CANCELAR RESERVA</a></button>
         </th>
       </tfoot>

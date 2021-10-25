@@ -2,7 +2,16 @@ module.exports = {
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: false, // or 'media' or 'class'
   theme: {
+    stroke: (theme) => ({
+      black: theme('colors.black'),
+    }),
     extend: {
+      strokeWidth: {
+        3: '3',
+        4: '4',
+        10: '10',
+        20: '20',
+      },
       gridTemplateRows: {
         auto: 'auto',
         8: 'repeat(8, minmax(0, 1fr))',

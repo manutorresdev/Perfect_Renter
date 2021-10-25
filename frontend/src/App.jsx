@@ -23,6 +23,7 @@ import Footer from './Components/Global/Footer';
 import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
 import Property from './Components/Properties/Property';
+import VoteForm from './Components/ToDo/VoteForm';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
@@ -59,6 +60,9 @@ function App() {
           </Route>
           <Route path='/perfil'>
             {Token ? <Profile token={Token} /> : <Redirect to='/' />}
+          </Route>
+          <Route path='/voteForm'>
+            <VoteForm />
           </Route>
         </Switch>
         <Footer token={Token} setToken={setToken} />
