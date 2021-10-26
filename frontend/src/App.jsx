@@ -23,9 +23,8 @@ import Footer from './Components/Global/Footer';
 import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
 import Property from './Components/Properties/Property';
-import VoteForm from './Components/ToDo/VoteForm';
 import VerifyUser from './Components/Users/VerifyUser';
-// import RegisterEdit from './Components/Forms/RegisterEdit';
+import Filters from './Components/Properties/Filters';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
@@ -43,9 +42,7 @@ function App() {
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
           <Route path='/alquileres/:idProperty' component={Property} />
-          <Route path='/alquileres'>
-            <Properties />
-          </Route>
+          <Route path='/alquileres' component={Properties} />
           <Route path='/contacto'>
             <ContactUs />
           </Route>
@@ -72,8 +69,8 @@ function App() {
               <Redirect to='/' />
             )}
           </Route>
-          <Route path='/voteForm'>
-            <VoteForm />
+          <Route path='/filters'>
+            <Filters />
           </Route>
           {/* <Route path='/editar'>
             <Register token={Token} /> : <Redirect to='/' />

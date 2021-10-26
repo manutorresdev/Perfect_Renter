@@ -15,19 +15,30 @@ const listProperties = async (req, res, next) => {
     connection = await getDB();
 
     // Obtenemos los queryParams en caso de que haya.
-    const {
-      order,
-      direction,
-      filtCity,
-      filtProvince,
-      filtType,
-      filtPmax,
-      filtPmin,
-      filtRooms,
-      filtGarage,
-      filtToilets,
-      filtMts,
+    let {
+      orden: order,
+      direccion: direction,
+      ciudad: filtCity,
+      provincia: filtProvince,
+      tipo: filtType,
+      pMax: filtPmax,
+      pMin: filtPmin,
+      hab: filtRooms,
+      garaje: filtGarage,
+      baños: filtToilets,
+      m2: filtMts,
     } = req.query;
+    console.log(req.query);
+
+    // Cambiamos valores para encajar con backend.
+    if (direction === 'precio') {
+      direction = 'price';
+    } else if (direction === 'creacion') {
+      direction = 'createdAt';
+    } else if (direction === 'valoraciones') {
+      direction = 'votes';
+    }
+
     // Establecemos opciones de validación de orden.
     const validOrderOptions = ['votes', 'createdAt', 'price'];
 
