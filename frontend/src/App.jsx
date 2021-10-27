@@ -72,9 +72,6 @@ function App() {
           <Route path='/filters'>
             <Filters />
           </Route>
-          {/* <Route path='/editar'>
-            <Register token={Token} /> : <Redirect to='/' />
-          </Route> */}
         </Switch>
         <Footer token={Token} setToken={setToken} />
       </Router>

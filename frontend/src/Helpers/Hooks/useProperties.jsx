@@ -11,7 +11,6 @@ export default function useProperties(props) {
       get(
         `http://localhost:4000/properties${location.search}`,
         (data) => {
-          console.log('\x1b[43m########\x1b[30m', data);
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setProperty(data.properties);
           } else {
@@ -35,3 +34,6 @@ export default function useProperties(props) {
 
   return [properties, setProperty];
 }
+
+  
+  

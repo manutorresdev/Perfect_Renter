@@ -4,14 +4,8 @@ import { MenuElements } from './MenuElements';
 import { Link } from 'react-router-dom';
 
 export default function NavBar({ token, setToken }) {
-  const [Width, setWidth] = useState(false);
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const showMenu = () => setMostrarMenu(!mostrarMenu);
-
-  useEffect(() => {
-    console.log('\x1b[43m########\x1b[30m', 'HOLA', Width);
-    setWidth(window.innerWidth);
-  }, [Width]);
 
   const buttonStyle =
     'text-center bg-principal-1 min-w-min p-1 cursor-pointer sm:hover:text-white sm:hover:font-bold sm:duration-300';

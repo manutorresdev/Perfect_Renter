@@ -3,11 +3,14 @@ import { get } from '../../Helpers/Api';
 import { FaStar } from 'react-icons/fa';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 import ContactTenant from '../Forms/ContactTenant';
+import useProperties from '../../Helpers/Hooks/useProperties';
+import Property from '../Properties/Property';
 
-export default function UserProfile({ match }) {
+export default function UserProfile({ match, property }) {
   const [Token] = useContext(TokenContext);
   const [user, setUser] = useState({});
   const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
+  const [properties] = useProperties([]);
 
   useEffect(() => {
     get(
@@ -20,7 +23,11 @@ export default function UserProfile({ match }) {
       },
       Token
     );
-  }, [match.params.idUser, Token]);
+  }, [match.params.idUser,Token]);
+
+  const propiedadUsuario = properties.filter(
+    (property) => property.idUser === user.idUser
+  );
 
   return (
     <>
@@ -66,7 +73,19 @@ export default function UserProfile({ match }) {
             <img src='../../Images/flat.jpg' alt='imagen vivienda' />
           </div>
         </section>
-        <section>viviendas en alquiler</section>
+        <section className='font-bold'>
+          ALQUILERES
+          {propiedadUsuario.length > 0 ? (
+            propiedadUsuario.map((property) => (
+              <Property
+                key={property.idProperty}
+                property={property}
+              ></Property>
+            ))
+          ) : (
+            <div>No hay ningún inmueble</div>
+          )}
+        </section>
 
         <section>
           <h2 className='p-5 text-2xl underline'>Opiniones</h2>
