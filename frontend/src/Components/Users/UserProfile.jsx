@@ -12,7 +12,6 @@ export default function UserProfile({ match, property }) {
   const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
   const [properties] = useProperties([]);
 
-  /* console.log(userInfo); */
   useEffect(() => {
     get(
       `http://localhost:4000/users/${match.params.idUser}`,
@@ -24,7 +23,7 @@ export default function UserProfile({ match, property }) {
       },
       Token
     );
-  }, [match.params.idUser]);
+  }, [match.params.idUser,Token]);
 
   const propiedadUsuario = properties.filter(
     (property) => property.idUser === user.idUser

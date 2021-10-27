@@ -1,6 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
-
 import { Link } from 'react-router-dom';
 
 export default function Property({ property }) {
@@ -18,26 +16,4 @@ export default function Property({ property }) {
         </Link>
       </div>
     </>
-=======
-import { Link} from "react-router-dom";
-import PropertyInfo from './PropertyInfo';
-
-
-
-export default function Property({children, property, match}) {
-
-  if (!match) {
-    return (
-      <Link to={`/alquileres/${property.idProperty}`}>
-      {children}
-      </Link>
->>>>>>> origin
-  );
-  }
-  else{
-    return (
-        <PropertyInfo match={match} />
-     );
-  }
-  
-}
+  )};

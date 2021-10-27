@@ -66,6 +66,7 @@ const loginUser = async (req, res, next) => {
       message:
         'Sesión iniciada con éxito, se te redirigirá a la pantalla principal.',
       token,
+      idUser: user[0].idUser,
     });
   } catch (error) {
     next(error);

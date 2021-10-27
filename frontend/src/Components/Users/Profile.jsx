@@ -2,18 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { del, get, parseJwt, put } from '../../Helpers/Api';
 import { FaCamera, FaPencilAlt, FaTrash } from 'react-icons/fa';
 import Register from '../Forms/Register';
-
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';
 
 export default function Profile({ token, setToken }) {
   const [User, setUser] = useState({});
   const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
-  // const [Deleted, setDeleted] = useState(false);
   const [properties] = useProperties([]);
-
   const user = parseJwt(token);
-
   const [Error, setError] = useState('');
 
   useEffect(() => {
@@ -80,22 +76,11 @@ export default function Profile({ token, setToken }) {
               }
               alt='perfil de usuario'
             />
-            {/* <form onSubmit={uploadFile} className='SelectFile'>
-              <div>
-                <input type='file' onChange={newFile} />
-              </div>
-              <button type='submit'>
-                <FaCamera />
-              </button>
-              {Error ? <div>{Error}</div> : ''}
-            </form> */}
-            {/* <button onClic='onSubmitEdited'>
-              <FaCamera />
-              <input type='file' />
-              
-            </button> */}
           </section>
           <section>
+            <button>
+              <FaCamera />
+            </button>
             <ul>
               <li className='font-bold'>Nombre:</li>
               {User.name}

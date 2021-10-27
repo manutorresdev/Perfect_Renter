@@ -47,7 +47,7 @@ const deleteUser = async (req, res, next) => {
 
     // Obtenemos el nombre del avatar
     const [user] = await connection.query(
-      `SELECT avatar FROM users WHERE idUser = ?`,
+      `SELECT avatar,email FROM users WHERE idUser = ?`,
       [idUser]
     );
 
@@ -76,19 +76,23 @@ const deleteUser = async (req, res, next) => {
       }
 
       // Eliminamos la propiedad de la base de datos.
-      await connection.query(
-        `
-      DELETE FROM properties WHERE idProperty = ?
-      `,
-        [idProperty]
-      );
+      for (const property of properties) {
+        console.log('\x1b[43m########\x1b[30m', property);
+
+        // await connection.query(
+        //   `
+        // DELETE FROM properties WHERE idProperty = ?
+        // `,
+        //   [property.idProperty]
+        // );
+      }
     }
     // Anonimizamos al usuario
     await connection.query(
-      `UPDATE users SET password = ?, name = "[deleted]" , lastName = "[deleted]",tel = "[deleted]", email=?, avatar = NULL, renterActive = false, deleted = true, bio = "[deleted]", city = "[deleted]", birthDate = ? , modifiedAt = ? WHERE idUser = ?`,
+      `UPDATE users SET email = ?, password = ?, name = "[deleted]" , lastName = "[deleted]",tel = "[deleted]", avatar = NULL, renterActive = false, deleted = true, bio = "[deleted]", city = "[deleted]", birthDate = ? , modifiedAt = ? WHERE idUser = ?`,
       [
+        `${user[0].email}_deleted`,
         generateRandomString(20),
-        `${email}_deleted`,
         formatDate(0),
         formatDate(new Date()),
         idUser,

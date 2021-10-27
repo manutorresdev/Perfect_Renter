@@ -84,7 +84,7 @@ const newUser = async (req, res, next) => {
         <tfoot>
             <th>
               <button>
-              <a href="${process.env.PUBLIC_HOST}/users/validate/${registrationCode}">VERIFICAR</a>
+              <a href="http://localhost:3000/verificar/${registrationCode}">VERIFICAR</a>
               </button>
             </th>
         </tfoot>

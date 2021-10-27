@@ -1,5 +1,7 @@
 import { React } from 'react';
-import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { FaSearch } from 'react-icons/fa';
+import { Link, useHistory } from 'react-router-dom';
 
 // Styles
 const sectionStyle =
@@ -26,7 +28,7 @@ export function Home() {
           backgroundImage:
             "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
         }}
-        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5 sm:h-full sm:w-full'
+        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5 sm:h-full sm:w-full pb-32'
       >
         <HomeRentersList />
         <HomePropertiesList />
@@ -66,9 +68,16 @@ export function Home() {
 }
 
 function Banner() {
+  const history = useHistory();
+  const { register, handleSubmit } = useForm();
+
+  function onSubmit(body, e) {
+    e.preventDefault();
+    history.push(`/alquileres?ciudad=${body.city}`);
+  }
   return (
     <div
-      className='bg-center bg-cover h-60vh max-w-full grid grid-cols-10 grid-rows-8'
+      className='header bg-center bg-cover sm:h-60vh h-1/3  max-w-full grid grid-cols-10 grid-rows-8'
       style={{
         backgroundImage:
           "linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('./Images/bgheader.jpg')",
@@ -79,9 +88,7 @@ function Banner() {
         <h1 className='text-4xl text-principal-1'>Inquilino Perfecto</h1>
         <p className='w-4/5 text-base font-light'>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
-          doloribus nostrum rerum quisquam libero fugiat quam, at tempora
-          eligendi, dolores officia quos consequuntur facere, impedit aliquid
-          blanditiis dolorum voluptates laudantium.
+          doloribus nostrum rerum quisquam libero fugiat quam.
         </p>
         <Link
           to='/nosotros'
@@ -90,6 +97,33 @@ function Banner() {
           Leer más
         </Link>
       </div>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className='relative col-start-2 col-end-10 sm:col-start-4 sm:col-end-8 row-start-7 row-end-8 self-end w-full'
+      >
+        <input
+          type='text'
+          {...register('city', {
+            required: 'Debes escribir la ciudad donde resides.',
+            pattern: {
+              value:
+                /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+              message:
+                'La ciudad no puede contener carácteres especiales ni números.',
+            },
+            maxLength: {
+              value: 30,
+              message: 'La ciudad no puede tener más de 50 carácteres.',
+            },
+          })}
+          placeholder='Escribe aquí tu ciudad favorita...'
+          className='w-full pl-2 bg-gray-Primary border border-gray-300 border-opacity-20 text-white'
+        />
+        <FaSearch
+          onClick={handleSubmit(onSubmit)}
+          className='text-gray-300 absolute top-1 right-2 cursor-pointer'
+        />
+      </form>
     </div>
   );
 }

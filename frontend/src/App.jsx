@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -23,13 +23,15 @@ import Footer from './Components/Global/Footer';
 import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
 import Property from './Components/Properties/Property';
+import VerifyUser from './Components/Users/VerifyUser';
+import Filters from './Components/Properties/Filters';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
   return (
     <>
       <Router>
-        <NavBar token={Token} />
+        <NavBar token={Token} setToken={setToken} />
         <Switch>
           <Route path='/register'>
             {Token ? <Redirect to='/' /> : <Register token={Token} />}
@@ -39,13 +41,8 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-
-          <Route path='/alquileres/:idProperty' component={Property}/>
-
-          <Route path='/alquileres'>
-            <Properties />
-          </Route>
-
+          <Route path='/alquileres/:idProperty' component={Property} />
+          <Route path='/alquileres' component={Properties} />
           <Route path='/contacto'>
             <ContactUs />
           </Route>
@@ -57,11 +54,23 @@ function App() {
             path='/recuperar/:idUser/:recoverCode'
             component={ResetPass}
           />
+          <Route
+            exact
+            path='/verificar/:registrationCode'
+            component={VerifyUser}
+          />
           <Route path='/recuperar'>
             <RecoverPass />
           </Route>
           <Route path='/perfil'>
-            {Token ? <Profile token={Token} /> : <Redirect to='/' />}
+            {Token ? (
+              <Profile setToken={setToken} token={Token} />
+            ) : (
+              <Redirect to='/' />
+            )}
+          </Route>
+          <Route path='/filters'>
+            <Filters />
           </Route>
         </Switch>
         <Footer token={Token} setToken={setToken} />
@@ -71,3 +80,13 @@ function App() {
 }
 
 export default App;
+
+// use perfect_renter;
+
+// select idBooking,startBookingDate, endBookingDate, state from bookings where idProperty = 1 AND state = 'alquilada'
+// OR idProperty = 1 AND state = 'peticion'
+// OR idProperty = 1 AND state = 'reservado';
+
+// INSERT INTO perfect_renter.bookings
+// (idRenter, idTenant, idProperty, createdAt, modifiedAt, startBookingDate, endBookingDate, state, bookingCode)
+// VALUES(12, 13, 1, CURRENT_DATE(), NULL,"2021-12-03" , "2021-12-01", 'reservado', "reserva1");

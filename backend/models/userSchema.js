@@ -88,12 +88,6 @@ const editUserSchema = Joi.object().keys({
   email: Joi.string()
     .email()
     .error((errors) => {
-      if (
-        errors[0].code === 'any.required' ||
-        errors[0].code === 'string.empty'
-      )
-        return new Error('Se requiere un email');
-
       return new Error('El email no es válido.');
     }),
 
@@ -118,7 +112,7 @@ const editUserSchema = Joi.object().keys({
       return new Error('El teléfono no es válido.');
     }),
   name: Joi.string()
-    .alphanum()
+
     .min(3)
     .max(30)
     .error((errors) => {
@@ -131,7 +125,7 @@ const editUserSchema = Joi.object().keys({
       return new Error('El nombre no es válido.');
     }),
   lastName: Joi.string()
-    .alphanum()
+
     .min(3)
     .max(30)
     .error((errors) => {
