@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { get } from '../Api';
 
-export default function useProperties(props) {
+export default function useProperties() {
   const [properties, setProperty] = useState([]);
   const location = useLocation();
 
@@ -30,10 +30,7 @@ export default function useProperties(props) {
         (error) => console.log(error)
       );
     }
-  }, [props, location]);
+  }, [location]);
 
   return [properties, setProperty];
 }
-
-  
-  

@@ -23,7 +23,7 @@ export default function UserProfile({ match, property }) {
       },
       Token
     );
-  }, [match.params.idUser,Token]);
+  }, [match.params.idUser, Token]);
 
   const propiedadUsuario = properties.filter(
     (property) => property.idUser === user.idUser
@@ -36,7 +36,7 @@ export default function UserProfile({ match, property }) {
       ) : (
         ''
       )}
-      <main>
+      <main className='pb-28'>
         <div className='perfil flex flex-col items-center justify-center'>
           <article>
             <img
@@ -73,18 +73,47 @@ export default function UserProfile({ match, property }) {
             <img src='../../Images/flat.jpg' alt='imagen vivienda' />
           </div>
         </section>
-        <section className='font-bold'>
-          ALQUILERES
-          {propiedadUsuario.length > 0 ? (
-            propiedadUsuario.map((property) => (
-              <Property
-                key={property.idProperty}
-                property={property}
-              ></Property>
-            ))
-          ) : (
-            <div>No hay ningún inmueble</div>
-          )}
+        <section>
+          <h2 className='p-5 text-2xl underline'>Alquileres</h2>
+          <div className='flex flex-wrap gap-5'>
+            {propiedadUsuario.length > 0 ? (
+              propiedadUsuario.map((property) => (
+                <Property key={property.idProperty} property={property}>
+                  <div className='cont-vivienda bg-white w-auto min-w-min my-5 border border-black shadow-2xl '>
+                    <img
+                      className='w-auto max-w-xs'
+                      src={require('../../Images/defPicture.jpg').default}
+                      alt='default'
+                    />
+                    <div>
+                      {property.city}
+                      <br />
+                      {property.province}
+                      <br />
+                      {property.adress}
+                      <br />
+                      {property.price}
+                      <br />
+                      <span className='flex'>
+                        {Array(parseInt(property.votes))
+                          .fill(null)
+                          .map((value, i) => {
+                            return (
+                              <FaStar
+                                key={i}
+                                className='text-principal-1'
+                              ></FaStar>
+                            );
+                          })}
+                      </span>
+                    </div>
+                  </div>
+                </Property>
+              ))
+            ) : (
+              <div>No hay ningún inmueble</div>
+            )}
+          </div>
         </section>
 
         <section>
@@ -142,7 +171,8 @@ export default function UserProfile({ match, property }) {
         </section>
 
         <button
-          className=' relative bottom-10 left-16 place-self-center select-none text-center border border-gray-400 text-black rounded-full p-5 bg-gray-600 hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
+          // 'btn-submit  text-xl bg-none p- border-yellow-400 border-2 h-2/4 hover:bg-principal-1 hover:border-white hover:text-gray-600 duration-300'
+          className=' relative bottom-10 left-16 place-self-center select-none text-center border border-gray-400 text-white rounded-full p-5 bg-gray-600 hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
           onClick={() => {
             setOverlay({ shown: true, userInfo: user });
           }}

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { del, get, parseJwt, put } from '../../Helpers/Api';
-import { FaCamera, FaPencilAlt, FaTrash } from 'react-icons/fa';
+import { del, get, parseJwt } from '../../Helpers/Api';
+import { FaCamera, FaPencilAlt, FaStar, FaTrash } from 'react-icons/fa';
 import Register from '../Forms/Register';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';
@@ -10,7 +10,6 @@ export default function Profile({ token, setToken }) {
   const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
   const [properties] = useProperties([]);
   const user = parseJwt(token);
-  const [Error, setError] = useState('');
 
   useEffect(() => {
     get(
@@ -56,7 +55,7 @@ export default function Profile({ token, setToken }) {
         ''
       )}
 
-      <article className='pt-20 flex flex-col items-center justify-center'>
+      <article className='pt-20 pb-28 flex flex-col items-center justify-center'>
         <button
           className=''
           onClick={() => {
@@ -99,17 +98,16 @@ export default function Profile({ token, setToken }) {
             </ul>
           </section>
           <section className='font-bold'>
-            ALQUILERES
-            {propiedadUsuario.length > 0 ? (
-              propiedadUsuario.map((property) => (
-                <Property
-                  key={property.idProperty}
-                  property={property}
-                ></Property>
-              ))
-            ) : (
-              <div>No hay ningún inmueble</div>
-            )}
+            <div>ALQUILERES</div>
+            <div className='contenedor alquileres flex flex-wrap gap-5'>
+              {propiedadUsuario.length > 0 ? (
+                propiedadUsuario.map((property) => (
+                  <Property key={property.idProperty} property={property} />
+                ))
+              ) : (
+                <div>No hay ningún inmueble</div>
+              )}
+            </div>
           </section>
           <button
             className='p-4 rounded-full bg-gray-Primary'

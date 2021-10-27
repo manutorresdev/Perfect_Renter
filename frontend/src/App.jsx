@@ -22,9 +22,9 @@ import { TokenContext } from './Helpers/Hooks/TokenProvider';
 import Footer from './Components/Global/Footer';
 import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
-import Property from './Components/Properties/Property';
 import VerifyUser from './Components/Users/VerifyUser';
 import Filters from './Components/Properties/Filters';
+import PropertyInfo from './Components/Properties/PropertyInfo';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
@@ -41,7 +41,7 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/alquileres/:idProperty' component={Property} />
+          <Route path='/alquileres/:idProperty' component={PropertyInfo} />
           <Route path='/alquileres' component={Properties} />
           <Route path='/contacto'>
             <ContactUs />
