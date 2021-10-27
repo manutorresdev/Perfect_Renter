@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa';
 import { useHistory } from 'react-router';
 
-export default function Filters({ setOverlay }) {
+export default function Filters({ setOverlay, Overlay }) {
   const pMinVal = useRef();
   const history = useHistory();
 
@@ -11,25 +11,46 @@ export default function Filters({ setOverlay }) {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      orden: '',
+      direccion: '',
+      ciudad: '',
+      provincia: '',
+      tipo: '',
+      pMin: '',
+      pMax: '',
+      hab: '',
+      garaje: '',
+      baños: '',
+      m2: '',
+    },
+  });
 
   function onSubmit(body, e) {
     e.preventDefault();
+
     const queryString = Object.keys(body)
       .filter((val) => body[val].length > 1)
       .map((key) => {
         return `${key}=${body[key]}`;
       })
       .join('&');
+
     history.push('?' + queryString);
+
     if (window.innerWidth <= 650) {
       setOverlay(false);
     }
   }
 
   return (
-    <div className='overlay z-10  bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll  duration-300 sm:overflow-hidden sm:z-0 sm:bg-transparent sm:mt-0 sm:static sm:py-10'>
-      <section className='contact pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-9/12 bg-white relative'>
+    <div
+      className={`transform ${
+        Overlay ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0'
+      } sm:translate-y-0 sm:opacity-100 overlay z-10 bg-gray-400  bg-opacity-75 w-full h-full fixed left-0 top-0 flex flex-col items-center py-24 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:bg-transparent sm:mt-0 sm:static sm:py-10`}
+    >
+      <section className='filtros sm:bg-transparent overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white relative'>
         <button
           className='close-overlay absolute top-3 right-3 sm:hidden'
           onClick={() => {
@@ -39,7 +60,7 @@ export default function Filters({ setOverlay }) {
           <FaPlus className='transform rotate-45 ' />
         </button>
         <h1 className='title self-center select-none'>Filtros</h1>
-        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
+        <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
           <form
             className='flex flex-col gap-4 p-2'
             onSubmit={handleSubmit(onSubmit)}
@@ -55,11 +76,7 @@ export default function Filters({ setOverlay }) {
               </select>
             </label>
             <label>
-              <select
-                name='direccion'
-                defaultValue=''
-                {...register('direccion')}
-              >
+              <select name='direccion' {...register('direccion')}>
                 <option value='' disabled>
                   Orden
                 </option>
@@ -88,6 +105,7 @@ export default function Filters({ setOverlay }) {
             <div>Ciudad:</div>
             <label className='city'>
               <input
+                defaultValue={Filters.ciudad ?? ''}
                 {...register('ciudad', {
                   pattern: {
                     value:
@@ -131,16 +149,46 @@ export default function Filters({ setOverlay }) {
                 placeholder='Provincia...'
               />
             </label>
-            <label className='type'>
-              <div>Tipo de vivienda:</div>
-              <select name='type' defaultValue='' {...register('tipo')}>
-                <option value='' disabled></option>
-                <option value='piso'>Piso</option>
-                <option value='casa'>Casa</option>
-                <option value='duplex'>Dúplex</option>
-              </select>
-            </label>
-            <div className='flex gap-2'>
+            <div className='grid grid-cols-2 grid-rows-2'>
+              <div className='col-start-1 col-end-3'>Tipo de vivienda:</div>
+              <label className='flex gap-2 items-baseline'>
+                Piso
+                <input
+                  type='radio'
+                  name='tipo'
+                  value='piso'
+                  {...register('tipo')}
+                />
+              </label>
+              <label className='flex gap-2 items-baseline'>
+                Casa
+                <input
+                  type='radio'
+                  name='tipo'
+                  value='casa'
+                  {...register('tipo')}
+                />
+              </label>
+              <label className='flex gap-2 items-baseline'>
+                Duplex
+                <input
+                  type='radio'
+                  name='tipo'
+                  value='duplex'
+                  {...register('tipo')}
+                />
+              </label>
+              <label className='flex gap-2 items-baseline'>
+                Cualquiera
+                <input
+                  type='radio'
+                  name='tipo'
+                  value='%'
+                  {...register('tipo')}
+                />
+              </label>
+            </div>
+            <div className='flex flex-col gap-2'>
               <label className='minPrice'>
                 <div>Precio Mínimo:</div>
                 <input
@@ -215,11 +263,13 @@ export default function Filters({ setOverlay }) {
                 placeholder='Metros...'
               />
             </label>
-            <input
-              type='submit'
-              value='Aplicar filtros'
-              className='btn-more text-xl bg-none p-2 border-yellow-400 border-2 max-w-max hover:bg-principal-1 hover:border-white hover:text-gray-600 duration-300'
-            />
+            <div className='flex justify-center items-center self-center sticky bottom-0 w-full h-28 bg-white bg-transparent'>
+              <input
+                type='submit'
+                value='Aplicar filtros'
+                className='btn-submit  text-xl bg-none p- border-yellow-400 border-2 h-2/4 hover:bg-principal-1 hover:border-white hover:text-gray-600 duration-300'
+              />
+            </div>
           </form>
         </div>
       </section>

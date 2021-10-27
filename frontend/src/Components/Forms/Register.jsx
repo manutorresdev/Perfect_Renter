@@ -241,7 +241,7 @@ export default function Register({ Token, usuario, setOverlay }) {
               placeholder='Tlf'
               {...register('tel', {
                 pattern: {
-                  value: /^\s?\+?\s?([0-9][\s]*){9,}$/,
+                  value: /^\s?\+?\s?([0-9\s]*){9,}$/,
                   message: 'Debes introducir un número de teléfono válido.',
                 },
               })}

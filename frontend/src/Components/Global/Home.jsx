@@ -28,7 +28,7 @@ export function Home() {
           backgroundImage:
             "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
         }}
-        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5 sm:h-full sm:w-full'
+        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5 sm:h-full sm:w-full pb-32'
       >
         <HomeRentersList />
         <HomePropertiesList />
@@ -77,7 +77,7 @@ function Banner() {
   }
   return (
     <div
-      className='header bg-center bg-cover h-60vh max-w-full grid grid-cols-10 grid-rows-8'
+      className='header bg-center bg-cover sm:h-60vh h-1/3  max-w-full grid grid-cols-10 grid-rows-8'
       style={{
         backgroundImage:
           "linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('./Images/bgheader.jpg')",
@@ -88,9 +88,7 @@ function Banner() {
         <h1 className='text-4xl text-principal-1'>Inquilino Perfecto</h1>
         <p className='w-4/5 text-base font-light'>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
-          doloribus nostrum rerum quisquam libero fugiat quam, at tempora
-          eligendi, dolores officia quos consequuntur facere, impedit aliquid
-          blanditiis dolorum voluptates laudantium.
+          doloribus nostrum rerum quisquam libero fugiat quam.
         </p>
         <Link
           to='/nosotros'

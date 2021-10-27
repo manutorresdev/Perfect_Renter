@@ -31,7 +31,7 @@ function App() {
   return (
     <>
       <Router>
-        <NavBar token={Token} />
+        <NavBar token={Token} setToken={setToken} />
         <Switch>
           <Route path='/register'>
             {Token ? <Redirect to='/' /> : <Register token={Token} />}

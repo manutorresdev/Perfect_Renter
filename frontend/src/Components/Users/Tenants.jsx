@@ -25,7 +25,7 @@ export default function UsersList() {
   }, [Token]);
 
   return (
-    <>
+    <section className='pb-28'>
       {Overlay.shown ? (
         <ContactTenant
           setOverlay={setOverlay}
@@ -51,6 +51,6 @@ export default function UsersList() {
           <div>No hay resultados.</div>
         )}
       </section>
-    </>
+    </section>
   );
 }

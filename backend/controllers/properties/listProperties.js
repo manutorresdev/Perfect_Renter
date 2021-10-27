@@ -28,15 +28,14 @@ const listProperties = async (req, res, next) => {
       baños: filtToilets,
       m2: filtMts,
     } = req.query;
-    console.log(req.query);
 
     // Cambiamos valores para encajar con backend.
-    if (direction === 'precio') {
-      direction = 'price';
-    } else if (direction === 'creacion') {
-      direction = 'createdAt';
-    } else if (direction === 'valoraciones') {
-      direction = 'votes';
+    if (order === 'precio') {
+      order = 'price';
+    } else if (order === 'creacion') {
+      order = 'createdAt';
+    } else if (order === 'valoraciones') {
+      order = 'votes';
     }
 
     // Establecemos opciones de validación de orden.
@@ -60,7 +59,7 @@ const listProperties = async (req, res, next) => {
     const pmax = filtPmax ? filtPmax : 10000;
     const pmin = filtPmin ? filtPmin : 0;
     const rooms = filtRooms ? filtRooms : 1;
-    const garage = filtGarage ? filtGarage : 0;
+    const garage = filtGarage ? filtGarage : '%';
     const toilets = filtToilets ? filtToilets : 1;
     const mts = filtMts ? filtMts : 0;
 
@@ -91,12 +90,16 @@ const listProperties = async (req, res, next) => {
       energyCertificate,
       availabilityDate,
       price,
-      state, AVG(IFNULL(property_vote.voteValue, 0)) AS votes, properties.createdAt
+      state,
+      AVG(IFNULL(property_vote.voteValue, 0)) AS votes,
+      properties.createdAt
       FROM properties
       LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
       WHERE properties.idUser = ?
       group by properties.idProperty
-      ORDER BY properties.${orderBy} ${orderDirection}
+      ORDER BY ${
+        order === 'votes' ? 'votes' : `properties.${orderBy}`
+      } ${orderDirection}
       `,
         [idUser]
       );
@@ -105,7 +108,8 @@ const listProperties = async (req, res, next) => {
       // Obtenemos los datos de todas las propiedades
 
       [properties] = await connection.query(
-        `SELECT properties.idProperty,
+        `
+        SELECT properties.idProperty,
           properties.idUser,
           city,
           province,
@@ -124,13 +128,17 @@ const listProperties = async (req, res, next) => {
           energyCertificate,
           availabilityDate,
           price,
-          state, AVG(IFNULL(property_vote.voteValue, 0)) AS votes, properties.createdAt
+          state,
+          AVG(IFNULL(property_vote.voteValue, 0)) AS votes,
+          properties.createdAt
           FROM properties
           LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
-          WHERE city LIKE ? AND province LIKE ? AND "type" LIKE ? AND (price BETWEEN ?
-          AND ?) AND rooms >= ? AND garage >= ? AND toilets >= ?  AND mts >= ?
+          WHERE city LIKE ? AND province LIKE ? AND type LIKE ? AND (price BETWEEN ?
+          AND ?) AND rooms >= ? AND garage = ? AND toilets >= ?  AND mts >= ?
           group by properties.idProperty
-          ORDER BY properties.${orderBy} ${orderDirection}
+          ORDER BY  ${
+            order === 'votes' ? 'votes' : `properties.${orderBy}`
+          } ${orderDirection}
           `,
         [city, province, type, pmin, pmax, rooms, garage, toilets, mts]
       );
