@@ -85,8 +85,14 @@ const deleteUser = async (req, res, next) => {
     }
     // Anonimizamos al usuario
     await connection.query(
-      `UPDATE users SET password = ?, name = "[deleted]" , lastName = "[deleted]",tel = "[deleted]", avatar = NULL, renterActive = false, deleted = true, bio = "[deleted]", city = "[deleted]", birthDate = ? , modifiedAt = ? WHERE idUser = ?`,
-      [generateRandomString(20), formatDate(0), formatDate(new Date()), idUser]
+      `UPDATE users SET password = ?, name = "[deleted]" , lastName = "[deleted]",tel = "[deleted]", email=?, avatar = NULL, renterActive = false, deleted = true, bio = "[deleted]", city = "[deleted]", birthDate = ? , modifiedAt = ? WHERE idUser = ?`,
+      [
+        generateRandomString(20),
+        `${email}_deleted`,
+        formatDate(0),
+        formatDate(new Date()),
+        idUser,
+      ]
     );
     res.send({
       status: 'ok',

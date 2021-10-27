@@ -3,7 +3,7 @@ import * as FaIcons from 'react-icons/fa';
 import { MenuElements } from './MenuElements';
 import { Link } from 'react-router-dom';
 
-export default function NavBar({ token }) {
+export default function NavBar({ token, setToken }) {
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const showMenu = () => setMostrarMenu(!mostrarMenu);
 

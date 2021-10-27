@@ -32,7 +32,10 @@ export default function ResetPass({ match }) {
                 { password: data.password },
                 (data) => {
                   console.log(data);
-                  alert('Revisa tu correo para confirmar.');
+                  alert(
+                    'Contraseña cambiada con éxito, se te redirigirá a la pantalla principal.'
+                  );
+                  window.location.reload();
                 },
                 (error) => {
                   console.log(error);

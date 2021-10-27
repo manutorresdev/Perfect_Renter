@@ -29,7 +29,7 @@ export default function RecoverPass() {
   }
 
   return (
-    <section className='flex flex-col items-center justify-center'>
+    <section className='flex flex-col items-center justify-center pt-24'>
       <h1>Recuperación de contraseña</h1>
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-5'>
         <label>

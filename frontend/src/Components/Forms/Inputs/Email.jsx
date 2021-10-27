@@ -1,30 +1,25 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { parseJwt } from '../../../Helpers/Api';
-import { TokenContext } from '../../../Helpers/Hooks/TokenProvider';
-import { get } from '../../../Helpers/Api';
+import React from 'react';
 
 export default function Email({
+  onChange,
+  name,
+  ref,
   className,
-  register,
-  errors,
-  placeholder /* value ?? '' */,
+  placeHolder,
+  defaultValue,
+  value,
 }) {
   return (
     <>
       <input
+        value={value}
         className={className}
-        name='email'
+        name={name}
         type='email'
-        placeholder={placeholder ?? 'Email*'}
-        {...register('email', {
-          required: 'Debes escribir un email.',
-          maxLength: {
-            value: 200,
-            message: 'El email no puede contener más de 200 carácteres.',
-          },
-        })}
+        placeholder={placeHolder ?? 'Email*'}
+        ref={ref}
+        onChange={onChange}
       />
-      {errors.email && <p className='text-red-500'>{errors.email.message}</p>}
     </>
   );
 }
