@@ -106,32 +106,32 @@ const contactProperty = async (req, res, next) => {
           tel = 'No especificado.';
         }
       }
-      if (!comentarios) {
+
+      if (!comentarios || comentarios.length < 1) {
         const error = new Error(
           'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
         );
         error.httpStatus = 400;
         throw error;
       }
+
       if (!startDate || !endDate) {
         const error = new Error('Falta definir la fecha de la reserva.');
         error.httpStatus = 400;
         throw error;
       }
       // Si la fecha reservada es menor a la fecha actual, lanzamos error.
+
       if (
-        new Date(startDate).getMilliseconds < new Date().getMilliseconds ||
-        new Date(endDate).getMilliseconds < new Date().getMilliseconds
+        new Date(startDate).getTime() < new Date().getTime() ||
+        new Date(endDate).getTime() < new Date().getTime()
       ) {
         const error = new Error('No puedes reservar en el pasado.');
         error.httpStatus = 403;
         throw error;
       }
-
       // Si la fecha end es menor a la fecha start, lanzamos error.
-      if (
-        new Date(endDate).getMilliseconds < new Date(startDate).getMilliseconds
-      ) {
+      if (new Date(endDate).getTime() < new Date(startDate).getTime()) {
         const error = new Error(
           'Hay un error en las fechas, la fecha reservada debe ser posterior a la fecha actual.'
         );
@@ -141,7 +141,7 @@ const contactProperty = async (req, res, next) => {
 
       // Generamos el codigo de reserva,
       const bookingCode = generateRandomString(10);
-      console.log(`Este es el length del random ${bookingCode.length}`);
+
       // Definimos el body del email
       const emailBody = `
     <table>
@@ -173,12 +173,12 @@ const contactProperty = async (req, res, next) => {
       <tfoot>
         <th>
             <button>
-              <a href="http://localhost:4000/properties/${bookingCode}/accept"
+              <a href="http://localhost:3000/alquileres/${bookingCode}/aceptar"
             >ACEPTAR RESERVA</a></button>
             <span><span/>
             <span><span/>
             <button>
-              <a href="http://localhost:4000/properties/${bookingCode}/cancel"
+              <a href="http://localhost:3000/alquieres/${bookingCode}/cancelar"
             >CANCELAR RESERVA</a></button>
         </th>
       </tfoot>
@@ -186,11 +186,13 @@ const contactProperty = async (req, res, next) => {
     `;
 
       // Enviamos el correo del usuario que contacta, al usuario a contactar.
-      await sendMail({
-        to: property[0].email,
-        subject: 'Solicitud de alquiler',
-        body: emailBody,
-      });
+      if (process.env.NODE_ENV !== 'test') {
+        await sendMail({
+          to: property[0].email,
+          subject: 'Solicitud de alquiler',
+          body: emailBody,
+        });
+      }
 
       // Agregamos el código de reserva en la base de datos junto a la posible reserva.
       await connection.query(
@@ -211,6 +213,7 @@ const contactProperty = async (req, res, next) => {
       res.send({
         status: 'ok',
         message: 'Correo electrónico enviado con éxito.',
+        bookingCode,
       });
     }
   } catch (error) {

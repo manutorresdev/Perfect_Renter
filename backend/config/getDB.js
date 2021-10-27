@@ -10,7 +10,6 @@ const {
   MYSQL_DATABASE_TEST,
   NODE_ENV,
 } = process.env;
-
 let pool;
 /**
  * @module Database

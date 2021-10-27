@@ -9,9 +9,6 @@ export default function UserProfile({ match }) {
   const [user, setUser] = useState({});
   const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
 
-  console.log('este path se carga : ' + match.params.idUser);
-
-  /* console.log(userInfo); */
   useEffect(() => {
     get(
       `http://localhost:4000/users/${match.params.idUser}`,
@@ -23,9 +20,7 @@ export default function UserProfile({ match }) {
       },
       Token
     );
-  }, [match.params.idUser]);
-
-  console.log('info del get user: ' + user.name);
+  }, [match.params.idUser, Token]);
 
   return (
     <>
@@ -139,4 +134,3 @@ export default function UserProfile({ match }) {
     </>
   );
 }
-
