@@ -9,11 +9,16 @@
 ## Tutorial de uso
   
   - Despues de clonar el repositorio en tu repositorio local:
-      1. Crear un archivo que se llame: **.env** y añadir la información necesaria.
-      2. ```npm init -y``` Para instalar las dependencias necesarias.
+      1. Crear un archivo que se llame: **.env** y añadir la información necesaria, descrita en **.env_example**.
+      2. ```npm install ``` Para instalar las dependencias necesarias.
       3. ```npm run initDB``` Para la creación de las bases de datos.
       4. ```npm run dev``` Para iniciar el servidor.
 
+## Tutorial de uso TESTS
+
+  -Para iniciar los tests tan solo debes utilizar el siguiente comando:
+    1. ````npm run tests```
+   Y aparecerán todos los tests realizados en la app.
 ## Documentación
 
   - Sprint de Backend: [Tabla horas trabajadas.](https://github.com/manutowersdev/Perfect_Renter/blob/01ac551f8aaf83095e96a887ba5eb4e016b54b75/Sprint%20BACKEND%20-%20SCRUM.pdf)

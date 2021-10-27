@@ -9,7 +9,11 @@ export default function Properties() {
     <>
       <section className='flex flex-col items-center mt-14'>
         <h1 className='text-2xl'>Alquileres</h1>
+<<<<<<< HEAD
         {Properties.length > 0 ? (
+=======
+        {Properties.length>0 ? (
+>>>>>>> origin
           Properties.map((property) => (
             <Property key={property.idProperty} property={property}>
               <div className='my-5 border border-black'>

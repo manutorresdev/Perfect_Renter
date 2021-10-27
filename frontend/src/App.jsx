@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -12,7 +12,6 @@ import NavBar from './Components/Global/NavBar';
 import Tenants from './Components/Users/Tenants';
 // Properties comps
 import Properties from './Components/Properties/Properties';
-import PropertyInfo from './Components/Properties/PropertyInfo';
 // Form comps
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
@@ -23,25 +22,26 @@ import { TokenContext } from './Helpers/Hooks/TokenProvider';
 import Footer from './Components/Global/Footer';
 import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
+import Property from './Components/Properties/Property';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
-
   return (
     <>
       <Router>
         <NavBar token={Token} />
         <Switch>
-          <Route path='/register' component={Register} />
-          {/* {Token ? <Redirect to='/' /> : <Register />}
-          </Route> */}
+          <Route path='/register'>
+            {Token ? <Redirect to='/' /> : <Register token={Token} />}
+          </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
-
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/properties/:idProperty' component={PropertyInfo} />
+
+          <Route path='/alquileres/:idProperty' component={Property}/>
+
           <Route path='/alquileres'>
             <Properties />
           </Route>
