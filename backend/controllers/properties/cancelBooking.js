@@ -28,13 +28,13 @@ const cancelBooking = async (req, res, next) => {
       throw error;
     }
 
-    const date = format(booking[0].modifiedAt, 'd/MM/yyyy');
-    const time = format(booking[0].modifiedAt, 'HH:mm:ss');
+    // const date = format(booking[0].modifiedAt, 'dd/MM/yyyy');
+    // const time = format(booking[0].modifiedAt, 'HH:mm:ss');
 
     // Comprobamos que la reserva no esté en cancelada.
     if (booking[0].state.includes('cancelada')) {
       const error = new Error(
-        `La reserva ya ha fue cancelada el ${date} a las ${time}.`
+        `La reserva ya ha fue cancelada el ${booking[0].modifiedAt}.`
       );
       error.httpStatus = 400;
       throw error;
@@ -83,7 +83,7 @@ const cancelBooking = async (req, res, next) => {
             </td>
             <br/>
             <td>
-            La reserva ha sido cancelada el ${date} a las ${time}.
+            La reserva ha sido cancelada el ${modifiedAt}.
             </td>
         </tbody>
         <tfoot>
@@ -105,7 +105,7 @@ const cancelBooking = async (req, res, next) => {
             </td>
             <br/>
             <td>
-            La reserva ha sido cancelada el ${date} a las ${time}.
+            La reserva ha sido cancelada el ${modifiedAt}.
             </td>
         </tbody>
         <tfoot>
@@ -134,7 +134,7 @@ const cancelBooking = async (req, res, next) => {
             </td>
             <br/>
             <td>
-            La reserva ha sido cancelada el ${date} a las ${time}.
+            La reserva ha sido cancelada el ${modifiedAt}.
             </td>
         </tbody>
         <tfoot>
@@ -156,7 +156,7 @@ const cancelBooking = async (req, res, next) => {
             </td>
             <br/>
             <td>
-            La reserva ha sido cancelada el ${date} a las ${time}.
+            La reserva ha sido cancelada el ${modifiedAt}.
             </td>
         </tbody>
         <tfoot>

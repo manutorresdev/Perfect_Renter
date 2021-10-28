@@ -12,6 +12,7 @@ import NavBar from './Components/Global/NavBar';
 import Tenants from './Components/Users/Tenants';
 // Properties comps
 import Properties from './Components/Properties/Properties';
+import ManageBooking from './Components/Properties/ManageBooking';
 // Form comps
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
@@ -38,14 +39,24 @@ function App() {
           </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
-          
+
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/alquileres/:idProperty' component={Property}/>
-          <Route path='/alquileres'>
+          <Route exact path='/alquileres/:idProperty' component={Property} />
+          <Route exact path='/alquileres'>
             <Properties />
           </Route>
+          <Route
+            exact
+            path='/alquileres/:bookingCode/accept'
+            component={ManageBooking}
+          />
+          <Route
+            exact
+            path='/alquileres/:bookingCode/cancel'
+            component={ManageBooking}
+          />
           <Route path='/contacto'>
             <ContactUs />
           </Route>
@@ -69,6 +80,5 @@ function App() {
     </>
   );
 }
-
 
 export default App;

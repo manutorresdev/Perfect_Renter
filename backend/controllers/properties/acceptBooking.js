@@ -14,19 +14,19 @@ const acceptBooking = async (req, res, next) => {
 
   try {
     connection = await getDB();
-
     // Obtenemos el codigo de reserva de los path params.
     const { bookingCode } = req.params;
 
+    console.log('Accept booking: ', bookingCode);
     // Obtenemos el id del usuario que acepta. Debe ser el del casero
-    const { idUser: idTenant } = req.userAuth;
+    const { idUser: idRenter } = req.userAuth;
 
     //Verificamos que la propiedad y el inquilino existen
     const [property] = await connection.query(
       `SELECT b.idProperty, b.idRenter
       FROM bookings b
-      WHERE bookingCode = ? AND idTenant = ?`,
-      [bookingCode, idTenant]
+      WHERE bookingCode = ? AND idRenter = ?`,
+      [bookingCode, idRenter]
     );
 
     // si la propiedad no existe enviamos error
@@ -50,45 +50,45 @@ const acceptBooking = async (req, res, next) => {
     );
 
     // Si no hay reserva para aceptar, lanzamos error.
-    if (booking.state !== 'peticion') {
+    if (booking[0].state !== 'peticion') {
       const error = new Error('No hay reserva pendiente de aceptar.');
       error.httpStatus = 404;
       throw error;
     }
     // Una vez aceptada enviammos email a ambos usuarios
 
-    // Email para el inquilino
+    //Email para el dueño que aceptó la reserva
     let emailBody = `
     <table>
-      <tbody>
-        <td>
-          Hola ${booking[0].RenterName},
-          la reserva de la vivienda de ${booking[0].city} ha sido aceptada.
-        </td>
-      </tbody>
+    <tbody>
+    <td>
+    Hola ${booking[0].RenterName},
+    la reserva de la vivienda de ${booking[0].city} ha sido aceptada.
+    </td>
+    </tbody>
     </table>
     `;
 
-    // Enviamos el correo al inquilino
+    // Enviamos el correo al dueño de la viviendo
     await sendMail({
       to: booking[0].RenterEmail,
       subject: 'Reserva de alquiler',
       body: emailBody,
     });
 
-    //Email para el dueño que aceptó la reserva
+    // Email para el inquilino
     emailBody = `
     <table>
-      <tbody>
-        <td>
-          Hola ${booking[0].TenantName},
-          la reserva de la vivienda de ${booking[0].city} ha sido realizada.
-        </td>
-      </tbody>
+    <tbody>
+    <td>
+    Hola ${booking[0].TenantName},
+    la reserva de la vivienda de ${booking[0].city} ha sido realizada.
+    </td>
+    </tbody>
     </table>
     `;
 
-    // Enviamos el correo al dueño de la viviendo
+    // Enviamos el correo al inquilino
     await sendMail({
       to: booking[0].TenantEmail,
       subject: 'Reserva de alquiler',
@@ -100,7 +100,7 @@ const acceptBooking = async (req, res, next) => {
       `
     UPDATE bookings SET state = "reservado", modifiedAt = ? WHERE bookingCode = ?
     `,
-      [bookingCode, formatDate(new Date())]
+      [formatDate(new Date()), bookingCode]
     );
 
     res.send({

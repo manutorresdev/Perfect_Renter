@@ -44,7 +44,8 @@ const {
   newProperty,
   getProperty,
   addPropertyPhoto,
-  contactProperty,
+  bookProperty,
+  // contactProperty,
   editProperty,
   deleteProperty,
   deletePropertyPhoto,
@@ -131,10 +132,10 @@ app.post(
  * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
  */
 app.post(
-  '/properties/:idProperty/contact',
+  '/properties/:idProperty/book',
   authUser,
   propertyExists,
-  contactProperty
+  bookProperty
 );
 
 /**
