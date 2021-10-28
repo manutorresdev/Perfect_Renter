@@ -14,7 +14,7 @@ const {
  * @param {*} res El servidor lanza como respuesta un correo al usuario a contactar.
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
-const contactProperty = async (req, res, next) => {
+const bookProperty = async (req, res, next) => {
   let connection;
   try {
     connection = await getDB();
@@ -106,32 +106,32 @@ const contactProperty = async (req, res, next) => {
           tel = 'No especificado.';
         }
       }
-
-      if (!comentarios || comentarios.length < 1) {
+      if (!comentarios) {
         const error = new Error(
           'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
         );
         error.httpStatus = 400;
         throw error;
       }
-
       if (!startDate || !endDate) {
         const error = new Error('Falta definir la fecha de la reserva.');
         error.httpStatus = 400;
         throw error;
       }
       // Si la fecha reservada es menor a la fecha actual, lanzamos error.
-
       if (
-        new Date(startDate).getTime() < new Date().getTime() ||
-        new Date(endDate).getTime() < new Date().getTime()
+        new Date(startDate).getMilliseconds < new Date().getMilliseconds ||
+        new Date(endDate).getMilliseconds < new Date().getMilliseconds
       ) {
         const error = new Error('No puedes reservar en el pasado.');
         error.httpStatus = 403;
         throw error;
       }
+
       // Si la fecha end es menor a la fecha start, lanzamos error.
-      if (new Date(endDate).getTime() < new Date(startDate).getTime()) {
+      if (
+        new Date(endDate).getMilliseconds < new Date(startDate).getMilliseconds
+      ) {
         const error = new Error(
           'Hay un error en las fechas, la fecha reservada debe ser posterior a la fecha actual.'
         );
@@ -141,7 +141,7 @@ const contactProperty = async (req, res, next) => {
 
       // Generamos el codigo de reserva,
       const bookingCode = generateRandomString(10);
-
+      console.log(`Este es el length del random ${bookingCode.length}`);
       // Definimos el body del email
       const emailBody = `
     <table>
@@ -173,12 +173,12 @@ const contactProperty = async (req, res, next) => {
       <tfoot>
         <th>
             <button>
-              <a href="http://localhost:3000/alquileres/${bookingCode}/aceptar"
+              <a href="http://localhost:3000/alquileres/${bookingCode}/accept"
             >ACEPTAR RESERVA</a></button>
             <span><span/>
             <span><span/>
             <button>
-              <a href="http://localhost:3000/alquieres/${bookingCode}/cancelar"
+              <a href="http://localhost:3000/alquileres/${bookingCode}/cancel"
             >CANCELAR RESERVA</a></button>
         </th>
       </tfoot>
@@ -186,13 +186,11 @@ const contactProperty = async (req, res, next) => {
     `;
 
       // Enviamos el correo del usuario que contacta, al usuario a contactar.
-      if (process.env.NODE_ENV !== 'test') {
-        await sendMail({
-          to: property[0].email,
-          subject: 'Solicitud de alquiler',
-          body: emailBody,
-        });
-      }
+      await sendMail({
+        to: property[0].email,
+        subject: 'Solicitud de alquiler',
+        body: emailBody,
+      });
 
       // Agregamos el código de reserva en la base de datos junto a la posible reserva.
       await connection.query(
@@ -201,8 +199,8 @@ const contactProperty = async (req, res, next) => {
       `,
         [
           bookingCode,
-          idReqUser,
           property[0].idUser,
+          idReqUser,
           formatDate(new Date()),
           idProperty,
           startDate,
@@ -213,7 +211,6 @@ const contactProperty = async (req, res, next) => {
       res.send({
         status: 'ok',
         message: 'Correo electrónico enviado con éxito.',
-        bookingCode,
       });
     }
   } catch (error) {
@@ -223,5 +220,4 @@ const contactProperty = async (req, res, next) => {
   }
 };
 
-module.exports = contactProperty;
-
+module.exports = bookProperty;

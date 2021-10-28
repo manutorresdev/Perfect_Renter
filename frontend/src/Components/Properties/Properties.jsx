@@ -8,6 +8,9 @@ export default function Properties() {
   const [Overlay, setOverlay] = useState(false);
   const [Properties] = useProperties();
 
+  const prop = Properties.filter((property) => property.idUser === 1);
+  console.log(prop);
+
   return (
     <main className='flex pb-28 bg-gray-200 bg-opacity-20'>
       <aside

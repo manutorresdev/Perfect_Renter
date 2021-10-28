@@ -1,14 +1,20 @@
+
+import { Link } from 'react-router-dom';
+import ContactProperty from '../Forms/ContactProperty';
 import { useEffect, useRef, useState } from 'react';
 import { FaAngleLeft, FaAngleRight, FaChevronRight } from 'react-icons/fa';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Filters from './Filters';
 
 export default function PropertyInfo(props) {
-  const [Overlay, setOverlay] = useState(false);
+  const [Overlay, setOverlay] = useState({
+    form: '',
+    show: false,
+    propertyInfo: {},
+  });
   const [Photo, setPhoto] = useState(false);
   const [property, setProperty] = useState({});
   const [Properties] = useProperties();
-
   // Slider
   const [curr, setCurr] = useState(0);
   const [SlideImgs, setSlideImgs] = useState([]);
@@ -36,6 +42,7 @@ export default function PropertyInfo(props) {
     setPhoto(!Photo);
   }
 
+
   useEffect(() => {
     const prop = Properties.find(
       (property) =>
@@ -44,12 +51,20 @@ export default function PropertyInfo(props) {
     if (prop) {
       setProperty(prop);
     }
-  }, [Properties, props.match.params.idProperty]);
+  }, [props.match.params.idProperty, Properties]);
 
-  console.log(property);
 
   return (
     <article className='pb-24 flex w-screen bg-gray-200 bg-opacity-20'>
+     {overlay.show ? (
+        <ContactProperty
+          form={overlay.form}
+          setOverlay={setOverlay}
+          property={overlay.propertyInfo}
+        />
+      ) : (
+        ''
+      )}
       <aside
         className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static absolute left-0 top-20 sm:top-0 mt-5 sm:mt-20`}
       >
@@ -106,6 +121,45 @@ export default function PropertyInfo(props) {
           <h2>{Number(property.price)}/mes</h2>
         </div>
       </section>
+       <button>
+          {Properties.length === Number(props.match.params.idProperty) ? (
+            <span className='pointer-events-none'>
+              {' '}
+              No hay mas propiedades{' '}
+            </span>
+          ) : (
+            <Link
+              to={`/alquileres/${Number(props.match.params.idProperty) + 1}`}
+              className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+            >
+              Siguiente Link
+            </Link>
+          )}
+        </button>
+        <button
+          className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+          onClick={() => {
+            setOverlay({
+              form: 'contact',
+              show: true,
+              propertyInfo: property,
+            });
+          }}
+        >
+          Contactar
+        </button>
+        <button
+          className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+          onClick={() => {
+            setOverlay({
+              form: 'reservar',
+              show: true,
+              propertyInfo: property,
+            });
+          }}
+        >
+          Reservar
+        </button>
     </article>
   );
 }

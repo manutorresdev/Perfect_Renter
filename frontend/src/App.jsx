@@ -12,10 +12,12 @@ import NavBar from './Components/Global/NavBar';
 import Tenants from './Components/Users/Tenants';
 // Properties comps
 import Properties from './Components/Properties/Properties';
+import ManageBooking from './Components/Properties/ManageBooking';
 // Form comps
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
 import ContactUs from './Components/Forms/ContactUs';
+// import ContactProperty from './Components/Forms/ContactProperty';
 import RecoverPass from './Components/Forms/RecoverPass';
 import ResetPass from './Components/Forms/ResetPass';
 import { TokenContext } from './Helpers/Hooks/TokenProvider';
@@ -44,6 +46,16 @@ function App() {
           </Route>
           <Route path='/alquileres/:idProperty' component={PropertyInfo} />
           <Route path='/alquileres' component={Properties} />
+          <Route
+            exact
+            path='/alquileres/:bookingCode/accept'
+            component={ManageBooking}
+          />
+          <Route
+            exact
+            path='/alquileres/:bookingCode/cancel'
+            component={ManageBooking}
+          />
           <Route path='/contacto'>
             <ContactUs />
           </Route>
@@ -73,9 +85,6 @@ function App() {
           <Route path='/filters'>
             <Filters />
           </Route>
-          <Route path='/voteForm'>
-            <VoteForm />
-          </Route>
         </Switch>
         <Footer token={Token} setToken={setToken} />
       </Router>
@@ -84,13 +93,3 @@ function App() {
 }
 
 export default App;
-
-// use perfect_renter;
-
-// select idBooking,startBookingDate, endBookingDate, state from bookings where idProperty = 1 AND state = 'alquilada'
-// OR idProperty = 1 AND state = 'peticion'
-// OR idProperty = 1 AND state = 'reservado';
-
-// INSERT INTO perfect_renter.bookings
-// (idRenter, idTenant, idProperty, createdAt, modifiedAt, startBookingDate, endBookingDate, state, bookingCode)
-// VALUES(12, 13, 1, CURRENT_DATE(), NULL,"2021-12-03" , "2021-12-01", 'reservado', "reserva1");

@@ -1,21 +1,59 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa';
-import Email from '../Forms/Inputs/Email';
-import FirstName from '../Forms/Inputs/FirstName';
+import { post } from '../../Helpers/Api';
+import Email from './Inputs/Email';
+import FirstName from './Inputs/FirstName';
+import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
+import { Link } from 'react-router-dom';
 
-export default function ContactProperty() {
-  const [, setOverlay] = useState({ shown: false, propertyInfo: {} });
-
+export default function ContactProperty({ form, property, setOverlay }) {
+  const [Token] = useContext(TokenContext);
+  const [message, setMessage] = useState({});
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
 
-  const propertyInfo = {
-    city: 'Montmeló',
+  const formFunctions = {
+    register,
+    errors,
   };
+
+  function onSubmit(body, e) {
+    e.preventDefault();
+    post(
+      `http://localhost:4000/properties/${property.idProperty}/book`,
+      body,
+      (data) => {
+        alert(data.message);
+        setMessage(data);
+        setOverlay({ form: '', shown: false, propertyInfo: {} });
+      },
+      (error) => {
+        console.log(error);
+        setMessage(error);
+      },
+      Token
+    );
+  }
+  if (message.status === 'ok') {
+    return (
+      <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
+        <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
+          <h2>Ya esta listo!!!</h2>
+          <h2>{message.message}</h2>
+          <Link
+            to='/'
+            className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+          >
+            Cerrar
+          </Link>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className='overlay z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
@@ -23,39 +61,65 @@ export default function ContactProperty() {
         <button
           className='close-overlay absolute top-3 right-3'
           onClick={() => {
-            setOverlay({ shown: false, propertyInfo: {} });
+            setOverlay({ form: '', shown: false, propertyInfo: {} });
           }}
         >
           <FaPlus className='transform rotate-45' />
         </button>
         <h1 className='title self-center select-none'>Contacto</h1>
+        {message.status === 'error' ? (
+          <h1 className='title self-center select-none text-red-700'>
+            {message.message}
+          </h1>
+        ) : (
+          ''
+        )}
         <div className='contact-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
           <form
             className='flex flex-col gap-10 items-center'
-            onSubmit={handleSubmit((data) => console.log(data))}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <label>
               <div className='select-none'> Nombre Completo*</div>
 
-              <FirstName placeholder='Escribe aquí tu nombre....' />
+              <FirstName
+                {...formFunctions}
+                placeholder='Escribe aquí tu nombre....'
+              />
             </label>
             <label>
               <div className='select-none'> Correo electrónico*</div>
-              <Email className='p-2' placeholder='Escribe aquí tu email....' />
+              <Email
+                {...formFunctions}
+                className='p-2'
+                placeholder='Escribe aquí tu email....'
+              />
             </label>
-            <label>
-              <div className='select-none'>Escoge el alquiler a ofrecer:</div>
-              <select name='properties' {...register('property')}>
-                <option default value='Ninguno' disabled>
-                  Ninguno
-                </option>
-                {/* <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option>
-              <option value=""></option> */}
-              </select>
-            </label>
+            {form === 'reservar' ? (
+              <label>
+                <div className='select-none flex-col flex-center'>
+                  Selecciona las fechas:
+                </div>
+                <input
+                  type='date'
+                  name='startDate'
+                  {...register('startDate', {
+                    pattern: { message: 'indica la fecha de inicio' },
+                  })}
+                />
+                <input
+                  type='date'
+                  name='endDate'
+                  {...register('endDate', {
+                    pattern: {
+                      massage: 'Ingresa la fecha final de la reserva',
+                    },
+                  })}
+                />
+              </label>
+            ) : (
+              ''
+            )}
             <label>
               <div className='select-none'>Teléfono</div>
               <input
@@ -101,8 +165,8 @@ export default function ContactProperty() {
               alt='imagen de perfil'
             />
             <h2>
-              {propertyInfo.city
-                ? `Vivienda en ${propertyInfo.city}`
+              {property.city
+                ? `Vivienda en ${property.city}`
                 : 'Vivienda en alquiler'}
             </h2>
           </div>

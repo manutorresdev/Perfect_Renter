@@ -15,19 +15,19 @@ const acceptBooking = async (req, res, next) => {
 
   try {
     connection = await getDB();
-
     // Obtenemos el codigo de reserva de los path params.
     const { bookingCode } = req.params;
 
+    console.log('Accept booking: ', bookingCode);
     // Obtenemos el id del usuario que acepta. Debe ser el del casero
-    const { idUser: idTenant } = req.userAuth;
+    const { idUser: idRenter } = req.userAuth;
 
     //Verificamos que la propiedad y el inquilino existen
     const [property] = await connection.query(
       `SELECT b.idProperty, b.idRenter
       FROM bookings b
-      WHERE bookingCode = ? AND idTenant = ?`,
-      [bookingCode, idTenant]
+      WHERE bookingCode = ? AND idRenter = ?`,
+      [bookingCode, idRenter]
     );
 
     // si la propiedad no existe enviamos error
@@ -58,17 +58,18 @@ const acceptBooking = async (req, res, next) => {
     }
     // Una vez aceptada enviammos email a ambos usuarios
 
-    // Email para el inquilino
+    //Email para el dueño que aceptó la reserva
     let emailBody = `
     <table>
-      <tbody>
-        <td>
-          Hola ${booking[0].RenterName},
-          la reserva de la vivienda de ${booking[0].city} ha sido aceptada.
-        </td>
-      </tbody>
+    <tbody>
+    <td>
+    Hola ${booking[0].RenterName},
+    la reserva de la vivienda de ${booking[0].city} ha sido aceptada.
+    </td>
+    </tbody>
     </table>
     `;
+
 
     // Enviamos el correo al inquilino
     if (process.env.NODE_ENV !== 'test') {
@@ -79,15 +80,15 @@ const acceptBooking = async (req, res, next) => {
       });
     }
 
-    //Email para el dueño que aceptó la reserva
+    // Email para el inquilino
     emailBody = `
     <table>
-      <tbody>
-        <td>
-          Hola ${booking[0].TenantName},
-          la reserva de la vivienda de ${booking[0].city} ha sido realizada.
-        </td>
-      </tbody>
+    <tbody>
+    <td>
+    Hola ${booking[0].TenantName},
+    la reserva de la vivienda de ${booking[0].city} ha sido realizada.
+    </td>
+    </tbody>
     </table>
     `;
 
@@ -99,6 +100,7 @@ const acceptBooking = async (req, res, next) => {
         body: emailBody,
       });
     }
+
     // Aceptada la reserva, cambiamos el estado de la reserva de "petición" a "reservado"
     await connection.query(
       `
