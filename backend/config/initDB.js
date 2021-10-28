@@ -89,6 +89,7 @@ async function main() {
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
             city VARCHAR(100),
+            description VARCHAR(3000),
             province VARCHAR(100),
             address VARCHAR(100),
             zipCode VARCHAR(5),

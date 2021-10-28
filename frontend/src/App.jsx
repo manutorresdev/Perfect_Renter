@@ -25,6 +25,7 @@ import Profile from './Components/Users/Profile';
 import VerifyUser from './Components/Users/VerifyUser';
 import Filters from './Components/Properties/Filters';
 import PropertyInfo from './Components/Properties/PropertyInfo';
+import VoteForm from './Components/ToDo/VoteForm';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
@@ -71,6 +72,9 @@ function App() {
           </Route>
           <Route path='/filters'>
             <Filters />
+          </Route>
+          <Route path='/voteForm'>
+            <VoteForm />
           </Route>
         </Switch>
         <Footer token={Token} setToken={setToken} />

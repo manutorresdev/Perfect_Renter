@@ -70,7 +70,7 @@ export default function NavBar({ token, setToken }) {
         )}
       </ul>
       <div
-        className='block sm:hidden absolute top-6 right-4 text-3xl cursor-pointer'
+        className='text-gray-300 block sm:hidden absolute top-6 right-4 text-3xl cursor-pointer'
         id='menu-bar'
       >
         <FaIcons.FaBars onClick={showMenu} />
