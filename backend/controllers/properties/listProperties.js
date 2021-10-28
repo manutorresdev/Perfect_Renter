@@ -15,19 +15,29 @@ const listProperties = async (req, res, next) => {
     connection = await getDB();
 
     // Obtenemos los queryParams en caso de que haya.
-    const {
-      order,
-      direction,
-      filtCity,
-      filtProvince,
-      filtType,
-      filtPmax,
-      filtPmin,
-      filtRooms,
-      filtGarage,
-      filtToilets,
-      filtMts,
+    let {
+      orden: order,
+      direccion: direction,
+      ciudad: filtCity,
+      provincia: filtProvince,
+      tipo: filtType,
+      pMax: filtPmax,
+      pMin: filtPmin,
+      hab: filtRooms,
+      garaje: filtGarage,
+      baños: filtToilets,
+      m2: filtMts,
     } = req.query;
+
+    // Cambiamos valores para encajar con backend.
+    if (order === 'precio') {
+      order = 'price';
+    } else if (order === 'creacion') {
+      order = 'createdAt';
+    } else if (order === 'valoraciones') {
+      order = 'votes';
+    }
+
     // Establecemos opciones de validación de orden.
     const validOrderOptions = ['votes', 'createdAt', 'price'];
 
@@ -49,12 +59,11 @@ const listProperties = async (req, res, next) => {
     const pmax = filtPmax ? filtPmax : 10000;
     const pmin = filtPmin ? filtPmin : 0;
     const rooms = filtRooms ? filtRooms : 1;
-    const garage = filtGarage ? filtGarage : 0;
+    const garage = filtGarage ? filtGarage : '%';
     const toilets = filtToilets ? filtToilets : 1;
     const mts = filtMts ? filtMts : 0;
 
     let properties;
-    console.log(req.params.idUser);
     /***** Verificamos si la peticion viene de un usuario Propietario *****/
     if (req.params.idUser) {
       // Obtenemos el id del usuario que hace la peticion.
@@ -64,6 +73,7 @@ const listProperties = async (req, res, next) => {
         `
       SELECT properties.idProperty,
       properties.idUser,
+      description,
       city,
       province,
       address,
@@ -81,12 +91,16 @@ const listProperties = async (req, res, next) => {
       energyCertificate,
       availabilityDate,
       price,
-      state, AVG(IFNULL(property_vote.voteValue, 0)) AS votes, properties.createdAt
+      state,
+      AVG(IFNULL(property_vote.voteValue, 0)) AS votes,
+      properties.createdAt
       FROM properties
       LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
       WHERE properties.idUser = ?
       group by properties.idProperty
-      ORDER BY properties.${orderBy} ${orderDirection}
+      ORDER BY ${
+        order === 'votes' ? 'votes' : `properties.${orderBy}`
+      } ${orderDirection}
       `,
         [idUser]
       );
@@ -95,8 +109,10 @@ const listProperties = async (req, res, next) => {
       // Obtenemos los datos de todas las propiedades
 
       [properties] = await connection.query(
-        `SELECT properties.idProperty,
+        `
+        SELECT properties.idProperty,
           properties.idUser,
+          description,
           city,
           province,
           address,
@@ -114,18 +130,21 @@ const listProperties = async (req, res, next) => {
           energyCertificate,
           availabilityDate,
           price,
-          state, AVG(IFNULL(property_vote.voteValue, 0)) AS votes, properties.createdAt
+          state,
+          AVG(IFNULL(property_vote.voteValue, 0)) AS votes,
+          properties.createdAt
           FROM properties
           LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
-          WHERE city LIKE ? AND province LIKE ? AND "type" LIKE ? AND (price BETWEEN ?
-          AND ?) AND rooms >= ? AND garage >= ? AND toilets >= ?  AND mts >= ?
+          WHERE city LIKE ? AND province LIKE ? AND type LIKE ? AND (price BETWEEN ?
+          AND ?) AND rooms >= ? AND garage = ? AND toilets >= ?  AND mts >= ?
           group by properties.idProperty
-          ORDER BY properties.${orderBy} ${orderDirection}
+          ORDER BY  ${
+            order === 'votes' ? 'votes' : `properties.${orderBy}`
+          } ${orderDirection}
           `,
         [city, province, type, pmin, pmax, rooms, garage, toilets, mts]
       );
     }
-    console.log(properties);
     //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
     if (properties.length === 0) {
       res.send({

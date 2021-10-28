@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const mysql = require('mysql2');
 const path = require('path');
 
-const { MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, NODE_ENV } = process.env;
+const { NODE_ENV, MYSQL_DATABASE, MYSQL_DATABASE_TEST } = process.env;
 let connection;
 
 /**
@@ -89,6 +89,7 @@ async function main() {
             idUser INT NOT NULL,
             FOREIGN KEY (idUser) REFERENCES users(idUser) ON DELETE CASCADE,
             city VARCHAR(100),
+            description VARCHAR(3000),
             province VARCHAR(100),
             address VARCHAR(100),
             zipCode VARCHAR(5),
@@ -205,7 +206,7 @@ async function main() {
       const city = faker.address.cityName();
       const birthDate = format(faker.datatype.datetime(), 'yyyy-MM-dd');
 
-      // Fecha de cración.
+      // Fecha de creación.
       const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
 
       await connection.query(`
@@ -213,8 +214,25 @@ async function main() {
         VALUES ( "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
     `);
     }
-
     console.log('Usuarios creados');
+
+    // Borramos los eventos de la base de datos en caso de que haya.
+    const [events] = await connection.query(`
+        SELECT * FROM INFORMATION_SCHEMA.EVENTS WHERE EVENT_SCHEMA ="${
+          NODE_ENV === 'test' ? MYSQL_DATABASE_TEST : MYSQL_DATABASE
+        }";
+        `);
+    events.forEach(async (event) => {
+      await connection.query(
+        `
+      DROP EVENT ${event.EVENT_NAME};
+      `
+      );
+    });
+    // Habilitamos la creación de eventos en el servidor.
+    await connection.query(`
+        SET GLOBAL event_scheduler = ON;
+        `);
   } catch (error) {
     console.error(error.message);
     if (error.message === "Unknown database 'perfect_renter'") {

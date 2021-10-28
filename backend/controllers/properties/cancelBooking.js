@@ -28,11 +28,14 @@ const cancelBooking = async (req, res, next) => {
       throw error;
     }
 
+
     // const date = format(booking[0].modifiedAt, 'dd/MM/yyyy');
     // const time = format(booking[0].modifiedAt, 'HH:mm:ss');
 
     // Comprobamos que la reserva no esté en cancelada.
     if (booking[0].state.includes('cancelada')) {
+     // const date = format(booking[0].modifiedAt, 'd/MM/yyyy');
+     // const time = format(booking[0].modifiedAt, 'HH:mm:ss');
       const error = new Error(
         `La reserva ya ha fue cancelada el ${booking[0].modifiedAt}.`
       );
@@ -44,15 +47,15 @@ const cancelBooking = async (req, res, next) => {
     // INQUILINO
     const [userRenter] = await connection.query(
       `
-          SELECT name, email FROM users WHERE idUser = ?
-    `,
+        SELECT name, email FROM users WHERE idUser = ?
+        `,
       [booking[0].idRenter]
     );
     // CASERO
     const [userTenant] = await connection.query(
       `
           SELECT name, email FROM users WHERE idUser = ?
-    `,
+          `,
       [booking[0].idTenant]
     );
 
@@ -66,18 +69,18 @@ const cancelBooking = async (req, res, next) => {
     if (idUser === booking[0].idRenter) {
       await connection.query(
         `
-            UPDATE bookings SET state = "cancelada-renter", modifiedAt = ? WHERE bookingCode = ?
-        `,
+              UPDATE bookings SET state = "cancelada-renter", modifiedAt = ? WHERE bookingCode = ?
+              `,
         [modifiedAt, bookingCode]
       );
 
       emailBodyRenter = `
-      <table>
-        <thead>
-            <th>Confirmación de Cancelación Reserva ${booking[0].bookingCode}</th>
-        </thead>
-        <tbody>
-            <td>
+              <table>
+              <thead>
+              <th>Confirmación de Cancelación Reserva ${booking[0].bookingCode}</th>
+              </thead>
+              <tbody>
+              <td>
               Hola ${userRenter[0].name}
               Se ha registrado correctamente la cancelación de la reserva de ${userTenant[0].name}.
             </td>
@@ -172,16 +175,18 @@ const cancelBooking = async (req, res, next) => {
       throw error;
     }
 
-    await sendMail({
-      to: userRenter[0].email,
-      subject: 'Cancelación de reserva',
-      body: emailBodyRenter,
-    });
-    await sendMail({
-      to: userTenant[0].email,
-      subject: 'Cancelación de reserva',
-      body: emailBodyTenant,
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: userRenter[0].email,
+        subject: 'Cancelación de reserva',
+        body: emailBodyRenter,
+      });
+      await sendMail({
+        to: userTenant[0].email,
+        subject: 'Cancelación de reserva',
+        body: emailBodyTenant,
+      });
+    }
 
     res.send({
       status: 'ok',

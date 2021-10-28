@@ -189,9 +189,19 @@ const newProperty = async (req, res, next) => {
         );
       }
     }
+
+    // Recuperamos el ID de la propiedad recién creada.
+    const [[property]] = await connection.query(
+      `
+    SELECT idProperty FROM properties WHERE idUser = ? AND createdAt = ? AND flat = ?
+    `,
+      [userId, createdAt, flat]
+    );
+
     res.send({
       status: 'ok',
       message: 'El piso se ha creado correctamente',
+      property: property.idProperty,
     });
   } catch (error) {
     next(error);

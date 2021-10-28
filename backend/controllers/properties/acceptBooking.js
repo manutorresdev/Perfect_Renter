@@ -1,4 +1,5 @@
 // @ts-nocheck
+const { format } = require('date-fns');
 const getDB = require('../../config/getDB');
 const { sendMail, formatDate } = require('../../libs/helpers');
 /**
@@ -39,7 +40,7 @@ const acceptBooking = async (req, res, next) => {
     // Comprobamos que la reserva a validar, está pendiente de aceptar.
     const [booking] = await connection.query(
       `
-      SELECT idBooking, b.state, properties.city, u1.email as RenterEmail, u1.name as RenterName, u2.email as TenantEmail, u2.name AS TenantName
+      SELECT b.startBookingDate, b.endBookingDate, idBooking, b.state, properties.city, u1.email as RenterEmail, u1.name as RenterName, u2.email as TenantEmail, u2.name AS TenantName
       FROM bookings b
       LEFT JOIN properties ON b.idProperty = properties.idProperty
       LEFT JOIN users as u1 ON b.idRenter = u1.idUser
@@ -69,12 +70,15 @@ const acceptBooking = async (req, res, next) => {
     </table>
     `;
 
-    // Enviamos el correo al dueño de la viviendo
-    await sendMail({
-      to: booking[0].RenterEmail,
-      subject: 'Reserva de alquiler',
-      body: emailBody,
-    });
+
+    // Enviamos el correo al inquilino
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: booking[0].RenterEmail,
+        subject: 'Reserva de alquiler',
+        body: emailBody,
+      });
+    }
 
     // Email para el inquilino
     emailBody = `
@@ -88,17 +92,42 @@ const acceptBooking = async (req, res, next) => {
     </table>
     `;
 
-    // Enviamos el correo al inquilino
-    await sendMail({
-      to: booking[0].TenantEmail,
-      subject: 'Reserva de alquiler',
-      body: emailBody,
-    });
+    // Enviamos el correo al dueño de la vivienda
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: booking[0].TenantEmail,
+        subject: 'Reserva de alquiler',
+        body: emailBody,
+      });
+    }
 
     // Aceptada la reserva, cambiamos el estado de la reserva de "petición" a "reservado"
     await connection.query(
       `
     UPDATE bookings SET state = "reservado", modifiedAt = ? WHERE bookingCode = ?
+    `,
+      [formatDate(new Date()), bookingCode]
+    );
+
+    // Encargamos a SQL de hacer el cambio de "reservado" a "alquilado"
+    await connection.query(
+      `
+    CREATE EVENT ${bookingCode}_event_start
+    ON SCHEDULE AT "${format(booking[0].startBookingDate, 'yyyy-MM-dd')}"
+    DO
+    UPDATE bookings SET state = "alquilada", modifiedAt = ? WHERE bookingCode = ?
+    `,
+      [formatDate(new Date()), bookingCode]
+    );
+
+    // // Encargamos a SQL de hacer el cambio de "alquilado" a "finalizado"
+
+    await connection.query(
+      `
+    CREATE EVENT ${bookingCode}_event_end
+    ON SCHEDULE AT "${format(booking[0].endBookingDate, 'yyyy-MM-dd')}"
+    DO
+    UPDATE bookings SET state = "finalizado", modifiedAt = ? WHERE bookingCode = ?
     `,
       [formatDate(new Date()), bookingCode]
     );

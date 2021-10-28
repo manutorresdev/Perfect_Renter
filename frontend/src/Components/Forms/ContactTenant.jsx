@@ -1,20 +1,17 @@
-import React, { useContext } from 'react';
-import { useForm } from 'react-hook-form';
+import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
-import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 import { FaPlus } from 'react-icons/fa';
 
-export default function ContactTenant({ userInfo, setOverlay }) {
-  const [Token] = useContext(TokenContext);
-  console.log('info de usuario overlay', userInfo);
+export default function ContactTenant({ userInfo, setOverlay, Token }) {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm();
-  const formFunctions = { register, errors };
 
   function onSubmit(body, e) {
     e.preventDefault();
@@ -53,18 +50,69 @@ export default function ContactTenant({ userInfo, setOverlay }) {
             <label>
               <div className='select-none'> Nombre Completo*</div>
 
-              <FirstName
-                {...formFunctions}
-                placeholder='Escribe aquí tu nombre....'
+              <Controller
+                name='name'
+                control={control}
+                rules={{
+                  required: 'Debes escribir un nombre.',
+                  pattern: {
+                    value:
+                      /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                    message:
+                      'El nombre no puede contener carácteres especiales ni números.',
+                  },
+                  minLength: {
+                    value: 3,
+                    message:
+                      'El nombre debe contener como mínimo 3 carácteres.',
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: 'El nombre no puede tener más de 30 carácteres.',
+                  },
+                }}
+                render={({ field: { onChange, name, ref } }) => {
+                  return (
+                    <FirstName
+                      onChange={onChange}
+                      inputRef={ref}
+                      name={name}
+                      className={''}
+                    />
+                  );
+                }}
               />
+              {errors.name && (
+                <p className='text-red-500'>{errors.name.message}</p>
+              )}
             </label>
             <label>
               <div className='select-none'> Correo electrónico*</div>
-              <Email
-                className='p-2'
-                {...formFunctions}
-                placeholder='Escribe aquí tu email....'
+              <Controller
+                name='email'
+                control={control}
+                rules={{
+                  required: 'Debes escribir un email.',
+                  maxLength: {
+                    value: 200,
+                    message:
+                      'El email no puede contener más de 200 carácteres.',
+                  },
+                }}
+                render={({ field: { onChange, name, ref } }) => {
+                  return (
+                    <Email
+                      onChange={onChange}
+                      inputRef={ref}
+                      name={name}
+                      className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full'
+                    />
+                  );
+                }}
               />
+              {errors.email && (
+                <p className='text-red-500'>{errors.email.message}</p>
+              )}
             </label>
             <label>
               <div className='select-none'>Escoge el alquiler a ofrecer:</div>

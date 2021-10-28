@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -24,28 +24,28 @@ import { TokenContext } from './Helpers/Hooks/TokenProvider';
 import Footer from './Components/Global/Footer';
 import UserProfile from './Components/Users/UserProfile';
 import Profile from './Components/Users/Profile';
-import Property from './Components/Properties/Property';
+import VerifyUser from './Components/Users/VerifyUser';
+import Filters from './Components/Properties/Filters';
+import PropertyInfo from './Components/Properties/PropertyInfo';
+import VoteForm from './Components/ToDo/VoteForm';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
   return (
     <>
       <Router>
-        <NavBar token={Token} />
+        <NavBar token={Token} setToken={setToken} />
         <Switch>
           <Route path='/register'>
             {Token ? <Redirect to='/' /> : <Register token={Token} />}
           </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
-
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route exact path='/alquileres/:idProperty' component={Property} />
-          <Route exact path='/alquileres'>
-            <Properties />
-          </Route>
+          <Route path='/alquileres/:idProperty' component={PropertyInfo} />
+          <Route path='/alquileres' component={Properties} />
           <Route
             exact
             path='/alquileres/:bookingCode/accept'
@@ -67,15 +67,24 @@ function App() {
             path='/recuperar/:idUser/:recoverCode'
             component={ResetPass}
           />
+          <Route
+            exact
+            path='/verificar/:registrationCode'
+            component={VerifyUser}
+          />
           <Route path='/recuperar'>
             <RecoverPass />
           </Route>
           <Route path='/perfil'>
-            {Token ? <Profile token={Token} /> : <Redirect to='/' />}
+            {Token ? (
+              <Profile setToken={setToken} token={Token} />
+            ) : (
+              <Redirect to='/' />
+            )}
           </Route>
-          {/* <Route path='/editar'>
-            <Register token={Token} /> : <Redirect to='/' />
-          </Route> */}
+          <Route path='/filters'>
+            <Filters />
+          </Route>
         </Switch>
         <Footer token={Token} setToken={setToken} />
       </Router>
