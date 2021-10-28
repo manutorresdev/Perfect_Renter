@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { del, get, parseJwt } from '../../Helpers/Api';
-import { FaCamera, FaPencilAlt, FaStar, FaTrash } from 'react-icons/fa';
+import { FaCamera, FaPencilAlt, FaTrash } from 'react-icons/fa';
 import Register from '../Forms/Register';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';

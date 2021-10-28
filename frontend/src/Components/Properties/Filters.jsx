@@ -37,6 +37,9 @@ export default function Filters({ setOverlay, Overlay }) {
       })
       .join('&');
 
+    console.log(history.location);
+    if (history) {
+    }
     history.push('?' + queryString);
 
     if (window.innerWidth <= 650) {
@@ -87,20 +90,12 @@ export default function Filters({ setOverlay, Overlay }) {
             <label className='dispDate'>
               <div>Fecha de entrada:</div>
               {/* {A GESTIONAR} */}
-              <input
-                type='date'
-                name='dispDate'
-                className='border border-black'
-              />
+              <input type='date' name='dispDate' className='' />
             </label>
             <label className='dispDate'>
               <div>Fecha de salida:</div>
               {/* {A GESTIONAR} */}
-              <input
-                type='date'
-                name='dispDate'
-                className='border border-black'
-              />
+              <input type='date' name='dispDate' className='' />
             </label>
             <div>Ciudad:</div>
             <label className='city'>
@@ -120,7 +115,7 @@ export default function Filters({ setOverlay, Overlay }) {
                 })}
                 type='text'
                 name='ciudad'
-                className='border border-black'
+                className=''
                 placeholder='Ciudad...'
               />
               {errors.city && (
@@ -145,7 +140,7 @@ export default function Filters({ setOverlay, Overlay }) {
                 })}
                 type='text'
                 name='provincia'
-                className='border border-black'
+                className=''
                 placeholder='Provincia...'
               />
             </label>
@@ -198,7 +193,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   {...register('pMin')}
                   type='number'
                   name='pMin'
-                  className='border border-black'
+                  className=''
                   placeholder='Mínimo'
                 />
                 €
@@ -211,7 +206,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   max='10000'
                   type='number'
                   name='pMax'
-                  className='border border-black'
+                  className=''
                   placeholder='Máximo'
                 />
                 €
@@ -225,7 +220,7 @@ export default function Filters({ setOverlay, Overlay }) {
                 name='hab'
                 min='1'
                 max='10'
-                className='border border-black '
+                className=''
                 placeholder='Habitaciones'
               />
             </label>
@@ -235,7 +230,7 @@ export default function Filters({ setOverlay, Overlay }) {
                 {...register('garaje')}
                 type='checkbox'
                 name='garaje'
-                className='border border-black'
+                className=''
                 placeholder='Garaje...'
               />
             </label>
@@ -247,7 +242,7 @@ export default function Filters({ setOverlay, Overlay }) {
                 max='10'
                 type='number'
                 name='baños'
-                className='border border-black'
+                className=''
                 placeholder='Baños...'
               />
             </label>
@@ -259,15 +254,15 @@ export default function Filters({ setOverlay, Overlay }) {
                 max='1000'
                 type='number'
                 name='m2'
-                className='border border-black'
+                className=''
                 placeholder='Metros...'
               />
             </label>
-            <div className='flex justify-center items-center self-center sticky bottom-0 w-full h-28 bg-white bg-transparent'>
+            <div className='flex justify-center items-center self-center sticky bottom-0 w-full h-28 bg-white sm:bg-transparent'>
               <input
                 type='submit'
                 value='Aplicar filtros'
-                className='btn-submit  text-xl bg-none p- border-yellow-400 border-2 h-2/4 hover:bg-principal-1 hover:border-white hover:text-gray-600 duration-300'
+                className='btn-submit  text-xl bg-none p-2 border-yellow-400 border-2 h-2/4 hover:bg-principal-1 hover:border-white hover:text-gray-600 duration-300'
               />
             </div>
           </form>
