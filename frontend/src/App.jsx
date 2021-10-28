@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -17,7 +17,7 @@ import ManageBooking from './Components/Properties/ManageBooking';
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
 import ContactUs from './Components/Forms/ContactUs';
-import ContactProperty from './Components/Forms/ContactProperty';
+// import ContactProperty from './Components/Forms/ContactProperty';
 import RecoverPass from './Components/Forms/RecoverPass';
 import ResetPass from './Components/Forms/ResetPass';
 import { TokenContext } from './Helpers/Hooks/TokenProvider';
@@ -28,14 +28,13 @@ import Property from './Components/Properties/Property';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
-
   return (
     <>
       <Router>
         <NavBar token={Token} />
         <Switch>
           <Route path='/register'>
-            {Token ? <Redirect to='/' /> : <Register />}
+            {Token ? <Redirect to='/' /> : <Register token={Token} />}
           </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
@@ -74,6 +73,9 @@ function App() {
           <Route path='/perfil'>
             {Token ? <Profile token={Token} /> : <Redirect to='/' />}
           </Route>
+          {/* <Route path='/editar'>
+            <Register token={Token} /> : <Redirect to='/' />
+          </Route> */}
         </Switch>
         <Footer token={Token} setToken={setToken} />
       </Router>

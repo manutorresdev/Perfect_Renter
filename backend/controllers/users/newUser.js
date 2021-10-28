@@ -18,7 +18,6 @@ const { userSchema } = require('../../models/userSchema');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
  */
 const newUser = async (req, res, next) => {
-  console.log('estoy funcionando');
   let connection;
 
   try {
@@ -92,20 +91,23 @@ const newUser = async (req, res, next) => {
       </table>
     `;
 
-    try {
-      // Enviamos el mensaje al correo del usuario.
-      await sendMail({
-        to: email,
-        subject: 'Activa tu usuario de Perfect Renter',
-        body: emailBody,
-      });
-    } catch (error) {
-      throw new Error('Error enviando el mensaje de verificación');
+    // Enviamos el mensaje al correo del usuario.
+    if (process.env.NODE_ENV !== 'test') {
+      try {
+        await sendMail({
+          to: email,
+          subject: 'Activa tu usuario de Perfect Renter',
+          body: emailBody,
+        });
+      } catch (error) {
+        throw new Error('Error enviando el mensaje de verificación');
+      }
     }
 
     res.send({
       status: 'ok',
       message: 'Usuario registrado, comprueba tu email para activarlo',
+      registrationCode,
     });
   } catch (error) {
     next(error);

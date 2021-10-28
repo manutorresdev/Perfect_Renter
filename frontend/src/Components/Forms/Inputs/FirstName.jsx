@@ -3,13 +3,13 @@ import React from 'react';
 export default function FirstName({
   register,
   errors,
-  loggedUserName,
+  className,
   placeholder,
 }) {
   return (
     <>
       <input
-        className='p-2'
+        className={className}
         type='text'
         name='name'
         placeholder={placeholder ?? 'First Name*'}

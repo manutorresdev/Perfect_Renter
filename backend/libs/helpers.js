@@ -145,7 +145,6 @@ async function deletePhoto(photoName) {
  * @returns {string} Devuelve un UUID
  */
 function generateRandomString(length) {
-  console.log(`Length del randomString ${length}`);
   return crypto.randomBytes(length).toString('hex');
 }
 

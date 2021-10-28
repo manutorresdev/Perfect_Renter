@@ -39,7 +39,10 @@ export default function Login() {
           <h2>LOGIN</h2>
         </div>
         <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
-          <Email className='p-2' {...formFunctions} />
+          <Email
+            className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full'
+            {...formFunctions}
+          />
           <Password {...formFunctions} />
           {Error ? <div>{Error}</div> : ''}
           <input

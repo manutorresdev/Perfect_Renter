@@ -94,14 +94,17 @@ const editUserPass = async (req, res, next) => {
     `;
 
     // Envío de email.
-    await sendMail({
-      to: user[0].email,
-      subject: 'Cambio de contraseña Perfect Renter',
-      body: emailBody,
-    });
+    if (process.env.NODE_ENV !== 'test') {
+      await sendMail({
+        to: user[0].email,
+        subject: 'Cambio de contraseña Perfect Renter',
+        body: emailBody,
+      });
+    }
 
     res.send({
       status: 'ok',
+      regCode,
       message:
         'Contraseña cambiada con éxito. Confirma el cambio haciendo click en el enlace que te hemos enviado al correo electónico.',
     });
