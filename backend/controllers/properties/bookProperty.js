@@ -46,7 +46,7 @@ const bookProperty = async (req, res, next) => {
       `
         SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ? AND startBookingDate = ? AND endBookingDate = ?
         `,
-      [idReqUser, property[0].idUser, idProperty, startDate, endDate]
+      [property[0].idUser, idReqUser, idProperty, startDate, endDate]
     );
 
     // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
@@ -141,7 +141,6 @@ const bookProperty = async (req, res, next) => {
 
       // Generamos el codigo de reserva,
       const bookingCode = generateRandomString(10);
-      console.log(`Este es el length del random ${bookingCode.length}`);
       // Definimos el body del email
       const emailBody = `
     <table>
@@ -186,11 +185,13 @@ const bookProperty = async (req, res, next) => {
     `;
 
       // Enviamos el correo del usuario que contacta, al usuario a contactar.
-      await sendMail({
-        to: property[0].email,
-        subject: 'Solicitud de alquiler',
-        body: emailBody,
-      });
+      if (process.env.NODE_ENV !== 'test') {
+        await sendMail({
+          to: property[0].email,
+          subject: 'Solicitud de alquiler',
+          body: emailBody,
+        });
+      }
 
       // Agregamos el código de reserva en la base de datos junto a la posible reserva.
       await connection.query(
@@ -211,6 +212,7 @@ const bookProperty = async (req, res, next) => {
       res.send({
         status: 'ok',
         message: 'Correo electrónico enviado con éxito.',
+        bookingCode,
       });
     }
   } catch (error) {

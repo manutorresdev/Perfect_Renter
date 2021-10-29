@@ -18,7 +18,6 @@ const acceptBooking = async (req, res, next) => {
     // Obtenemos el codigo de reserva de los path params.
     const { bookingCode } = req.params;
 
-    console.log('Accept booking: ', bookingCode);
     // Obtenemos el id del usuario que acepta. Debe ser el del casero
     const { idUser: idRenter } = req.userAuth;
 
@@ -69,7 +68,6 @@ const acceptBooking = async (req, res, next) => {
     </tbody>
     </table>
     `;
-
 
     // Enviamos el correo al inquilino
     if (process.env.NODE_ENV !== 'test') {

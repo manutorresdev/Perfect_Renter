@@ -50,7 +50,7 @@ export default function Register({ Token, usuario, setOverlay }) {
     e.preventDefault();
 
     post(
-      'http://localhost:4000/users',
+      'http://192.168.5.103:4000/users',
       body,
       (data) => {
         console.log('Success');
@@ -70,7 +70,7 @@ export default function Register({ Token, usuario, setOverlay }) {
     e.preventDefault();
     console.log(body);
     put(
-      `http://localhost:4000/users/${usuario.idUser}`,
+      `http://192.168.5.103:4000/users/${usuario.idUser}`,
       body,
       (data) => {
         console.log('Success');

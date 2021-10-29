@@ -13,7 +13,7 @@ export default function Profile({ token, setToken }) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/users/${user.idUser}`,
+      `http://192.168.5.103:4000/users/${user.idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -25,7 +25,7 @@ export default function Profile({ token, setToken }) {
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
       del(
-        `http://localhost:4000/users/${user.idUser}`,
+        `http://192.168.5.103:4000/users/${user.idUser}`,
         body,
         (data) => {
           setToken('');

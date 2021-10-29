@@ -28,7 +28,7 @@ export default function ResetPass({ match }) {
               setError(true);
             } else {
               put(
-                `http://localhost:4000/users/password/recover/${match.params.idUser}/${match.params.recoverCode}`,
+                `http://192.168.5.103:4000/users/password/recover/${match.params.idUser}/${match.params.recoverCode}`,
                 { password: data.password },
                 (data) => {
                   console.log(data);

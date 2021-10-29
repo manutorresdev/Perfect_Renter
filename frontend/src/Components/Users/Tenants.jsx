@@ -14,7 +14,7 @@ export default function UsersList() {
   // Necesario estar logueado
   useEffect(() => {
     get(
-      'http://localhost:4000/users',
+      'http://192.168.5.103:4000/users',
       (data) => {
         setUsers(data.users);
         setLoaded(true);

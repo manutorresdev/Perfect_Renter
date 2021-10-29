@@ -25,7 +25,7 @@ export default function RegisterEdit() {
     console.log(body);
 
     post(
-      'http://localhost:4000/users',
+      'http://192.168.5.103:4000/users',
       body,
       (data) => {
         console.log('Success');

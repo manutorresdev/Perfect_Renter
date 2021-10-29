@@ -22,6 +22,7 @@ module.exports = {
       },
       textColor: {
         'principal-1': 'rgba(237,203,84,1)',
+        'principal-gris': 'rgba(49, 47, 47, 0.84)',
       },
       height: {
         'max-content': 'max-content',

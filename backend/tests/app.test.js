@@ -229,7 +229,7 @@ describe('User POST Endpoints', () => {
     const { id: idUser, token: token3 } = await getToken3();
 
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token3 })
       .send({
         comentarios:
@@ -237,6 +237,9 @@ describe('User POST Endpoints', () => {
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
+
+    console.log('\x1b[43m########\x1b[30m', idProperty, 'PROPIEDAD');
+    console.log('\x1b[43m########\x1b[30m', idUser, 'INQUILINO');
 
     const res = await api
       .post(`/users/${idUser}/votes`)
@@ -283,7 +286,7 @@ describe('User POST Endpoints', () => {
     const { id: idUser, token: token3 } = await getToken3();
 
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token3 })
       .send({
         comentarios:
@@ -685,12 +688,10 @@ describe('Properties POST Endpoints', () => {
       price: '650',
       state: 'reservado',
     };
-
     const res = await api
       .post('/properties')
       .set({ authorization: token })
       .send(body);
-
     expect(res.statusCode).toEqual(200);
     expect(res.body.message).toBe('El piso se ha creado correctamente');
   });
@@ -717,12 +718,10 @@ describe('Properties POST Endpoints', () => {
       price: '650',
       state: 'reservado',
     };
-
     const res = await api
       .post('/properties')
       .set({ authorization: token })
       .send(body);
-
     expect(res.statusCode).toEqual(409);
     expect(res.body.message).toBe('Ya existe un piso con los datos ingresados');
   });
@@ -748,12 +747,10 @@ describe('Properties POST Endpoints', () => {
       price: '650',
       state: 'reservado',
     };
-
     const res = await api
       .post('/properties')
       .set({ authorization: '' })
       .send(body);
-
     expect(res.statusCode).toEqual(401);
     expect(res.body.message).toBe('Falta la cabecera de autorización');
   });
@@ -780,12 +777,10 @@ describe('Properties POST Endpoints', () => {
       price: '650',
       state: 'reservado',
     };
-
     const res = await api
       .post('/properties')
       .set({ authorization: token })
       .send(body);
-
     expect(res.statusCode).toEqual(400);
     expect(res.body.message).toBe('El piso no es válido.');
   });
@@ -793,12 +788,10 @@ describe('Properties POST Endpoints', () => {
   test('Subir un alquiler sin fotos y sin datos.', async () => {
     const token = await getToken();
     const body = {};
-
     const res = await api
       .post('/properties')
       .set({ authorization: token })
       .send(body);
-
     expect(res.statusCode).toEqual(400);
     expect(res.body.message).toBe('Se requiere una provincia.');
   });
@@ -806,12 +799,10 @@ describe('Properties POST Endpoints', () => {
   test('Subir foto a un alquiler.', async () => {
     const token = await getToken();
     const idProperty = await createProperty(2);
-
     const resUplPhoto = await api
       .post(`/properties/${idProperty}/photos`)
       .set({ authorization: token })
       .attach('photo', 'tests/images/piso1.jpeg');
-
     expect(resUplPhoto.statusCode).toEqual(200);
     expect(resUplPhoto.body.message).toBe('Las fotos han sido subidas');
   });
@@ -819,19 +810,16 @@ describe('Properties POST Endpoints', () => {
   test('Subir fotos a un alquiler.', async () => {
     const token = await getToken();
     const idProperty = await createProperty(3);
-
     const files = [
       'tests/images/piso1.jpeg',
       'tests/images/piso2.jpeg',
       'tests/images/piso3.jpeg',
     ];
-
     for (const file of files) {
       const resUplPhoto = await api
         .post(`/properties/${idProperty}/photos`)
         .set({ authorization: token })
         .attach('photo', file);
-
       expect(resUplPhoto.statusCode).toEqual(200);
       expect(resUplPhoto.body.message).toBe('Las fotos han sido subidas');
     }
@@ -857,7 +845,7 @@ describe('Properties POST Endpoints', () => {
     const token2 = await getToken2();
     const idProperty = await createProperty(4);
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios:
@@ -865,31 +853,27 @@ describe('Properties POST Endpoints', () => {
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
-
     expect(resBook.statusCode).toEqual(200);
     expect(resBook.body.message).toBe('Correo electrónico enviado con éxito.');
   });
 
   test('Hacer una reserva sin autorización', async () => {
     const idProperty = await createProperty(5);
-    const resBook = await api.post(`/properties/${idProperty}/contact`).send({
+    const resBook = await api.post(`/properties/${idProperty}/book`).send({
       comentarios:
         'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
       startDate: '2021-09-29',
       endDate: '2021-10-03',
     });
-
     expect(resBook.statusCode).toEqual(401);
     expect(resBook.body.message).toBe('Falta la cabecera de autorización');
   });
 
   test('Hacer una reserva ya existente.', async () => {
     const token2 = await getToken2();
-
     const idProperty = await createProperty(6);
-
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios:
@@ -899,7 +883,7 @@ describe('Properties POST Endpoints', () => {
       });
 
     const resBook2 = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios:
@@ -916,18 +900,15 @@ describe('Properties POST Endpoints', () => {
 
   test('Hacer una reserva sin algún dato obligatorio.', async () => {
     const token2 = await getToken2();
-
     const idProperty = await createProperty(7);
-
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios: '',
         startDate: '2021-09-29',
         endDate: '2021-10-03',
       });
-
     expect(resBook.statusCode).toEqual(400);
     expect(resBook.body.message).toBe(
       'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
@@ -939,7 +920,7 @@ describe('Properties POST Endpoints', () => {
     const token2 = await getToken2();
 
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios:
@@ -948,11 +929,12 @@ describe('Properties POST Endpoints', () => {
         endDate: '2022-10-29',
       });
 
+    console.log('\x1b[43m########\x1b[30m', resBook.body, 'RESPUESTA RESERVA');
+
     const res = await api
       .post(`/properties/${idProperty}/votes`)
       .set({ authorization: token2 })
       .send({ voteValue: 1, commentary: 'Hola que bonita casa tienes' });
-
     expect(res.statusCode).toEqual(200);
     expect(res.body.message).toBe('El voto ha sido creado con éxito.');
   });
@@ -960,12 +942,10 @@ describe('Properties POST Endpoints', () => {
   test('Usuario vota una propiedad en la que no ha tenido relación.', async () => {
     const idProperty = await createProperty(2, 'Zaragoza', 'Zaragoza');
     const token2 = await getToken2();
-
     const res = await api
       .post(`/properties/${idProperty}/votes`)
       .set({ authorization: token2 })
       .send({ voteValue: 1, commentary: 'Hola que bonita casa tienes' });
-
     expect(res.statusCode).toEqual(403);
     expect(res.body.message).toBe(
       'No puedes votar un alquiler en el que no has estado.'
@@ -975,9 +955,8 @@ describe('Properties POST Endpoints', () => {
   test('Usuario vota una propiedad con valores incorrectos.', async () => {
     const idProperty = await createProperty(3, 'Zaragoza', 'Zaragoza');
     const token2 = await getToken2();
-
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios:
@@ -985,12 +964,10 @@ describe('Properties POST Endpoints', () => {
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
-
     const res = await api
       .post(`/properties/${idProperty}/votes`)
       .set({ authorization: token2 })
       .send({ voteValue: 6, commentary: 'Hola que bonita casa tienes' });
-
     expect(res.statusCode).toEqual(400);
     expect(res.body.message).toBe(
       'El voto debe ser un valor entero entre 1 y 5.'
@@ -1003,135 +980,111 @@ describe('Properties GET Endpoints', () => {
     const token2 = await getToken2();
     const token = await getToken();
     const idProperty = await createProperty(8);
-
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios: 'Hola',
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
-
     const resAccept = await api
       .get(`/properties/${resBook.body.bookingCode}/accept`)
       .set({ authorization: token });
-
     expect(resAccept.statusCode).toEqual(200);
     expect(resAccept.body.message).toBe('Reserva aceptada');
   });
-
   test('Hacer una reserva y cancela la reserva el dueño de la propiedad', async () => {
     const token2 = await getToken2();
     const token = await getToken();
     const idProperty = await createProperty(9);
-
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios: 'Hola',
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
-
     const resCancel = await api
       .get(`/properties/${resBook.body.bookingCode}/cancel`)
       .set({ authorization: token });
-
     expect(resCancel.statusCode).toEqual(200);
     expect(resCancel.body.message).toBe(
       'La reserva ha sido cancelada Correctamente'
     );
   });
-
   test('Hacer una reserva y cancela la reserva el inquilino', async () => {
     const token2 = await getToken2();
     const token = await getToken();
     const idProperty = await createProperty(10);
-
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios: 'Hola',
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
-
     const resAccept = await api
       .get(`/properties/${resBook.body.bookingCode}/cancel`)
       .set({ authorization: token2 });
-
     expect(resAccept.statusCode).toEqual(200);
     expect(resAccept.body.message).toBe(
       'La reserva ha sido cancelada Correctamente'
     );
   });
-
   test('Hacer una reserva y dueño e inquilino la cancelan.', async () => {
     const token2 = await getToken2();
     const token = await getToken();
     const idProperty = await createProperty(11);
-
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios: 'Hola',
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
-
     const resCancelOwner = await api
       .get(`/properties/${resBook.body.bookingCode}/cancel`)
       .set({ authorization: token });
-
     const resCancelTenant = await api
       .get(`/properties/${resBook.body.bookingCode}/cancel`)
       .set({ authorization: token2 });
-
     expect(resCancelTenant.statusCode).toEqual(400);
     expect(resCancelTenant.body).toHaveProperty('message');
   });
-
   test('Obtener una lista de alquileres', async () => {
     const res = await api.get('/properties');
-
     expect(res.statusCode).toEqual(200);
     expect(res.body.properties).toHaveLength(res.body.properties.length);
   });
-
   test('Obtener una lista de alquileres con filtro de ciudad', async () => {
     const res = await api
       .get('/properties')
-      .query({ filtCity: 'Montornes_del_valles' });
+      .query({ ciudad: 'Montornes_del_valles' });
     expect(res.statusCode).toEqual(200);
     expect(res.body.properties).toHaveLength(10);
     expect(res.body.properties[0].city).toBe('Montornes del valles');
   });
-
   test('Obtener una lista de alquileres con filtro de provincia', async () => {
     const resProp = await createProperty(12, 'Girona', 'Girona');
-    const res = await api.get('/properties').query({ filtProvince: 'Girona' });
+    const res = await api.get('/properties').query({ provincia: 'Girona' });
     expect(res.statusCode).toEqual(200);
     expect(res.body.properties).toHaveLength(1);
   });
-
   test('Obtener una propiedad en concreto.', async () => {
     const resProp = await createProperty(1, 'Girona', 'Girona');
-
     const res = await api.get(`/properties/${resProp}`);
     expect(res.statusCode).toEqual(200);
     expect(res.body.property.idProperty).toEqual(resProp);
   });
-
   test('Obtener votos de una propiedad.', async () => {
     const idProperty = await createProperty(4, 'Zaragoza', 'Zaragoza');
     const token2 = await getToken2();
-
     const resBook = await api
-      .post(`/properties/${idProperty}/contact`)
+      .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios:
@@ -1139,16 +1092,13 @@ describe('Properties GET Endpoints', () => {
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
-
     const resVote = await api
       .post(`/properties/${idProperty}/votes`)
       .set({ authorization: token2 })
       .send({ voteValue: 1, commentary: 'Hola que bonita casa tienes' });
-
     const res = await api
       .get(`/properties/${idProperty}/votes`)
       .set({ authorization: token2 });
-
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('Valoraciones');
   });

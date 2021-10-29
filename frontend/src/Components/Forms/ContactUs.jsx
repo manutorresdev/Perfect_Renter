@@ -19,7 +19,7 @@ export default function ContactUs() {
     console.log(body);
 
     post(
-      'http://localhost:4000/contact',
+      'http://192.168.5.103:4000/contact',
       body,
       (data) => {
         console.log(data);

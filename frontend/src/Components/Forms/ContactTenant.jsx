@@ -17,7 +17,7 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
     e.preventDefault();
 
     post(
-      `http://localhost:4000/users/${userInfo.idUser}/contact`,
+      `http://192.168.5.103:4000/users/${userInfo.idUser}/contact`,
       body,
       (data) => {
         alert(data.message);

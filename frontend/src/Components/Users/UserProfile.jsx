@@ -14,7 +14,7 @@ export default function UserProfile({ match, property }) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/users/${match.params.idUser}`,
+      `http://192.168.5.103:4000/users/${match.params.idUser}`,
       (data) => {
         setUser(data.userInfo);
       },

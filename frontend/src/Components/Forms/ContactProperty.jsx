@@ -24,7 +24,7 @@ export default function ContactProperty({ form, property, setOverlay }) {
   function onSubmit(body, e) {
     e.preventDefault();
     post(
-      `http://localhost:4000/properties/${property.idProperty}/book`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
       body,
       (data) => {
         alert(data.message);
