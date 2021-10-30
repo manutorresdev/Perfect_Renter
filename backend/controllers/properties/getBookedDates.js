@@ -1,10 +1,6 @@
-const getDB = require('../config/getDB');
-const { uploadsDir } = require('../libs/helpers');
-
-const path = require('path');
-
+const getDB = require('../../config/getDB');
 /**
- * @module Global
+ * @module Entries
  */
 /**
  * Middleware para listar las reservas de una propiedad en concreto
@@ -14,41 +10,32 @@ const path = require('path');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  * @returns {Promise} Devuelve un objeto con los datos
  */
-const getPhoto = async (req, res, next) => {
+const getProperty = async (req, res, next) => {
   let connection;
   try {
     connection = await getDB();
 
     //Obtenemos el id de la propiedad.
-
-    const { pictureName } = req.params;
+    const { idProperty } = req.params;
 
     // Obtenemos el id del usuario que hace la request.
     const { idUser } = req.userAuth;
 
-    // Verificamos que la foto exista.
-    const [picture] = await connection.query(
+    //Obtenemos los datos de las reservas de dicha propiedad.
+    const [bookings] = await connection.query(
       `
       SELECT
-      avatar
-      FROM users WHERE avatar = ?
+      state, startBookingDate, endBookingDate
+      FROM bookings WHERE idProperty = ?
       `,
-      [pictureName]
+      [idProperty]
     );
 
-    // Si no existe lanzamos error
-
-    if (picture.length < 1) {
-      const error = new Error('La foto no existe.');
-      error.httpStatus = 404;
-      throw error;
-    }
-
-    const photo = path.join(uploadsDir, pictureName);
+    console.log('\x1b[43m########\x1b[30m', bookings);
 
     res.send({
       status: 'ok',
-      photo,
+      bookings,
     });
   } catch (error) {
     next(error);
@@ -57,4 +44,4 @@ const getPhoto = async (req, res, next) => {
   }
 };
 
-module.exports = getPhoto;
+module.exports = getProperty;

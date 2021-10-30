@@ -12,6 +12,7 @@ import NavBar from './Components/Global/NavBar';
 import Tenants from './Components/Users/Tenants';
 // Properties comps
 import Properties from './Components/Properties/Properties';
+import ManageBooking from './Components/Properties/ManageBooking';
 // Form comps
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
@@ -28,6 +29,7 @@ import PropertyInfo from './Components/Properties/PropertyInfo';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
+
   return (
     <>
       <Router>
@@ -41,8 +43,24 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/alquileres/:idProperty' component={PropertyInfo} />
-          <Route path='/alquileres' component={Properties} />
+          <Route
+            exact
+            path='/alquileres/:idProperty'
+            render={(routeProps) => (
+              <PropertyInfo {...routeProps} token={Token} />
+            )}
+          />
+          <Route exact path='/alquileres' component={Properties} />
+          <Route
+            exact
+            path='/alquileres/:bookingCode/accept'
+            component={ManageBooking}
+          />
+          <Route
+            exact
+            path='/alquileres/:bookingCode/cancel'
+            component={ManageBooking}
+          />
           <Route path='/contacto'>
             <ContactUs />
           </Route>
@@ -80,13 +98,3 @@ function App() {
 }
 
 export default App;
-
-// use perfect_renter;
-
-// select idBooking,startBookingDate, endBookingDate, state from bookings where idProperty = 1 AND state = 'alquilada'
-// OR idProperty = 1 AND state = 'peticion'
-// OR idProperty = 1 AND state = 'reservado';
-
-// INSERT INTO perfect_renter.bookings
-// (idRenter, idTenant, idProperty, createdAt, modifiedAt, startBookingDate, endBookingDate, state, bookingCode)
-// VALUES(12, 13, 1, CURRENT_DATE(), NULL,"2021-12-03" , "2021-12-01", 'reservado', "reserva1");

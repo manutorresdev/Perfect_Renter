@@ -13,7 +13,7 @@ export default function Tenant({ user, setOverlay }) {
 
   return (
     <article className='flex gap-2 text-xs '>
-      <div className='w-48 flex flex-col relative'>
+      <div className='w-48 flex flex-col relative items-center'>
         <Link to={`/inquilinos/${user.idUser}`}>
           <div className='font-bold ml-1'>{user.name}</div>
           <span className='ml-2'>{user.city}</span>
@@ -25,7 +25,10 @@ export default function Tenant({ user, setOverlay }) {
             }
             alt={'perfil ' + user.name + user.lastName}
           />
-          <div className='flex text-xs self-center' id='calification'>
+          <div
+            className='flex text-xs self-center text-principal-1 justify-center'
+            id='calification'
+          >
             <FaStar />
             <FaStar />
             <FaStar />

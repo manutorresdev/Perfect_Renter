@@ -28,12 +28,22 @@ const cancelBooking = async (req, res, next) => {
       throw error;
     }
 
+    // Obtenemos los datos de la vivienda de la reserva.
+    const [[property]] = await connection.query(
+      `
+    SELECT address,city FROM properties WHERE idProperty = ?
+    `,
+      [booking[0].idProperty]
+    );
+    // Definimos la fecha de modificación
+    const modifiedAt = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    // const date = format(booking[0].modifiedAt, 'dd/MM/yyyy');
+    // const time = format(booking[0].modifiedAt, 'HH:mm:ss');
+
     // Comprobamos que la reserva no esté en cancelada.
     if (booking[0].state.includes('cancelada')) {
-      const date = format(booking[0].modifiedAt, 'd/MM/yyyy');
-      const time = format(booking[0].modifiedAt, 'HH:mm:ss');
       const error = new Error(
-        `La reserva ya ha fue cancelada el ${date} a las ${time}.`
+        `La reserva ya ha fue cancelada el ${modifiedAt}.`
       );
       error.httpStatus = 400;
       throw error;
@@ -59,10 +69,6 @@ const cancelBooking = async (req, res, next) => {
     let emailBodyRenter;
     let emailBodyTenant;
 
-    // Definimos la fecha de modificación
-    const modifiedAt = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
-    const date = format(new Date(), 'd/MM/yyyy');
-    const time = format(new Date(), 'HH:mm:ss');
     //Verificamos si la cancelacion la hace el tenant o el renter y lo registramos
     if (idUser === booking[0].idRenter) {
       await connection.query(
@@ -81,10 +87,11 @@ const cancelBooking = async (req, res, next) => {
               <td>
               Hola ${userRenter[0].name}
               Se ha registrado correctamente la cancelación de la reserva de ${userTenant[0].name}.
+              En ${property.city}, ${property.address}.
             </td>
             <br/>
             <td>
-            La reserva ha sido cancelada el ${date} a las ${time}.
+            La reserva ha sido cancelada el ${modifiedAt}.
             </td>
         </tbody>
         <tfoot>
@@ -101,12 +108,13 @@ const cancelBooking = async (req, res, next) => {
         </thead>
         <tbody>
             <td>
-              Hola ${userTenant[0].name}
-              Lamentamos informarte que el usuario ${userRenter[0].name} ha Anulado la reserva que tenías.
+              Hola ${userTenant[0].name},
+              Lamentamos informarte que ${userRenter[0].name} ha Anulado la reserva que tenías.
+              En ${property.city}, ${property.address}.
             </td>
             <br/>
             <td>
-            La reserva ha sido cancelada el ${date} a las ${time}.
+            La reserva ha sido cancelada el ${modifiedAt}.
             </td>
         </tbody>
         <tfoot>
@@ -130,12 +138,12 @@ const cancelBooking = async (req, res, next) => {
         </thead>
         <tbody>
             <td>
-              Hola ${userRenter[0].name}
-              Lamentamos informarte que el usuario ${userTenant[0].name} ha Anulado la reserva que tenias.
+              Hola ${userRenter[0].name},
+              Lamentamos informarte que ${userTenant[0].name} ha anulado la reserva que tenia en la vivienda de la ${property.address}, en ${property.city}.
             </td>
             <br/>
             <td>
-            La reserva ha sido cancelada el ${date} a las ${time}.
+            La reserva ha sido cancelada el ${modifiedAt}.
             </td>
         </tbody>
         <tfoot>
@@ -148,16 +156,17 @@ const cancelBooking = async (req, res, next) => {
       emailBodyTenant = `
       <table>
         <thead>
-            <th>Confirmación de Cancelación Reserva ${booking[0].bookingCode}</th>
+            <th>Confirmación de Cancelación Reserva <b>${booking[0].bookingCode}</b></th>
         </thead>
         <tbody>
             <td>
               Hola ${userTenant[0].name}
               Se ha registrado correctamente la cancelación de la reserva de la propiedad de ${userRenter[0].name}.
+              En ${property.city}, ${property.address}
             </td>
             <br/>
             <td>
-            La reserva ha sido cancelada el ${date} a las ${time}.
+            La reserva ha sido cancelada el ${modifiedAt}.
             </td>
         </tbody>
         <tfoot>

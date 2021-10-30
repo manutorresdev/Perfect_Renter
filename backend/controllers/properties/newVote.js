@@ -40,7 +40,7 @@ const newVote = async (req, res, next) => {
       // Seleccionamos la relación entre inquilino y casero, de haberla
       const [relation] = await connection.query(
         `
-        SELECT idTenant FROM bookings WHERE idProperty = ? AND idRenter = ?
+        SELECT idRenter FROM bookings WHERE idProperty = ? AND idTenant = ?
         `,
         [idProperty, idReqUser]
       );
@@ -55,7 +55,7 @@ const newVote = async (req, res, next) => {
       }
 
       // Comprobamos que el usuario que vota y el propietario son diferentes
-      if (relation[0].idTenant === idReqUser) {
+      if (relation[0].idRenter === idReqUser) {
         const error = new Error('No te puedes votar a ti mismo.');
         error.httpStatus = 403;
         throw error;
@@ -64,7 +64,7 @@ const newVote = async (req, res, next) => {
       // Comprobamos que no exista un voto entre ellos
       const [votes] = await connection.query(
         `
-      SELECT count(*) as quantity FROM votes WHERE idRenter = ? AND idProperty = ?
+      SELECT count(*) as quantity FROM votes WHERE idTenant = ? AND idProperty = ?
       `,
         [idReqUser, idProperty]
       );
@@ -96,8 +96,8 @@ const newVote = async (req, res, next) => {
             voteValue,
             commentary,
             date,
+            relation[0].idRenter,
             idReqUser,
-            relation[0].idTenant,
             idProperty,
           ]
         );
@@ -131,8 +131,8 @@ const newVote = async (req, res, next) => {
             voteValue,
             commentary,
             date,
-            relation[0].idTenant,
             idReqUser,
+            relation[0].idRenter,
             idProperty,
           ]
         );
@@ -164,14 +164,12 @@ const newVote = async (req, res, next) => {
         throw error;
       }
 
-      if (!idProperty) {
-      }
       // Seleccionamos la relación entre inquilino y casero (idReqUser = casero)
       const [relation] = await connection.query(
         `
         SELECT state FROM bookings WHERE idProperty = ? AND idTenant = ? AND idRenter = ?
         `,
-        [idProperty, idReqUser, idUser]
+        [idProperty, idUser, idReqUser]
       );
 
       // Comprobamos que un usuario no vote mas de 3 veces a otro usuario

@@ -73,6 +73,7 @@ const listProperties = async (req, res, next) => {
         `
       SELECT properties.idProperty,
       properties.idUser,
+      description,
       city,
       province,
       address,
@@ -111,6 +112,7 @@ const listProperties = async (req, res, next) => {
         `
         SELECT properties.idProperty,
           properties.idUser,
+          description,
           city,
           province,
           address,
