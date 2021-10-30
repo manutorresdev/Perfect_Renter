@@ -224,4 +224,3 @@ const contactProperty = async (req, res, next) => {
 };
 
 module.exports = contactProperty;
-

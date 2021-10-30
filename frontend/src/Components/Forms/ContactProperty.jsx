@@ -31,7 +31,7 @@ export default function ContactProperty({
     e.preventDefault();
 
     post(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
+      `http://localhost:4000/properties/${property.idProperty}/book`,
       CreateFormData(body),
       (data) => {
         alert(data.message);

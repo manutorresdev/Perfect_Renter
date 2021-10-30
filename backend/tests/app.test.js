@@ -853,6 +853,7 @@ describe('Properties POST Endpoints', () => {
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
+
     expect(resBook.statusCode).toEqual(200);
     expect(resBook.body.message).toBe('Correo electrónico enviado con éxito.');
   });

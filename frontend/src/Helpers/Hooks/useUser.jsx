@@ -8,7 +8,7 @@ export default function useUser(token) {
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/users/${userLogged.idUser}`,
+      `http://localhost:4000/users/${userLogged.idUser}`,
       (data) => {
         if (data.message !== 'No hay conicidencias para su busqueda') {
           setUser(data.userInfo);

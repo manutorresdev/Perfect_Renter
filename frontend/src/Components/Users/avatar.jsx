@@ -9,7 +9,7 @@ const Avatar= () => {
   async function uploadFile() {
     let data = new FormData();
     data.append('image', file);
-    const response = await fetch(`http://192.168.5.103:4000/users/${user.idUser}`, {
+    const response = await fetch(`http://localhost:4000/users/${user.idUser}`, {
       method: 'POST',
       body: data,
     });
