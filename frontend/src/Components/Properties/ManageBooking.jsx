@@ -22,6 +22,7 @@ export default function ManageBokking({ match }) {
       Token
     );
   }
+
   function cancelBooking() {
     get(
       `http://192.168.5.103:4000/properties/${match.params.bookingCode}/cancel`,
@@ -38,7 +39,6 @@ export default function ManageBokking({ match }) {
   }
 
   if (Token) {
-    // console.log(match.params.bookingCode);
     if (booking.status === 'error') {
       return (
         <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>

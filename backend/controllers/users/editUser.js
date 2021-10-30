@@ -38,7 +38,7 @@ const editUser = async (req, res, next) => {
     // Validamos los datos recibidos.
     await validate(editUserSchema, req.body);
 
-    console.log(req.body);
+    console.log(req);
 
     // Lanzamos un error en caso de que no seamos dueños de este usuario.
     if (Number(idUser) !== idReqUser) {
@@ -46,7 +46,8 @@ const editUser = async (req, res, next) => {
       error.httpStatus = 403;
       throw error;
     }
-
+    console.log(req);
+    // console.log('\x1b[43m########\x1b[30m', req.files.avatar, 'ARCHIVO--');
     // Si no llega ningún dato lanzamos un error.
     if (
       !name &&
@@ -82,6 +83,19 @@ const editUser = async (req, res, next) => {
      * Actualizamos Avatar.
      *
      */
+    /*
+        files {
+          avatar: {
+            data: data,
+            x:x,
+            y:y,
+            z:z,
+          }
+        }
+
+
+    */
+
     if (req.files && req.files.avatar) {
       // Comprobamos si el usuario ya tiene un avatar previo.
       // De ser así eliminamos el avatar del disco.

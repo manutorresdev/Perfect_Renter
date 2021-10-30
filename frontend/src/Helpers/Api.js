@@ -3,10 +3,9 @@ export const post = (url, body, onSuccess, onError, token) => {
   fetch(url, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: token,
     },
-    body: JSON.stringify(body),
+    body: body,
   })
     .then((res) => {
       console.log('Respuesta de api.js/fetch', res);
@@ -53,11 +52,9 @@ export const put = (url, body, onSuccess, onError, token) => {
   fetch(url, {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: token,
     },
-
-    body: JSON.stringify(body),
+    body: body,
   })
     .then((res) => {
       console.log('Respuesta de api.js/fetch', res);
@@ -79,11 +76,8 @@ export const del = (url, body, onSuccess, onError, token) => {
   fetch(url, {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json',
       Authorization: token,
     },
-
-    body: JSON.stringify(body),
   })
     .then((res) => {
       console.log('Respuesta de api.js/fetch', res);
@@ -119,4 +113,10 @@ export function parseJwt(token) {
   );
 
   return JSON.parse(jsonPayload);
+}
+
+export function CreateFormData(body) {
+  const formData = new FormData();
+  Object.keys(body).map((prop) => formData.append(prop, body[prop]));
+  return formData;
 }

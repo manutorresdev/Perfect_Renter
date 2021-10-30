@@ -12,8 +12,9 @@ export default function useUser(token) {
       (data) => {
         if (data.message !== 'No hay conicidencias para su busqueda') {
           setUser(data.userInfo);
+        } else {
+          setUser({});
         }
-        setUser({});
       },
       (error) => console.log(error),
       token

@@ -29,6 +29,7 @@ import PropertyInfo from './Components/Properties/PropertyInfo';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
+
   return (
     <>
       <Router>
@@ -42,8 +43,14 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/alquileres/:idProperty' component={PropertyInfo} />
-          <Route path='/alquileres' component={Properties} />
+          <Route
+            exact
+            path='/alquileres/:idProperty'
+            render={(routeProps) => (
+              <PropertyInfo {...routeProps} token={Token} />
+            )}
+          />
+          <Route exact path='/alquileres' component={Properties} />
           <Route
             exact
             path='/alquileres/:bookingCode/accept'
