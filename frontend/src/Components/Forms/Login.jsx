@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { post } from '../../Helpers/Api';
+import { CreateFormData, post } from '../../Helpers/Api';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 import Email from './Inputs/Email';
 import Password from './Inputs/Password';
@@ -18,7 +18,7 @@ export default function Login() {
   function onSubmit(body) {
     post(
       'http://localhost:4000/users/login',
-      body,
+      CreateFormData(body),
       (data) => {
         console.log(data);
         setToken(data.token);

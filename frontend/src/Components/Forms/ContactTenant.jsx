@@ -1,6 +1,6 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { post } from '../../Helpers/Api';
+import { CreateFormData, post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { FaPlus } from 'react-icons/fa';
@@ -18,7 +18,7 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
 
     post(
       `http://localhost:4000/users/${userInfo.idUser}/contact`,
-      body,
+      CreateFormData(body),
       (data) => {
         alert(data.message);
         window.location.reload();

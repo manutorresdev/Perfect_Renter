@@ -46,7 +46,7 @@ const bookProperty = async (req, res, next) => {
       `
         SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ? AND startBookingDate = ? AND endBookingDate = ?
         `,
-      [idReqUser, property[0].idUser, idProperty, startDate, endDate]
+      [property[0].idUser, idReqUser, idProperty, startDate, endDate]
     );
 
     // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
@@ -141,7 +141,6 @@ const bookProperty = async (req, res, next) => {
 
       // Generamos el codigo de reserva,
       const bookingCode = generateRandomString(10);
-      console.log(`Este es el length del random ${bookingCode.length}`);
       // Definimos el body del email
       const emailBody = `
     <table>
@@ -155,6 +154,7 @@ const bookProperty = async (req, res, next) => {
             <li><b>Nombre completo:</b> ${name} ${lastName}</li>
             <li><b>Email:</b> ${email}</li>
             <li><b>Teléfono:</b> ${tel}</li>
+            <li><b>Fecha de reserva:</b> Entrada: ${startDate} | Salida: ${endDate}</li>
           </ul>
           <br/>
           <b>Información adicional:</b>
@@ -185,17 +185,61 @@ const bookProperty = async (req, res, next) => {
     </table>
     `;
 
+      const emailBodyReq = `
+    <table>
+      <tbody>
+        <td>
+          Hola ${contactUser[0].name},
+          Se ha solicitado con éxito la reserva de la vivienda en ${property[0].city}
+          <br/>
+          Datos de la reserva:
+          <ul>
+          <li><b>Código de reserva:</b> ${bookingCode}</li>
+            <li><b>Nombre completo:</b> ${name} ${lastName}</li>
+            <li><b>Email:</b> ${email}</li>
+            <li><b>Teléfono:</b> ${tel}</li>
+            <li><b>Fecha de reserva:</b> Entrada: ${startDate} | Salida: ${endDate}</li>
+          </ul>
+          <br/>
+          <b>Información adicional:</b>
+          ${comentarios}
+      </tbody>
+      <tbody>
+          <td>
+            <br/>
+            Si quieres cancelar la solicitud de reserva, pulsa en el botón de cancelar reserva.
+            <br/>
+          </td>
+      </tbody>
+      <tfoot>
+        <th>
+        <button>
+            <a href="http://localhost:3000/alquileres/${bookingCode}/cancel">CANCELAR RESERVA</a>
+        </button>
+        </th>
+      </tfoot>
+    </table>
+    `;
       // Enviamos el correo del usuario que contacta, al usuario a contactar.
-      await sendMail({
-        to: property[0].email,
-        subject: 'Solicitud de alquiler',
-        body: emailBody,
-      });
+      if (process.env.NODE_ENV !== 'test') {
+        await sendMail({
+          to: property[0].email,
+          subject: 'Solicitud de reserva.',
+          body: emailBody,
+        });
+
+        await sendMail({
+          to: email,
+          subject: 'Solicitud de reserva.',
+          body: emailBodyReq,
+        });
+      }
 
       // Agregamos el código de reserva en la base de datos junto a la posible reserva.
+      // CORREGIDO
       await connection.query(
         `
-      INSERT INTO bookings(bookingCode, idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
+      INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
       `,
         [
           bookingCode,
@@ -211,6 +255,7 @@ const bookProperty = async (req, res, next) => {
       res.send({
         status: 'ok',
         message: 'Correo electrónico enviado con éxito.',
+        bookingCode,
       });
     }
   } catch (error) {

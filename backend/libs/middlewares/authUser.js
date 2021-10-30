@@ -14,7 +14,7 @@ const authUser = async (req, res, next) => {
   try {
     // Obtenemos la cabecera de autorización.
     const { authorization } = req.headers;
-    console.log('Req del auth: ', req);
+
     // Si no existe la cabecera de autorización lanzamos un error.
     if (!authorization) {
       const error = new Error('Falta la cabecera de autorización');

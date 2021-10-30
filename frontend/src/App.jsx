@@ -17,7 +17,6 @@ import ManageBooking from './Components/Properties/ManageBooking';
 import Register from './Components/Forms/Register';
 import Login from './Components/Forms/Login';
 import ContactUs from './Components/Forms/ContactUs';
-// import ContactProperty from './Components/Forms/ContactProperty';
 import RecoverPass from './Components/Forms/RecoverPass';
 import ResetPass from './Components/Forms/ResetPass';
 import { TokenContext } from './Helpers/Hooks/TokenProvider';
@@ -27,10 +26,10 @@ import Profile from './Components/Users/Profile';
 import VerifyUser from './Components/Users/VerifyUser';
 import Filters from './Components/Properties/Filters';
 import PropertyInfo from './Components/Properties/PropertyInfo';
-import VoteForm from './Components/ToDo/VoteForm';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
+
   return (
     <>
       <Router>
@@ -44,8 +43,14 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/alquileres/:idProperty' component={PropertyInfo} />
-          <Route path='/alquileres' component={Properties} />
+          <Route
+            exact
+            path='/alquileres/:idProperty'
+            render={(routeProps) => (
+              <PropertyInfo {...routeProps} token={Token} />
+            )}
+          />
+          <Route exact path='/alquileres' component={Properties} />
           <Route
             exact
             path='/alquileres/:bookingCode/accept'
