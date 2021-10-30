@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { del, get, parseJwt } from '../../Helpers/Api';
-import { FaCamera, FaPencilAlt, FaStar, FaTrash } from 'react-icons/fa';
+import { FaCamera, FaPencilAlt, FaTrash } from 'react-icons/fa';
 import Register from '../Forms/Register';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';
+import Avatar from '../Users/avatar';
 
 export default function Profile({ token, setToken }) {
   const [User, setUser] = useState({});
-  const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
+  const [Overlay, setOverlay] = useState({
+    shown: false,
+    userInfo: {},
+    form: '',
+  });
   const [properties] = useProperties([]);
+  const [AvatarFile, setAvatarFile] = useState('');
+
   const user = parseJwt(token);
 
   useEffect(() => {
@@ -20,7 +27,21 @@ export default function Profile({ token, setToken }) {
       (error) => console.log(error),
       token
     );
-  }, [token, user.idUser]);
+    if (User) {
+      get(
+        `http://localhost:4000/photo/${User.avatar}`,
+        (data) => {
+          setAvatarFile(data.photo);
+          console.log(data);
+        },
+        (error) => console.log(error),
+        token
+      );
+    }
+  }, [token, user.idUser, User.avatar]);
+
+  console.log(User);
+  console.log(AvatarFile);
 
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
@@ -44,22 +65,29 @@ export default function Profile({ token, setToken }) {
 
   return (
     <>
-      {Overlay.shown ? (
+      {Overlay.form === 'register' && (
         <Register
           setOverlay={setOverlay}
           userInfo={Overlay.userInfo}
           usuario={User}
           Token={token}
         />
-      ) : (
-        ''
+      )}
+
+      {Overlay.form === 'avatar' && (
+        <Avatar
+          setOverlay={setOverlay}
+          avatar={User.avatar}
+          usuario={User}
+          Token={token}
+        />
       )}
 
       <article className='pt-20 pb-28 flex flex-col items-center justify-center'>
         <button
           className=''
           onClick={() => {
-            setOverlay({ shown: true, userInfo: user });
+            setOverlay({ shown: true, userInfo: user, form: 'register' });
           }}
         >
           <FaPencilAlt />
@@ -77,7 +105,11 @@ export default function Profile({ token, setToken }) {
             />
           </section>
           <section>
-            <button>
+            <button
+              onClick={() => {
+                setOverlay({ shown: true, userInfo: user, form: 'avatar' });
+              }}
+            >
               <FaCamera />
             </button>
             <ul>

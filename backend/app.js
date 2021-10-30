@@ -265,6 +265,7 @@ const {
   listUserVotes,
 } = require('./controllers/users/index');
 const contactUs = require('./controllers/contactUs');
+const getPhoto = require('./controllers/getPhoto');
 
 /**
  * ####################
@@ -485,6 +486,17 @@ app.get('/users/:idUser/properties', userExists, listProperties);
  *
  */
 app.post('/contact', contactUs);
+
+/**
+ * Middleware que muestra una foto guardada en el servidor.
+ *
+ * @name getPhoto
+ * @path {GET} /photo/:photoName
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Respones El servidor envía un objeto con un mensaje de confirmación y la foto cargada.
+ */
+
+app.get('/photo/:pictureName', authUser, getPhoto);
 
 /**
  * ####################

@@ -1,65 +1,58 @@
-/* import React, { useState } from 'react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FaPlus } from 'react-icons/fa';
+import { put } from '../../Helpers/Api';
 
+export default function Avatar({ setOverlay, avatar, usuario, Token }) {
+  const [file, setFile] = useState('');
+  const [Error, setError] = useState('');
 
+  const { handleSubmit, reset, register } = useForm();
 
-
-const Avatar= () => {
-  const [file, setFile] = useState([]);
-
-  async function uploadFile() {
-    let data = new FormData();
-    data.append('image', file);
-    const response = await fetch(`http://localhost:4000/users/${user.idUser}`, {
-      method: 'POST',
-      body: data,
-    });
-    try {
-      const response = await fetch('http://localhost:3050/files', {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
-      
-        if (response.ok) {
-          const body = await response.json();
-    
-          callback(body);
-          console.log(callback);
-          // respuesta correcta, hacer algo con body
-        } else {
-          onError(response);
-          console.log(
-            'Codigo de estado no esperado',
-            response.status,
-            response.statusText
-          );
-          // respuesta erronea, informar al usuario?
-        }
-    } catch (msg) {
-      // fallo de comunicación, informar al usuario?
-      console.error('Errorísimo!!!!', msg);
-    }
+  async function uploadFile(body, e) {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('avatar', body.avatar[0]);
+    put(
+      `http://localhost:4000/users/${usuario.idUser}`,
+      formData,
+      (data) => {
+        console.log('Success');
+        alert(data.message);
+        reset();
+      },
+      (error) => {
+        setError(error.message);
+      },
+      Token
+    );
   }
 
-  const newFile = (e) => {
-    e.preventDefault();
-    const f = e.target.files[0];
-    setFile(f);
-  };
-
-  /* if (token) {
-    return <Redirect to='/' />;
-  } 
+  const registerComponentStyle = Token
+    ? 'overlay z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'
+    : '';
 
   return (
-    <form onSubmit={uploadFile} className='SelectFile'>
-      <div>
-        <h1>File</h1>
-        <label>Selecciona un archivo</label>
-        <input type='file' onChange={newFile} />
-      </div>
-      <button type='submit'>Subir</button>
-    </form>
-  );
-};
+    <div className={registerComponentStyle}>
+      <form
+        onSubmit={handleSubmit(uploadFile)}
+        className='contact pt-2 p-20 border border-black flex flex-col gap-5  bg-white relative'
+      >
+        <div>
+          <button
+            className='close-overlay absolute top-3 right-3'
+            onClick={() => {
+              setOverlay({ shown: false, form: '' });
+            }}
+          >
+            <FaPlus className='transform rotate-45' />
+          </button>
+          <label>Selecciona un archivo</label>
+          <input type='file' name='avatar' {...register('avatar')} />
+        </div>
 
-export default Avatar; */
+        <button type='submit'>Subir</button>
+      </form>
+    </div>
+  );
+}

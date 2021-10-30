@@ -38,7 +38,8 @@ const editUser = async (req, res, next) => {
     // Validamos los datos recibidos.
     await validate(editUserSchema, req.body);
 
-    console.log(req.body);
+    console.log(req.body, 'ESTO ES HEADEEEEEEEERS');
+    console.log(req.files, 'ESTO ES REEEQ FILES');
 
     // Lanzamos un error en caso de que no seamos dueños de este usuario.
     if (Number(idUser) !== idReqUser) {
