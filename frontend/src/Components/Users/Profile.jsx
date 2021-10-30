@@ -21,6 +21,7 @@ export default function Profile({ token, setToken }) {
       token
     );
   }, [token, user.idUser]);
+  console.log('usuario profile:', User);
 
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
@@ -41,6 +42,11 @@ export default function Profile({ token, setToken }) {
   const propiedadUsuario = properties.filter(
     (property) => property.idUser === user.idUser
   );
+
+  /**
+   * Es necesario hacer un llamado a un nuevo middleware para listar
+   * las reservas de un usuario y ponerlas en su perfil
+   */
 
   return (
     <>

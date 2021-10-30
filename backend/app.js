@@ -45,7 +45,7 @@ const {
   getProperty,
   addPropertyPhoto,
   bookProperty,
-  // contactProperty,
+  contactProperty,
   editProperty,
   deleteProperty,
   deletePropertyPhoto,
@@ -117,10 +117,30 @@ app.post(
   canEdit,
   addPropertyPhoto
 );
+
 /**
- * Solicitud a un inmueble
+ * Solicitud de alquiler a un inmueble
  *
  * @name contactProperty
+ * @path {get} /properties/:idProperty/contact
+ * @params {number} idProperty Número del inmueble a contactar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {403} Si es el dueño de la vivienda
+ * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
+ */
+app.get(
+  '/properties/:idProperty/contact',
+  authUser,
+  propertyExists,
+  contactProperty
+);
+
+/**
+ * Solicitud de alquiler a un inmueble
+ *
+ * @name bookProperty
  * @path {POST} /properties/:idProperty/contact
  * @params {number} idProperty Número del inmueble a contactar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request

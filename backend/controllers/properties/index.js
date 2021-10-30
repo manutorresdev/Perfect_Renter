@@ -11,10 +11,11 @@ const newVote = require('./newVote');
 const acceptBooking = require('./acceptBooking');
 const cancelBooking = require('./cancelBooking');
 const listPropertyVotes = require('./listPropertyVotes');
+const contactProperty = require('./contactProperty');
 
 module.exports = {
   addPropertyPhoto,
-  // contactProperty,
+  contactProperty,
   bookProperty,
   newProperty,
   editProperty,

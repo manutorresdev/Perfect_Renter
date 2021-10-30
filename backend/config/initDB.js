@@ -183,8 +183,8 @@ async function main() {
     VALUES (
         "david",
         "losas",
-        "123456789",
-        "david1935@gmail.com",
+        "Pr1234567",
+        "projectionseo@gmail.com",
         SHA2("123456", 512),
         "admin",
         "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}",

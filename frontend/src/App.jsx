@@ -44,8 +44,12 @@ function App() {
           <Route path='/inquilinos'>
             {Token ? <Tenants /> : <Redirect to='/' />}
           </Route>
-          <Route path='/alquileres/:idProperty' component={PropertyInfo} />
-          <Route path='/alquileres' component={Properties} />
+          <Route
+            exact
+            path='/alquileres/:idProperty'
+            component={PropertyInfo}
+          />
+          <Route exact path='/alquileres' component={Properties} />
           <Route
             exact
             path='/alquileres/:bookingCode/accept'
