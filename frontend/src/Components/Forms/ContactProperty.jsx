@@ -5,18 +5,20 @@ import { CreateFormData, post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 
 export default function ContactProperty({
   form,
   property,
   setOverlay,
   user,
+  pictures,
+  setMessage,
+  message,
   Slider,
 }) {
   const [curr, setCurr] = useState(0);
   const [Token] = useContext(TokenContext);
-  const [message, setMessage] = useState({});
   const {
     handleSubmit,
     watch,
@@ -29,21 +31,36 @@ export default function ContactProperty({
 
   function onSubmit(body, e) {
     e.preventDefault();
-
-    post(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
-      CreateFormData(body),
-      (data) => {
-        alert(data.message);
-        setMessage(data);
-        setOverlay({ form: '', shown: false, propertyInfo: {} });
-      },
-      (error) => {
-        console.log(error);
-        setMessage(error);
-      },
-      Token
-    );
+    if (form === 'reservar') {
+      post(
+        `http://localhost:4000/properties/${property.idProperty}/book`,
+        CreateFormData(body),
+        (data) => {
+          alert(data.message);
+          setMessage(data);
+          setOverlay({ form: '', shown: false, propertyInfo: {} });
+        },
+        (error) => {
+          console.log(error);
+          setMessage(error);
+        },
+        Token
+      );
+    } else if (form === 'contact') {
+      post(
+        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        CreateFormData(body),
+        (data) => {
+          setMessage({ status: data.status, message: data.message });
+          setOverlay({ form: '', show: false, propertyInfo: {} });
+        },
+        (error) => {
+          console.log(error);
+          setMessage(error);
+        },
+        Token
+      );
+    }
   }
 
   function right() {
@@ -53,7 +70,6 @@ export default function ContactProperty({
   function left() {
     setCurr(curr === 0 ? Slider.SlideImgs.length - 1 : curr - 1);
   }
-
   const comentarios = watch('comentarios');
   if (message.status === 'ok') {
     return (

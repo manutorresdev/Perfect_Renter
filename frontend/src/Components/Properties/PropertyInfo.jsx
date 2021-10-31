@@ -15,12 +15,15 @@ export default function PropertyInfo(props) {
   );
   // Recibimos id del usuario que hace la request
   const [User] = useUser(props.token);
+  //Overlay de respuestas
+  const [message, setMessage] = useState({ status: '', message: '' });
   // Overlay de formularios
   const [Overlay, setOverlay] = useState({
     form: '',
     show: false,
     propertyInfo: {},
   });
+
   // Verificar si User es dueño de la propiedad
   const [Owner, setOwner] = useState(false);
   // Ampliar fotos
@@ -102,6 +105,8 @@ export default function PropertyInfo(props) {
           property={Overlay.propertyInfo}
           user={User}
           pictures={SlideImgs}
+          setMessage={setMessage}
+          message={message}
           Slider={{
             Photo: Photo,
             right: right,
@@ -112,6 +117,7 @@ export default function PropertyInfo(props) {
           }}
         />
       )}
+      {message.status ? <Message message={message} /> : ''}
       <aside
         className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static absolute left-0 top-20 sm:top-0 mt-5 sm:mt-20`}
       >
@@ -262,4 +268,37 @@ export default function PropertyInfo(props) {
       </section>
     </article>
   );
+}
+function Message({ message }) {
+  if (message.status === 'ok') {
+    return (
+      <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
+        <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
+          <h2>Ya esta listo!</h2>
+          <h2>{message.message}</h2>
+          <Link
+            to='/'
+            className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+          >
+            Cerrar
+          </Link>
+        </section>
+      </div>
+    );
+  } else if (message.status === 'error') {
+    return (
+      <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
+        <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
+          <h2>Parece que algo va mal!!!</h2>
+          <h2>{message.message}</h2>
+          <Link
+            to='/'
+            className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+          >
+            Cerrar
+          </Link>
+        </section>
+      </div>
+    );
+  }
 }
