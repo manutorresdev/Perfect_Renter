@@ -176,4 +176,5 @@ module.exports = {
   generateRandomString,
   validate,
   sendMail,
+  uploadsDir,
 };

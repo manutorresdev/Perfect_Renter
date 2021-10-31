@@ -18,11 +18,10 @@ const acceptBooking = async (req, res, next) => {
     // Obtenemos el codigo de reserva de los path params.
     const { bookingCode } = req.params;
 
-    console.log('Accept booking: ', bookingCode);
     // Obtenemos el id del usuario que acepta. Debe ser el del casero
     const { idUser: idRenter } = req.userAuth;
 
-    //Verificamos que la propiedad y el inquilino existen
+    //Verificamos que la propiedad y el casero existen
     const [property] = await connection.query(
       `SELECT b.idProperty, b.idRenter
       FROM bookings b
@@ -66,10 +65,14 @@ const acceptBooking = async (req, res, next) => {
     Hola ${booking[0].RenterName},
     la reserva de la vivienda de ${booking[0].city} ha sido aceptada.
     </td>
+    <br/>
+    <td>
+      <b>Fecha de entrada: ${booking[0].startBookingDate}</b>
+      <b>Fecha de salida: ${booking[0].endBookingDate}</b>
+    </td>
     </tbody>
     </table>
     `;
-
 
     // Enviamos el correo al inquilino
     if (process.env.NODE_ENV !== 'test') {
@@ -86,7 +89,15 @@ const acceptBooking = async (req, res, next) => {
     <tbody>
     <td>
     Hola ${booking[0].TenantName},
-    la reserva de la vivienda de ${booking[0].city} ha sido realizada.
+    !la reserva de la vivienda de ${booking[0].city} ha sido realizada!
+    </td>
+    <td>
+    <b>¿Preparado para viajar?</b>
+    </td>
+    <br/>
+    <td>
+      <b>Fecha de entrada: ${booking[0].startBookingDate}</b>
+      <b>Fecha de salida: ${booking[0].endBookingDate}</b>
     </td>
     </tbody>
     </table>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { post, put } from '../../Helpers/Api';
+import { CreateFormData, post, put } from '../../Helpers/Api';
 
 // Import inputs controlados
 import Email from './Inputs/Email';
@@ -51,7 +51,7 @@ export default function Register({ Token, usuario, setOverlay }) {
 
     post(
       'http://localhost:4000/users',
-      body,
+      CreateFormData(body),
       (data) => {
         console.log('Success');
         alert(data.message);
@@ -68,10 +68,9 @@ export default function Register({ Token, usuario, setOverlay }) {
 
   function onSubmitEdited(body, e) {
     e.preventDefault();
-    console.log(body);
     put(
       `http://localhost:4000/users/${usuario.idUser}`,
-      body,
+      CreateFormData(body),
       (data) => {
         console.log('Success');
         alert(data.message);
@@ -86,20 +85,21 @@ export default function Register({ Token, usuario, setOverlay }) {
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full';
 
-  const registerComponentStyle = Token
-    ? 'overlay z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'
-    : '';
+  const registerComponentStyle =
+    Token &&
+    'overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden';
+
   return (
     <>
       <div className={registerComponentStyle}>
         <section
           className={
             Token
-              ? 'contact pt-2 p-20 border border-black flex flex-col gap-5  bg-white relative'
-              : 'mt-20 flex flex-col items-center gap-5 p-2'
+              ? 'contact w-1/3 p-24 border border-black flex flex-col gap-5 mt-16 bg-white relative'
+              : 'mt-24 flex flex-col items-center gap-5 p-2'
           }
         >
-          {Token ? (
+          {Token && (
             <button
               className='close-overlay absolute top-3 right-3'
               onClick={() => {
@@ -108,8 +108,6 @@ export default function Register({ Token, usuario, setOverlay }) {
             >
               <FaPlus className='transform rotate-45' />
             </button>
-          ) : (
-            ''
           )}
           <div className='title underline text-5xl m-0 p-0'>
             {Token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
@@ -137,7 +135,6 @@ export default function Register({ Token, usuario, setOverlay }) {
                 return (
                   <Email
                     value={value}
-                    defaultValue={Token ? usuario.email : ''}
                     onChange={onChange}
                     inputRef={ref}
                     name={name}
@@ -149,7 +146,7 @@ export default function Register({ Token, usuario, setOverlay }) {
             {errors.email && (
               <p className='text-red-500'>{errors.email.message}</p>
             )}
-            {Token ? '' : <Password {...formFunctions} />}
+            {!Token && <Password {...formFunctions} />}
             <Controller
               name='name'
               control={control}

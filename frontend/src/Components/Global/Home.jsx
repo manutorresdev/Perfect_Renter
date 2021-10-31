@@ -1,7 +1,8 @@
-import { React } from 'react';
+import { React, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useHistory } from 'react-router-dom';
+import useProperties from '../../Helpers/Hooks/useProperties';
 
 // Styles
 const sectionStyle =
@@ -9,15 +10,16 @@ const sectionStyle =
 const sectionTitleStyle = 'pb-5 text-3xl font-medium';
 const sectionImgStyle = 'w-2/5 float-right pl-3';
 const boxContStyle = 'flex flex-col gap-5';
-const boxContTitleStyle = 'w-full text-center pb-3 text-principal-1';
+const boxContTitleStyle =
+  'w-full text-center pb-3 text-principal-1 underline text-xl';
 const boxItemContStyle =
   'grid grid-cols-1 grid-rows-auto gap-2 justify-items-center sm:grid-cols-2';
 const boxReadMoreBtnStyle =
   'm-auto text-xl bg-gray-Primary text-principal-1 border-2 border-gray-800 max-w-max px-6 py-2 hover:bg-principal-1 hover:text-gray-700 duration-300';
 const descBoxStyle = 'content-center w-3/4 h-full bg-principal-1';
 const descBoxTextStyle = 'text-left p-4';
-const descBoxTitleStyle = 'text-base text-gray-700 pb-3';
-const descBoxPStyle = 'text-gray-700 text-sm';
+const descBoxTitleStyle = 'text-base text-gray-700 pb-3 font-medium';
+const descBoxPStyle = 'text-gray-700 text-sm pl-2';
 
 export function Home() {
   return (
@@ -104,7 +106,6 @@ function Banner() {
         <input
           type='text'
           {...register('city', {
-            required: 'Debes escribir la ciudad donde resides.',
             pattern: {
               value:
                 /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
@@ -129,14 +130,47 @@ function Banner() {
 }
 
 function HomePropertiesList() {
+  const [properties] = useProperties();
+  const [Imgs, setImgs] = useState([]);
+
+  function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1);
+  }
+
+  useEffect(() => {
+    setImgs([
+      require('../../Images/defPicture.jpg').default,
+      require('../../Images/defPicture2.jpg').default,
+      require('../../Images/defPicture4.jpg').default,
+      require('../../Images/defPicture3.jpg').default,
+    ]);
+  }, []);
+
+  console.log('\x1b[43m########\x1b[30m', properties);
+
   return (
     <div className={boxContStyle}>
-      <h2 className={boxContTitleStyle}>Titulo de los alquileres</h2>
+      <h2 className={boxContTitleStyle}>ALQUILERES</h2>
       <div className={boxItemContStyle}>
-        <PropertyDescription />
-        <PropertyDescription />
-        <PropertyDescription />
-        <PropertyDescription />
+        {properties.length > 1 &&
+          properties.slice(0, 4).map((property, i) => {
+            return (
+              <PropertyDescription key={i}>
+                <Link to={`/alquileres/${property.idProperty}`}>
+                  <img className='w-full' src={Imgs[i]} alt='' />
+                </Link>
+                <span>
+                  {property.type && capitalizeFirstLetter(property.type)} en{' '}
+                  {property.city}
+                </span>
+                <span>
+                  {`${Number(property.mts)}m² - ${property.rooms} Hab - ${
+                    property.toilets
+                  } ${property.toilets > 1 ? 'Baños' : 'Baño'}`}
+                </span>
+              </PropertyDescription>
+            );
+          })}
       </div>
       <Link to='/alquileres' className={boxReadMoreBtnStyle}>
         <button>Ver Mas</button>
@@ -145,13 +179,13 @@ function HomePropertiesList() {
   );
 }
 
-function PropertyDescription() {
+function PropertyDescription({ children }) {
   return (
     <div className={descBoxStyle}>
-      <img className='w-full' src='/Images/flat.jpg' alt='' />
+      {children[0]}
       <div className={descBoxTextStyle}>
-        <h2 className={descBoxTitleStyle}>Title Flat</h2>
-        <p className={descBoxPStyle}>Description del Alquiler</p>
+        <h2 className={descBoxTitleStyle}>{children[1]}</h2>
+        <p className={descBoxPStyle}>{children[2]}</p>
       </div>
     </div>
   );
@@ -160,7 +194,7 @@ function PropertyDescription() {
 function HomeRentersList() {
   return (
     <div className={boxContStyle}>
-      <h2 className={boxContTitleStyle}>Titulo de los renters</h2>
+      <h2 className={boxContTitleStyle}>INQUILINOS</h2>
       <div className={boxItemContStyle}>
         <RenterDescription />
         <RenterDescription />

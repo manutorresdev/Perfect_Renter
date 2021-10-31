@@ -22,9 +22,9 @@ const contactProperty = async (req, res, next) => {
     const { idUser: idReqUser } = req.userAuth;
 
     // Obtenemos los datos del usuario que contacta.
-    //He quitado todos los datos que recibe, ya que si esta registrado no
-    //quiero molestarlo llenando campos inncesarios.
-    let { comentarios } = req.body;
+    let { name, lastName, email, tel, comentarios } = req.body;
+
+    console.log('Entre al contact property: \x1b[43m########\x1b[30m', name);
 
     // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
     const [property] = await connection.query(
@@ -47,14 +47,6 @@ const contactProperty = async (req, res, next) => {
       throw error;
     }
 
-    // Seleccionamos el nombre completo, el email, el teléfono del usuario que contacta. (PARA EL FRONTEND)
-    const [contactUser] = await connection.query(
-      `
-      SELECT name,lastName,tel,email FROM users WHERE idUser = ?
-      `,
-      [idReqUser]
-    );
-
     if (!comentarios || comentarios.length < 1) {
       const error = new Error(
         'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
@@ -73,9 +65,9 @@ const contactProperty = async (req, res, next) => {
           <br/>
           Datos del inquilino:
           <ul>
-            <li><b>Nombre completo:</b> ${contactUser.name} ${contactUser.lastName}</li>
-            <li><b>Email:</b> ${contactUser.email}</li>
-            <li><b>Teléfono:</b> ${contactUser.tel}</li>
+            <li><b>Nombre completo:</b> ${name} ${lastName}</li>
+            <li><b>Email:</b> ${email}</li>
+            <li><b>Teléfono:</b> ${tel}</li>
           </ul>
           <br/>
           <b>Información adicional:</b>
@@ -100,7 +92,7 @@ const contactProperty = async (req, res, next) => {
         body: emailBody,
       });
       await sendMail({
-        to: contactUser.email,
+        to: email,
         subject: 'Copia de tu mensaje - Perfect Renter',
         body: emailBody,
       });
@@ -109,7 +101,6 @@ const contactProperty = async (req, res, next) => {
     res.send({
       status: 'ok',
       message: 'Correo electrónico enviado con éxito.',
-      bookingCode,
     });
   } catch (error) {
     next(error);

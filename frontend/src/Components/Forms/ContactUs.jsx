@@ -1,6 +1,6 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { post } from '../../Helpers/Api';
+import { Controller, useForm } from 'react-hook-form';
+import { CreateFormData, post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 
@@ -9,51 +9,97 @@ export default function ContactUs() {
     handleSubmit,
     register,
     formState: { errors },
+    control,
   } = useForm();
-
-  const formFunctions = { register, errors };
 
   function onSubmit(body, e) {
     e.preventDefault();
-
-    console.log(body);
-
     post(
       'http://localhost:4000/contact',
-      body,
+      CreateFormData(body),
       (data) => {
         console.log(data);
         alert(data.message);
         window.location.reload();
       },
       (error) => {
-        console.error(error);
+        console.log(error);
       }
     );
   }
+
+  // Styles
+  const inpStyle =
+    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
 
   return (
     <section className='flex flex-col items-center justify-center pt-20'>
       <h1 className='text-3xl mb-20'>Perfect Renter</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <label>
-          <div>Nombre:</div>
-          <FirstName
-            {...formFunctions}
-            placeholder='Escribe aquí tu nombre completo...'
+          <div className='select-none'> Nombre Completo*</div>
+          <Controller
+            name='name'
+            control={control}
+            rules={{
+              required: 'Debes escribir un nombre.',
+              pattern: {
+                value:
+                  /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                message:
+                  'El nombre no puede contener carácteres especiales ni números.',
+              },
+              minLength: {
+                value: 3,
+                message: 'El nombre debe contener como mínimo 3 carácteres.',
+              },
+              maxLength: {
+                value: 30,
+                message: 'El nombre no puede tener más de 30 carácteres.',
+              },
+            }}
+            render={({ field: { onChange, name, ref, value } }) => {
+              return (
+                <FirstName
+                  value={value}
+                  onChange={onChange}
+                  inputRef={ref}
+                  name={name}
+                  className={inpStyle}
+                />
+              );
+            }}
           />
         </label>
         <label>
           <div className='select-none'> Correo electrónico*</div>
-          <Email
-            className='p-2'
-            {...formFunctions}
-            placeholder='Escribe aquí tu email....'
+          <Controller
+            name='email'
+            control={control}
+            rules={{
+              required: 'Debes escribir un email.',
+              maxLength: {
+                value: 200,
+                message: 'El email no puede contener más de 200 carácteres.',
+              },
+            }}
+            render={({ field: { onChange, name, ref, value } }) => {
+              return (
+                <Email
+                  value={value}
+                  onChange={onChange}
+                  inputRef={ref}
+                  name={name}
+                  className={inpStyle}
+                />
+              );
+            }}
           />
         </label>
         <label>
           <div>Asunto</div>
           <input
+            className={inpStyle}
             type='text'
             {...register('asunto', { required: 'Debes escribir un asunto.' })}
           />
@@ -64,7 +110,7 @@ export default function ContactUs() {
         <label>
           <div className='select-none'>Comentarios</div>
           <textarea
-            className='w-10/12'
+            className={`${inpStyle} w-full h-60 resize-none`}
             name='comments'
             id='comments'
             cols='30'

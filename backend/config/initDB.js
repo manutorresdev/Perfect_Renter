@@ -183,9 +183,9 @@ async function main() {
     VALUES (
         "david",
         "losas",
-        "Pr1234567",
+        "123456789",
         "projectionseo@gmail.com",
-        SHA2("123456", 512),
+        SHA2("Pr1234567", 512),
         "admin",
         "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}",
         "A coruña",

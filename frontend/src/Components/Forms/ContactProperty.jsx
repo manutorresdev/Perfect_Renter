@@ -1,34 +1,74 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { FaPlus } from 'react-icons/fa';
 import { CreateFormData, post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
-import { FaPlus } from 'react-icons/fa';
+import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
+// import { Link } from 'react-router-dom';
 
-export default function ContactTenant({ userInfo, setOverlay, Token }) {
+export default function ContactProperty({
+  form,
+  property,
+  setOverlay,
+  user,
+  pictures,
+  setMessage,
+  message,
+}) {
+  const [Token] = useContext(TokenContext);
   const {
-    register,
     handleSubmit,
+    register,
     formState: { errors },
     control,
-  } = useForm();
+  } = useForm({
+    defaultValues: { email: user.email, name: user.name, tel: user.tel },
+  });
+
+  console.log('\x1b[43m########\x1b[30m', user, 'USUARIO');
 
   function onSubmit(body, e) {
     e.preventDefault();
-
-    post(
-      `http://localhost:4000/users/${userInfo.idUser}/contact`,
-      CreateFormData(body),
-      (data) => {
-        alert(data.message);
-        window.location.reload();
-      },
-      (error) => {
-        console.log(error);
-      },
-      Token
-    );
+    if (form === 'reservar') {
+      post(
+        `http://localhost:4000/properties/${property.idProperty}/book`,
+        CreateFormData(body),
+        (data) => {
+          alert(data.message);
+          setMessage(data);
+          setOverlay({ form: '', shown: false, propertyInfo: {} });
+        },
+        (error) => {
+          console.log(error);
+          setMessage(error);
+        },
+        Token
+      );
+    } else if (form === 'contact') {
+      console.log(
+        'If de contact: \x1b[43m########\x1b[30m',
+        property.idProperty
+      );
+      post(
+        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        CreateFormData(body),
+        (data) => {
+          setMessage({ status: data.status, message: data.message });
+          setOverlay({ form: '', show: false, propertyInfo: {} });
+        },
+        (error) => {
+          console.log(error);
+          setMessage(error);
+        },
+        Token
+      );
+    }
   }
+
+  // Styles
+  const inpStyle =
+    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
 
   return (
     <div className='overlay z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
@@ -36,12 +76,17 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
         <button
           className='close-overlay absolute top-3 right-3'
           onClick={() => {
-            setOverlay({ shown: false, userInfo: {} });
+            setOverlay({ form: '', shown: false, propertyInfo: {} });
           }}
         >
           <FaPlus className='transform rotate-45' />
         </button>
         <h1 className='title self-center select-none'>Contacto</h1>
+        {message.status === 'error' && (
+          <h1 className='title self-center select-none text-red-700'>
+            {message.message}
+          </h1>
+        )}
         <div className='contact-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
           <form
             className='flex flex-col gap-10 items-center'
@@ -49,7 +94,6 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
           >
             <label>
               <div className='select-none'> Nombre Completo*</div>
-
               <Controller
                 name='name'
                 control={control}
@@ -71,20 +115,18 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
                     message: 'El nombre no puede tener más de 30 carácteres.',
                   },
                 }}
-                render={({ field: { onChange, name, ref } }) => {
+                render={({ field: { onChange, name, ref, value } }) => {
                   return (
                     <FirstName
+                      value={value}
                       onChange={onChange}
                       inputRef={ref}
                       name={name}
-                      className={''}
+                      className={inpStyle}
                     />
                   );
                 }}
               />
-              {errors.name && (
-                <p className='text-red-500'>{errors.name.message}</p>
-              )}
             </label>
             <label>
               <div className='select-none'> Correo electrónico*</div>
@@ -99,38 +141,50 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
                       'El email no puede contener más de 200 carácteres.',
                   },
                 }}
-                render={({ field: { onChange, name, ref } }) => {
+                render={({ field: { onChange, name, ref, value } }) => {
                   return (
                     <Email
+                      value={value}
                       onChange={onChange}
                       inputRef={ref}
                       name={name}
-                      className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full'
+                      className={inpStyle}
                     />
                   );
                 }}
               />
-              {errors.email && (
-                <p className='text-red-500'>{errors.email.message}</p>
-              )}
             </label>
-            <label>
-              <div className='select-none'>Escoge el alquiler a ofrecer:</div>
-              <select name='properties' {...register('property')}>
-                <option default value='Ninguno' disabled>
-                  Ninguno
-                </option>
-                {/* <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option> */}
-              </select>
-            </label>
+            {form === 'reservar' && (
+              <label>
+                <div className='select-none flex-col flex-center'>
+                  Selecciona las fechas:
+                </div>
+                <input
+                  className={inpStyle}
+                  type='date'
+                  name='startDate'
+                  {...register('startDate', {
+                    pattern: { message: 'indica la fecha de inicio' },
+                  })}
+                />
+                <input
+                  className={inpStyle}
+                  type='date'
+                  name='endDate'
+                  {...register('endDate', {
+                    pattern: {
+                      massage: 'Ingresa la fecha final de la reserva',
+                    },
+                  })}
+                />
+              </label>
+            )}
             <label>
               <div className='select-none'>Teléfono</div>
               <input
+                className={inpStyle}
                 type='tel'
+                placeholder='Escribe aquí tu teléfono...'
                 name='phone'
                 {...register('tel', {
                   pattern: {
@@ -144,9 +198,9 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
             <label>
               <div className='select-none'>Comentarios</div>
               <textarea
-                className='w-10/12'
-                name='comentarios'
-                id='comentarios'
+                className={`${inpStyle} resize-none w-80`}
+                name='comments'
+                id='comments'
                 cols='30'
                 rows='10'
                 {...register('comentarios', {
@@ -158,10 +212,6 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
                 })}
               ></textarea>
             </label>
-            {errors.comentarios && (
-              <p className='text-red-500'>{errors.comentarios.message}</p>
-            )}
-
             <input
               className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
               type='submit'
@@ -170,15 +220,11 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
           </form>
 
           <div className='perfil flex flex-col items-center justify-center'>
-            <img
-              className='w-40'
-              src={require('../../Images/defProfile.png').default}
-              alt='imagen de perfil'
-            />
+            <img className='w-40' src={pictures[0]} alt='imagen de perfil' />
             <h2>
-              {userInfo.name
-                ? userInfo.name + ' ' + userInfo.lastName
-                : 'Nombre de tenant'}
+              {property.city
+                ? `Vivienda en ${property.city}`
+                : 'Vivienda en alquiler'}
             </h2>
           </div>
         </div>
