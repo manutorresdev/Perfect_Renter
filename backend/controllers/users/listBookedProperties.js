@@ -28,30 +28,61 @@ const listBookedProperties = async (req, res, next) => {
       throw error;
     }
 
-    // Obtenemos los alquileres en reserva o alquilados actualmente del usuario
-    const [bookedProperties] = await connection.query(
+    // Obtenemos los alquileres del usuario
+    const [bookings] = await connection.query(
       `
-      SELECT city, province, type, mts, price, bookings.state FROM properties
+      SELECT
+      bookings.idProperty,
+      bookingCode,
+      city,
+      province,
+      type,
+      mts,
+      price,
+      rooms,
+      photos.name LIMIT 1,
+      AVG(IFNULL(property_votes.voteValue, 0)) AS votes,
+      bookings.state,
+      startBookingDate,
+      endBookingDate
+      FROM properties
+      LEFT JOIN photos ON properties.idProperty = photos.idProperty
+      LEFT JOIN votes AS property_votes ON (properties.idProperty = property_votes.idProperty)
       LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
-      WHERE bookings.idRenter = ? AND (bookings.state = "reservado" OR bookings.state = "alquilada");
+      WHERE bookings.idTenant = ?
+      GROUP BY bookings.idBooking;
       `,
-      [idUser]
-    );
-
-    // Seleccionamos las reservas en petición.
-    const [petitionProterties] = await connection.query(
-      `
-    SELECT city, province, type, mts, price, bookings.state FROM properties
-    LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
-    WHERE bookings.idRenter = ? AND (bookings.state = "peticion");
-    `,
       [idReqUser]
     );
+    // (SELECT name FROM photos WHERE idProperty = bookings.idProperty LIMIT 1) as photo
+
+    // Obtenemos los alquileres en reserva o alquilados actualmente del usuario
+    // const [bookedProperties] = await connection.query(
+    //   `
+    //   SELECT bookings.idProperty, city, province, type, mts, price, bookings.state FROM properties
+    //   LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
+    //   WHERE bookings.idRenter = ? AND (bookings.state = "reservado" OR bookings.state = "alquilada");
+    //   `,
+    //   [idUser]
+    // );
+
+    // Seleccionamos las reservas en petición.
+    // const [petitionProterties] = await connection.query(
+    //   `
+    // SELECT city, province, type, mts, price, bookings.state FROM properties
+    // LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
+    // WHERE bookings.idRenter = ? AND (bookings.state = "peticion");
+    // `,
+    //   [idReqUser]
+    // );
 
     res.send({
       status: 'ok',
-      Alquileres_reservados: bookedProperties,
-      Peticiones_en_proceso: petitionProterties,
+      bookings,
+      // bookings: {
+      //   Alquileres_reservados: bookedProperties,
+      //   Peticiones_en_proceso: petitionProterties,
+      // },
     });
   } catch (error) {
     next(error);

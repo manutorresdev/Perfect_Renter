@@ -11,12 +11,16 @@ export default function Tenant({ user, setOverlay }) {
     }
   }, [Votes]);
 
+  function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1);
+  }
+
   return (
-    <article className='flex gap-2 text-xs '>
-      <div className='w-48 flex flex-col relative items-center'>
+    <article className='flex gap-2 text-xs items-center'>
+      <div className='flex flex-col relative items-center'>
         <Link to={`/inquilinos/${user.idUser}`}>
-          <div className='font-bold ml-1'>{user.name}</div>
-          <span className='ml-2'>{user.city}</span>
+          <div className='font-bold'>{capitalizeFirstLetter(user.name)}</div>
+          <span className=''>{user.city}</span>
           <span>{user.idUser}</span>
           <img
             className='w-32'
@@ -41,14 +45,24 @@ export default function Tenant({ user, setOverlay }) {
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet
         natus eaque rem ad, minima iure.
       </p>
-      <button
-        className='bg-principal-1 self-center px-2 py-1 '
-        onClick={() => {
-          setOverlay({ shown: true, userInfo: user });
-        }}
-      >
-        Contactar
-      </button>
+      <div className='flex flex-col gap-1'>
+        <button
+          className='bg-principal-1 self-center px-2 py-1 '
+          onClick={() => {
+            setOverlay({ shown: true, userInfo: user, form: 'contact' });
+          }}
+        >
+          Contactar
+        </button>
+        <button
+          className='bg-principal-1 self-center px-2 py-1 '
+          onClick={() => {
+            setOverlay({ shown: true, userInfo: user, form: 'vote' });
+          }}
+        >
+          Valorar
+        </button>
+      </div>
     </article>
   );
 }

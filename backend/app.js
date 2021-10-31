@@ -54,6 +54,7 @@ const {
   acceptBooking,
   cancelBooking,
   listPropertyVotes,
+  getBookings,
 } = require('./controllers/properties/index');
 
 /**
@@ -243,6 +244,16 @@ app.post('/properties/:idProperty/votes', authUser, propertyExists, newVote);
  * @response {Object} Response Lista de las valoraciones
  */
 app.get('/properties/:idProperty/votes', propertyExists, listPropertyVotes);
+/**
+ * Listar las reservas de un alquiler
+ *
+ * @name getBookings
+ * @path {GET} /properties/:idProperty/bookings
+ * @params {number} idProperty Número del inmueble del que se quiere visualizar las reservas
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response Lista de reservas
+ */
+app.get('/properties/:idProperty/bookings', propertyExists, getBookings);
 
 /**
  * ######################
@@ -474,6 +485,16 @@ app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
  * @response {Object} Response listando las propiedades de ese renter
  */
 app.get('/users/:idUser/properties', userExists, listProperties);
+// /**
+//  * Listar las reservas de un usuario
+//  *
+//  * @name getBookings
+//  * @path {GET} /properties/:idProperty/bookings
+//  * @params {number} idProperty Número del inmueble del que se quiere visualizar las reservas
+//  * @code {200} Si la respuesta es correcta
+//  * @response {Object} Response Lista de reservas
+//  */
+//  app.get('/users/:idUser/bookings', propertyExists, getBookings);
 
 /**
  * Contacto a nuestra empresa.
@@ -519,7 +540,7 @@ app.use((req, res) => {
  * ####################
  */
 const server = app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+  console.log(`Server listening at http://192.168.5.103:${PORT}`);
 });
 
 module.exports = { server, app };

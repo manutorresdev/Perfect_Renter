@@ -418,9 +418,9 @@ describe('User GET endpoints', () => {
       .set({ authorization: token3 });
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveProperty('Peticiones_en_proceso');
-    expect(res.body.Peticiones_en_proceso).toHaveLength(
-      res.body.Peticiones_en_proceso.length
+    expect(res.body.bookings).toHaveProperty('Peticiones_en_proceso');
+    expect(res.body.bookings.Peticiones_en_proceso).toHaveLength(
+      res.body.bookings.Peticiones_en_proceso.length
     );
   });
 

@@ -154,7 +154,7 @@ const newVote = async (req, res, next) => {
       // Obtenemos id del usuario a votar
       const { idUser } = req.params;
 
-      // Obtenemos el voto y el comentario del usuario
+      // Obtenemos el voto y el comentario del casero/renter
       const { commentary, voteValueRenter, idProperty } = req.body;
 
       // Comprobamos que el usuario que vota y el votado son diferentes
