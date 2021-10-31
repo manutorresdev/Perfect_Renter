@@ -8,25 +8,39 @@ import Property from '../Properties/Property';
 export default function Profile({ token, setToken }) {
   const [User, setUser] = useState({});
   const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
+  const [Bookings, setBookings] = useState([]);
   const [properties] = useProperties([]);
   const user = parseJwt(token);
 
   useEffect(() => {
+    console.log('\x1b[43m########\x1b[30m', user.idUser);
     get(
-      `http://localhost:4000/users/${user.idUser}`,
+      `http://192.168.5.103:4000/users/${user.idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
       (error) => console.log(error),
       token
     );
+    get(
+      `http://192.168.5.103:4000/users/${user.idUser}/bookings`,
+      (data) => {
+        setBookings(data.bookings);
+      },
+      (error) => {
+        console.log(error);
+      },
+      token
+    );
   }, [token, user.idUser]);
   console.log('usuario profile:', User);
+
+  console.log(Bookings);
 
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
       del(
-        `http://localhost:4000/users/${user.idUser}`,
+        `http://192.168.5.103:4000/users/${user.idUser}`,
         body,
         (data) => {
           setToken('');
@@ -50,17 +64,14 @@ export default function Profile({ token, setToken }) {
 
   return (
     <>
-      {Overlay.shown ? (
+      {Overlay.shown && (
         <Register
           setOverlay={setOverlay}
           userInfo={Overlay.userInfo}
           usuario={User}
           Token={token}
         />
-      ) : (
-        ''
       )}
-
       <article className='pt-20 pb-28 flex flex-col items-center justify-center'>
         <button
           className=''
@@ -99,7 +110,7 @@ export default function Profile({ token, setToken }) {
               {User.tel}
               <li className='font-bold'>Bio:</li>
               {User.bio}
-              <li className='font-bold'>Fecha de nacimiento:</li>
+              <li className='font-bold'>Fecha de nacimiento:</li>0
               {new Date(User.birthDate).toLocaleDateString('es-ES')}
             </ul>
           </section>
@@ -113,6 +124,30 @@ export default function Profile({ token, setToken }) {
               ) : (
                 <div>No hay ningún inmueble</div>
               )}
+            </div>
+          </section>
+          <section>
+            <div>RESERVAS</div>
+            <div className='bookings-cont'>
+              {Bookings &&
+                Bookings.map((booking) => {
+                  console.log('\x1b[43m########\x1b[30m', booking);
+                  return (
+                    <h1>{booking.bookingCode}</h1>
+                    // <Property
+                    //   key={booking.bookingCode}
+                    //   property={{
+                    //     idProperty: booking.idProperty,
+                    //     mts: booking.mts,
+                    //     price: booking.price,
+                    //     province: booking.province,
+                    //     rooms: booking.rooms,
+                    //     votes: booking.votes,
+                    //     type: booking.type,
+                    //   }}
+                    // />
+                  );
+                })}
             </div>
           </section>
           <button

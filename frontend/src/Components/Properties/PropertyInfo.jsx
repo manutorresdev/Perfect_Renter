@@ -6,8 +6,13 @@ import useProperties from '../../Helpers/Hooks/useProperties';
 import Filters from './Filters';
 // import { parseJwt } from '../../Helpers/Api';
 import useUser from '../../Helpers/Hooks/useUser';
+import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 
 export default function PropertyInfo(props) {
+  const [pisosVisitados, setPisosVisitados] = useLocalStorage(
+    'pisosVisitados',
+    []
+  );
   // Recibimos id del usuario que hace la request
   const [User] = useUser(props.token);
   //Overlay de respuestas
@@ -60,13 +65,24 @@ export default function PropertyInfo(props) {
 
     if (prop) {
       setProperty(prop);
+      // if (!pisosVisitados.includes(prop.idProperty)) {
+      //   setPisosVisitados({...pisosVisitados, {p: prop.idProperty, }});
+      // }
       if (prop.idUser === User.idUser) {
         setOwner(true);
       } else {
         setOwner(false);
       }
     }
-  }, [props.match.params.idProperty, Properties, property, Owner, User]);
+  }, [
+    props.match.params.idProperty,
+    Properties,
+    property,
+    Owner,
+    User,
+    pisosVisitados,
+    setPisosVisitados,
+  ]);
 
   function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
@@ -82,7 +98,7 @@ export default function PropertyInfo(props) {
 
   return (
     <article className='pb-28 flex bg-gray-200 bg-opacity-20 relative'>
-      {Overlay.form ? (
+      {Overlay.form && (
         <ContactProperty
           form={Overlay.form}
           setOverlay={setOverlay}
@@ -91,9 +107,15 @@ export default function PropertyInfo(props) {
           pictures={SlideImgs}
           setMessage={setMessage}
           message={message}
+          Slider={{
+            Photo: Photo,
+            right: right,
+            sliderButtonStyle: sliderButtonStyle,
+            slider: slider,
+            SlideImgs: SlideImgs,
+            curr: curr,
+          }}
         />
-      ) : (
-        ''
       )}
       {message.status ? <Message message={message} /> : ''}
       <aside
@@ -174,6 +196,9 @@ export default function PropertyInfo(props) {
               {property.energyCertificate === 0 ? 'Sin especificar' : 'Si'}
             </li>
           </ul>
+          {/* {property && pisosVisitados.includes(property.idProperty) && (
+            <p>Ya has visitado este piso.</p>
+          )} */}
         </div>
         <div className='buttons-cont p-5 flex justify-around items-center'>
           <div className='grid grid-cols-2 grid-rows-2 gap-1 fixed right-5 bottom-0 select-none z-10'>

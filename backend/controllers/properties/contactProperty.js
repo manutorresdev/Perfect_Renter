@@ -81,6 +81,18 @@ const contactProperty = async (req, res, next) => {
             Por favor responde lo antes posible el mensaje para mantener nuestro buen servicio.
           </td>
       </tbody>
+      <tfoot>
+        <th>
+            <button>
+              <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/aceptar"
+            >ACEPTAR RESERVA</a></button>
+            <span><span/>
+            <span><span/>
+            <button>
+              <a href="http://192.168.5.103:3000/alquieres/${bookingCode}/cancelar"
+            >CANCELAR RESERVA</a></button>
+        </th>
+      </tfoot>
     </table>
     `;
 
