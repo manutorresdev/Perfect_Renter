@@ -8,17 +8,22 @@ import Avatar from '../Users/avatar';
 
 export default function Profile({ token, setToken }) {
   const [User, setUser] = useState({});
+
   const [Overlay, setOverlay] = useState({
     shown: false,
     userInfo: {},
     form: '',
   });
+
+  const [Bookings, setBookings] = useState([]);
+
   const [properties] = useProperties([]);
   const [AvatarFile, setAvatarFile] = useState('');
 
   const user = parseJwt(token);
 
   useEffect(() => {
+    console.log('\x1b[43m########\x1b[30m', user.idUser);
     get(
       `http://localhost:4000/users/${user.idUser}`,
       (data) => {
@@ -63,6 +68,11 @@ export default function Profile({ token, setToken }) {
     (property) => property.idUser === user.idUser
   );
 
+  /**
+   * Es necesario hacer un llamado a un nuevo middleware para listar
+   * las reservas de un usuario y ponerlas en su perfil
+   */
+
   return (
     <>
       {Overlay.form === 'register' && (
@@ -82,7 +92,6 @@ export default function Profile({ token, setToken }) {
           Token={token}
         />
       )}
-
       <article className='pt-20 pb-28 flex flex-col items-center justify-center'>
         <button
           className=''
@@ -125,7 +134,7 @@ export default function Profile({ token, setToken }) {
               {User.tel}
               <li className='font-bold'>Bio:</li>
               {User.bio}
-              <li className='font-bold'>Fecha de nacimiento:</li>
+              <li className='font-bold'>Fecha de nacimiento:</li>0
               {new Date(User.birthDate).toLocaleDateString('es-ES')}
             </ul>
           </section>
@@ -139,6 +148,30 @@ export default function Profile({ token, setToken }) {
               ) : (
                 <div>No hay ningún inmueble</div>
               )}
+            </div>
+          </section>
+          <section>
+            <div>RESERVAS</div>
+            <div className='bookings-cont'>
+              {Bookings &&
+                Bookings.map((booking) => {
+                  console.log('\x1b[43m########\x1b[30m', booking);
+                  return (
+                    <h1>{booking.bookingCode}</h1>
+                    // <Property
+                    //   key={booking.bookingCode}
+                    //   property={{
+                    //     idProperty: booking.idProperty,
+                    //     mts: booking.mts,
+                    //     price: booking.price,
+                    //     province: booking.province,
+                    //     rooms: booking.rooms,
+                    //     votes: booking.votes,
+                    //     type: booking.type,
+                    //   }}
+                    // />
+                  );
+                })}
             </div>
           </section>
           <button

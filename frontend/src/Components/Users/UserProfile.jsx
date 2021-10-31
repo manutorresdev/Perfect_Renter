@@ -14,7 +14,7 @@ export default function UserProfile({ match, property }) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/users/${match.params.idUser}`,
+      `http://192.168.5.100:4000/users/${match.params.idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -29,33 +29,42 @@ export default function UserProfile({ match, property }) {
     (property) => property.idUser === user.idUser
   );
 
+  function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1);
+  }
+
   return (
     <>
-      {Overlay.shown ? (
+      {Overlay.shown && (
         <ContactTenant setOverlay={setOverlay} userInfo={Overlay.userInfo} />
-      ) : (
-        ''
       )}
-      <main className='pb-28'>
+      <main className='pb-28  py-20 flex items-center flex-col justify-center'>
         <div className='perfil flex flex-col items-center justify-center'>
-          <article>
+          <article className=' flex flex-col gap-5 items-center justic'>
             <img
-              className='w-80 py-20 float-right '
+              className='w-2/4'
               src={require('../../Images/defProfile.png').default}
               alt='imagen de perfil'
             />
-            <section className='p-40'>
-              <h1>
-                {user.name
-                  ? user.name + ' ' + user.lastName
-                  : 'Nombre de tenant'}
-              </h1>
-              <div className='flex text-xs self-center'>
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
+            <section className=''>
+              <div className='bg-gray-Primary p-2 bg-opacity-25 text-3xl text-principal-1 flex justify-between'>
+                <h1>
+                  {user.name
+                    ? `${capitalizeFirstLetter(
+                        user.name
+                      )} ${capitalizeFirstLetter(user.lastName)}`
+                    : 'Nombre de tenant'}
+                </h1>
+              </div>
+              <div className='flex self-center px-2 py-2'>
+                {[1, 2, 3, 4, 5].map((value, i) => {
+                  return (
+                    <FaStar
+                      key={value}
+                      className={`text-principal-1 duration-200 text-2xl cursor-pointer`}
+                    />
+                  );
+                })}
               </div>
               <p className=''>
                 {user.bio} Lorem ipsum dolor sit amet consectetur adipisicing
@@ -66,13 +75,23 @@ export default function UserProfile({ match, property }) {
             </section>
           </article>
         </div>
+
         <section>
           <h2 className='p-5 text-2xl underline'>Historial viviendas</h2>
-          <div className='flex items-center  space-x-5 max-w-sm'>
-            <img src='../../Images/flat.jpg' alt='imagen vivienda' />
-            <img src='../../Images/flat.jpg' alt='imagen vivienda' />
+          <div className='flex items-center'>
+            <img
+              className='w-10'
+              src='../../Images/flat.jpg'
+              alt='imagen vivienda'
+            />
+            <img
+              className='w-10'
+              src='../../Images/flat.jpg'
+              alt='imagen vivienda'
+            />
           </div>
         </section>
+
         <section>
           <h2 className='p-5 text-2xl underline'>Alquileres</h2>
           <div className='flex flex-wrap gap-5'>
@@ -118,10 +137,10 @@ export default function UserProfile({ match, property }) {
 
         <section>
           <h2 className='p-5 text-2xl underline'>Opiniones</h2>
-          <div className='flex items-center justify-center'>
+          <div className='flex flex-col items-center justify-center'>
             <article>
               <img
-                className='w-40 py-20 float-left '
+                className='w-10 py-20 float-left '
                 src={require('../../Images/defProfile.png').default}
                 alt='imagen de perfil'
               />
@@ -145,7 +164,7 @@ export default function UserProfile({ match, property }) {
             </article>
             <article>
               <img
-                className='w-40 py-20 float-left '
+                className='w-10 py-20 float-left '
                 src={require('../../Images/defProfile.png').default}
                 alt='imagen de perfil'
               />

@@ -4,7 +4,6 @@ import { FaPlus } from 'react-icons/fa';
 import { put } from '../../Helpers/Api';
 
 export default function Avatar({ setOverlay, avatar, usuario, Token }) {
-  const [file, setFile] = useState('');
   const [Error, setError] = useState('');
 
   const { handleSubmit, reset, register } = useForm();

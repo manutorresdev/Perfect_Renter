@@ -228,6 +228,7 @@ const bookProperty = async (req, res, next) => {
           body: emailBody,
         });
 
+        // VALIDAR CORREO USUARIO QUE RESERVA
         await sendMail({
           to: email,
           subject: 'Solicitud de reserva.',

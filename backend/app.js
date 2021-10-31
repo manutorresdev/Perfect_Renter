@@ -45,7 +45,7 @@ const {
   getProperty,
   addPropertyPhoto,
   bookProperty,
-  // contactProperty,
+  contactProperty,
   editProperty,
   deleteProperty,
   deletePropertyPhoto,
@@ -54,6 +54,7 @@ const {
   acceptBooking,
   cancelBooking,
   listPropertyVotes,
+  getBookings,
 } = require('./controllers/properties/index');
 
 /**
@@ -117,10 +118,30 @@ app.post(
   canEdit,
   addPropertyPhoto
 );
+
 /**
- * Solicitud a un inmueble
+ * Solicitud de alquiler a un inmueble
  *
  * @name contactProperty
+ * @path {get} /properties/:idProperty/contact
+ * @params {number} idProperty Número del inmueble a contactar
+ * @header Authorization Es la identificación utlizada para llevar a cabo la request
+ * @code {200} Si la respuesta es correcta
+ * @code {401} Si la autorización del usuario es errónea
+ * @code {403} Si es el dueño de la vivienda
+ * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
+ */
+app.post(
+  '/properties/:idProperty/contact',
+  authUser,
+  propertyExists,
+  contactProperty
+);
+
+/**
+ * Solicitud de alquiler a un inmueble
+ *
+ * @name bookProperty
  * @path {POST} /properties/:idProperty/contact
  * @params {number} idProperty Número del inmueble a contactar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
@@ -243,6 +264,16 @@ app.post('/properties/:idProperty/votes', authUser, propertyExists, newVote);
  * @response {Object} Response Lista de las valoraciones
  */
 app.get('/properties/:idProperty/votes', propertyExists, listPropertyVotes);
+/**
+ * Listar las reservas de un alquiler
+ *
+ * @name getBookings
+ * @path {GET} /properties/:idProperty/bookings
+ * @params {number} idProperty Número del inmueble del que se quiere visualizar las reservas
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response Lista de reservas
+ */
+app.get('/properties/:idProperty/bookings', propertyExists, getBookings);
 
 /**
  * ######################
@@ -475,6 +506,16 @@ app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
  * @response {Object} Response listando las propiedades de ese renter
  */
 app.get('/users/:idUser/properties', userExists, listProperties);
+// /**
+//  * Listar las reservas de un usuario
+//  *
+//  * @name getBookings
+//  * @path {GET} /properties/:idProperty/bookings
+//  * @params {number} idProperty Número del inmueble del que se quiere visualizar las reservas
+//  * @code {200} Si la respuesta es correcta
+//  * @response {Object} Response Lista de reservas
+//  */
+//  app.get('/users/:idUser/bookings', propertyExists, getBookings);
 
 /**
  * Contacto a nuestra empresa.
