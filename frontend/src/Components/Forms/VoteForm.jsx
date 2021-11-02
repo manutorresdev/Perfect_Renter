@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus, FaStar } from 'react-icons/fa';
-import { CreateFormData, post } from '../../Helpers/Api';
+import { capitalizeFirstLetter, CreateFormData, post } from '../../Helpers/Api';
 
 export default function VoteForm({ setOverlay, info, Token }) {
   // Estados
@@ -37,7 +37,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
     e.preventDefault();
     if (body.voteValueRenter && body.commentary && Property) {
       post(
-        `http://localhost:4000/users/${info.idUser}/votes`,
+        `http://192.168.5.103:4000/users/${info.idUser}/votes`,
         CreateFormData({ ...body, idProperty: Property }),
         (data) => {
           setMessage(data.message);
@@ -169,9 +169,6 @@ function PropertiesToVote({
   setSelectProperty,
   setOverlay,
 }) {
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
-  }
   return (
     <div className='z-50 p-2 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
       <div className='contact border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4 font-medium'>
@@ -249,7 +246,7 @@ function PropertiesToVote({
   );
 }
 
-function ConfirmMessage({ Message }) {
+export function ConfirmMessage({ Message }) {
   return (
     <div className='flex-col z-20 absolute left-0 top-0 right-0 bottom-0 bg-gray-700 bg-opacity-30 h-screen w-screen shadow-2xl p-20 flex items-center justify-between'>
       <section className='confirm-message m-auto font-medium p-4 border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>

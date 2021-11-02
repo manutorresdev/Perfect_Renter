@@ -1,12 +1,9 @@
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { capitalizeFirstLetter } from '../../Helpers/Api';
 
 export default function Tenant({ user, setOverlay, relation }) {
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
-  }
-
   return (
     <article className='user-card flex gap-2 text-xs items-center p-1 bg-gray-100 bg-opacity-30'>
       <div className='user-info-cont flex items-center font-medium relative flex-grow-0 w-9/12'>

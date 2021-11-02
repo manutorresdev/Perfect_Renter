@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { get } from '../../Helpers/Api';
+import { capitalizeFirstLetter, get } from '../../Helpers/Api';
 import { FaStar } from 'react-icons/fa';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 import ContactTenant from '../Forms/ContactTenant';
@@ -28,10 +28,6 @@ export default function UserProfile({ match, property }) {
   const propiedadUsuario = properties.filter(
     (property) => property.idUser === user.idUser
   );
-
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
-  }
 
   return (
     <>

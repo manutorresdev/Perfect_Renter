@@ -8,6 +8,7 @@ import Filters from './Filters';
 import useUser from '../../Helpers/Hooks/useUser';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 import Property from './Property';
+import { capitalizeFirstLetter } from '../../Helpers/Api';
 
 export default function PropertyInfo(props) {
   const [pisosVisitados, setPisosVisitados] = useLocalStorage(
@@ -84,10 +85,6 @@ export default function PropertyInfo(props) {
     pisosVisitados,
     setPisosVisitados,
   ]);
-
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
-  }
 
   // Styles
   const sliderButtonStyle =

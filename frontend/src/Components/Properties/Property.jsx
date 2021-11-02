@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FaAngleLeft, FaAngleRight, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { capitalizeFirstLetter } from '../../Helpers/Api';
 
 export default function Property({ property }) {
   const [curr, setCurr] = useState(0);
@@ -23,10 +24,6 @@ export default function Property({ property }) {
   function left() {
     console.log('\x1b[43m########\x1b[30m', 'LEFT');
     setCurr(curr === 0 ? SlideImgs.length - 1 : curr - 1);
-  }
-
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
   }
 
   return (

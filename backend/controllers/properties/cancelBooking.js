@@ -17,7 +17,7 @@ const cancelBooking = async (req, res, next) => {
     //Verificamos que exista la solicitud de reserva en la BD
     const [booking] = await connection.query(
       `
-            SELECT * FROM bookings WHERE bookingCode = ? AND idTenant = ? OR bookingCode = ? AND idRenter = ?
+      SELECT * FROM bookings WHERE bookingCode = ? AND idTenant = ? OR bookingCode = ? AND idRenter = ?
        `,
       [bookingCode, idUser, bookingCode, idUser]
     );

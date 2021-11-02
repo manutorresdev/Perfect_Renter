@@ -19,7 +19,7 @@ const contactUser = async (req, res, next) => {
     const { idUser } = req.params;
 
     // Obtenemos los datos del usuario que contacta.
-    const { name, lastName, email, tel, comentarios } = req.body;
+    const { name, lastName, email, tel, comentarios, property } = req.body;
 
     // Si el usuario a contactar y el usuario contactado son el mismo, devolvemos error.
     if (Number(idUser) === req.userAuth.idUser) {
@@ -64,7 +64,7 @@ const contactUser = async (req, res, next) => {
             <li><b>Nombre completo:</b> ${name} ${lastName}</li>
             <li><b>Email:</b> ${email}</li>
             <li><b>Teléfono:</b> ${tel}</li>
-            <li><b>Propiedad:</b> LINK DE LA PROPIEDAD A OFRECER </li>
+            <li><b>Propiedad:</b><a href="http://192.168.5.103:3000/alquileres/${property}">Vivienda ofrecida</a></li>
           </ul>
           <br/>
           ${comentarios}

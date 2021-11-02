@@ -1,11 +1,11 @@
 import React from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { CreateFormData, post } from '../../Helpers/Api';
+import { capitalizeFirstLetter, CreateFormData, post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { FaPlus } from 'react-icons/fa';
 
-export default function ContactTenant({ info, setOverlay, Token }) {
+export default function ContactTenant({ info, setOverlay, Token, properties }) {
   const {
     register,
     handleSubmit,
@@ -16,9 +16,9 @@ export default function ContactTenant({ info, setOverlay, Token }) {
 
   function onSubmit(body, e) {
     e.preventDefault();
-
+    console.log('\x1b[45m%%%%%%%', body);
     post(
-      `http://localhost:4000/users/${info.idUser}/contact`,
+      `http://192.168.5.103:4000/users/${info.idUser}/contact`,
       CreateFormData(body),
       (data) => {
         alert(data.message);
@@ -125,17 +125,25 @@ export default function ContactTenant({ info, setOverlay, Token }) {
               <div className='select-none'>Escoge el alquiler a ofrecer:</div>
               <select
                 name='properties'
+                defaultValue='Ninguno'
                 className={inpStyle}
                 {...register('property')}
               >
                 <option default value='Ninguno' disabled>
                   Ninguno
                 </option>
-                {/* <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option>
-                <option value=""></option> */}
+                {properties.length > 0 &&
+                  properties.map((property) => {
+                    return (
+                      <option
+                        key={property.idProperty}
+                        value={`${property.idProperty}`}
+                      >
+                        {capitalizeFirstLetter(property.type)} en{' '}
+                        {property.city}, {property.address} {property.number}{' '}
+                      </option>
+                    );
+                  })}
               </select>
             </label>
             <label>
