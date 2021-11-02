@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import { MenuElements } from './MenuElements';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,14 @@ import { Link } from 'react-router-dom';
 export default function NavBar({ token, setToken }) {
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const showMenu = () => setMostrarMenu(!mostrarMenu);
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleWindowResize);
+
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, []);
 
   const buttonStyle =
     'text-center bg-principal-1 min-w-min p-1 cursor-pointer sm:hover:text-white sm:hover:font-bold sm:duration-300';
@@ -22,6 +30,16 @@ export default function NavBar({ token, setToken }) {
           id='logo'
         />
       </Link>
+      {width <= 637 && (
+        <div
+          onClick={() => {
+            setMostrarMenu(false);
+          }}
+          className={`Menu toggler animate-fadeIn ${
+            mostrarMenu ? 'static' : 'hidden'
+          } absolute h-screen w-screen bg-gray-700 top-0 left-0 bottom-0 right-0 bg-opacity-20 duration-300 z-10 cursor-pointer`}
+        ></div>
+      )}
       <ul
         className={`navBar
         sm:text-lg sm:static sm:flex-row sm:justify-self-start sm:col-start-2 sm:col-end-8 sm:bg-transparent sm:p-0 sm:justify-around sm:w-full
@@ -29,7 +47,7 @@ export default function NavBar({ token, setToken }) {
         xl:col-start-2 xl:col-end-8 xl:justify-self-end xl:justify-around
         ${
           mostrarMenu ? 'right-0' : '-right-full'
-        } text-2xl flex flex-col p-5 items-center bg-gray-Primary duration-300 absolute top-20`}
+        } text-2xl flex flex-col p-5 items-center bg-gray-Primary duration-300 absolute top-20 z-20`}
         id='menu'
       >
         {MenuElements.map((item) => {

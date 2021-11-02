@@ -5,7 +5,7 @@ import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { FaPlus } from 'react-icons/fa';
 
-export default function ContactTenant({ userInfo, setOverlay, Token }) {
+export default function ContactTenant({ info, setOverlay, Token }) {
   const {
     register,
     handleSubmit,
@@ -18,7 +18,7 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
     e.preventDefault();
 
     post(
-      `http://192.168.5.103:4000/users/${userInfo.idUser}/contact`,
+      `http://192.168.5.103:4000/users/${info.idUser}/contact`,
       CreateFormData(body),
       (data) => {
         alert(data.message);
@@ -36,12 +36,12 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
   const comentarios = watch('comentarios');
 
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
+    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
       <section className='contact pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
-            setOverlay({ shown: false, userInfo: {} });
+            setOverlay({ shown: false, info: {} });
           }}
         >
           <FaPlus className='transform scale-150 rotate-45' />
@@ -192,9 +192,7 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
               alt='imagen de perfil'
             />
             <h2 className='informacion w-5/6 bg-gray-Primary bg-opacity-25 text-2xl text-principal-1 flex justify-center'>
-              {userInfo.name
-                ? userInfo.name + ' ' + userInfo.lastName
-                : 'Nombre de tenant'}
+              {info.name ? info.name + ' ' + info.lastName : 'Nombre de tenant'}
             </h2>
           </div>
         </div>

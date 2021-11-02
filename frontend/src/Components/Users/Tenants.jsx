@@ -15,7 +15,7 @@ export default function UsersList() {
   const [Overlay, setOverlay] = useState({
     shown: false,
     form: '',
-    userInfo: {},
+    info: {},
   });
   const [Users, setUsers] = useState([]);
   const [Loaded, setLoaded] = useState(false);
@@ -74,7 +74,7 @@ export default function UsersList() {
       {Overlay.form === 'contact' && (
         <ContactTenant
           setOverlay={setOverlay}
-          userInfo={Overlay.userInfo}
+          info={Overlay.info}
           Token={Token}
         />
       )}
@@ -82,7 +82,9 @@ export default function UsersList() {
         <VoteForm setOverlay={setOverlay} info={Overlay.info} Token={Token} />
       )}
       <aside
-        className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static fixed right-0 top-20 mt-5 sm:top-0 z-20`}
+        className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static fixed right-0 top-20 mt-5 sm:top-0 ${
+          Overlay.form ? 'z-0' : 'z-20'
+        }`}
       >
         <button
           className='text-white text-xl w-10 min-w-min h-full p-2 sm:hidden'
@@ -105,7 +107,6 @@ export default function UsersList() {
               .map((el, i) => <LoadingSkeleton key={i} />)}
           {Users.length ? (
             Users.map((user) => {
-              user.name === 'Rocio' ? console.log(user.votes) : console.log('');
               return (
                 <Tenant
                   relation={Bookings.filter(
@@ -122,7 +123,6 @@ export default function UsersList() {
               No hay inquilinos que mostrar.
             </div>
           )}
-          <LoadingSkeleton />
         </div>
       </section>
     </main>
@@ -154,7 +154,6 @@ function Filters({ setOverlay, Overlay }) {
       })
       .join('&');
 
-    console.log(history.location);
     if (history.location.pathname.length > 12) {
       history.replace('/inquilinos?' + queryString);
     }

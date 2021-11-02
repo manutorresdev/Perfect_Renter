@@ -27,7 +27,6 @@ export default function VoteForm({ setOverlay, info, Token }) {
   } = useForm();
 
   useEffect(() => {
-    console.log('\x1b[43m########\x1b[30m', info.relation, 'RELATION');
     if (info.relation.length > 1) {
       setSelectProperty(true);
     } else {
@@ -43,7 +42,6 @@ export default function VoteForm({ setOverlay, info, Token }) {
         `http://192.168.5.103:4000/users/${info.idUser}/votes`,
         CreateFormData({ ...body, idProperty: Property }),
         (data) => {
-          console.log('\x1b[45m%%%%%%%', data);
           setMessage(data.message);
         },
         (error) => {

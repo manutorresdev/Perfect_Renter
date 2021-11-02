@@ -34,7 +34,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/book`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           alert(data.message);
@@ -49,7 +49,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -105,7 +105,7 @@ export default function ContactProperty({
           <FaPlus className='transform scale-150 rotate-45' />
         </button>
         <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
-          Contacto
+          {form === 'reservar' ? 'Reservar' : 'Contacto'}
         </h1>
         {message.status === 'error' && (
           <h1 className='title self-center select-none text-red-700'>

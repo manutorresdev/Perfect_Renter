@@ -4,7 +4,6 @@ import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 export default function Tenant({ user, setOverlay, relation }) {
-  console.log('\x1b[43m########\x1b[30m', user);
   function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
   }
