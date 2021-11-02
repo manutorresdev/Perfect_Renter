@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { del, get, parseJwt } from '../../Helpers/Api';
+import { del, get } from '../../Helpers/Api';
 import {
   FaCamera,
-  FaEnvelope,
   FaPencilAlt,
   FaPlusSquare,
+  FaStar,
   FaTrash,
 } from 'react-icons/fa';
 import Register from '../Forms/Register';
@@ -13,7 +13,6 @@ import Property from '../Properties/Property';
 import Avatar from '../Users/avatar';
 import NewProperty from '../Properties/NewProperty';
 import { Link } from 'react-router-dom';
-
 
 export default function Profile({ token, setToken }) {
   const [User, setUser] = useState({});
@@ -26,9 +25,7 @@ export default function Profile({ token, setToken }) {
   const [Bookings, setBookings] = useState([]);
   const [ShownBookings, setShownBookings] = useState('proximas');
   const [properties] = useProperties([]);
-  const [AvatarFile, setAvatarFile] = useState('');
-
-
+  const [, setAvatarFile] = useState('');
 
   useEffect(() => {
     get(
@@ -49,23 +46,23 @@ export default function Profile({ token, setToken }) {
         (error) => console.log(error),
         token
       );
-     get(
-      `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
-      (data) => {
-        setBookings(data.bookings);
-      },
-      (error) => {
-        console.log(error);
-      };
-      token
-     );
-   }
-  }, [token, user.idUser]);
+      get(
+        `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
+        (data) => {
+          setBookings(data.bookings);
+        },
+        (error) => {
+          console.log(error);
+        },
+        token
+      );
+    }
+  }, [token, User]);
 
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
       del(
-        `http://localhost:4000/users/${user.idUser}`,
+        `http://localhost:4000/users/${User.idUser}`,
         body,
         (data) => {
           setToken('');
@@ -79,12 +76,12 @@ export default function Profile({ token, setToken }) {
   }
 
   const propiedadUsuario = properties.filter(
-    (property) => property.idUser === user.idUser
+    (property) => property.idUser === User.idUser
   );
 
   return (
     <article className='pt-20 pb-28 flex flex-col justify-center w-screen'>
-    {Overlay.form === 'register' && (
+      {Overlay.form === 'register' && (
         <Register
           setOverlay={setOverlay}
           userInfo={Overlay.info}
@@ -121,7 +118,7 @@ export default function Profile({ token, setToken }) {
           <button
             className='left-44  '
             onClick={() => {
-              setOverlay({ shown: true, userInfo: user, form: 'avatar' });
+              setOverlay({ shown: true, userInfo: User, form: 'avatar' });
             }}
           >
             <FaCamera className='text-4xl' />
@@ -135,7 +132,7 @@ export default function Profile({ token, setToken }) {
             <button
               className='text-2xl '
               onClick={() => {
-                setOverlay({ shown: true, userInfo: user, form: 'register' });
+                setOverlay({ shown: true, userInfo: User, form: 'register' });
               }}
             >
               <FaPencilAlt />
@@ -177,7 +174,7 @@ export default function Profile({ token, setToken }) {
                 onClick={() => {
                   setOverlay({
                     shown: true,
-                    userInfo: user,
+                    userInfo: User,
                     form: 'property',
                   });
                 }}
@@ -224,11 +221,10 @@ export default function Profile({ token, setToken }) {
           <FaTrash className='  text-principal-1 ' /> Eliminar cuenta
         </button>
       </div>
-    </article>
       <button
         className=''
         onClick={() => {
-          setOverlay({ shown: true, userInfo: user });
+          setOverlay({ shown: true, userInfo: User });
         }}
       >
         <FaPencilAlt />
