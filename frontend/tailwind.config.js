@@ -6,6 +6,29 @@ module.exports = {
       black: theme('colors.black'),
     }),
     extend: {
+      keyframes: {
+        LeftX: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+        RightX: {
+          '0%': { transform: 'translateX(100%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+        fadeIn: {
+          '0%': {
+            opacity: 0,
+          },
+          '100%': {
+            opacity: 1,
+          },
+        },
+      },
+      animation: {
+        LeftX: 'LeftX 0.3s ease-in',
+        RightX: 'RightX 0.3s ease-in',
+        fadeIn: 'fadeIn 0.2s ease-in',
+      },
       strokeWidth: {
         3: '3',
         4: '4',

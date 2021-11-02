@@ -20,6 +20,7 @@ app.use(fileUpload());
 // PHOTOS MIDDLEWARE
 app.use('/photo', express.static(uploadsDir));
 
+
 /**
  * @module Routes
  */
@@ -518,7 +519,7 @@ app.get('/users/:idUser/properties', userExists, listProperties);
 //  * @code {200} Si la respuesta es correcta
 //  * @response {Object} Response Lista de reservas
 //  */
-//  app.get('/users/:idUser/bookings', propertyExists, getBookings);
+app.get('/users/:idUser/bookings/renter', authUser, getBookings);
 
 /**
  * Contacto a nuestra empresa.
