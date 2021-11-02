@@ -31,7 +31,7 @@ export default function Property({ property }) {
 
   return (
     <article className='cont-vivienda overflow-hidden border-2 border-white bg-white sm:w-auto w-full min-w-min my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-200'>
-      <div className='slider w-full sm:w-80 relative '>
+      <div className='slider w-full relative'>
         <button
           onClick={right}
           className='absolute z-10 text-white text-3xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'

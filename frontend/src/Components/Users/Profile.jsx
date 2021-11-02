@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { del, get } from '../../Helpers/Api';
+import { del, get, parseJwt } from '../../Helpers/Api';
 import {
   FaCamera,
   FaPencilAlt,
@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 
 export default function Profile({ token, setToken }) {
   const [User, setUser] = useState({});
-
   const [Overlay, setOverlay] = useState({
     shown: false,
     info: {},
@@ -29,22 +28,21 @@ export default function Profile({ token, setToken }) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/users/${User.idUser}`,
+      `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
       (error) => console.log(error),
       token
     );
-    if (User) {
+    if (User.idUser) {
       get(
-        `http://localhost:4000/photo/${User.avatar}`,
+        `http://192.168.5.103:4000/photo/${User.avatar}`,
         (data) => {
+          console.log('\x1b[45m%%%%%%%', data);
           setAvatarFile(data.photo);
-          console.log(data);
         },
-        (error) => console.log(error),
-        token
+        (error) => console.log(error)
       );
       get(
         `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
@@ -57,12 +55,12 @@ export default function Profile({ token, setToken }) {
         token
       );
     }
-  }, [token, User]);
+  }, [token, User.avatar, User.idUser]);
 
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
       del(
-        `http://localhost:4000/users/${User.idUser}`,
+        `http://192.168.5.103:4000/users/${User.idUser}`,
         body,
         (data) => {
           setToken('');
@@ -80,7 +78,7 @@ export default function Profile({ token, setToken }) {
   );
 
   return (
-    <article className='pt-20 pb-28 flex flex-col justify-center w-screen'>
+    <article className='pt-24 pb-32 flex flex-col justify-center'>
       {Overlay.form === 'register' && (
         <Register
           setOverlay={setOverlay}
@@ -104,19 +102,19 @@ export default function Profile({ token, setToken }) {
       <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 '>
         SOBRE TI
       </div>
-      <div className='grid grid-cols-1 sm:grid-cols-2 p-10 gap-32 '>
-        <section className=' md:ml-36'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 p-10 gap-10 sm:gap-32 '>
+        <section className='md:ml-36'>
           <img
-            className='max-w-sm rounded-full py-4 '
+            className='sm:max-w-sm rounded-full py-4 '
             src={
               User.avatar
-                ? `http://localhost:4000/photo/${User.avatar}`
+                ? `http://192.168.5.103:4000/photo/${User.avatar}`
                 : require('../../Images/defProfile.png').default
             }
             alt='perfil de usuario'
           />
           <button
-            className='left-44  '
+            className=''
             onClick={() => {
               setOverlay({ shown: true, userInfo: User, form: 'avatar' });
             }}
@@ -140,16 +138,16 @@ export default function Profile({ token, setToken }) {
           </div>
           <br />
           <ul className='bg-gray-200 grid grid-cols-1 gap-4'>
-            <li className='sm:bg-gray-400 text-lg'>Email</li>
+            <li className='bg-gray-400 text-lg'>Email</li>
             {User.email}
-            <li className='sm:bg-gray-400 text-lg'>Ciudad</li>
+            <li className='bg-gray-400 text-lg'>Ciudad</li>
             {User.ciudad}
-            <li className='sm:bg-gray-400 text-lg'>Teléfono</li>
+            <li className='bg-gray-400 text-lg'>Teléfono</li>
             {User.tel}
-            <li className='sm:bg-gray-400 text-lg'>Fecha de nacimiento</li>
+            <li className='bg-gray-400 text-lg'>Fecha de nacimiento</li>
             {new Date(User.birthDate).toLocaleDateString('es-ES')}
 
-            <li className='sm:bg-gray-400 text-lg'>Biografía:</li>
+            <li className='bg-gray-400 text-lg'>Biografía:</li>
             {User.bio}
           </ul>
         </section>
@@ -182,129 +180,42 @@ export default function Profile({ token, setToken }) {
             </button>
           </div>
         </section>
-        <section>
-          <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1'>
-            {' '}
+        <section className='reservas min-h-'>
+          <div className='w-full bg-principal-1 text-principal-gris font-medium text-3xl pl-5'>
             RESERVAS
           </div>
-          <div className='bookings-cont'>
-            {Bookings &&
-              Bookings.map((booking) => {
-                console.log('\x1b[43m########\x1b[30m', booking);
-                return (
-                  <h1>{booking.bookingCode}</h1>
-                  // <Property
-                  //   key={booking.bookingCode}
-                  //   property={{
-                  //     idProperty: booking.idProperty,
-                  //     mts: booking.mts,
-                  //     price: booking.price,
-                  //     province: booking.province,
-                  //     rooms: booking.rooms,
-                  //     votes: booking.votes,
-                  //     type: booking.type,
-                  //   }}
-                  // />
-                );
-              })}
+          <div className='flex gap-5 justify-around bg-gray-Primary text-principal-1 font-medium'>
+            <button
+              className='py-2 px-10 border-opacity-5 hover:text-white '
+              onClick={() => {
+                !(ShownBookings === 'proximas') && setShownBookings('proximas');
+              }}
+            >
+              Próximas
+            </button>
+            <button
+              onClick={() => {
+                !(ShownBookings === 'finalizada') &&
+                  setShownBookings('finalizada');
+              }}
+              className='py-2 px-10 border-opacity-5 hover:text-white '
+            >
+              Finalizadas
+            </button>
           </div>
+          <BookingsComp Bookings={Bookings} ShownBookings={ShownBookings} />
         </section>
       </div>
-
       <div className='flex justify-end'>
         <button
-          className='p-4 rounded-full  text-principal-1 bg-gray-Primary flex flex-row items-center justify-around'
+          className='py-4 px-2 rounded-full text-principal-1 bg-gray-Primary flex flex-row items-center justify-around'
           onClick={() => {
             onSubmitDeleted();
           }}
         >
-          <FaTrash className='  text-principal-1 ' /> Eliminar cuenta
+          <FaTrash className='text-principal-1' /> Eliminar cuenta
         </button>
       </div>
-      <button
-        className=''
-        onClick={() => {
-          setOverlay({ shown: true, userInfo: User });
-        }}
-      >
-        <FaPencilAlt />
-      </button>
-
-      <section>
-        <img
-          className='w-40'
-          src={
-            User.avatar ? '' : require('../../Images/defProfile.png').default
-          }
-          alt='perfil de usuario'
-        />
-      </section>
-      <section>
-        <button>
-          <FaCamera />
-        </button>
-        <ul>
-          <li className='font-bold'>Nombre:</li>
-          {User.name}
-          <li className='font-bold'>Apellidos:</li>
-          {User.lastName}
-          <li className='font-bold'>Email:</li>
-          {User.email}
-          <li className='font-bold'>Ciudad:</li>
-          {User.ciudad}
-          <li className='font-bold'>Teléfono:</li>
-          {User.tel}
-          <li className='font-bold'>Bio:</li>
-          {User.bio}
-          <li className='font-bold'>Fecha de nacimiento:</li>0
-          {new Date(User.birthDate).toLocaleDateString('es-ES')}
-        </ul>
-      </section>
-      <section className='font-bold'>
-        <div>ALQUILERES</div>
-        <div className='contenedor alquileres flex flex-wrap gap-5'>
-          {propiedadUsuario.length > 0 ? (
-            propiedadUsuario.map((property) => (
-              <Property key={property.idProperty} property={property} />
-            ))
-          ) : (
-            <div>No hay ningún inmueble</div>
-          )}
-        </div>
-      </section>
-      <section className='reservas min-h-'>
-        <div className='w-full bg-principal-1 text-principal-gris font-medium text-3xl pl-5'>
-          RESERVAS
-        </div>
-        <div className='flex gap-5 justify-around bg-gray-Primary text-principal-1 font-medium'>
-          <button
-            className='py-2 px-10 border-opacity-5 hover:text-white '
-            onClick={() => {
-              !(ShownBookings === 'proximas') && setShownBookings('proximas');
-            }}
-          >
-            Próximas
-          </button>
-          <button
-            onClick={() => {
-              !(ShownBookings === 'finalizada') &&
-                setShownBookings('finalizada');
-            }}
-            className='py-2 px-10 border-opacity-5 hover:text-white '
-          >
-            Finalizadas
-          </button>
-        </div>
-        <BookingsComp Bookings={Bookings} ShownBookings={ShownBookings} />
-      </section>
-      <button
-        className='p-4 rounded-full bg-gray-Primary'
-        onClick={() => {
-          onSubmitDeleted();
-        }}
-      >
-        <FaTrash className=' text-4xl text-principal-1 ' />
-      </button>
     </article>
   );
 }

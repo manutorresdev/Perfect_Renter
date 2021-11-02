@@ -15,7 +15,7 @@ export default function ContactUs() {
   function onSubmit(body, e) {
     e.preventDefault();
     post(
-      'http://localhost:4000/contact',
+      'http://192.168.5.103:4000/contact',
       CreateFormData(body),
       (data) => {
         console.log(data);

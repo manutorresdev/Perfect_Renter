@@ -20,7 +20,6 @@ app.use(fileUpload());
 // PHOTOS MIDDLEWARE
 app.use('/photo', express.static(uploadsDir));
 
-
 /**
  * @module Routes
  */
@@ -576,7 +575,7 @@ app.use((req, res) => {
  * ####################
  */
 const server = app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+  console.log(`Server listening at http://192.168.5.103:${PORT}`);
 });
 
 module.exports = { server, app };

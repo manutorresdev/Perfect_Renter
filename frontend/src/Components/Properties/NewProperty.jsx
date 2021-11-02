@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaCamera, FaEuroSign, FaPlus } from 'react-icons/fa';
+import { FaCamera, FaEuroSign } from 'react-icons/fa';
 import { CreateFormData, post } from '../../Helpers/Api';
 
 export default function NewProperty({ Token, setOverlay, usuario }) {
@@ -11,14 +11,14 @@ export default function NewProperty({ Token, setOverlay, usuario }) {
     reset,
   } = useForm();
 
-  const formFunctions = { register, errors };
+  // const formFunctions = { register, errors };
 
-  const [Error, setError] = useState('');
+  const [, setError] = useState('');
 
   function onSubmitProperty(body, e) {
     e.preventDefault();
     post(
-      'http://localhost:4000/properties',
+      'http://192.168.5.103:4000/properties',
       CreateFormData(body),
       (data) => {
         alert(data.message);

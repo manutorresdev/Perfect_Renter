@@ -13,7 +13,7 @@ export default function FileProperty({ setOverlay, usuario, Token }) {
     const formData = new FormData();
     formData.append('photos', body.photos[0]);
     put(
-      `http://localhost:4000/properties/:12/photos`,
+      `http://192.168.5.103:4000/properties/:12/photos`,
       formData,
       (data) => {
         console.log('Success');

@@ -190,11 +190,9 @@ export default function ContactTenant({ info, setOverlay, Token }) {
               className='w-48 rounded-full'
               src={
                 info.avatar
-                  ? `http://localhost:4000/photo/${info.avatar}`
+                  ? `http://192.168.5.103:4000/photo/${info.avatar}`
                   : require('../../Images/defProfile.png').default
               }
-              className='w-2/4'
-              src={require('../../Images/defProfile.png').default}
               alt='imagen de perfil'
             />
             <h2 className='informacion w-5/6 bg-gray-Primary bg-opacity-25 text-2xl text-principal-1 flex justify-center'>

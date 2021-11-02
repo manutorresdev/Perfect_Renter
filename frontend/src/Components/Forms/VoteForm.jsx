@@ -35,7 +35,6 @@ export default function VoteForm({ setOverlay, info, Token }) {
 
   function onSubmit(body, e) {
     e.preventDefault();
-
     if (body.voteValueRenter && body.commentary && Property) {
       post(
         `http://192.168.5.103:4000/users/${info.idUser}/votes`,
