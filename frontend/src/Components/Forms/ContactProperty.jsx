@@ -5,6 +5,7 @@ import { CreateFormData, post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
+import { Link } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 
 export default function ContactProperty({
@@ -70,7 +71,6 @@ export default function ContactProperty({
   function left() {
     setCurr(curr === 0 ? Slider.SlideImgs.length - 1 : curr - 1);
   }
-  const comentarios = watch('comentarios');
   if (message.status === 'ok') {
     return (
       <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
@@ -91,6 +91,7 @@ export default function ContactProperty({
   // Styles
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+  const comentarios = watch('comentarios');
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>

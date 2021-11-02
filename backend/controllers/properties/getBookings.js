@@ -46,17 +46,31 @@ const getBookings = async (req, res, next) => {
      * ####################
      */
 
-    if (req.route.path.includes('users')) {
+    if (req.route.path.includes('renter')) {
       // Obtenemos el id del usuario que hace la request.
       const { idUser: idReqUser } = req.userAuth;
 
-      //Obtenemos los datos de las reservas de dicho usuario.
+      //Obtenemos los datos de las reservas de dicho usuario COMO CASERO.
       const [bookings] = await connection.query(
         `
-            SELECT
-            idBooking, idRenter, idTenant, state, startBookingDate, endBookingDate
-            FROM bookings WHERE idRenter = ? OR idTenant = ?
-            `,
+        SELECT
+        bookings.idProperty,
+        bookings.idTenant,
+        idBooking,
+        bookingCode,
+        city,
+        address,
+        number,
+        type,
+        bookings.state,
+        startBookingDate,
+        endBookingDate
+        FROM properties
+        LEFT JOIN votes AS property_votes ON (properties.idProperty = property_votes.idProperty)
+        LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
+        WHERE bookings.idRenter = ? AND (bookings.state = "reservado" OR bookings.state = "alquilada" OR bookings.state = "finalizada")
+        GROUP BY bookings.idBooking;
+        `,
         [idReqUser]
       );
 

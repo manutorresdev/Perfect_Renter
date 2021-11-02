@@ -28,19 +28,19 @@ const listBookedProperties = async (req, res, next) => {
       throw error;
     }
 
-    // Obtenemos los alquileres del usuario
+    // Obtenemos los alquileres del usuario como INQUILINO = TENANT
     const [bookings] = await connection.query(
       `
       SELECT
       bookings.idProperty,
+      idBooking,
       bookingCode,
       city,
-      province,
+      address,
+      number,
       type,
-      mts,
       price,
       rooms,
-      photos.name LIMIT 1,
       AVG(IFNULL(property_votes.voteValue, 0)) AS votes,
       bookings.state,
       startBookingDate,
@@ -49,7 +49,7 @@ const listBookedProperties = async (req, res, next) => {
       LEFT JOIN photos ON properties.idProperty = photos.idProperty
       LEFT JOIN votes AS property_votes ON (properties.idProperty = property_votes.idProperty)
       LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
-      WHERE bookings.idTenant = ?
+      WHERE bookings.idTenant = ? AND (bookings.state = "reservado" OR bookings.state = "alquilada" OR bookings.state = "finalizada")
       GROUP BY bookings.idBooking;
       `,
       [idReqUser]

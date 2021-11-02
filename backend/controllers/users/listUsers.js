@@ -15,8 +15,16 @@ const listUsers = async (req, res, next) => {
     connection = await getDB();
 
     // Obtenemos los queryParams en caso de que haya.
-    const { search, order, direction } = req.query;
+    let { ciudad: city, orden: order, direccion: direction } = req.query;
 
+    // Cambiamos valores para encajar con backend.
+    if (order === 'creacion') {
+      order = 'createdAt';
+    } else if (order === 'valoraciones') {
+      order = 'votes';
+    } else if (order === 'edad') {
+      order = 'birthDate';
+    }
     // Establecemos opciones de validación de orden.
     const validOrderOptions = ['city', 'votes', 'birthDate'];
 
@@ -29,12 +37,12 @@ const listUsers = async (req, res, next) => {
     // Establecemos una dirección por defecto
     const orderDirection = validDirectionOptions.includes(direction)
       ? direction
-      : 'ASC';
+      : 'DESC';
 
     let users;
 
     // Obtenemos los datos de todos los usuarios
-    if (!search && order === 'birthDate') {
+    if (!city && order === 'birthDate') {
       // Filtrado por fecha de nacimiento.
       console.log('Ordenado por fecha de nacimiento.');
       [users] = await connection.query(
@@ -45,7 +53,7 @@ const listUsers = async (req, res, next) => {
         ORDER BY users.birthDate ${orderDirection}
         `
       );
-    } else if (search) {
+    } else if (city) {
       // Filtrado por ciudad
       console.log('Filtrado por ciudad.');
       [users] = await connection.query(
@@ -56,7 +64,7 @@ const listUsers = async (req, res, next) => {
       group by users.idUser
       ORDER BY ${orderBy} ${orderDirection}
       `,
-        [`%${search}%`]
+        [`%${city}%`]
       );
     } else {
       console.log('Ordenado por votos');

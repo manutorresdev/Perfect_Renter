@@ -187,11 +187,11 @@ export default function ContactTenant({ userInfo, setOverlay, Token }) {
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
             <img
-              className=''
+              className='w-2/4'
               src={require('../../Images/defProfile.png').default}
               alt='imagen de perfil'
             />
-            <h2 className='informacion w-full bg-gray-Primary bg-opacity-25 text-2xl text-principal-1 flex justify-center'>
+            <h2 className='informacion w-5/6 bg-gray-Primary bg-opacity-25 text-2xl text-principal-1 flex justify-center'>
               {userInfo.name
                 ? userInfo.name + ' ' + userInfo.lastName
                 : 'Nombre de tenant'}
