@@ -126,7 +126,7 @@ export default function Profile({ token, setToken }) {
           </button>
         </section>
         <section className='w-auto'>
-          <div className='text-gray-Primary px-2 text-2xl bg-principal-1 font-normal flex flex-col-2 justify-between'>
+          <div className='text-gray-Primary px-4 text-2xl bg-principal-1 font-normal flex flex-col-2 justify-between'>
             <h1>
               {User.name} {User.lastName}
             </h1>
