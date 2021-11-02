@@ -8,3 +8,6 @@ listarlas en su eprfil y poder administrarlas.
 
 \*\*\* separar el contac property por componentes dentro del mismo archivo
 \*\*\* pisos visitados (Visto)
+
+\*\*\* Quite de de propertyinfo el relative del aside y al footer le quite el absolute
+se deforma porquq queda con scrool lateral.

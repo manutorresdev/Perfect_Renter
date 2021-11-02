@@ -9,7 +9,7 @@ export default function Properties() {
   const [Properties] = useProperties();
 
   return (
-    <main className='flex pb-28 bg-gray-200 bg-opacity-20 border-2 '>
+    <main className='flex pb-28 bg-gray-200 bg-opacity-20'>
       <aside
         className={`bg-gray-Primary  w-min sm:bg-transparent flex-grow-0 sm:static absolute left-0 top-20 sm:top-0 mt-5 sm:mt-20`}
       >

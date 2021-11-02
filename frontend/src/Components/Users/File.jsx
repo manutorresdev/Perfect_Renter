@@ -46,7 +46,7 @@ const Upload = (props) => {
       console.log(jsonResponse);
       setServerImg(jsonResponse.filename);
     };
-    uploadFile("http://192.168.5.103:3050/files", file, onSuccess);
+    uploadFile("http://localhost:3050/files", file, onSuccess);
   };
   return (
     <div className="App">
@@ -57,7 +57,7 @@ const Upload = (props) => {
         </div>
         <button type="submit">Upload</button>
       </form>
-      {serverImg && <img src={`http://192.168.5.103:3050/${serverImg}`} alt="server avatar" />}
+      {serverImg && <img src={`http://localhost:3050/${serverImg}`} alt="server avatar" />}
     </div>
   );
 };

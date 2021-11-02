@@ -15,7 +15,7 @@ export default function Profile({ token, setToken }) {
   useEffect(() => {
     console.log('\x1b[43m########\x1b[30m', user.idUser);
     get(
-      `http://192.168.5.103:4000/users/${user.idUser}`,
+      `http://localhost:4000/users/${user.idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -23,7 +23,7 @@ export default function Profile({ token, setToken }) {
       token
     );
     get(
-      `http://192.168.5.103:4000/users/${user.idUser}/bookings`,
+      `http://localhost:4000/users/${user.idUser}/bookings`,
       (data) => {
         setBookings(data.bookings);
       },
@@ -40,7 +40,7 @@ export default function Profile({ token, setToken }) {
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
       del(
-        `http://192.168.5.103:4000/users/${user.idUser}`,
+        `http://localhost:4000/users/${user.idUser}`,
         body,
         (data) => {
           setToken('');

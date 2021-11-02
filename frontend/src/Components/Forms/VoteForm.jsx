@@ -19,7 +19,7 @@ export default function VoteForm({ setOverlay, userInfo, Token }) {
 
     if (body.voteValueRenter && body.commentary) {
       post(
-        `http://192.168.5.103:4000/users/${userInfo.idUser}/votes`,
+        `http://localhost:4000/users/${userInfo.idUser}/votes`,
         CreateFormData(body),
         (data) => {
           console.log(data);

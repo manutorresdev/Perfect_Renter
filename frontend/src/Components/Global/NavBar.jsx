@@ -70,7 +70,7 @@ export default function NavBar({ token, setToken }) {
         )}
       </ul>
       <div
-        className='text-gray-300 block sm:hidden absolute top-6 right-4 text-3xl cursor-pointer'
+        className='text-principal-1 block sm:hidden absolute top-6 right-4 text-3xl cursor-pointer'
         id='menu-bar'
       >
         <FaIcons.FaBars onClick={showMenu} />
@@ -79,7 +79,7 @@ export default function NavBar({ token, setToken }) {
         <>
           <Link
             to='/perfil'
-            className={`${buttonStyle} relative col-start-5 justify-self-center sm:col-start-8 lg:col-start-8 lg:justify-self-end sm:justify-self-start sm:px-2 sm:hover:px-3 lg:px-6 lg:hover:px-8 flex items-center gap-3 justify-around`}
+            className={`${buttonStyle} relative col-start-5 justify-self-center sm:col-start-8 lg:col-start-8 lg:justify-self-end sm:justify-self-start px-3 lg:px-6 lg:hover:px-8 flex items-center gap-3 justify-around`}
           >
             <FaIcons.FaUser className='text-gray-700' />
             <span>Perfil</span>
