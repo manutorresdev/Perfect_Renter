@@ -38,7 +38,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
 
     if (body.voteValueRenter && body.commentary && Property) {
       post(
-        `http://192.168.5.103:4000/users/${info.idUser}/votes`,
+        `http://localhost:4000/users/${info.idUser}/votes`,
         CreateFormData({ ...body, idProperty: Property }),
         (data) => {
           setMessage(data.message);

@@ -18,7 +18,7 @@ export default function ContactTenant({ info, setOverlay, Token }) {
     e.preventDefault();
 
     post(
-      `http://192.168.5.103:4000/users/${info.idUser}/contact`,
+      `http://localhost:4000/users/${info.idUser}/contact`,
       CreateFormData(body),
       (data) => {
         alert(data.message);

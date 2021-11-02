@@ -33,7 +33,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
+        `http://localhost:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           alert(data.message);
@@ -48,7 +48,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
+        `http://localhost:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });

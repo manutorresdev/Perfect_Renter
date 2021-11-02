@@ -5,7 +5,7 @@ import { MenuElements } from './MenuElements';
 
 export default function Footer({ token, setToken }) {
   return (
-    <footer className='text-principal-1 absolute bottom-0 right-0 bg-gray-Primary h-28 w-screen flex items-center justify-evenly'>
+    <footer className='text-principal-1 bottom-0 bg-gray-Primary h-28 absolute w-full flex items-center justify-evenly'>
       <div className='logo+name h-full flex flex-col items-center justify-center'>
         <Link to='/' className='logo p-1'>
           <img
