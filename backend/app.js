@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
-
+const { uploadsDir } = require('./libs/helpers');
 const app = express();
 const { PORT } = process.env;
 
@@ -16,6 +16,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 // FORM-DATA DESERIALIZER
 app.use(fileUpload());
+// PHOTOS MIDDLEWARE
+app.use('/photos', express.static(uploadsDir));
 
 /**
  * @module Routes
@@ -514,7 +516,7 @@ app.get('/users/:idUser/properties', userExists, listProperties);
 //  * @code {200} Si la respuesta es correcta
 //  * @response {Object} Response Lista de reservas
 //  */
-//  app.get('/users/:idUser/bookings', propertyExists, getBookings);
+app.get('/users/:idUser/bookings/renter', authUser, getBookings);
 
 /**
  * Contacto a nuestra empresa.

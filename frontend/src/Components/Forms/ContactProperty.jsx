@@ -5,6 +5,7 @@ import { CreateFormData, post } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
+import { Link } from 'react-router-dom';
 // import { Link } from 'react-router-dom';
 
 export default function ContactProperty({
@@ -33,7 +34,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/book`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           alert(data.message);
@@ -48,7 +49,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -70,7 +71,6 @@ export default function ContactProperty({
   function left() {
     setCurr(curr === 0 ? Slider.SlideImgs.length - 1 : curr - 1);
   }
-  const comentarios = watch('comentarios');
   if (message.status === 'ok') {
     return (
       <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
@@ -91,6 +91,7 @@ export default function ContactProperty({
   // Styles
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+  const comentarios = watch('comentarios');
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
@@ -104,7 +105,7 @@ export default function ContactProperty({
           <FaPlus className='transform scale-150 rotate-45' />
         </button>
         <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
-          Contacto
+          {form === 'reservar' ? 'Reservar' : 'Contacto'}
         </h1>
         {message.status === 'error' && (
           <h1 className='title self-center select-none text-red-700'>

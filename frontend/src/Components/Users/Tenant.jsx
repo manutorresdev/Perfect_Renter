@@ -1,29 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FaStar } from 'react-icons/fa';
 
 import { Link } from 'react-router-dom';
 
-export default function Tenant({ user, setOverlay }) {
-  const [Votes] = useState(0);
-
-  useEffect(() => {
-    if (Votes === 1) {
-    }
-  }, [Votes]);
-
+export default function Tenant({ user, setOverlay, relation }) {
   function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
   }
 
   return (
-    <article className='flex gap-2 text-xs items-center'>
-      <div className='flex flex-col relative items-center'>
-        <Link to={`/inquilinos/${user.idUser}`}>
-          <div className='font-bold'>{capitalizeFirstLetter(user.name)}</div>
-          <span className=''>{user.city}</span>
-          <span>{user.idUser}</span>
+    <article className='user-card flex gap-2 text-xs items-center p-1 bg-gray-100 bg-opacity-30'>
+      <div className='user-info-cont flex items-center font-medium relative flex-grow-0 w-9/12'>
+        <Link className='user-avatar ' to={`/inquilinos/${user.idUser}`}>
           <img
-            className='w-32'
+            className=''
             src={
               user.avatar ? '' : require('../../Images/defProfile.png').default
             }
@@ -33,40 +23,51 @@ export default function Tenant({ user, setOverlay }) {
             className='flex text-xs self-center text-principal-1 justify-center'
             id='calification'
           >
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
-            <FaStar />
+            {Array(parseInt(user.votes))
+              .fill(null)
+              .map((value, i) => {
+                return <FaStar key={i} className='text-principal-1'></FaStar>;
+              })}
           </div>
         </Link>
       </div>
-      <p className='self-center '>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet
-        natus eaque rem ad, minima iure.
-      </p>
-      <div className='flex flex-col gap-1'>
+      <div className='user-info flex flex-col flex-grow min-w-min'>
+        <Link className='self-start w-full' to={`/inquilinos/${user.idUser}`}>
+          <div className='font-bold text-base  text-principal-gris py-1 pl-1 border-b-2'>
+            {capitalizeFirstLetter(user.name)}{' '}
+            {capitalizeFirstLetter(user.lastName)}
+          </div>
+          <span className='pl-2 font-medium text-sm'>{user.city}</span>
+        </Link>
+        <p className='self-center p-1'>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet
+          natus eaque rem ad, minima iure.
+        </p>
+      </div>
+      <div className='buttons-cont flex flex-col justify-around w-full h-full'>
         <button
-          className='bg-principal-1 self-center px-2 py-1 '
+          className='bg-principal-1 self-center px-2 py-2 font-medium'
           onClick={() => {
-            setOverlay({ shown: true, userInfo: user, form: 'contact' });
+            setOverlay({ shown: true, info: user, form: 'contact' });
           }}
         >
           Contactar
         </button>
-        <button
-          className='bg-principal-1 self-center px-2 py-1 '
-          onClick={() => {
-            setOverlay({ shown: true, userInfo: user, form: 'vote' });
-          }}
-        >
-          Valorar
-        </button>
+        {relation.length > 0 && (
+          <button
+            className='bg-principal-1 self-center px-2 py-1 fm font-medium'
+            onClick={() => {
+              setOverlay({
+                shown: true,
+                info: { ...user, relation: relation },
+                form: 'vote',
+              });
+            }}
+          >
+            Valorar
+          </button>
+        )}
       </div>
     </article>
   );
 }
-
-// FaStar
-// FaStarHalfAlt
-// FaRegStar

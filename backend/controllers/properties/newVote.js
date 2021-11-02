@@ -177,7 +177,7 @@ const newVote = async (req, res, next) => {
         `
       SELECT count(*) as quantity FROM votes WHERE idRenter = ? AND idTenant = ?
       `,
-        [idUser, idReqUser]
+        [idReqUser, idUser]
       );
 
       // Si ya existe un voto en esta relacion, lo editamos
@@ -203,7 +203,7 @@ const newVote = async (req, res, next) => {
           `
         UPDATE votes SET voteValueRenter = ?, commentRenter = ?, modifiedAt = ? WHERE idRenter = ? AND idTenant = ?
           `,
-          [voteValueRenter, commentary, date, idUser, idReqUser]
+          [voteValueRenter, commentary, date, idReqUser, idUser]
         );
         res.send({
           status: 'ok',
@@ -240,7 +240,7 @@ const newVote = async (req, res, next) => {
           `
         INSERT INTO votes(voteValue,commentProperty,createdAt,idTenant,idRenter, idProperty) VALUES(?,?,?,?,?,?)
         `,
-          [voteValueRenter, commentary, date, idReqUser, idUser, idProperty]
+          [voteValueRenter, commentary, date, idUser, idReqUser, idProperty]
         );
 
         res.send({
