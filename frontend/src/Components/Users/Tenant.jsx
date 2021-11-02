@@ -10,63 +10,64 @@ export default function Tenant({ user, setOverlay, relation }) {
   }
 
   return (
-    <article className='flex flex-col gap-2 text-xs items-center p-4 '>
-      <Link className='self-start' to={`/inquilinos/${user.idUser}`}>
-        <div className='font-bold'>{capitalizeFirstLetter(user.name)}</div>
-      </Link>
-      <div className='flex items-center font-medium'>
-        <div className='flex flex-col relative items-center'>
-          <Link to={`/inquilinos/${user.idUser}`}>
-            <span className=''>{user.city}</span>
-            <img
-              className='w-32'
-              src={
-                user.avatar
-                  ? ''
-                  : require('../../Images/defProfile.png').default
-              }
-              alt={'perfil ' + user.name + user.lastName}
-            />
-            <div
-              className='flex text-xs self-center text-principal-1 justify-center'
-              id='calification'
-            >
-              {Array(parseInt(user.votes))
-                .fill(null)
-                .map((value, i) => {
-                  return <FaStar key={i} className='text-principal-1'></FaStar>;
-                })}
-            </div>
-          </Link>
-        </div>
-        <p className='self-center '>
+    <article className='user-card flex gap-2 text-xs items-center p-1 bg-gray-100 bg-opacity-30'>
+      <div className='user-info-cont flex items-center font-medium relative flex-grow-0 w-9/12'>
+        <Link className='user-avatar ' to={`/inquilinos/${user.idUser}`}>
+          <img
+            className=''
+            src={
+              user.avatar ? '' : require('../../Images/defProfile.png').default
+            }
+            alt={'perfil ' + user.name + user.lastName}
+          />
+          <div
+            className='flex text-xs self-center text-principal-1 justify-center'
+            id='calification'
+          >
+            {Array(parseInt(user.votes))
+              .fill(null)
+              .map((value, i) => {
+                return <FaStar key={i} className='text-principal-1'></FaStar>;
+              })}
+          </div>
+        </Link>
+      </div>
+      <div className='user-info flex flex-col flex-grow min-w-min'>
+        <Link className='self-start w-full' to={`/inquilinos/${user.idUser}`}>
+          <div className='font-bold text-base  text-principal-gris py-1 pl-1 border-b-2'>
+            {capitalizeFirstLetter(user.name)}{' '}
+            {capitalizeFirstLetter(user.lastName)}
+          </div>
+          <span className='pl-2 font-medium text-sm'>{user.city}</span>
+        </Link>
+        <p className='self-center p-1'>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet
           natus eaque rem ad, minima iure.
         </p>
-        <div className='flex flex-col gap-1'>
+      </div>
+      <div className='buttons-cont flex flex-col justify-around w-full h-full'>
+        <button
+          className='bg-principal-1 self-center px-2 py-2 font-medium'
+          onClick={() => {
+            setOverlay({ shown: true, info: user, form: 'contact' });
+          }}
+        >
+          Contactar
+        </button>
+        {relation.length > 0 && (
           <button
-            className='bg-principal-1 self-center px-2 py-1 '
+            className='bg-principal-1 self-center px-2 py-1 fm font-medium'
             onClick={() => {
-              setOverlay({ shown: true, info: user, form: 'contact' });
+              setOverlay({
+                shown: true,
+                info: { ...user, relation: relation },
+                form: 'vote',
+              });
             }}
           >
-            Contactar
+            Valorar
           </button>
-          {relation.length > 0 && (
-            <button
-              className='bg-principal-1 self-center px-2 py-1 '
-              onClick={() => {
-                setOverlay({
-                  shown: true,
-                  info: { ...user, relation: relation },
-                  form: 'vote',
-                });
-              }}
-            >
-              Valorar
-            </button>
-          )}
-        </div>
+        )}
       </div>
     </article>
   );

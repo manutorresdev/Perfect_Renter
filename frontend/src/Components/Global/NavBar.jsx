@@ -11,7 +11,7 @@ export default function NavBar({ token, setToken }) {
     'text-center bg-principal-1 min-w-min p-1 cursor-pointer sm:hover:text-white sm:hover:font-bold sm:duration-300';
 
   return (
-    <nav className='navbar bg-gray-Primary grid grid-cols-9 gap-5 items-center font-light h-20 fixed top-0 w-full z-50'>
+    <nav className='navbar bg-gray-Primary grid grid-cols-9 gap-5 items-center font-light h-20 fixed top-0 w-full z-50 '>
       <Link
         to='/'
         className='logo w-10 p-1 sm:col-start-1 sm:col-end-2 col-start-2 justify-self-end xl:justify-self-center'
@@ -79,10 +79,10 @@ export default function NavBar({ token, setToken }) {
         <>
           <Link
             to='/perfil'
-            className={`${buttonStyle} relative col-start-5 justify-self-center sm:col-start-8 lg:col-start-8 lg:justify-self-end sm:justify-self-start sm:px-2 sm:hover:px-3 lg:px-6 lg:hover:px-8 flex items-center gap-3 justify-around`}
+            className={`${buttonStyle} relative pr-5 col-start-5 justify-self-center sm:col-start-8 lg:col-start-8 lg:justify-self-end sm:justify-self-start sm:px-2 sm:hover:px-3 lg:px-6 lg:hover:px-8 flex items-center gap-3 justify-between`}
           >
-            <FaIcons.FaUser className='text-gray-700' />
-            <span>Perfil</span>
+            <FaIcons.FaUser className='text-gray-700 ' />
+            <span className='flex-grow font-medium'>Perfil</span>
           </Link>
           <button
             className={`hidden sm:block text-white p-1 hover:text-principal-1 sm:col-start-9 lg:col-start-9 lg:col-end-10 justify-self-start sm:justify-self-end lg:justify-self-center`}
