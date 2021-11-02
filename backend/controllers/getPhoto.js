@@ -1,5 +1,8 @@
 const getDB = require('../config/getDB');
 const { uploadsDir } = require('../libs/helpers');
+
+const path = require('path');
+
 /**
  * @module Global
  */
@@ -17,10 +20,11 @@ const getPhoto = async (req, res, next) => {
     connection = await getDB();
 
     //Obtenemos el id de la propiedad.
+
     const { pictureName } = req.params;
 
     // Obtenemos el id del usuario que hace la request.
-    const { idUser } = req.userAuth;
+    /* const { idUser } = req.userAuth; */
 
     // Verificamos que la foto exista.
     const [picture] = await connection.query(
@@ -33,6 +37,7 @@ const getPhoto = async (req, res, next) => {
     );
 
     // Si no existe lanzamos error
+
     if (picture.length < 1) {
       const error = new Error('La foto no existe.');
       error.httpStatus = 404;
