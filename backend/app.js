@@ -4,7 +4,8 @@ const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
-const { uploadsDir } = require('./libs/helpers');
+const { uploadsDir } = require('../backend/libs/helpers');
+
 const app = express();
 const { PORT } = process.env;
 
@@ -17,7 +18,8 @@ app.use(express.json());
 // FORM-DATA DESERIALIZER
 app.use(fileUpload());
 // PHOTOS MIDDLEWARE
-app.use('/photos', express.static(uploadsDir));
+app.use('/photo', express.static(uploadsDir));
+
 
 /**
  * @module Routes
@@ -299,6 +301,7 @@ const {
   listUserVotes,
 } = require('./controllers/users/index');
 const contactUs = require('./controllers/contactUs');
+const getPhoto = require('./controllers/getPhoto');
 
 /**
  * ####################
@@ -531,6 +534,17 @@ app.get('/users/:idUser/bookings/renter', authUser, getBookings);
 app.post('/contact', contactUs);
 
 /**
+ * Middleware que muestra una foto guardada en el servidor.
+ *
+ * @name getPhoto
+ * @path {GET} /photo/:photoName
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Respones El servidor envía un objeto con un mensaje de confirmación y la foto cargada.
+ */
+
+app.get('/photo/:pictureName', getPhoto);
+
+/**
  * ####################
  * ## ERROR LISTENER ##
  * ####################
@@ -562,7 +576,7 @@ app.use((req, res) => {
  * ####################
  */
 const server = app.listen(PORT, () => {
-  console.log(`Server listening at http://192.168.5.103:${PORT}`);
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
 
 module.exports = { server, app };

@@ -3,17 +3,17 @@ import { useForm } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa';
 import { put } from '../../Helpers/Api';
 
-export default function Avatar({ setOverlay, avatar, usuario, Token }) {
+export default function FileProperty({ setOverlay, usuario, Token }) {
   const [Error, setError] = useState('');
 
   const { handleSubmit, reset, register } = useForm();
-
+  console.log(usuario);
   async function uploadFile(body, e) {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('avatar', body.avatar[0]);
+    formData.append('photos', body.photos[0]);
     put(
-      `http://localhost:4000/users/${usuario.idUser}`,
+      `http://localhost:4000/properties/:12/photos`,
       formData,
       (data) => {
         console.log('Success');
@@ -47,7 +47,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
             <FaPlus className='transform rotate-45' />
           </button>
           <label>Selecciona un archivo</label>
-          <input type='file' name='avatar' {...register('avatar')} />
+          <input type='file' name='photo' /*  {...register('avatar')} */ />
         </div>
 
         <button type='submit'>Subir</button>

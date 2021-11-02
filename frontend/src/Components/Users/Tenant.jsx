@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaStar } from 'react-icons/fa';
-
 import { Link } from 'react-router-dom';
 
 export default function Tenant({ user, setOverlay, relation }) {
@@ -13,9 +12,11 @@ export default function Tenant({ user, setOverlay, relation }) {
       <div className='user-info-cont flex items-center font-medium relative flex-grow-0 w-9/12'>
         <Link className='user-avatar ' to={`/inquilinos/${user.idUser}`}>
           <img
-            className=''
+            className='w-32 rounded-full'
             src={
-              user.avatar ? '' : require('../../Images/defProfile.png').default
+              user.avatar
+                ? `http://localhost:4000/photo/${user.avatar}`
+                : require('../../Images/defProfile.png').default
             }
             alt={'perfil ' + user.name + user.lastName}
           />

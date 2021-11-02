@@ -47,15 +47,11 @@ export default function UsersList() {
           } else {
             setUsers([]);
           }
-          // setUsers(data.users);
-          // setLoaded(true);
         },
         (error) => console.log(error),
         Token
       );
-    }
-
-    get(
+     get(
       `http://192.168.5.103:4000/users/${
         parseJwt(Token).idUser
       }/bookings/renter`,
@@ -67,7 +63,8 @@ export default function UsersList() {
       },
       Token
     );
-  }, [Token, location.search]);
+   }
+ }, [Token, location.search]);
 
   return (
     <main className='pb-28 pt-20 flex'>

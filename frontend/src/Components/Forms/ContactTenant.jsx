@@ -187,6 +187,12 @@ export default function ContactTenant({ info, setOverlay, Token }) {
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
             <img
+              className='w-48 rounded-full'
+              src={
+                info.avatar
+                  ? `http://localhost:4000/photo/${info.avatar}`
+                  : require('../../Images/defProfile.png').default
+              }
               className='w-2/4'
               src={require('../../Images/defProfile.png').default}
               alt='imagen de perfil'

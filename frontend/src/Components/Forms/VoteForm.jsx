@@ -5,7 +5,6 @@ import { CreateFormData, post } from '../../Helpers/Api';
 
 export default function VoteForm({ setOverlay, info, Token }) {
   // Estados
-
   // Estado con el id de la propiedad a votar
   const [Property, setProperty] = useState({});
   // Estado con el mensaje de confirmación al votar
