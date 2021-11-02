@@ -23,9 +23,11 @@ export default function Tenant({ user, setOverlay }) {
           <span className=''>{user.city}</span>
           <span>{user.idUser}</span>
           <img
-            className='w-32'
+            className='w-32 rounded-full'
             src={
-              user.avatar ? '' : require('../../Images/defProfile.png').default
+              user.avatar
+                ? `http://localhost:4000/photo/${user.avatar}`
+                : require('../../Images/defProfile.png').default
             }
             alt={'perfil ' + user.name + user.lastName}
           />

@@ -24,7 +24,7 @@ const getPhoto = async (req, res, next) => {
     const { pictureName } = req.params;
 
     // Obtenemos el id del usuario que hace la request.
-    const { idUser } = req.userAuth;
+    /* const { idUser } = req.userAuth; */
 
     // Verificamos que la foto exista.
     const [picture] = await connection.query(

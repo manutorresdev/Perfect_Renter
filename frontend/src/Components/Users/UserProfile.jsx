@@ -14,7 +14,7 @@ export default function UserProfile({ match, property }) {
 
   useEffect(() => {
     get(
-      `http://192.168.5.100:4000/users/${match.params.idUser}`,
+      `http://localhost:4000/users/${match.params.idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -42,8 +42,12 @@ export default function UserProfile({ match, property }) {
         <div className='perfil flex flex-col items-center justify-center'>
           <article className=' flex flex-col gap-5 items-center justic'>
             <img
-              className='w-2/4'
-              src={require('../../Images/defProfile.png').default}
+              className='w-2/4 rounded-full'
+              src={
+                user.avatar
+                  ? `http://localhost:4000/photo/${user.avatar}`
+                  : require('../../Images/defProfile.png').default
+              }
               alt='imagen de perfil'
             />
             <section className=''>

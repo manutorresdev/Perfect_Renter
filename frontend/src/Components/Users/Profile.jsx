@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { del, get, parseJwt } from '../../Helpers/Api';
-import { FaCamera, FaPencilAlt, FaTrash } from 'react-icons/fa';
+import {
+  FaCamera,
+  FaEnvelope,
+  FaPencilAlt,
+  FaPlusSquare,
+  FaTrash,
+} from 'react-icons/fa';
 import Register from '../Forms/Register';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';
 import Avatar from '../Users/avatar';
+import NewProperty from '../Properties/NewProperty';
 
 export default function Profile({ token, setToken }) {
   const [User, setUser] = useState({});
@@ -45,8 +52,7 @@ export default function Profile({ token, setToken }) {
     }
   }, [token, user.idUser, User.avatar]);
 
-  console.log(User);
-  console.log(AvatarFile);
+  console.log(User.avatar);
 
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
@@ -74,7 +80,7 @@ export default function Profile({ token, setToken }) {
    */
 
   return (
-    <>
+    <article className=' pt-24 pb-32 px-10 grid grid-cols-1  '>
       {Overlay.form === 'register' && (
         <Register
           setOverlay={setOverlay}
@@ -92,98 +98,130 @@ export default function Profile({ token, setToken }) {
           Token={token}
         />
       )}
-      <article className='pt-20 pb-28 flex flex-col items-center justify-center'>
-        <button
-          className=''
-          onClick={() => {
-            setOverlay({ shown: true, userInfo: user, form: 'register' });
-          }}
-        >
-          <FaPencilAlt />
-        </button>
-        <div>
-          <section>
-            <img
-              className='w-40'
-              src={
-                User.avatar
-                  ? ''
-                  : require('../../Images/defProfile.png').default
-              }
-              alt='perfil de usuario'
-            />
-          </section>
-          <section>
-            <button
-              onClick={() => {
-                setOverlay({ shown: true, userInfo: user, form: 'avatar' });
-              }}
-            >
-              <FaCamera />
-            </button>
-            <ul>
-              <li className='font-bold'>Nombre:</li>
-              {User.name}
-              <li className='font-bold'>Apellidos:</li>
-              {User.lastName}
-              <li className='font-bold'>Email:</li>
-              {User.email}
-              <li className='font-bold'>Ciudad:</li>
-              {User.ciudad}
-              <li className='font-bold'>Teléfono:</li>
-              {User.tel}
-              <li className='font-bold'>Bio:</li>
-              {User.bio}
-              <li className='font-bold'>Fecha de nacimiento:</li>0
-              {new Date(User.birthDate).toLocaleDateString('es-ES')}
-            </ul>
-          </section>
-          <section className='font-bold'>
-            <div>ALQUILERES</div>
-            <div className='contenedor alquileres flex flex-wrap gap-5'>
-              {propiedadUsuario.length > 0 ? (
-                propiedadUsuario.map((property) => (
-                  <Property key={property.idProperty} property={property} />
-                ))
-              ) : (
-                <div>No hay ningún inmueble</div>
-              )}
-            </div>
-          </section>
-          <section>
-            <div>RESERVAS</div>
-            <div className='bookings-cont'>
-              {Bookings &&
-                Bookings.map((booking) => {
-                  console.log('\x1b[43m########\x1b[30m', booking);
-                  return (
-                    <h1>{booking.bookingCode}</h1>
-                    // <Property
-                    //   key={booking.bookingCode}
-                    //   property={{
-                    //     idProperty: booking.idProperty,
-                    //     mts: booking.mts,
-                    //     price: booking.price,
-                    //     province: booking.province,
-                    //     rooms: booking.rooms,
-                    //     votes: booking.votes,
-                    //     type: booking.type,
-                    //   }}
-                    // />
-                  );
-                })}
-            </div>
-          </section>
+      {Overlay.form === 'property' && (
+        <NewProperty setOverlay={setOverlay} usuario={User} Token={token} />
+      )}
+
+      <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 '>
+        SOBRE TI
+      </div>
+      <div className='grid grid-cols-1 sm:grid-cols-2 p-10 gap-32 '>
+        <section className=' md:ml-36'>
+          <img
+            className='max-w-sm rounded-full py-4 '
+            src={
+              User.avatar
+                ? `http://localhost:4000/photo/${User.avatar}`
+                : require('../../Images/defProfile.png').default
+            }
+            alt='perfil de usuario'
+          />
           <button
-            className='p-4 rounded-full bg-gray-Primary'
+            className='left-44  '
             onClick={() => {
-              onSubmitDeleted();
+              setOverlay({ shown: true, userInfo: user, form: 'avatar' });
             }}
           >
-            <FaTrash className=' text-4xl text-principal-1 ' />
+            <FaCamera className='text-4xl' />
           </button>
-        </div>
-      </article>
-    </>
+        </section>
+        <section className='w-auto'>
+          <div className='text-gray-Primary px-2 text-2xl bg-principal-1 font-normal flex flex-col-2 justify-between'>
+            <h1>
+              {User.name} {User.lastName}
+            </h1>
+            <button
+              className='text-2xl '
+              onClick={() => {
+                setOverlay({ shown: true, userInfo: user, form: 'register' });
+              }}
+            >
+              <FaPencilAlt />
+            </button>
+          </div>
+          <br />
+          <ul className='bg-gray-200 grid grid-cols-1 gap-4'>
+            <li className='sm:bg-gray-400 text-lg'>Email</li>
+            {User.email}
+            <li className='sm:bg-gray-400 text-lg'>Ciudad</li>
+            {User.ciudad}
+            <li className='sm:bg-gray-400 text-lg'>Teléfono</li>
+            {User.tel}
+            <li className='sm:bg-gray-400 text-lg'>Fecha de nacimiento</li>
+            {new Date(User.birthDate).toLocaleDateString('es-ES')}
+
+            <li className='sm:bg-gray-400 text-lg'>Biografía:</li>
+            {User.bio}
+          </ul>
+        </section>
+      </div>
+      <div>
+        <section>
+          <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 '>
+            ALQUILERES
+          </div>
+          <div className='contenedor alquileres flex flex-wrap gap-5'>
+            {propiedadUsuario.length > 0 ? (
+              propiedadUsuario.map((property) => (
+                <Property key={property.idProperty} property={property} />
+              ))
+            ) : (
+              <div>No hay ningún inmueble</div>
+            )}
+            <button className='text-gray-400'>
+              Añade un inmueble <br />
+              <FaPlusSquare
+                className='text-4xl '
+                onClick={() => {
+                  setOverlay({
+                    shown: true,
+                    userInfo: user,
+                    form: 'property',
+                  });
+                }}
+              />
+            </button>
+          </div>
+        </section>
+        <section>
+          <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1'>
+            {' '}
+            RESERVAS
+          </div>
+          <div className='bookings-cont'>
+            {Bookings &&
+              Bookings.map((booking) => {
+                console.log('\x1b[43m########\x1b[30m', booking);
+                return (
+                  <h1>{booking.bookingCode}</h1>
+                  // <Property
+                  //   key={booking.bookingCode}
+                  //   property={{
+                  //     idProperty: booking.idProperty,
+                  //     mts: booking.mts,
+                  //     price: booking.price,
+                  //     province: booking.province,
+                  //     rooms: booking.rooms,
+                  //     votes: booking.votes,
+                  //     type: booking.type,
+                  //   }}
+                  // />
+                );
+              })}
+          </div>
+        </section>
+      </div>
+
+      <div className='flex justify-end'>
+        <button
+          className='p-4 rounded-full  text-principal-1 bg-gray-Primary flex flex-row items-center justify-around'
+          onClick={() => {
+            onSubmitDeleted();
+          }}
+        >
+          <FaTrash className='  text-principal-1 ' /> Eliminar cuenta
+        </button>
+      </div>
+    </article>
   );
 }

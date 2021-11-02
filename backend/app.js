@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const fileUpload = require('express-fileupload');
 const morgan = require('morgan');
+const { uploadsDir } = require('../backend/libs/helpers');
 
 const app = express();
 const { PORT } = process.env;
@@ -16,6 +17,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 // FORM-DATA DESERIALIZER
 app.use(fileUpload());
+// PHOTOS MIDDLEWARE
+app.use('/photo', express.static(uploadsDir));
 
 /**
  * @module Routes
@@ -538,7 +541,7 @@ app.post('/contact', contactUs);
  * @response {Object} Respones El servidor envía un objeto con un mensaje de confirmación y la foto cargada.
  */
 
-app.get('/photo/:pictureName', authUser, getPhoto);
+app.get('/photo/:pictureName', getPhoto);
 
 /**
  * ####################
