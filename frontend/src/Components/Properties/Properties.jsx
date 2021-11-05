@@ -6,7 +6,6 @@ import Property from './Property';
 export default function Properties() {
   const [Overlay, setOverlay] = useState({ show: false });
   const [Properties] = useProperties();
-  console.log(Properties);
   return (
     <main className='flex pb-28 bg-gray-200 bg-opacity-20'>
       <aside
@@ -30,7 +29,7 @@ export default function Properties() {
         <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
           Viviendas en alquiler
         </h1>
-        <div className='cont-alquileres bg-gray-Primary justify-center flex flex-wrap w-full gap-5'>
+        <div className='cont-alquileres  justify-center flex flex-wrap w-full gap-5'>
           {Properties.length > 0 ? (
             Properties.map((property) => (
               <Property key={property.idProperty} property={property} />

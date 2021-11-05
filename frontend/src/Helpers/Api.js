@@ -122,3 +122,7 @@ export function CreateFormData(body) {
   console.log('\x1b[45m%%%%%%%', formData, 'DATOS de FORM DATA');
   return formData;
 }
+
+export function capitalizeFirstLetter(string) {
+  return string[0].toUpperCase() + string.slice(1);
+}

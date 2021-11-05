@@ -14,7 +14,6 @@ const listPropertyVotes = require('./listPropertyVotes');
 const contactProperty = require('./contactProperty');
 const getBookings = require('./getBookings');
 
-
 module.exports = {
   addPropertyPhoto,
   contactProperty,

@@ -2,6 +2,7 @@ import { React, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useHistory } from 'react-router-dom';
+import { capitalizeFirstLetter } from '../../Helpers/Api';
 import useProperties from '../../Helpers/Hooks/useProperties';
 
 // Styles
@@ -132,10 +133,6 @@ function Banner() {
 function HomePropertiesList() {
   const [properties] = useProperties();
   const [Imgs, setImgs] = useState([]);
-
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
-  }
 
   useEffect(() => {
     setImgs([

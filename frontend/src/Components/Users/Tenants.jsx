@@ -8,15 +8,18 @@ import VoteForm from '../Forms/VoteForm';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router';
 import { FaPlus } from 'react-icons/fa';
+import useProperties from '../../Helpers/Hooks/useProperties';
 
 export default function UsersList() {
   const [Bookings, setBookings] = useState([]);
+  const [Properties] = useProperties();
   const [Token] = useContext(TokenContext);
   const [Overlay, setOverlay] = useState({
     shown: false,
     form: '',
     info: {},
   });
+
   const [Users, setUsers] = useState([]);
   const [Loaded, setLoaded] = useState(false);
   const location = useLocation();
@@ -25,7 +28,7 @@ export default function UsersList() {
   useEffect(() => {
     if (location.search) {
       get(
-        `http://localhost:4000/users${location.search}`,
+        `http://192.168.5.103:4000/users${location.search}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -39,7 +42,7 @@ export default function UsersList() {
       );
     } else {
       get(
-        'http://localhost:4000/users',
+        'http://192.168.5.103:4000/users',
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -52,7 +55,9 @@ export default function UsersList() {
         Token
       );
       get(
-        `http://localhost:4000/users/${parseJwt(Token).idUser}/bookings/renter`,
+        `http://192.168.5.103:4000/users/${
+          parseJwt(Token).idUser
+        }/bookings/renter`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -64,13 +69,18 @@ export default function UsersList() {
     }
   }, [Token, location.search]);
 
+  const userProperties = Properties.filter(
+    (property) => property.idUser === parseJwt(Token).idUser
+  );
+
   return (
-    <main className='pb-28 pt-20 flex'>
+    <main className='pb-28 pt-20 flex w-full'>
       {Overlay.form === 'contact' && (
         <ContactTenant
           setOverlay={setOverlay}
           info={Overlay.info}
           Token={Token}
+          properties={userProperties}
         />
       )}
       {Overlay.form === 'vote' && (
@@ -91,7 +101,7 @@ export default function UsersList() {
         </button>
         <Filters setOverlay={setOverlay} Overlay={Overlay} />
       </aside>
-      <section className='users-cont flex flex-col'>
+      <section className='users-cont flex flex-col flex-grow'>
         <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
           Inquilinos
         </h1>
@@ -102,16 +112,20 @@ export default function UsersList() {
               .map((el, i) => <LoadingSkeleton key={i} />)}
           {Users.length ? (
             Users.map((user) => {
-              return (
-                <Tenant
-                  relation={Bookings.filter(
-                    (bookings) => bookings.idTenant === user.idUser
-                  )}
-                  user={user}
-                  key={user.idUser}
-                  setOverlay={setOverlay}
-                />
-              );
+              if (user.idUser === parseJwt(Token).idUser) {
+                return null;
+              } else {
+                return (
+                  <Tenant
+                    relation={Bookings.filter(
+                      (bookings) => bookings.idTenant === user.idUser
+                    )}
+                    user={user}
+                    key={user.idUser}
+                    setOverlay={setOverlay}
+                  />
+                );
+              }
             })
           ) : (
             <div className='p-5 font-medium'>
@@ -178,7 +192,7 @@ function Filters({ setOverlay, Overlay }) {
           : '-translate-y-full opacity-0'
       } sm:translate-y-0 sm:opacity-100 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center py-24 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
     >
-      <section className='filtros sm:bg-transparent overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 shadow-xl border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white relative'>
+      <section className='filtros sm:bg-transparent overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white relative'>
         <button
           className='close-overlay absolute top-3 right-3 sm:hidden'
           onClick={() => {

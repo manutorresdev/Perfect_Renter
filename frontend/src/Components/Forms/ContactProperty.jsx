@@ -33,7 +33,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/book`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           alert(data.message);
@@ -48,7 +48,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -249,7 +249,7 @@ export default function ContactProperty({
           </form>
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
-            <div className='slider pt-20 flex flex-col items-center justify-center '>
+            <div className='slider flex flex-col items-center justify-center '>
               <div
                 className={`slider-cont ${
                   Slider.Photo ? 'h-full' : 'h-96'

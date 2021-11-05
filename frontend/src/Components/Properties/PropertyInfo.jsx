@@ -8,6 +8,7 @@ import Filters from './Filters';
 import useUser from '../../Helpers/Hooks/useUser';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 import Property from './Property';
+import { capitalizeFirstLetter } from '../../Helpers/Api';
 
 export default function PropertyInfo(props) {
   const [pisosVisitados, setPisosVisitados] = useLocalStorage(
@@ -57,7 +58,6 @@ export default function PropertyInfo(props) {
       require('../../Images/defPicture3.jpg').default,
     ]);
   }, []);
-
   useEffect(() => {
     const prop = Properties.find(
       (property) =>
@@ -66,13 +66,16 @@ export default function PropertyInfo(props) {
 
     if (prop) {
       setProperty(prop);
+      console.log('\x1b[45m%%%%%%%', prop);
       // if (!pisosVisitados.includes(prop.idProperty)) {
       //   setPisosVisitados({...pisosVisitados, {p: prop.idProperty, }});
       // }
-      if (prop.idUser === User.idUser) {
-        setOwner(true);
-      } else {
-        setOwner(false);
+      if (props.token) {
+        if (prop.idUser === User.idUser) {
+          setOwner(true);
+        } else {
+          setOwner(false);
+        }
       }
     }
   }, [
@@ -83,11 +86,8 @@ export default function PropertyInfo(props) {
     User,
     pisosVisitados,
     setPisosVisitados,
+    props.token,
   ]);
-
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
-  }
 
   // Styles
   const sliderButtonStyle =

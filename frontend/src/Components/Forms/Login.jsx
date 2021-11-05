@@ -17,13 +17,10 @@ export default function Login() {
   // Enviar datos a backend
   function onSubmit(body) {
     post(
-      'http://localhost:4000/users/login',
+      'http://192.168.5.103:4000/users/login',
       CreateFormData(body),
       (data) => {
-        console.log(data);
         setToken(data.token);
-        console.log('Success');
-        alert(data.message);
         window.location.reload();
       },
       (data) => {
