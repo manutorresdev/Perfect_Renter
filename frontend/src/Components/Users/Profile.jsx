@@ -146,8 +146,8 @@ export default function Profile({ token, setToken }) {
             <span className='pl-2'>
               {new Date(User.birthDate).toLocaleDateString('es-ES')}
             </span>
-            <li className='bg-gray-400 text-lg px-2'>Biografía</li>
-            <span className='pl-2'>{User.bio}</span>
+            <li className='bg-gray-400 text-lg pl-2'>Biografía</li>
+            <span className='py-2'>{User.bio}</span>
           </ul>
         </section>
       </div>

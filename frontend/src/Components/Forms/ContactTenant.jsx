@@ -154,7 +154,7 @@ export default function ContactTenant({ info, setOverlay, Token }) {
               />
             </label>
             {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
-            <label className='relative '>
+            <label className='relative w-min'>
               <div className='select-none'>Comentarios</div>
               <textarea
                 className={`${inpStyle} resize-none w-80`}
