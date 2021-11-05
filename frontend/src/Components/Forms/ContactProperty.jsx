@@ -249,7 +249,7 @@ export default function ContactProperty({
           </form>
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
-            <div className='slider pt-20 flex flex-col items-center justify-center '>
+            <div className='slider flex flex-col items-center justify-center '>
               <div
                 className={`slider-cont ${
                   Slider.Photo ? 'h-full' : 'h-96'

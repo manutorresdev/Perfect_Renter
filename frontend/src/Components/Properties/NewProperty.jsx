@@ -95,7 +95,7 @@ export default function NewProperty({
 
   function onSubmitEdited(body, e) {
     e.preventDefault();
-    console.log(body.terrace);
+
     put(
       `http://localhost:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
@@ -116,13 +116,11 @@ export default function NewProperty({
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full';
   const description = watch('description');
+
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center  px-12 py-24 overflow-scroll sm:overflow-hidden'>
       {file.form === 'FileProperty' && (
-        <FileProperty
-          setOverlay={setOverlay}
-          /* idProperty={EditProperty.idProperty} */ Token={Token}
-        />
+        <FileProperty setOverlay={setOverlay} Token={Token} />
       )}
       <section className='pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-4/6'>
         <button
@@ -179,6 +177,7 @@ export default function NewProperty({
             <h3 className={inputsLabelStyle}>
               ¿Qué disponibilidad tiene ahora mismmo?
             </h3>
+
             <div className='grid grid-cols-3 '>
               <label className='flex gap-2 items-baseline font-medium'>
                 Disponible
@@ -506,12 +505,12 @@ export default function NewProperty({
                 {description ? description.length : 0}/3000
               </p>
             </label>
-            {Error ? <div>{Error}</div> : ''}
+            {Error && <div>{Error}</div>}
             <div className='flex justify-center items-center self-center  bottom-0 w-full h-28 bg-white sm:bg-transparent'>
               <input
                 type='submit'
-                value='Añadir'
-                className='btn-submit text-xl bg-none p-2 font-medium text-principal-gris border-gray-700 border-2 h-2/4 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
+                value='AÑADIR'
+                className='btn-submit cursor-pointer text-xl bg-none p-2 font-medium text-principal-gris border-gray-700 border-2 h-2/4 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
               />
             </div>
           </form>

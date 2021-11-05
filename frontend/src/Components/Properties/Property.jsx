@@ -89,7 +89,7 @@ export default function Property({ property, token }) {
                 key={i}
                 className={`${
                   i === curr ? '' : 'absolute opacity-0'
-                } w-auto sm:max-w-xs object-cover duration-300`}
+                } w-auto sm:max-w-xs object-cover obj duration-300`}
                 src={img}
                 alt='default'
               />
@@ -128,7 +128,7 @@ export default function Property({ property, token }) {
         {token ? (
           <div className='flex flex-row justify-between'>
             <button
-              className='text-xl '
+              className='text-xl p-4 hover:text-blue-700'
               onClick={() => {
                 setOverlay({ shown: true, form: 'newProperty' });
               }}
@@ -136,10 +136,8 @@ export default function Property({ property, token }) {
               <FaPencilAlt />
             </button>
             <button
-              className='text-xl'
-              onClick={() => {
-                onSubmitDeleted();
-              }}
+              className='text-xl p-4 hover:text-red-500'
+              onClick={onSubmitDeleted}
             >
               <FaTrash />
             </button>

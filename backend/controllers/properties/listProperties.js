@@ -105,8 +105,8 @@ const listProperties = async (req, res, next) => {
       `,
         [idUser]
       );
-    } else {
       /*********** Final usuario propietario *****************/
+    } else {
       // Obtenemos los datos de todas las propiedades
 
       [properties] = await connection.query(
@@ -155,8 +155,6 @@ const listProperties = async (req, res, next) => {
         message: 'No hay conicidencias para su busqueda',
       });
     } else {
-      console.log(properties.length);
-
       res.send({
         status: 'ok',
         properties,
