@@ -35,6 +35,7 @@ const getProperty = async (req, res, next) => {
             rooms,
             garage,
             terrace,
+            elevator,
             toilets,
             energyCertificate,
             availabilityDate,

@@ -75,6 +75,7 @@ export default function Register({ Token, usuario, setOverlay }) {
         console.log('Success');
         alert(data.message);
         reset();
+        window.location.reload();
       },
       (error) => {
         setError(error.message);
@@ -95,7 +96,7 @@ export default function Register({ Token, usuario, setOverlay }) {
         <section
           className={
             Token
-              ? 'contact w-1/3 p-24 border border-black flex flex-col gap-5 mt-16 bg-white relative'
+              ? 'w-2/4 p-24 border border-gray-700 flex flex-col gap-5 mt-16 bg-gray-100 text-principal-gris overflow-y-scroll relative'
               : 'mt-24 flex flex-col items-center gap-5 p-2'
           }
         >
@@ -109,8 +110,8 @@ export default function Register({ Token, usuario, setOverlay }) {
               <FaPlus className='transform rotate-45' />
             </button>
           )}
-          <div className='title underline text-5xl m-0 p-0'>
-            {Token ? <h2>Editar</h2> : <h2>REGISTER</h2>}
+          <div className='title text-3xl p-4  bg-principal-1 flex justify-center w-3/6 select-none'>
+            {Token ? <h2>EDITAR</h2> : <h2>REGISTRO</h2>}
           </div>
 
           <form
@@ -278,7 +279,7 @@ export default function Register({ Token, usuario, setOverlay }) {
             {Error ? <div>{Error}</div> : ''}
 
             <input
-              className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+              className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
               type='submit'
               value={Token ? 'Guardar' : 'Registrar'}
             />

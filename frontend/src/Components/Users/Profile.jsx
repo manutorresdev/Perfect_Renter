@@ -13,6 +13,7 @@ import Property from '../Properties/Property';
 import Avatar from '../Users/avatar';
 import NewProperty from '../Properties/NewProperty';
 import { Link } from 'react-router-dom';
+import Properties from '../Properties/Properties';
 
 export default function Profile({ token, setToken }) {
   const [User, setUser] = useState({});
@@ -24,7 +25,6 @@ export default function Profile({ token, setToken }) {
   const [Bookings, setBookings] = useState([]);
   const [ShownBookings, setShownBookings] = useState('proximas');
   const [properties] = useProperties([]);
-  const [, setAvatarFile] = useState('');
 
   useEffect(() => {
     get(
@@ -36,14 +36,6 @@ export default function Profile({ token, setToken }) {
       token
     );
     if (User.idUser) {
-      get(
-        `http://localhost:4000/photo/${User.avatar}`,
-        (data) => {
-          console.log('\x1b[45m%%%%%%%', data);
-          setAvatarFile(data.photo);
-        },
-        (error) => console.log(error)
-      );
       get(
         `http://localhost:4000/users/${User.idUser}/bookings`,
         (data) => {
@@ -77,6 +69,7 @@ export default function Profile({ token, setToken }) {
     (property) => property.idUser === User.idUser
   );
 
+  console.log(propiedadUsuario);
   return (
     <article className='pt-24 pb-32 flex flex-col justify-center'>
       {Overlay.form === 'register' && (
@@ -96,10 +89,15 @@ export default function Profile({ token, setToken }) {
         />
       )}
       {Overlay.form === 'property' && (
-        <NewProperty setOverlay={setOverlay} usuario={User} Token={token} />
+        <NewProperty
+          setOverlay={setOverlay}
+          Overlay={Overlay}
+          idProperty={propiedadUsuario}
+          Token={token}
+        />
       )}
 
-      <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 '>
+      <div className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25  '>
         SOBRE TI
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 p-10 gap-10 sm:gap-32 '>
@@ -123,7 +121,7 @@ export default function Profile({ token, setToken }) {
           </button>
         </section>
         <section className='w-auto'>
-          <div className='text-gray-Primary px-2 text-2xl bg-principal-1 font-normal flex flex-col-2 justify-between'>
+          <div className=' px-4 text-2xl bg-gray-Primary text-principal-1  font-normal flex flex-col-2 justify-between'>
             <h1>
               {User.name} {User.lastName}
             </h1>
@@ -138,29 +136,34 @@ export default function Profile({ token, setToken }) {
           </div>
           <br />
           <ul className='bg-gray-200 grid grid-cols-1 gap-4'>
-            <li className='bg-gray-400 text-lg'>Email</li>
-            {User.email}
-            <li className='bg-gray-400 text-lg'>Ciudad</li>
-            {User.ciudad}
-            <li className='bg-gray-400 text-lg'>Teléfono</li>
-            {User.tel}
-            <li className='bg-gray-400 text-lg'>Fecha de nacimiento</li>
-            {new Date(User.birthDate).toLocaleDateString('es-ES')}
-
-            <li className='bg-gray-400 text-lg'>Biografía:</li>
-            {User.bio}
+            <li className='bg-gray-400 text-lg px-2'>Email</li>
+            <span className='pl-2'>{User.email}</span>
+            <li className='bg-gray-400 text-lg px-2'>Ciudad</li>
+            <span className='pl-2'>{User.ciudad}</span>
+            <li className='bg-gray-400 text-lg px-2'>Teléfono</li>
+            <span className='pl-2'>{User.tel}</span>
+            <li className='bg-gray-400 text-lg px-2'>Fecha de nacimiento</li>
+            <span className='pl-2'>
+              {new Date(User.birthDate).toLocaleDateString('es-ES')}
+            </span>
+            <li className='bg-gray-400 text-lg px-2'>Biografía</li>
+            <span className='pl-2'>{User.bio}</span>
           </ul>
         </section>
       </div>
       <div>
         <section>
-          <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 '>
+          <div className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25 '>
             ALQUILERES
           </div>
           <div className='contenedor alquileres flex flex-wrap gap-5'>
             {propiedadUsuario.length > 0 ? (
               propiedadUsuario.map((property) => (
-                <Property key={property.idProperty} property={property} />
+                <Property
+                  key={property.idProperty}
+                  property={property}
+                  token={token}
+                />
               ))
             ) : (
               <div>No hay ningún inmueble</div>

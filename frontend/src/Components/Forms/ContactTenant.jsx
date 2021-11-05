@@ -30,6 +30,7 @@ export default function ContactTenant({ info, setOverlay, Token }) {
       Token
     );
   }
+
   // Styles
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
@@ -153,7 +154,7 @@ export default function ContactTenant({ info, setOverlay, Token }) {
               />
             </label>
             {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
-            <label className='relative w-min'>
+            <label className='relative '>
               <div className='select-none'>Comentarios</div>
               <textarea
                 className={`${inpStyle} resize-none w-80`}
@@ -187,14 +188,12 @@ export default function ContactTenant({ info, setOverlay, Token }) {
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
             <img
-              className='w-48 rounded-full'
+              className='w-2/4 rounded-full'
               src={
                 info.avatar
                   ? `http://localhost:4000/photo/${info.avatar}`
                   : require('../../Images/defProfile.png').default
               }
-              className='w-2/4'
-              src={require('../../Images/defProfile.png').default}
               alt='imagen de perfil'
             />
             <h2 className='informacion w-5/6 bg-gray-Primary bg-opacity-25 text-2xl text-principal-1 flex justify-center'>
