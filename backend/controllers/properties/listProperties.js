@@ -59,7 +59,7 @@ const listProperties = async (req, res, next) => {
     const pmax = filtPmax ? filtPmax : 10000;
     const pmin = filtPmin ? filtPmin : 0;
     const rooms = filtRooms ? filtRooms : 1;
-    const garage = filtGarage ? filtGarage : '%';
+    const garage = filtGarage ? filtGarage : 0;
     const toilets = filtToilets ? filtToilets : 1;
     const mts = filtMts ? filtMts : 0;
 
@@ -104,8 +104,8 @@ const listProperties = async (req, res, next) => {
       `,
         [idUser]
       );
-    } else {
       /*********** Final usuario propietario *****************/
+    } else {
       // Obtenemos los datos de todas las propiedades
 
       [properties] = await connection.query(
@@ -136,7 +136,7 @@ const listProperties = async (req, res, next) => {
           FROM properties
           LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
           WHERE city LIKE ? AND province LIKE ? AND type LIKE ? AND (price BETWEEN ?
-          AND ?) AND rooms >= ? AND garage = ? AND toilets >= ?  AND mts >= ?
+          AND ?) AND rooms >= ? AND garage >= ? AND toilets >= ?  AND mts >= ?
           group by properties.idProperty
           ORDER BY  ${
             order === 'votes' ? 'votes' : `properties.${orderBy}`
@@ -152,6 +152,7 @@ const listProperties = async (req, res, next) => {
         message: 'No hay conicidencias para su busqueda',
       });
     } else {
+      console.log('properties en back', properties);
       res.send({
         status: 'ok',
         properties,
