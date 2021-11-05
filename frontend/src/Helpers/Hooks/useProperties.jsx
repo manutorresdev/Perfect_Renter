@@ -5,7 +5,6 @@ import { get } from '../Api';
 export default function useProperties() {
   const [properties, setProperty] = useState([]);
   const location = useLocation();
-
   useEffect(() => {
     if (location.search) {
       get(

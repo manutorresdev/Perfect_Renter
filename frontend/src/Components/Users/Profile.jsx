@@ -105,7 +105,7 @@ export default function Profile({ token, setToken }) {
       <div className='grid grid-cols-1 sm:grid-cols-2 p-10 gap-10 sm:gap-32 '>
         <section className='md:ml-36'>
           <img
-            className='sm:max-w-sm rounded-full py-4 '
+            className='sm:max-w-sm rounded-full py-4 object-contain '
             src={
               User.avatar
                 ? `http://192.168.5.103:4000/photo/${User.avatar}`
@@ -122,7 +122,7 @@ export default function Profile({ token, setToken }) {
             <FaCamera className='text-4xl' />
           </button>
         </section>
-        <section className='w-auto'>
+        <section className=''>
           <div className='text-gray-Primary px-2 text-2xl bg-principal-1 font-normal flex flex-col-2 justify-between'>
             <h1>
               {User.name} {User.lastName}
@@ -137,18 +137,19 @@ export default function Profile({ token, setToken }) {
             </button>
           </div>
           <br />
-          <ul className='bg-gray-200 grid grid-cols-1 gap-4'>
-            <li className='bg-gray-400 text-lg'>Email</li>
-            {User.email}
-            <li className='bg-gray-400 text-lg'>Ciudad</li>
-            {User.ciudad}
-            <li className='bg-gray-400 text-lg'>Teléfono</li>
-            {User.tel}
-            <li className='bg-gray-400 text-lg'>Fecha de nacimiento</li>
-            {new Date(User.birthDate).toLocaleDateString('es-ES')}
-
-            <li className='bg-gray-400 text-lg'>Biografía:</li>
-            {User.bio}
+          <ul className='bg-gray-200 grid grid-cols-1 gap-4 overflow-hidden'>
+            <li className='bg-gray-400 text-lg pl-2'>Email</li>
+            <span className='pl-2'>{User.email}</span>
+            <li className='bg-gray-400 text-lg pl-2'>Ciudad</li>
+            <span className='pl-2'>{User.ciudad}</span>
+            <li className='bg-gray-400 text-lg pl-2'>Teléfono</li>
+            <span className='pl-2'>{User.tel}</span>
+            <li className='bg-gray-400 text-lg pl-2'>Fecha de nacimiento</li>
+            <span className='pl-2'>
+              {new Date(User.birthDate).toLocaleDateString('es-ES')}
+            </span>
+            <li className='bg-gray-400 text-lg pl-2'>Biografía:</li>
+            <span className='pl-2 pb-2'>{User.bio}</span>
           </ul>
         </section>
       </div>
@@ -157,7 +158,7 @@ export default function Profile({ token, setToken }) {
           <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 '>
             ALQUILERES
           </div>
-          <div className='contenedor alquileres flex flex-wrap gap-5'>
+          <div className='contenedor alquileres flex flex-wrap items-center justify-center sm:justify-start gap-5 sm:pl-2 pb-10'>
             {propiedadUsuario.length > 0 ? (
               propiedadUsuario.map((property) => (
                 <Property key={property.idProperty} property={property} />
@@ -165,7 +166,7 @@ export default function Profile({ token, setToken }) {
             ) : (
               <div>No hay ningún inmueble</div>
             )}
-            <button className='text-gray-400 flex flex-col justify-center items-center'>
+            <button className='text-gray-400 flex flex-col items-center gap-2'>
               <span>Añade un inmueble</span>
               <FaPlusSquare
                 className='text-4xl '
@@ -180,7 +181,7 @@ export default function Profile({ token, setToken }) {
             </button>
           </div>
         </section>
-        <section className='reservas min-h-'>
+        <section className='reservas '>
           <div className='w-full bg-principal-1 text-principal-gris font-medium text-3xl pl-5'>
             RESERVAS
           </div>
@@ -232,7 +233,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
 
   return (
     <div className='bookings-cont p-5 flex flex-col sm:flex-row sm:flex-wrap gap-5'>
-      {Bookings &&
+      {Bookings.length ? (
         Bookings.filter((booking) => {
           if (ShownBookings === 'proximas') {
             return booking.state !== 'finalizada';
@@ -312,7 +313,10 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
               </Link>
             </article>
           );
-        })}
+        })
+      ) : (
+        <h2>No hay reservas.</h2>
+      )}
     </div>
   );
 }

@@ -31,13 +31,24 @@ export default function Filters({ setOverlay, Overlay }) {
     e.preventDefault();
 
     const queryString = Object.keys(body)
-      .filter((val) => body[val].length > 1)
+      .filter((val) => {
+        console.log('\x1b[45m%%%%%%%', body[val], val);
+        if (val === 'garaje' && body['garaje'] === true) {
+          return body[val];
+        } else {
+          return body[val].length >= 1;
+        }
+      })
       .map((key) => {
-        return `${key}=${body[key]}`;
+        console.log(key);
+        if (key === 'garaje') {
+          return `${key}=1`;
+        } else {
+          return `${key}=${body[key]}`;
+        }
       })
       .join('&');
 
-    console.log(history.location);
     if (history.location.pathname.length > 12) {
       history.replace('/alquileres?' + queryString);
     }
@@ -66,7 +77,7 @@ export default function Filters({ setOverlay, Overlay }) {
           Overlay.show
             ? 'translate-y-0 opacity-100'
             : '-translate-y-full opacity-0'
-        } sm:translate-y-0 sm:opacity-100 bg-gray-400 bg-opacity-50 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+        } sm:translate-y-0 sm:opacity-100  bg-opacity-50 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
       >
         <section className='filtros sm:bg-transparent overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white relative'>
           <button

@@ -52,7 +52,7 @@ export default function Property({ property }) {
                 key={i}
                 className={`${
                   i === curr ? '' : 'absolute opacity-0'
-                } w-auto sm:max-w-xs object-cover duration-300`}
+                } w-auto sm:max-w-xs object-cover obj duration-300`}
                 src={img}
                 alt='default'
               />

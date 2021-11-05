@@ -195,7 +195,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
             <img
-              className='w-48 rounded-full'
+              className='w-2/4 rounded-full'
               src={
                 info.avatar
                   ? `http://192.168.5.103:4000/photo/${info.avatar}`

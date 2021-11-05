@@ -6,10 +6,10 @@ import { capitalizeFirstLetter } from '../../Helpers/Api';
 export default function Tenant({ user, setOverlay, relation }) {
   return (
     <article className='user-card flex gap-2 text-xs items-center p-1 bg-gray-100 bg-opacity-30'>
-      <div className='user-info-cont flex items-center font-medium relative flex-grow-0 w-9/12'>
+      <div className='user-info-cont flex items-center font-medium relative flex-grow-0 md:flex-grow w-9/12'>
         <Link className='user-avatar ' to={`/inquilinos/${user.idUser}`}>
           <img
-            className='w-32 rounded-full'
+            className='w-32 h-28 rounded-full object-scale-down'
             src={
               user.avatar
                 ? `http://192.168.5.103:4000/photo/${user.avatar}`
@@ -31,9 +31,10 @@ export default function Tenant({ user, setOverlay, relation }) {
       </div>
       <div className='user-info flex flex-col flex-grow min-w-min'>
         <Link className='self-start w-full' to={`/inquilinos/${user.idUser}`}>
-          <div className='font-bold text-base  text-principal-gris py-1 pl-1 border-b-2'>
+          <div className='font-bold text-base  text-principal-gris py-1 pl-1 border-b-2 flex-grow w-max'>
             {capitalizeFirstLetter(user.name)}{' '}
-            {capitalizeFirstLetter(user.lastName)}
+            {capitalizeFirstLetter(user.lastName)},{' '}
+            {new Date().getFullYear() - new Date(user.birthDate).getFullYear()}
           </div>
           <span className='pl-2 font-medium text-sm'>{user.city}</span>
         </Link>

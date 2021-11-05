@@ -2,34 +2,59 @@ import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
 import { CreateFormData, put } from '../../Helpers/Api';
+import EditAvatar from 'react-avatar-editor';
 
 export default function Avatar({ setOverlay, avatar, usuario, Token }) {
   const [Error, setError] = useState('');
   const [FileName, setFileName] = useState('');
-  const { handleSubmit, register } = useForm();
+  const [ImgPreview, setImgPreview] = useState(null);
   const hiddenInput = useRef(null);
-  const { ref, onChange, ...rest } = register('avatar');
+  const editedImg = useRef(null);
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
+
+  const { ref, onChange, ...rest } = register('avatar', {
+    required: 'Debes escoger una foto',
+  });
 
   function uploadFile(body, e) {
-    console.log('\x1b[45m%%%%%%%', body);
     e.preventDefault();
+
     if (body.avatar[0]) {
-      put(
-        `http://192.168.5.103:4000/users/${usuario.idUser}`,
-        CreateFormData({ avatar: body.avatar[0] }),
-        (data) => {
-          console.log('Success');
-          alert(data.message);
-          window.location.reload();
-        },
-        (error) => {
-          setError(error.message);
-        },
-        Token
-      );
-    } else {
-      setError('Debes seleccionar un archivo.');
+      editedImg.current.getImageScaledToCanvas().toBlob((blob) => {
+        const file = new File([blob], hiddenInput.current.files[0].name, {
+          type: 'image/jpeg',
+        });
+
+        put(
+          `http://192.168.5.103:4000/users/${usuario.idUser}`,
+          CreateFormData({ avatar: file }),
+          (data) => {
+            console.log('Success');
+            alert(data.message);
+            window.location.reload();
+          },
+          (error) => {
+            setError(error.message);
+          },
+          Token
+        );
+      }, 'image/jpeg');
     }
+  }
+
+  function imageHandler(e) {
+    const reader = new FileReader();
+    reader.onload = (d) => {
+      if (reader.readyState === 2) {
+        setImgPreview(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
   }
 
   // const registerComponentStyle =
@@ -70,15 +95,12 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
                 <FaRegArrowAltCircleUp className='animate-bounce' />
                 Selecciona un archivo
               </button>
-              <p className='text-center'>
-                {FileName ?? 'Ningún archivo seleccionado.'}
-              </p>
-
               <input
                 className='hidden'
                 {...rest}
                 onChange={(e) => {
                   onChange(e);
+                  imageHandler(e);
                   setFileName(hiddenInput.current.files[0].name);
                 }}
                 ref={(e) => {
@@ -91,6 +113,24 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
             </div>
             {Error && (
               <p className='text-red-600 font-medium text-center'>{Error}</p>
+            )}
+            {errors.avatar && (
+              <p className='text-red-600 font-medium text-center'>
+                {errors.avatar.message}
+              </p>
+            )}
+            {FileName && (
+              <EditAvatar
+                image={ImgPreview}
+                ref={editedImg}
+                width={250}
+                height={250}
+                borderRadius={150}
+                border={50}
+                color={[255, 255, 255, 0.6]} // RGBA
+                scale={1.2}
+                rotate={0}
+              />
             )}
             <button
               type='submit'

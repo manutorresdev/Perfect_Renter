@@ -58,7 +58,6 @@ export default function PropertyInfo(props) {
       require('../../Images/defPicture3.jpg').default,
     ]);
   }, []);
-
   useEffect(() => {
     const prop = Properties.find(
       (property) =>
@@ -67,13 +66,16 @@ export default function PropertyInfo(props) {
 
     if (prop) {
       setProperty(prop);
+      console.log('\x1b[45m%%%%%%%', prop);
       // if (!pisosVisitados.includes(prop.idProperty)) {
       //   setPisosVisitados({...pisosVisitados, {p: prop.idProperty, }});
       // }
-      if (prop.idUser === User.idUser) {
-        setOwner(true);
-      } else {
-        setOwner(false);
+      if (props.token) {
+        if (prop.idUser === User.idUser) {
+          setOwner(true);
+        } else {
+          setOwner(false);
+        }
       }
     }
   }, [
@@ -84,6 +86,7 @@ export default function PropertyInfo(props) {
     User,
     pisosVisitados,
     setPisosVisitados,
+    props.token,
   ]);
 
   // Styles
