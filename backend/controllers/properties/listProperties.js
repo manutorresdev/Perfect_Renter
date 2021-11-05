@@ -58,9 +58,9 @@ const listProperties = async (req, res, next) => {
     const type = filtType ? filtType : '%';
     const pmax = filtPmax ? filtPmax : 10000;
     const pmin = filtPmin ? filtPmin : 0;
-    const rooms = filtRooms ? filtRooms : 1;
-    const garage = filtGarage ? filtGarage : '%';
-    const toilets = filtToilets ? filtToilets : 1;
+    const rooms = filtRooms ? filtRooms : 0;
+    const garage = filtGarage ? filtGarage : 0;
+    const toilets = filtToilets ? filtToilets : 0;
     const mts = filtMts ? filtMts : 0;
 
     let properties;
@@ -81,6 +81,7 @@ const listProperties = async (req, res, next) => {
       number,
       type,
       stair,
+      elevator,
       flat,
       gate,
       mts,
@@ -120,6 +121,7 @@ const listProperties = async (req, res, next) => {
           number,
           type,
           stair,
+          elevator,
           flat,
           gate,
           mts,
@@ -135,16 +137,17 @@ const listProperties = async (req, res, next) => {
           properties.createdAt
           FROM properties
           LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
-          WHERE city LIKE ? AND province LIKE ? AND type LIKE ? AND (price BETWEEN ?
-          AND ?) AND rooms >= ? AND garage = ? AND toilets >= ?  AND mts >= ?
-          group by properties.idProperty
+          WHERE city LIKE ? AND province LIKE ? AND type LIKE ? AND rooms >= ? AND (price BETWEEN ?
+            AND ?) AND garage >= ? AND toilets >= ? AND mts >= ?
+          GROUP BY properties.idProperty
           ORDER BY  ${
             order === 'votes' ? 'votes' : `properties.${orderBy}`
           } ${orderDirection}
           `,
-        [city, province, type, pmin, pmax, rooms, garage, toilets, mts]
+        [city, province, type, rooms, pmin, pmax, garage, toilets, mts]
       );
     }
+
     //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
     if (properties.length === 0) {
       res.send({
@@ -152,6 +155,8 @@ const listProperties = async (req, res, next) => {
         message: 'No hay conicidencias para su busqueda',
       });
     } else {
+      console.log(properties.length);
+
       res.send({
         status: 'ok',
         properties,

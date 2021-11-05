@@ -20,7 +20,6 @@ app.use(fileUpload());
 // PHOTOS MIDDLEWARE
 app.use('/photo', express.static(uploadsDir));
 
-
 /**
  * @module Routes
  */

@@ -31,9 +31,19 @@ export default function Filters({ setOverlay, Overlay }) {
     e.preventDefault();
 
     const queryString = Object.keys(body)
-      .filter((val) => body[val].length > 1)
+      .filter((val) => {
+        if (val === 'garaje' && body['garaje'] === true) {
+          return body[val];
+        } else {
+          return body[val].length >= 1;
+        }
+      })
       .map((key) => {
-        return `${key}=${body[key]}`;
+        if (key === 'garaje') {
+          return `${key}=1`;
+        } else {
+          return `${key}=${body[key]}`;
+        }
       })
       .join('&');
 

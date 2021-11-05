@@ -102,6 +102,7 @@ async function main() {
             rooms INT,
             garage BOOLEAN,
             terrace BOOLEAN,
+            elevator BOOLEAN,
             toilets INT,
             energyCertificate BOOLEAN,
             availabilityDate DATE,

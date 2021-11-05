@@ -6,7 +6,7 @@ import Property from './Property';
 export default function Properties() {
   const [Overlay, setOverlay] = useState({ show: false });
   const [Properties] = useProperties();
-
+  console.log(Properties);
   return (
     <main className='flex pb-28 bg-gray-200 bg-opacity-20'>
       <aside

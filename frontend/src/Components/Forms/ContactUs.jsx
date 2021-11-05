@@ -145,7 +145,7 @@ export default function ContactUs() {
             <p className='text-red-500'>{errors.comentarios.message}</p>
           )}
           <input
-            className='button select-none self-center text-center border border-gray-400 text-black rounded-full p-2 md:px-10 md:mt-5 font-medium hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
+            className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
             type='submit'
             value='Contactar'
           />

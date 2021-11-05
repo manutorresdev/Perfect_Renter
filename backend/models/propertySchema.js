@@ -141,6 +141,17 @@ const propertySchema = Joi.object({
 
       return new Error('La terraza no es válida.');
     }),
+  elevator: Joi.number()
+    .required()
+    .error((errors) => {
+      if (
+        errors[0].code === 'any.required' ||
+        errors[0].code === 'string.empty'
+      )
+        return new Error('Se requiere especificar si hay o no ascensor.');
+
+      return new Error('El ascensor no es válido.');
+    }),
   toilets: Joi.number()
     .required()
     .error((errors) => {
@@ -173,6 +184,17 @@ const propertySchema = Joi.object({
         return new Error('Se requiere un precio mensual.');
 
       return new Error('El precio no es válido.');
+    }),
+  description: Joi.string()
+    .required()
+    .error((errors) => {
+      if (
+        errors[0].code === 'any.required' ||
+        errors[0].code === 'string.empty'
+      )
+        return new Error('Se requiere una descripción.');
+
+      return new Error('La descripción no es válida.');
     }),
   city: Joi.string()
     .required()
@@ -213,9 +235,11 @@ const editPropertySchema = Joi.object({
   garage: Joi.number(),
   rooms: Joi.number(),
   terrace: Joi.number(),
+  elevator: Joi.number(),
   toilets: Joi.number(),
   energyCertificate: Joi.number(),
   price: Joi.number(),
+  description: Joi.string(),
   city: Joi.string(),
   state: Joi.string(),
 });

@@ -13,6 +13,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
   function uploadFile(body, e) {
     console.log('\x1b[45m%%%%%%%', body);
     e.preventDefault();
+    console.log(body.avatar[0]);
     if (body.avatar[0]) {
       put(
         `http://localhost:4000/users/${usuario.idUser}`,
@@ -31,10 +32,6 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
       setError('Debes seleccionar un archivo.');
     }
   }
-
-  // const registerComponentStyle =
-  //   Token &&
-  //   'overlay z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-32 overflow-scroll sm:overflow-hidden';
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
