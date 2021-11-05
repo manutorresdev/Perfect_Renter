@@ -23,7 +23,6 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
 
   function uploadFile(body, e) {
     e.preventDefault();
-
     if (body.avatar[0]) {
       editedImg.current.getImageScaledToCanvas().toBlob((blob) => {
         const file = new File([blob], hiddenInput.current.files[0].name, {

@@ -190,6 +190,7 @@ export default function PropertyInfo(props) {
               <li>Ciudad: {property.province}</li>
               <li>{property.terrace === 0 ? 'Sin' : 'Con'} terraza</li>
               <li>{property.garage === 0 ? 'Sin' : 'Con'} garaje</li>
+              <li>{property.elevator === 0 ? 'Sin' : 'Con'} ascensor</li>
               <li>
                 Estado:{' '}
                 {property.state && capitalizeFirstLetter(property.state)}

@@ -34,8 +34,8 @@ export default function Login() {
 
   return (
     <>
-      <section className='mt-20 flex flex-col items-center gap-5 m-0 p-0'>
-        <div className='title underline text-5xl m-0 p-0'>
+      <section className='mt-24 flex flex-col items-center gap-5 m-0 p-0'>
+        <div className='title text-3xl p-4  bg-principal-1 flex justify-center w-3/6 select-none'>
           <h2>LOGIN</h2>
         </div>
         <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
@@ -66,7 +66,7 @@ export default function Login() {
           <Password {...formFunctions} />
           {Error ? <div>{Error}</div> : ''}
           <input
-            className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
+            className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
             type='submit'
             value='Entrar'
           />

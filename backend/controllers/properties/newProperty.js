@@ -18,6 +18,27 @@ const newProperty = async (req, res, next) => {
   try {
     connection = await getDB();
 
+    //convertimos en número los datos booleanos
+    if (req.body.garage === 'true') {
+      req.body.garage = 1;
+    } else {
+      req.body.garage = 0;
+    }
+    if (req.body.terrace === 'true') {
+      req.body.terrace = 1;
+    } else {
+      req.body.terrace = 0;
+    }
+    if (req.body.elevator === 'true') {
+      req.body.elevator = 1;
+    } else {
+      req.body.elevator = 0;
+    }
+    if (req.body.energyCertificate === 'true') {
+      req.body.energyCertificate = 1;
+    } else {
+      req.body.energyCertificate = 0;
+    }
     // Validamos los datos recibidos.
     await validate(propertySchema, req.body);
 
@@ -36,9 +57,11 @@ const newProperty = async (req, res, next) => {
       rooms,
       garage,
       terrace,
+      elevator,
       toilets,
       energyCertificate,
       price,
+      description,
       state,
     } = req.body;
 
@@ -112,6 +135,8 @@ const newProperty = async (req, res, next) => {
     // Generamos la fecha de creación
     const createdAt = formatDate(new Date());
 
+    console.log('\x1b[43m########\x1b[30m', typeof mts);
+
     // Guardamos la propiedad en la base de datos.
     await connection.query(
       `INSERT INTO properties (
@@ -129,14 +154,16 @@ const newProperty = async (req, res, next) => {
         rooms,
         garage,
         terrace,
+        elevator,
         toilets,
         energyCertificate,
         availabilityDate,
         price,
+        description,
         state,
         createdAt
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         userId,
         city,
@@ -152,10 +179,12 @@ const newProperty = async (req, res, next) => {
         rooms,
         garage,
         terrace,
+        elevator,
         toilets,
         energyCertificate,
         formatDate(new Date()),
         price,
+        description,
         state,
         createdAt,
       ]

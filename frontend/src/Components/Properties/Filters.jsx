@@ -32,7 +32,6 @@ export default function Filters({ setOverlay, Overlay }) {
 
     const queryString = Object.keys(body)
       .filter((val) => {
-        console.log('\x1b[45m%%%%%%%', body[val], val);
         if (val === 'garaje' && body['garaje'] === true) {
           return body[val];
         } else {
@@ -40,7 +39,6 @@ export default function Filters({ setOverlay, Overlay }) {
         }
       })
       .map((key) => {
-        console.log(key);
         if (key === 'garaje') {
           return `${key}=1`;
         } else {

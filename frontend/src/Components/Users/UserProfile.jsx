@@ -32,7 +32,7 @@ export default function UserProfile({ match, property }) {
   return (
     <>
       {Overlay.shown && (
-        <ContactTenant setOverlay={setOverlay} userInfo={Overlay.userInfo} />
+        <ContactTenant setOverlay={setOverlay} info={Overlay.userInfo} />
       )}
       <main className='pb-28  py-20 flex items-center flex-col justify-center'>
         <div className='perfil flex flex-col items-center justify-center'>

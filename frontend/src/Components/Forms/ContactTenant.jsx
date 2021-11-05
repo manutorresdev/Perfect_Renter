@@ -30,6 +30,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
       Token
     );
   }
+
   // Styles
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';

@@ -26,7 +26,7 @@ const editProperty = async (req, res, next) => {
     const idReqUser = req.userAuth.idUser;
 
     // Obtenemos los datos editables
-    const {
+    let {
       city,
       province,
       address,
@@ -40,6 +40,7 @@ const editProperty = async (req, res, next) => {
       rooms,
       garage,
       terrace,
+      elevator,
       toilets,
       energyCertificate,
       availabilityDate,
@@ -324,6 +325,14 @@ const editProperty = async (req, res, next) => {
      * Actualizamos si la vivienda tiene garaje.
      *
      */
+
+    //convertimos en número el dato booleanos
+    if (garage === 'true') {
+      garage = 1;
+    } else {
+      garage = 0;
+    }
+
     if (garage && property[0].garage !== garage) {
       // Validamos la información recibida.
       validateData = { garage };
@@ -336,6 +345,33 @@ const editProperty = async (req, res, next) => {
       );
     }
     /**
+     * ##############
+     * ## ELEVATOR ##
+     * ##############
+     *
+     * Actualizamos si la vivienda tiene ascensor.
+     *
+     */
+
+    //convertimos en número el dato booleanos
+    if (elevator === 'true') {
+      elevator = 1;
+    } else {
+      elevator = 0;
+    }
+    console.log(elevator);
+    if (elevator && property[0].elevator !== elevator) {
+      // Validamos la información recibida.
+      validateData = { elevator };
+      await validate(editPropertySchema, validateData);
+
+      // Actualizamos la información en la base de datos.
+      await connection.query(
+        `UPDATE properties SET elevator = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [elevator, modifiedAt, idProperty]
+      );
+    }
+    /**
      * #############
      * ## TERRACE ##
      * #############
@@ -343,11 +379,19 @@ const editProperty = async (req, res, next) => {
      * Actualizamos si la vivienda tiene terraza.
      *
      */
+    //convertimos en número el dato booleanos
+    console.log('llega' + terrace);
+    if (terrace === 'true') {
+      terrace = 1;
+    } else {
+      terrace = 0;
+    }
+    console.log('se transforma' + terrace);
     if (terrace && property[0].terrace !== terrace) {
       // Validamos la información recibida.
       validateData = { terrace };
       await validate(editPropertySchema, validateData);
-
+      console.log(terrace);
       // Actualizamos la información en la base de datos.
       await connection.query(
         `UPDATE properties SET terrace = ?, modifiedAt = ? WHERE idProperty = ?`,
@@ -381,6 +425,12 @@ const editProperty = async (req, res, next) => {
      * Actualizamos si la vivienda tiene certificado energético.
      *
      */
+    //convertimos en número el dato booleanos
+    if (energyCertificate === 'true') {
+      energyCertificate = 1;
+    } else {
+      energyCertificate = 0;
+    }
     if (
       energyCertificate &&
       property[0].energyCertificate !== energyCertificate

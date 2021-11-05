@@ -1,12 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FaAngleLeft, FaAngleRight, FaStar } from 'react-icons/fa';
+import {
+  FaAngleLeft,
+  FaAngleRight,
+  FaPencilAlt,
+  FaStar,
+  FaTrash,
+} from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { capitalizeFirstLetter } from '../../Helpers/Api';
+import { del } from '../../Helpers/Api';
+import NewProperty from './NewProperty';
 
-export default function Property({ property }) {
+export default function Property({ property, token }) {
   const [curr, setCurr] = useState(0);
   const [SlideImgs, setSlideImgs] = useState([]);
   const slider = useRef();
+  const [Overlay, setOverlay] = useState({
+    shown: false,
+    form: '',
+  });
 
   useEffect(() => {
     setSlideImgs([
@@ -26,8 +37,34 @@ export default function Property({ property }) {
     setCurr(curr === 0 ? SlideImgs.length - 1 : curr - 1);
   }
 
+  function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1);
+  }
+
+  function onSubmitDeleted(body, e) {
+    if (window.confirm('¿Desea eliminar el inmueble?')) {
+      del(
+        `http://localhost:4000/properties/${property.idProperty}`,
+        body,
+        (data) => {
+          alert(data.message);
+          window.location.reload();
+        },
+        (error) => console.log(error),
+        token
+      );
+    }
+  }
+
   return (
     <article className='cont-vivienda overflow-hidden border-2 border-white bg-white sm:w-auto min-w-min my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-200'>
+      {Overlay.form === 'newProperty' && (
+        <NewProperty
+          setOverlay={setOverlay}
+          Token={token}
+          EditProperty={property}
+        />
+      )}
       <div className='slider w-full relative '>
         <button
           onClick={right}
@@ -60,9 +97,10 @@ export default function Property({ property }) {
           })}
         </div>
       </div>
-      <Link to={`/alquileres/${property.idProperty}`}>
-        <div className='relative'>
-          <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 flex justify-between'>
+
+      <div className='relative'>
+        <Link to={`/alquileres/${property.idProperty}`}>
+          <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 flex justify-between gap-2'>
             <h3>
               {capitalizeFirstLetter(property.type)} en {property.city}
             </h3>
@@ -86,8 +124,30 @@ export default function Property({ property }) {
                 return <FaStar key={i} className='text-principal-1'></FaStar>;
               })}
           </footer>
-        </div>
-      </Link>
+        </Link>
+        {token ? (
+          <div className='flex flex-row justify-between'>
+            <button
+              className='text-xl '
+              onClick={() => {
+                setOverlay({ shown: true, form: 'newProperty' });
+              }}
+            >
+              <FaPencilAlt />
+            </button>
+            <button
+              className='text-xl'
+              onClick={() => {
+                onSubmitDeleted();
+              }}
+            >
+              <FaTrash />
+            </button>
+          </div>
+        ) : (
+          ''
+        )}
+      </div>
     </article>
   );
 }
