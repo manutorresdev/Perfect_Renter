@@ -7,7 +7,7 @@ export default function Properties() {
   const [Overlay, setOverlay] = useState({ show: false });
   const [Properties] = useProperties();
   return (
-    <main className='flex pb-28 bg-gray-200 bg-opacity-20'>
+    <main className='flex pb-28  bg-gray-Primary'>
       <aside
         className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static fixed right-0 top-20 z-20 sm:top-0 mt-5 sm:mt-20`}
       >

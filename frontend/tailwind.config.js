@@ -58,11 +58,19 @@ module.exports = {
         'principal-1': 'rgba(237,203,84,1)',
         'principal-1-hover': 'rgba(237, 204, 84, 0.73)',
       },
+      boxShadow: {
+        perfil: 'rgba(0, 0, 0, 0.25) 0px 25px 50px -12px',
+      },
+      outline: {
+        contrast: ['1px solid #000000', '0px'],
+      },
     },
   },
   variants: {
     extend: {
       padding: ['hover', 'focus'],
+      boxShadow: ['active'],
+      outline: ['hover', 'active'],
     },
   },
   plugins: [],
