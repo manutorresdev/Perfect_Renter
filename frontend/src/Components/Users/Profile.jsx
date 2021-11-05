@@ -109,9 +109,9 @@ export default function Profile({ token, setToken }) {
         SOBRE TI
       </div>
       <div className='grid grid-cols-1 sm:grid-cols-2 p-10 gap-10 sm:gap-32 '>
-        <section className='md:ml-36'>
+        <section className='w-full h-full relative'>
           <img
-            className='sm:max-w-sm rounded-full py-4 object-contain '
+            className='sm:max-w-sm rounded-full  py-4 object-contain'
             src={
               User.avatar
                 ? `http://192.168.5.103:4000/photo/${User.avatar}`
@@ -119,14 +119,13 @@ export default function Profile({ token, setToken }) {
             }
             alt='perfil de usuario'
           />
-          <button
-            className=''
+
+          <FaCamera
+            className='text-4xl text-principal-gris m-auto absolute top-0 right-0 left-0 bottom-0'
             onClick={() => {
               setOverlay({ shown: true, userInfo: User, form: 'avatar' });
             }}
-          >
-            <FaCamera className='text-4xl' />
-          </button>
+          />
         </section>
         <section className='w-auto'>
           <div className=' px-4 text-2xl bg-gray-Primary text-principal-1  font-normal flex flex-col-2 justify-between'>
@@ -143,19 +142,19 @@ export default function Profile({ token, setToken }) {
             </button>
           </div>
           <br />
-          <ul className='bg-gray-200 grid grid-cols-1 gap-4'>
+          <ul className='bg-gray-200 grid grid-cols-1 gap-4 '>
             <li className='bg-gray-400 text-lg px-2'>Email</li>
-            <span className='pl-2'>{User.email}</span>
-            <li className='bg-gray-400 text-lg px-2'>Ciudad</li>
-            <span className='pl-2'>{User.ciudad}</span>
+            <span className='pl-2  overflow-x-auto'>{User.email}</span>
+            <li className='bg-gray-400 text-lg px-2 '>Ciudad</li>
+            <span className='pl-2  overflow-x-auto'>{User.ciudad}</span>
             <li className='bg-gray-400 text-lg px-2'>Teléfono</li>
-            <span className='pl-2'>{User.tel}</span>
+            <span className='pl-2  overflow-x-auto'>{User.tel}</span>
             <li className='bg-gray-400 text-lg px-2'>Fecha de nacimiento</li>
-            <span className='pl-2'>
+            <span className='pl-2  overflow-x-auto'>
               {new Date(User.birthDate).toLocaleDateString('es-ES')}
             </span>
             <li className='bg-gray-400 text-lg px-2'>Biografía</li>
-            <span className='py-2'>{User.bio}</span>
+            <span className='py-2  overflow-x-auto'>{User.bio}</span>
           </ul>
         </section>
       </div>
@@ -229,7 +228,8 @@ export default function Profile({ token, setToken }) {
             onSubmitDeleted();
           }}
         >
-          <FaTrash className='text-principal-1' /> Eliminar cuenta
+          <FaTrash className='text-principal-1 hover:text-red-500' /> Eliminar
+          cuenta
         </button>
       </div>
     </article>

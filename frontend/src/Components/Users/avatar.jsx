@@ -8,6 +8,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
   const [Error, setError] = useState('');
   const [FileName, setFileName] = useState('');
   const [ImgPreview, setImgPreview] = useState(null);
+  const [Scale, setScale] = useState(1);
   const hiddenInput = useRef(null);
   const editedImg = useRef(null);
 
@@ -119,17 +120,29 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
               </p>
             )}
             {FileName && (
-              <EditAvatar
-                image={ImgPreview}
-                ref={editedImg}
-                width={250}
-                height={250}
-                borderRadius={150}
-                border={50}
-                color={[255, 255, 255, 0.6]} // RGBA
-                scale={1.2}
-                rotate={0}
-              />
+              <>
+                <EditAvatar
+                  image={ImgPreview}
+                  ref={editedImg}
+                  width={250}
+                  height={250}
+                  borderRadius={150}
+                  border={50}
+                  color={[255, 255, 255, 0.6]} // RGBA
+                  scale={Scale}
+                  rotate={0}
+                />
+                <input
+                  type='range'
+                  name='scale'
+                  min='1'
+                  max='3'
+                  step='0.01'
+                  onChange={(e) => {
+                    setScale(e.target.value);
+                  }}
+                />
+              </>
             )}
             <button
               type='submit'

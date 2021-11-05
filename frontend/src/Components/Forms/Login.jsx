@@ -20,10 +20,7 @@ export default function Login() {
       'http://192.168.5.103:4000/users/login',
       CreateFormData(body),
       (data) => {
-        console.log(data);
         setToken(data.token);
-        console.log('Success');
-        alert(data.message);
         window.location.reload();
       },
       (data) => {
