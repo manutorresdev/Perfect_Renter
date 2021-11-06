@@ -57,13 +57,9 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
     reader.readAsDataURL(e.target.files[0]);
   }
 
-  // const registerComponentStyle =
-  //   Token &&
-  //   'overlay z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-32 overflow-scroll sm:overflow-hidden';
-
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
-      <section className='contact pt-2 border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
+    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-20 pb-10 px-2 overflow-auto sm:overflow-hidden'>
+      <section className='avatar pt-2 mt-2 border-2 min-h-full h-min border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -86,7 +82,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
           >
             <div className='flex flex-col gap-5'>
               <button
-                className='font-medium flex items-center gap-2 bg-blue-600 text-white p-1 rounded'
+                className='font-medium flex items-center gap-2 bg-blue-600 text-white p-1 rounded self-center'
                 onClick={(e) => {
                   e.preventDefault();
                   hiddenInput.current.click();

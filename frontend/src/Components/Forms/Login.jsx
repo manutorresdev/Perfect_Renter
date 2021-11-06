@@ -31,7 +31,7 @@ export default function Login() {
 
   return (
     <>
-      <section className='mt-24 flex flex-col items-center gap-5 m-0 p-0'>
+      <section className='pt-24 flex flex-col items-center gap-5 m-0 p-0 bg-gray-200 bg-opacity-50 h-screen'>
         <div className='title text-3xl p-4  bg-principal-1 flex justify-center w-3/6 select-none'>
           <h2>LOGIN</h2>
         </div>
@@ -52,7 +52,7 @@ export default function Login() {
                   onChange={onChange}
                   inputRef={ref}
                   name={name}
-                  className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full'
+                  className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
                 />
               );
             }}
@@ -68,7 +68,18 @@ export default function Login() {
             value='Entrar'
           />
         </form>
-        <Link to='/recuperar'>Recuperar contraseña</Link>
+        <Link
+          className='p-4 font-medium hover:text-blue-900 hover:underline duration-200'
+          to='/recuperar'
+        >
+          Recuperar contraseña
+        </Link>
+        <div className='flex gap-1'>
+          ¿Aún no tienes cuenta? Registrate
+          <Link className='hover:text-blue-900 font-medium hover:underline duration-200'>
+            aquí
+          </Link>
+        </div>
       </section>
     </>
   );

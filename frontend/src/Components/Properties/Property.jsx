@@ -57,7 +57,7 @@ export default function Property({ property, token }) {
   }
 
   return (
-    <article className='cont-vivienda overflow-hidden border-2 border-white bg-white sm:w-auto min-w-min my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-200'>
+    <article className='cont-vivienda overflow-hidden border-2 border-white bg-white sm:w-auto min-w-min hover:max-h-full my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-300'>
       {Overlay.form === 'newProperty' && (
         <NewProperty
           setOverlay={setOverlay}

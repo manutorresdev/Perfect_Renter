@@ -6,6 +6,15 @@ module.exports = {
       black: theme('colors.black'),
     }),
     extend: {
+      minHeight: {
+        '6/10': '60%',
+        '20rem': '20rem',
+        lg: '700px',
+      },
+      maxHeight: {
+        xs: '20rem',
+        full: '100%',
+      },
       keyframes: {
         LeftX: {
           '0%': { transform: 'translateX(-100%)' },
@@ -49,6 +58,7 @@ module.exports = {
       },
       height: {
         'max-content': 'max-content',
+        min: 'min-content',
         '60vh': '60vh',
         '30vh': '30vh',
         custom: '100px',
@@ -62,6 +72,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      maxHeight: ['hover'],
       padding: ['hover', 'focus'],
     },
   },

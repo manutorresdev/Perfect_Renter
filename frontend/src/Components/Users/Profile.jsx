@@ -104,14 +104,13 @@ export default function Profile({ token, setToken }) {
           Token={token}
         />
       )}
-
       <div className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25  '>
         SOBRE TI
       </div>
-      <div className='grid grid-cols-1 sm:grid-cols-2 p-10 gap-10 sm:gap-32 '>
-        <section className='w-full h-full relative'>
+      <div className='grid grid-cols-1 justify-items-center items-center sm:grid-cols-2 p-10 gap-10 sm:gap-32 '>
+        <section className='w-52 h-52 max-h-xs max-w-xs relative'>
           <img
-            className='sm:max-w-sm rounded-full  py-4 object-contain'
+            className='w-full h-full rounded-full'
             src={
               User.avatar
                 ? `http://192.168.5.103:4000/photo/${User.avatar}`
@@ -119,16 +118,17 @@ export default function Profile({ token, setToken }) {
             }
             alt='perfil de usuario'
           />
-
-          <FaCamera
-            className='text-4xl text-principal-gris m-auto absolute top-0 right-0 left-0 bottom-0'
+          <button
             onClick={() => {
               setOverlay({ shown: true, userInfo: User, form: 'avatar' });
             }}
-          />
+            className='bg-white bg-opacity-50 h-full w-full absolute top-0 right-0 left-0 bottom-0'
+          >
+            <FaCamera className='text-4xl m-auto' />
+          </button>
         </section>
         <section className='w-auto'>
-          <div className=' px-4 text-2xl bg-gray-Primary text-principal-1  font-normal flex flex-col-2 justify-between'>
+          <div className=' px-4 text-2xl bg-gray-Primary text-principal-1 font-normal flex flex-col-2 justify-between'>
             <h1>
               {User.name} {User.lastName}
             </h1>
@@ -150,44 +150,48 @@ export default function Profile({ token, setToken }) {
             <li className='bg-gray-400 text-lg px-2'>Teléfono</li>
             <span className='pl-2  overflow-x-auto'>{User.tel}</span>
             <li className='bg-gray-400 text-lg px-2'>Fecha de nacimiento</li>
-            <span className='pl-2  overflow-x-auto'>
+            <span className='pl-2 overflow-x-auto'>
               {new Date(User.birthDate).toLocaleDateString('es-ES')}
             </span>
             <li className='bg-gray-400 text-lg px-2'>Biografía</li>
-            <span className='py-2  overflow-x-auto'>{User.bio}</span>
+            <span className='pl-2 pb-4 overflow-x-auto'>{User.bio}</span>
           </ul>
         </section>
       </div>
       <div>
-        <section>
+        <section className=''>
           <div className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25 '>
             ALQUILERES
           </div>
-          <div className='contenedor alquileres flex flex-wrap items-center justify-center sm:justify-start gap-5 sm:pl-2 pb-10'>
-            {propiedadUsuario.length > 0 ? (
-              propiedadUsuario.map((property) => (
-                <Property
-                  key={property.idProperty}
-                  property={property}
-                  token={token}
+          <div className='flex flex-col lg:flex-row'>
+            <div className='contenedor-alquileres flex flex-wrap justify-center gap-5 m-auto max-w-md sm:max-w-none sm:justify-start sm:pl-2 px-2 pb-10'>
+              {propiedadUsuario.length > 0 ? (
+                propiedadUsuario.map((property) => (
+                  <Property
+                    key={property.idProperty}
+                    property={property}
+                    token={token}
+                  />
+                ))
+              ) : (
+                <div>No hay ningún inmueble</div>
+              )}
+            </div>
+            <div className='text-gray-400 flex flex-col items-center gap-2 m-auto pb-5 lg:flex-grow lg:items-start'>
+              <button className='flex flex-col items-center gap-2'>
+                <span>Añade un inmueble</span>
+                <FaPlusSquare
+                  className='text-4xl'
+                  onClick={() => {
+                    setOverlay({
+                      shown: true,
+                      userInfo: User,
+                      form: 'property',
+                    });
+                  }}
                 />
-              ))
-            ) : (
-              <div>No hay ningún inmueble</div>
-            )}
-            <button className='text-gray-400 flex flex-col items-center gap-2'>
-              <span>Añade un inmueble</span>
-              <FaPlusSquare
-                className='text-4xl '
-                onClick={() => {
-                  setOverlay({
-                    shown: true,
-                    userInfo: User,
-                    form: 'property',
-                  });
-                }}
-              />
-            </button>
+              </button>
+            </div>
           </div>
         </section>
         <section className='reservas '>
@@ -221,15 +225,15 @@ export default function Profile({ token, setToken }) {
           />
         </section>
       </div>
-      <div className='flex justify-end'>
+      <div className='flex justify-center sm:justify-end'>
         <button
-          className='py-4 px-2 rounded-full text-principal-1 bg-gray-Primary flex flex-row items-center justify-around'
+          className='py-4 px-2 rounded-full text-principal-1 bg-gray-Primary flex items-center justify-around'
           onClick={() => {
             onSubmitDeleted();
           }}
         >
-          <FaTrash className='text-principal-1 hover:text-red-500' /> Eliminar
-          cuenta
+          <FaTrash className='text-principal-1 hover:text-red-500 w-12' />{' '}
+          Eliminar cuenta
         </button>
       </div>
     </article>
@@ -242,7 +246,11 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
   }
 
   return (
-    <div className='bookings-cont p-5 flex flex-col sm:flex-row sm:flex-wrap gap-5'>
+    <div
+      className='
+      bookings-cont p-5 flex flex-col items-center gap-5
+      sm:justify-center sm:flex-row sm:flex-wrap lg:justify-start'
+    >
       {Bookings.length ? (
         Bookings.filter((booking) => {
           if (ShownBookings === 'proximas') {
@@ -252,76 +260,84 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
           }
         }).map((booking) => {
           return (
-            <article
-              key={booking.idBooking}
-              className={`animate-fadeIn h-1/3 flex md:w-4/12 md:max-w-md sm:w-7/12 justify-between shadow-2xl`}
-            >
-              <div className='flex flex-col flex-grow w-5/12'>
-                <h2 className='bg-gray-Primary text-principal-1 text-lg w-full'>
-                  {capitalizeFirstLetter(booking.type)} en {booking.city}
-                </h2>
-                <p>
-                  {booking.address}, {booking.number}
-                </p>
-                <p>Precio: {Number(booking.price)}€</p>
-                <p>
-                  Entrada:{' '}
-                  {new Date(booking.startBookingDate).toLocaleDateString()}
-                </p>
-                <p>
-                  Salida:{' '}
-                  {new Date(booking.endBookingDate).toLocaleDateString()}
-                </p>
-                {booking.state !== 'finalizada' && (
-                  <div className='flex pt-1'>
-                    <button
-                      onClick={() => console.log('')}
-                      className='bg-gray-200 text-principal-gris font-medium flex items-center justify-between p-1 w-full'
-                    >
-                      {' '}
-                      <FaPencilAlt />
-                      <span className='flex-grow'>Editar</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setOverlay({
-                          form: 'cancelBooking',
-                          info: { ...User, ...booking },
-                          shown: true,
-                        });
-                      }}
-                      className='bg-gray-100 font-medium text-principal-gris p-1 w-full'
-                    >
-                      Cancelar
-                    </button>
-                  </div>
-                )}
-              </div>
-              <div className='border-r-2 border-opacity-75 border-gray-700'></div>
-              <Link
-                to={`/alquileres/${booking.idProperty}`}
-                className='w-4/12 relative flex flex-col justify-between'
+            <>
+              <article
+                key={booking.idBooking}
+                className={`animate-fadeIn h-1/3 max-w-xs flex flex-col items-start justify-between shadow-2xl
+                sm:w-7/12 sm:max-w-xs
+                lg:flex-row lg:w-4/12 lg:max-w-md`}
               >
-                <img
-                  className='object-cover flex-grow'
-                  src={require('../../Images/defPicture.jpg').default}
-                  alt=''
-                />
-                <div className='flex justify-end bg-gray-Primary w-full'>
-                  {booking.votes > 0 ? (
-                    Array(parseInt(booking.votes))
-                      .fill(null)
-                      .map((value, i) => {
-                        return (
-                          <FaStar key={i} className='text-principal-1'></FaStar>
-                        );
-                      })
-                  ) : (
-                    <div className='h-4'></div>
+                <div className='flex flex-col flex-grow lg:w-5/12 w-full'>
+                  <h2 className='bg-gray-Primary text-principal-1 text-lg w-full'>
+                    {capitalizeFirstLetter(booking.type)} en {booking.city}
+                  </h2>
+                  <p>
+                    {booking.address}, {booking.number}
+                  </p>
+                  <p>Precio: {Number(booking.price)}€</p>
+                  <p>
+                    Entrada:{' '}
+                    {new Date(booking.startBookingDate).toLocaleDateString()}
+                  </p>
+                  <p>
+                    Salida:{' '}
+                    {new Date(booking.endBookingDate).toLocaleDateString()}
+                  </p>
+                  {booking.state !== 'finalizada' && (
+                    <div className='flex pt-1'>
+                      <button
+                        onClick={() => console.log('')}
+                        className='bg-gray-200 text-principal-gris font-medium flex items-center justify-between p-1 w-full'
+                      >
+                        {' '}
+                        <FaPencilAlt />
+                        <span className='flex-grow'>Editar</span>
+                      </button>
+                      <button
+                        onClick={() => {
+                          setOverlay({
+                            form: 'cancelBooking',
+                            info: { ...User, ...booking },
+                            shown: true,
+                          });
+                        }}
+                        className='bg-gray-100 font-medium text-principal-gris p-1 w-full'
+                      >
+                        Cancelar
+                      </button>
+                    </div>
                   )}
                 </div>
-              </Link>
-            </article>
+                <div className='border-r-2 border-opacity-75 border-gray-700'></div>
+                <Link
+                  to={`/alquileres/${booking.idProperty}`}
+                  className='lg:h-40 w-full relative flex flex-col flex-grow justify-between lg:w-4/12'
+                >
+                  <img
+                    className='flex-grow object-cover w-full h-full'
+                    src={require('../../Images/defPicture.jpg').default}
+                    alt='alquiler'
+                  />
+                  <div className='flex justify-end bg-gray-Primary w-full'>
+                    {booking.votes > 0 ? (
+                      Array(parseInt(booking.votes))
+                        .fill(null)
+                        .map((value, i) => {
+                          return (
+                            <FaStar
+                              key={i}
+                              className='text-principal-1'
+                            ></FaStar>
+                          );
+                        })
+                    ) : (
+                      <div className='h-4'></div>
+                    )}
+                  </div>
+                </Link>
+              </article>
+              <div className='separador bg-principal-1 h-4 w-full sm:w-0 max-w-xs'></div>
+            </>
           );
         })
       ) : (
