@@ -268,7 +268,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
                 lg:flex-row lg:w-4/12 lg:max-w-md`}
               >
                 <div className='flex flex-col flex-grow lg:w-5/12 w-full'>
-                  <h2 className='bg-gray-Primary text-principal-1 text-lg w-full'>
+                  <h2 className='bg-gray-Primary text-principal-1 text-lg w-full p-2'>
                     {capitalizeFirstLetter(booking.type)} en {booking.city}
                   </h2>
                   <p>
