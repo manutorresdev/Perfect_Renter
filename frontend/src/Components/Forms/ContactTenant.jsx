@@ -38,7 +38,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
-      <section className='contact pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
+      <section className='contact shadow-custom pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {

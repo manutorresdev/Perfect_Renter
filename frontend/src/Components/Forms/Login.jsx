@@ -76,7 +76,10 @@ export default function Login() {
         </Link>
         <div className='flex gap-1'>
           ¿Aún no tienes cuenta? Registrate
-          <Link className='hover:text-blue-900 font-medium hover:underline duration-200'>
+          <Link
+            className='hover:text-blue-900 font-medium hover:underline duration-200'
+            to='/registro'
+          >
             aquí
           </Link>
         </div>

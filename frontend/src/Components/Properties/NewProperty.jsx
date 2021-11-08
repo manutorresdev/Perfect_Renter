@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FaCamera, FaEuroSign, FaPlus } from 'react-icons/fa';
-import { CreateFormData, post, put } from '../../Helpers/Api';
+import {
+  FaCamera,
+  FaEuroSign,
+  FaHome,
+  FaListUl,
+  FaMapMarkerAlt,
+  FaMoneyCheckAlt,
+  FaPlus,
+  FaRegCalendarAlt,
+  FaRegImages,
+} from 'react-icons/fa';
+import { CreateFormData, get, post, put } from '../../Helpers/Api';
 import FileProperty from './FileProperty';
 
-export default function NewProperty({
-  setOverlay,
-  Token,
-  EditProperty,
-  property,
-}) {
+export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const {
     register,
     handleSubmit,
@@ -72,11 +77,21 @@ export default function NewProperty({
     form: '',
   });
 
+  // Provincias
+  const [Provinces, setProvinces] = useState([]);
+  const provRef = useRef(null);
+  const [ProvincesFound, setProvincesFound] = useState([]);
+  const [ProvincesOverlay, setProvincesOverlay] = useState(false);
+
+  // Ciudades
+  const cityRef = useRef(null);
+  const [Cities, setCities] = useState([]);
+  const [CitiesFound, setFound] = useState([]);
+  const [CitiesOverlay, setCitiesOverlay] = useState(false);
   const [Error, setError] = useState('');
+  const cpRef = useRef(null);
 
   function onSubmitProperty(body, e) {
-    console.log(body);
-
     post(
       'http://192.168.5.103:4000/properties',
       CreateFormData(body),
@@ -97,7 +112,7 @@ export default function NewProperty({
     e.preventDefault();
 
     put(
-      `http://localhost:4000/properties/${EditProperty.idProperty}`,
+      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess');
@@ -111,18 +126,73 @@ export default function NewProperty({
     );
   }
 
-  const inputsLabelStyle = 'sm:text-gray-600  text-xl ';
+  useEffect(() => {
+    get(
+      'http://192.168.5.103:4000/properties/location',
+      (data) => {
+        setProvinces(data.provinces);
+        setCities(data.cities);
+        console.log('\x1b[45m%%%%%%%', data.provinces);
+      },
+      (error) => {
+        console.log('\x1b[43m########\x1b[30m', error);
+      }
+    );
+  }, []);
+  // Province React Hook Form
+  const {
+    onChange: onChangeProvince,
+    ref: provinceRef,
+    onBlur: onBlurProvince,
+    ...restProvince
+  } = register('province', {
+    required: 'Debes escribir la provincia',
+    pattern: {
+      value:
+        /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+      message:
+        'La provincia no puede contener carácteres especiales ni números.',
+    },
+    maxLength: {
+      value: 30,
+      message: 'La provincia no puede tener más de 50 carácteres.',
+    },
+  });
+  // City React Hook Form
+  const { onChange, ref, onBlur, ...restCity } = register('city', {
+    required: 'Debes escribir una ciudad',
+    pattern: {
+      value:
+        /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+      message: 'La ciudad no puede contener carácteres especiales ni números.',
+    },
+    maxLength: {
+      value: 30,
+      message: 'La ciudad no puede tener más de 50 carácteres.',
+    },
+  });
+
+  // Postal Code React Hook Form
+  const { ref: cpFormRef, ...cpRest } = register('zipCode', {
+    required: 'Debes escribir el código postal',
+    pattern: {
+      value: /^\s?\+?\s?([0-9\s]*){9,}$/,
+      message: 'Debes introducir un número válido.',
+    },
+  });
+  const inputsLabelStyle =
+    'sm:text-gray-600  text-xl border-b-2 border-gray-200 flex items-center gap-1';
 
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full';
   const description = watch('description');
 
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center  px-12 py-24 overflow-scroll sm:overflow-hidden'>
+    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
       {file.form === 'FileProperty' && (
         <FileProperty setOverlay={setOverlay} Token={Token} />
       )}
-      <section className='pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-4/6'>
+      <section className='pt-20 border-2 shadow-custom border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll  md:w-4/6'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -131,10 +201,10 @@ export default function NewProperty({
         >
           <FaPlus className='transform scale-150 rotate-45' />
         </button>
-        <h1 className='title w-4/6 text-5xl text-center m-auto p-4 bg-principal-1  '>
+        <h1 className='title w-4/6 text-2xl sm:text-5xl text-center m-auto p-4 bg-principal-1  '>
           Inmueble
         </h1>
-        <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
+        <div className='newProperty-card-container flex justify-around flex-col-reverse gap-10 '>
           <form
             className='flex flex-col gap-4 p-6'
             onSubmit={
@@ -143,7 +213,10 @@ export default function NewProperty({
                 : handleSubmit(onSubmitProperty)
             }
           >
-            <h2 className={inputsLabelStyle}>¿Qúe tipo de inmueble ofreces?</h2>
+            <h2 className={inputsLabelStyle}>
+              <FaHome className='min-w-min m-1 sm:m-0' />
+              ¿Qúe tipo de inmueble ofreces?
+            </h2>
             <div className='grid grid-cols-3 '>
               <label className='flex gap-2 items-baseline font-medium'>
                 Piso
@@ -175,10 +248,11 @@ export default function NewProperty({
             </div>
 
             <h3 className={inputsLabelStyle}>
-              ¿Qué disponibilidad tiene ahora mismmo?
+              <FaRegCalendarAlt className='min-w-min m-1 sm:m-0' />
+              ¿Qué disponibilidad tiene ahora mismo?
             </h3>
 
-            <div className='grid grid-cols-3 '>
+            <div className='flex flex-col items-end m-auto sm:m-0 sm:grid sm:grid-cols-3 '>
               <label className='flex gap-2 items-baseline font-medium'>
                 Disponible
                 <input
@@ -207,49 +281,127 @@ export default function NewProperty({
                 />
               </label>
             </div>
-            <h4 className={inputsLabelStyle}>¿Dónde está?</h4>
-            <input
-              type='text'
-              name='city'
-              className={inpStyle}
-              placeholder='Ciudad'
-              {...register('city', {
-                required: 'Debes escribir una ciudad',
-                pattern: {
-                  value:
-                    /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
-                  message:
-                    'La ciudad no puede contener carácteres especiales ni números.',
-                },
-                maxLength: {
-                  value: 30,
-                  message: 'La ciudad no puede tener más de 50 carácteres.',
-                },
-              })}
-            />
-            {errors.city && (
-              <p className='text-red-500'>{errors.city.message}</p>
-            )}
-
-            <input
-              type='text'
-              name='province'
-              className={inpStyle}
-              placeholder='Provincia'
-              {...register('province', {
-                required: 'Debes escribir la provincia',
-                pattern: {
-                  value:
-                    /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
-                  message:
-                    'La provincia no puede contener carácteres especiales ni números.',
-                },
-                maxLength: {
-                  value: 30,
-                  message: 'La provincia no puede tener más de 50 carácteres.',
-                },
-              })}
-            />
+            <h4 className={inputsLabelStyle}>
+              <FaMapMarkerAlt className='min-w-min m-1 sm:m-0' />
+              ¿Dónde está?
+            </h4>
+            <label className='relative'>
+              <input
+                type='text'
+                name='city'
+                autoComplete='new-password'
+                onBlur={() => {
+                  setCitiesOverlay(false);
+                }}
+                ref={(el) => {
+                  ref(el);
+                  cityRef.current = el;
+                }}
+                className={inpStyle}
+                placeholder='Ciudad'
+                onChange={(el) => {
+                  setCitiesOverlay(true);
+                  const citiesFound = Cities.filter((city) => {
+                    if (
+                      city.poblacion
+                        .toLowerCase()
+                        .includes(el.target.value.toLowerCase())
+                    ) {
+                      return city;
+                    }
+                    return null;
+                  });
+                  setFound(citiesFound);
+                  onChange(el);
+                }}
+                {...restCity}
+              />
+              {errors.city && (
+                <p className='text-red-500'>{errors.city.message}</p>
+              )}
+              {CitiesOverlay && (
+                <div className='cities-cont absolute z-20 flex flex-col items-start overflow-y-scroll max-h-96  w-full border-2 border-black border-t-0 bg-white'>
+                  {CitiesFound.length > 0 ? (
+                    CitiesFound.slice(0, 100).map((city) => {
+                      return (
+                        <button
+                          className='bg-white w-full text-left p-2 border'
+                          key={city.internalid}
+                          onMouseDown={() => {
+                            console.log('\x1b[45m%%%%%%%', city.cp);
+                            cityRef.current.value = city.poblacion;
+                            provRef.current.value = city.provincia;
+                            city.cp.length === 4
+                              ? (cpRef.current.value = `0${city.cp}`)
+                              : (cpRef.current.value = city.cp);
+                            // setCitiesOverlay(false);
+                          }}
+                        >
+                          {city.poblacion},{' '}
+                          <span className='text-gray-400'>
+                            {city.provincia}
+                          </span>
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <p>No hay resultados.</p>
+                  )}
+                </div>
+              )}
+            </label>
+            <label className='relative'>
+              <input
+                type='text'
+                name='province'
+                className={inpStyle}
+                placeholder='Provincia'
+                onBlur={() => {
+                  setProvincesOverlay(false);
+                }}
+                ref={(e) => {
+                  provinceRef(e);
+                  provRef.current = e;
+                }}
+                onChange={(e) => {
+                  setProvincesOverlay(true);
+                  const provincesFound = Provinces.filter((province) => {
+                    if (
+                      province.provincia
+                        .toLowerCase()
+                        .includes(e.target.value.toLowerCase())
+                    ) {
+                      return province;
+                    }
+                    return null;
+                  });
+                  setProvincesFound(provincesFound);
+                  onChangeProvince(e);
+                }}
+                {...restProvince}
+              />
+              {ProvincesOverlay && (
+                <div className='provinces-cont absolute z-20 flex flex-col items-start overflow-y-scroll max-h-96  w-full border-2 border-black border-t-0 bg-white'>
+                  {ProvincesFound.length > 0 ? (
+                    ProvincesFound.map((province) => {
+                      return (
+                        <button
+                          className='bg-white w-full text-left p-2 border'
+                          key={province.provinciaid}
+                          onMouseDown={() => {
+                            provRef.current.value = province.provincia;
+                          }}
+                        >
+                          {province.provincia}
+                        </button>
+                      );
+                    })
+                  ) : (
+                    <p>No hay resultados.</p>
+                  )}
+                </div>
+              )}
+            </label>
             {errors.province && (
               <p className='text-red-500'>{errors.province.message}</p>
             )}
@@ -275,8 +427,7 @@ export default function NewProperty({
             {errors.address && (
               <p className='text-red-500'>{errors.address.message}</p>
             )}
-
-            <div className='flex flex-col-4 gap-2'>
+            <div className='flex flex-col gap-2'>
               <input
                 type='num'
                 name='number'
@@ -335,20 +486,21 @@ export default function NewProperty({
                 name='zipCode'
                 className={inpStyle}
                 placeholder='Código Postal'
-                {...register('zipCode', {
-                  required: 'Debes escribir el código postal',
-                  pattern: {
-                    /* value: /^\s?\+?\s?([0-9\s]*){9,}$/, */
-                    message: 'Debes introducir un número válido.',
-                  },
-                })}
+                ref={(e) => {
+                  cpFormRef(e);
+                  cpRef.current = e;
+                }}
+                {...cpRest}
               />
               {errors.zipCode && (
                 <p className='text-red-500'>{errors.zipCode.message}</p>
               )}
             </div>
-            <h5 className={inputsLabelStyle}>¿Qúe características tiene?</h5>
-            <div className='flex flex-col-4 gap-2'>
+            <h5 className={inputsLabelStyle}>
+              <FaListUl className='min-w-min m-1 sm:m-0' />
+              ¿Qúe características tiene?
+            </h5>
+            <div className='flex flex-col gap-2'>
               <input
                 {...register('rooms')}
                 type='number'
@@ -368,7 +520,6 @@ export default function NewProperty({
               {errors.rooms && (
                 <p className='text-red-500'>{errors.rooms.message}</p>
               )}
-
               <input
                 {...register('toilets')}
                 min='1'
@@ -384,7 +535,6 @@ export default function NewProperty({
                   },
                 })}
               />
-
               <input
                 {...register('mts')}
                 min='1'
@@ -444,10 +594,11 @@ export default function NewProperty({
               </label>
             </div>
             <h6 className={inputsLabelStyle}>
+              <FaRegImages className='min-w-min m-1 sm:m-0' />
               ¡Sube fotos para que vean cómo es!
             </h6>
             <button
-              className={inpStyle}
+              className={inpStyle + ' flex items-center justify-between'}
               onClick={() => {
                 setFile({
                   shown: true,
@@ -457,11 +608,14 @@ export default function NewProperty({
               }}
             >
               La primera fotografía será la principal
-              <FaCamera className='text-4xl ml-10 mb-4' />
+              <FaCamera className='text-4xl' />
             </button>
 
-            <p className={inputsLabelStyle}>¿Qué precio tiene?</p>
-            <div className='flex flex-col-2 w-52  gap-2'>
+            <p className={inputsLabelStyle}>
+              <FaMoneyCheckAlt />
+              ¿Qué precio tiene?
+            </p>
+            <div className='flex flex-col-2 w-52 gap-2'>
               <input
                 min='1'
                 max='10000'
@@ -486,8 +640,10 @@ export default function NewProperty({
               <p className={inputsLabelStyle}>
                 Cuéntanos un poco más sobre tu vivienda
               </p>
-              <input
-                className={inpStyle + ' h-20'}
+              <textarea
+                className={
+                  'px-3 pt-3 pb-5 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full h-20'
+                }
                 type='text'
                 name='description'
                 cols='20'
@@ -501,12 +657,12 @@ export default function NewProperty({
                   },
                 })}
               />
-              <p className=' absolute right-5 bottom-0 '>
+              <p className=' absolute right-5 bottom-2 '>
                 {description ? description.length : 0}/3000
               </p>
             </label>
             {Error && <div>{Error}</div>}
-            <div className='flex justify-center items-center self-center  bottom-0 w-full h-28 bg-white sm:bg-transparent'>
+            <div className='flex justify-center items-center self-center  bottom-0 w-full h-28 sm:bg-transparent'>
               <input
                 type='submit'
                 value='AÑADIR'

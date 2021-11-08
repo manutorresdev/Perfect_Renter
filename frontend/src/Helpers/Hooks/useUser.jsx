@@ -1,25 +1,27 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { get, parseJwt } from '../Api';
+import { TokenContext } from './TokenProvider';
 
-export default function useUser(token) {
+export default function useUser() {
+  const [token] = useContext(TokenContext);
   const [User, setUser] = useState({});
 
-  const userLogged = parseJwt(token);
-
   useEffect(() => {
-    get(
-      `http://192.168.5.103:4000/users/${userLogged.idUser}`,
-      (data) => {
-        if (data.message !== 'No hay conicidencias para su busqueda') {
-          setUser(data.userInfo);
-        } else {
-          setUser({});
-        }
-      },
-      (error) => console.log(error),
-      token
-    );
-  }, [userLogged.idUser, token]);
+    if (token) {
+      get(
+        `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
+        (data) => {
+          if (data.message !== 'No hay conicidencias para su busqueda') {
+            setUser(data.userInfo);
+          } else {
+            setUser({});
+          }
+        },
+        (error) => console.log(error),
+        token
+      );
+    }
+  }, [token]);
 
   return [User, setUser];
 }

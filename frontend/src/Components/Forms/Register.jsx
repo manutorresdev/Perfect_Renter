@@ -90,7 +90,7 @@ export default function Register({ Token, usuario, setOverlay }) {
     );
   }
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer';
+    'px-3 py-3 placeholder-gray-400 text-gray-600 focus:cursor-default relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer';
 
   const registerComponentStyle = Token
     ? 'overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full min-h-full h-96 left-0 top-0 flex flex-col items-center pt-20 pb-10 overflow-auto sm:overflow-hidden'
@@ -101,7 +101,7 @@ export default function Register({ Token, usuario, setOverlay }) {
       <section
         className={
           Token
-            ? 'w-4/5 max-w-xl p-4 pt-14 border border-gray-700 flex  flex-col gap-5 mt-2 bg-gray-100 text-principal-gris overflow-y-auto relative'
+            ? 'w-4/5 shadow-custom max-w-xl p-4 pt-14 border border-gray-700 flex  flex-col gap-5 mt-2 bg-gray-100 text-principal-gris overflow-y-auto relative'
             : 'pt-24 pb-32 flex flex-col items-center gap-5 p-2'
         }
       >
@@ -284,7 +284,7 @@ export default function Register({ Token, usuario, setOverlay }) {
             placeholder='Tlf'
             {...register('tel', {
               pattern: {
-                value: /^\s?\+?\s?([0-9\s]*){9,}$/,
+                value: /^\s?\+?\s?([0-9][0-9\s]*){9,}$/,
                 message: 'Debes introducir un número de teléfono válido.',
               },
             })}
@@ -349,10 +349,10 @@ export default function Register({ Token, usuario, setOverlay }) {
             <p className='text-red-500'>{errors.birthDate.message}</p>
           )}
 
-          {Error ? <div>{Error}</div> : ''}
+          {Error ? <div className='text-red-500 font-medium'>{Error}</div> : ''}
 
           <input
-            className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
+            className='button select-none w-1/2 font-medium self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
             type='submit'
             value={Token ? 'Guardar' : 'Registrar'}
           />

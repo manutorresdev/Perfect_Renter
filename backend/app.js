@@ -58,6 +58,8 @@ const {
   cancelBooking,
   listPropertyVotes,
   getBookings,
+  getLocations,
+  editBooking,
 } = require('./controllers/properties/index');
 
 /**
@@ -79,6 +81,17 @@ const {
  * @response {Object} Response Guarda los datos en la base de datos
  */
 app.post('/properties', authUser, newProperty);
+
+/**
+ * Lista las provincias/ciudades
+ *
+ * @name getLocations
+ * @path {GET} /properties/locations
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response Lista de ciudades
+ */
+app.get('/properties/location', getLocations);
+
 /**
  * Obtener información de una propiedad en concreto
  *
@@ -277,6 +290,22 @@ app.get('/properties/:idProperty/votes', propertyExists, listPropertyVotes);
  * @response {Object} Response Lista de reservas
  */
 app.get('/properties/:idProperty/bookings', propertyExists, getBookings);
+/**
+ * Editar fecha de reserva
+ *
+ * @name editBooking
+ * @path {PUT} /properties/:idProperty/:bookingCode
+ * @params {idProperty} Número del inmueble del que se quiere cambiar la reserva
+ * @params {bookingCode} Código de reserva del cual se quieren cambiar las fechas
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response Lista de reservas
+ */
+app.put(
+  '/properties/:idProperty/:bookingCode',
+  propertyExists,
+  authUser,
+  editBooking
+);
 
 /**
  * ######################

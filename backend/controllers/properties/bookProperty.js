@@ -48,7 +48,6 @@ const bookProperty = async (req, res, next) => {
         `,
       [property[0].idUser, idReqUser, idProperty, startDate, endDate]
     );
-
     // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
     if (petition.length > 0) {
       res.send({
@@ -143,46 +142,118 @@ const bookProperty = async (req, res, next) => {
       const bookingCode = generateRandomString(10);
       // Definimos el body del email
       const emailBody = `
-    <table>
-      <tbody>
-        <td>
-          Hola ${property[0].ownerName},
-          un inquilino está interesado en tu vivienda de ${property[0].city}.
-          <br/>
-          Datos del inquilino:
-          <ul>
-            <li><b>Nombre completo:</b> ${name} ${lastName}</li>
-            <li><b>Email:</b> ${email}</li>
-            <li><b>Teléfono:</b> ${tel}</li>
-            <li><b>Fecha de reserva:</b> Entrada: ${startDate} | Salida: ${endDate}</li>
-          </ul>
-          <br/>
-          <b>Información adicional:</b>
-          ${comentarios}
-      </tbody>
-      <tbody>
-          <td>
-            <br/>
-            Tienes a tu disposición el teléfono y el correo electrónico del interesado si deseas responder.
-            <br/>
-            Si quieres aceptar su solicitud de reserva, pulsa en el botón de aceptar reserva.
-            <br/>
-            Si por el contrario no está interesado, pulse el botón de cancelar.
-          </td>
-      </tbody>
-      <tfoot>
-        <th>
-            <button>
-              <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/accept"
-            >ACEPTAR RESERVA</a></button>
-            <span><span/>
-            <span><span/>
-            <button>
-              <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/cancel"
-            >CANCELAR RESERVA</a></button>
-        </th>
-      </tfoot>
-    </table>
+      <style>
+      table {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-family: sans-serif;
+          font-size: calc((60% + 0.25vw));
+          width: 100%;
+          max-width: 50vw;
+          height: 100%;
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+      }
+      thead {
+          height: 20vh;
+          width: 100%;
+          background: linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('http://192.168.5.103:4000/photo/portada-nosotros.jpg');
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: center;
+          position: relative;
+      }
+      .thead-tr {
+          color: rgba(237,203,84,1);
+          top: 0px;
+          bottom: 0px;
+          left: 0px;
+          right: 0px;
+          padding-left: 10%;
+          padding-top: 10%;
+          position: absolute;
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0px;
+          opacity: 95%;
+      }
+      .thead-tr a {
+          text-decoration: none;
+          color: rgba(237,203,84,1);
+      }
+      .thead-tr a h3 {
+          opacity: 90%;
+          padding-left: 20px;
+      }
+      tbody {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+  
+  
+      @media screen and (min-width: 600px){
+          table {
+              font-size: calc((100% + 0.25vw));
+              max-width: 100vw;
+              }
+      }
+  </style>
+   <table>
+     <thead>
+          <tr class="thead-tr">
+              <td>
+                  <a href="http://192.168.5.103:3000/home" target="__blank" rel="noreferer"><h1 style="margin-bottom: -10px;">Perfect Renter</h1></a>
+                  <h3>El lugar para encontrar tu hogar</h3>
+              </td>
+          </tr>
+      </thead>
+      <tbody style="width:100%; background-color: rgba(16, 16, 16, 0.02);">
+          <td style="padding: 1rem;">
+          <p>
+              Hola <span style="font-weight: bold;">${property[0].ownerName}</span>,
+              <br />
+             un inquilino está interesado en tu vivienda de <span style="font-weight: bold;">${property[0].city}</span>.
+          </p>
+          <tr style="background-color: rgba(16, 16, 16, 0.05); width: 100%;">
+              <td>
+                  Datos del inquilino:
+                  <ul>
+                    <li><b>Nombre completo:</b> ${name} ${lastName}</li>
+                    <li><b>Email:</b> ${email}</li>
+                    <li><b>Teléfono:</b> ${tel}</li>
+                    <li><b>Fecha de reserva:</b> Entrada: ${startDate} | Salida: ${endDate}</li>
+                  </ul>
+                  <br/>
+                  <b>Información adicional:</b>
+                  ${comentarios}
+              </td>
+          </tr>
+          <tr>
+              <td>
+                <br/>
+                Tienes a tu disposición el teléfono y el correo electrónico del interesado si deseas responder.
+                <br/>
+                Si quieres aceptar su solicitud de reserva, pulsa en el botón de aceptar reserva.
+                <br/>
+                Si por el contrario no está interesado, pulse el botón de cancelar.
+              </td>
+          </tr>
+          </tbody>
+          <tfoot>
+            <th>
+                <button>
+                  <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/accept"
+                >ACEPTAR RESERVA</a></button>
+                <span><span/>
+                <span><span/>
+                <button>
+                  <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/cancel"
+                >CANCELAR RESERVA</a></button>
+            </th>
+          </tfoot>
+        </table>
     `;
 
       const emailBodyReq = `

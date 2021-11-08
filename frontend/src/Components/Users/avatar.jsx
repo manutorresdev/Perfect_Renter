@@ -59,7 +59,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-20 pb-10 px-2 overflow-auto sm:overflow-hidden'>
-      <section className='avatar pt-2 mt-2 border-2 min-h-full h-min border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-auto md:w-3/4'>
+      <section className='avatar shadow-custom pt-2 mt-2 border-2 min-h-full h-min border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {

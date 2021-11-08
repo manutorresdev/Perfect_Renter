@@ -117,9 +117,9 @@ export function parseJwt(token) {
 }
 
 export function CreateFormData(body) {
+  console.log('\x1b[45m%%%%%%%', body, 'DATOS de FORM DATA');
   const formData = new FormData();
   Object.keys(body).map((prop) => formData.append(prop, body[prop]));
-  console.log('\x1b[45m%%%%%%%', formData, 'DATOS de FORM DATA');
   return formData;
 }
 
