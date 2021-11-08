@@ -13,6 +13,8 @@ const cancelBooking = require('./cancelBooking');
 const listPropertyVotes = require('./listPropertyVotes');
 const contactProperty = require('./contactProperty');
 const getBookings = require('./getBookings');
+const getLocations = require('./getLocations');
+const editBooking = require('./editBooking');
 
 module.exports = {
   addPropertyPhoto,
@@ -29,4 +31,6 @@ module.exports = {
   cancelBooking,
   getBookings,
   listPropertyVotes,
+  getLocations,
+  editBooking,
 };

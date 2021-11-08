@@ -56,7 +56,8 @@ const acceptBooking = async (req, res, next) => {
       throw error;
     }
     // Una vez aceptada enviammos email a ambos usuarios
-
+    const start = format(booking[0].startBookingDate, 'dd-MM-yyyy');
+    const end = format(booking[0].endBookingDate, 'dd-MM-yyyy');
     //Email para el dueño que aceptó la reserva
     let emailBody = `
     <table>
@@ -67,8 +68,8 @@ const acceptBooking = async (req, res, next) => {
     </td>
     <br/>
     <td>
-      <b>Fecha de entrada: ${booking[0].startBookingDate}</b>
-      <b>Fecha de salida: ${booking[0].endBookingDate}</b>
+      <b>Fecha de entrada: ${start}</b>
+      <b>Fecha de salida: ${end}</b>
     </td>
     </tbody>
     </table>
@@ -96,8 +97,8 @@ const acceptBooking = async (req, res, next) => {
     </td>
     <br/>
     <td>
-      <b>Fecha de entrada: ${booking[0].startBookingDate}</b>
-      <b>Fecha de salida: ${booking[0].endBookingDate}</b>
+      <b>Fecha de entrada: ${start}</b>
+      <b>Fecha de salida: ${end}</b>
     </td>
     </tbody>
     </table>

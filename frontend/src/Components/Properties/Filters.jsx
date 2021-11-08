@@ -64,8 +64,7 @@ export default function Filters({ setOverlay, Overlay }) {
   const inputStyle =
     'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
    */
-  const inputsLabelStyle =
-    'sm:text-gray-600 sm:hover:text-principal-1 text-xl duration-200';
+  const inputsLabelStyle = 'sm:text-principal-1 text-xl duration-200';
   const inputStyle =
     'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
   return (
@@ -73,11 +72,11 @@ export default function Filters({ setOverlay, Overlay }) {
       <div
         className={`transform ${
           Overlay.show
-            ? 'translate-y-0 opacity-100'
+            ? 'translate-y-0 opacity-100 bg-gray-500'
             : '-translate-y-full opacity-0'
-        } sm:translate-y-0 sm:opacity-100  bg-opacity-50 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+        } sm:translate-y-0 sm:opacity-100 sm:bg-gray-200 bg-opacity-50 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
       >
-        <section className='filtros sm:bg-transparent overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white relative'>
+        <section className='filtros sm:bg-gray-200 overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white relative'>
           <button
             className='close-overlay absolute top-3 right-3 sm:hidden'
             onClick={() => {
@@ -86,7 +85,7 @@ export default function Filters({ setOverlay, Overlay }) {
           >
             <FaPlus className='transform rotate-45 ' />
           </button>
-          <h1 className='title self-center select-none  font-semibold sm:text-gray-600 text-2xl underline'>
+          <h1 className='title self-center select-none  font-semibold text-principal-gris sm:text-principal-1 text-2xl underline'>
             Filtros
           </h1>
           <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>

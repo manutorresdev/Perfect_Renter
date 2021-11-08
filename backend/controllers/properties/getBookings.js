@@ -20,6 +20,7 @@ const getBookings = async (req, res, next) => {
      * ### BOOKINGS PROPERTY ##
      * ########################
      */
+    console.log('\x1b[45m%%%%%%% Hemos entrado');
 
     if (req.route.path.includes('properties')) {
       //Obtenemos el id de la propiedad.
@@ -30,7 +31,8 @@ const getBookings = async (req, res, next) => {
         `
       SELECT
       idBooking, idRenter, idTenant, state, startBookingDate, endBookingDate
-      FROM bookings WHERE idProperty = ?
+      FROM bookings
+      WHERE idProperty = ?
       `,
         [idProperty]
       );

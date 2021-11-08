@@ -117,15 +117,14 @@ export function parseJwt(token) {
 }
 
 export function CreateFormData(body) {
-  console.log('##########', body);
   const formData = new FormData();
 
   Object.keys(body).map((prop) => formData.append(prop, body[prop]));
+
   return formData;
 }
 
 export function CreateFormDataMultipleFiles(files) {
-  console.log('##########', files);
   const formData = new FormData();
 
   if (files.photos.length > 1) {

@@ -1,11 +1,17 @@
-import React, { useContext, useState } from 'react';
+// import React, { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FaAngleLeft, FaAngleRight, FaPlus } from 'react-icons/fa';
-import { CreateFormData, post } from '../../Helpers/Api';
+import { CreateFormData, post, get } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import { Link } from 'react-router-dom';
+import { Box } from '@mui/system';
+import DateRangePicker from '@mui/lab/DateRangePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { format } from 'date-fns';
+import esEsLocale from 'date-fns/locale/es';
+
 
 export default function ContactProperty({
   form,
@@ -18,16 +24,52 @@ export default function ContactProperty({
   Slider,
 }) {
   const [curr, setCurr] = useState(0);
+  const [Value, setPickerValue] = useState([null, null]);
   const [Token] = useContext(TokenContext);
+  const [Value, setPickerValue] = useState([null, null]);
+
   const {
     handleSubmit,
     watch,
     register,
+    setValue,
     formState: { errors },
     control,
+    setValue,
   } = useForm({
-    defaultValues: { email: user.email, name: user.name, tel: user.tel },
+    defaultValues: {
+      email: user.email,
+      name: user.name,
+      tel: user.tel,
+    },
   });
+  // const [Bookings, setBookings] = useState();
+  // get(
+  //   `http://localhost:4000/properties/${property.idProperty}/bookings`,
+  //   (data) => {
+  //     console.log(data.message);
+  //     setBookings(data);
+  //   },
+  //   (error) => {
+  //     console.log(error);
+  //   },
+  //   Token
+  // );
+  // useEffect(() => {
+  //   get(
+  //     `http://localhost:4000/properties/${property.idProperty}/bookings`,
+  //     (data) => {
+  //       console.log(data.message);
+  //       setBookings(data);
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     },
+  //     Token
+  //   );
+  // }, [Token, property.idProperty]);
+
+  // console.log('\x1b[45m%%%%%%%', property.idProperty, Bookings);
 
   function onSubmit(body, e) {
     e.preventDefault();
@@ -36,7 +78,6 @@ export default function ContactProperty({
         `http://localhost:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
-          alert(data.message);
           setMessage(data);
           setOverlay({ form: '', shown: false, propertyInfo: {} });
         },
@@ -70,22 +111,26 @@ export default function ContactProperty({
   function left() {
     setCurr(curr === 0 ? Slider.SlideImgs.length - 1 : curr - 1);
   }
+
   if (message.status === 'ok') {
     return (
-      <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
+      <div className='z-20 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
         <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
           <h2>Ya esta listo!</h2>
           <h2>{message.message}</h2>
-          <Link
-            to='/'
+          <button
             className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+            onClick={() => {
+              setOverlay({ form: '', shown: false, propertyInfo: {} });
+            }}
           >
             Cerrar
-          </Link>
+          </button>
         </section>
       </div>
     );
   }
+
 
   // Styles
   const inpStyle =
@@ -93,8 +138,8 @@ export default function ContactProperty({
   const comentarios = watch('comentarios');
 
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
-      <section className='contact pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
+    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 pb-2 px-2 overscroll-scroll sm:overflow-hidden'>
+      <section className='contact shadow-custom pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll w-full md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -111,7 +156,7 @@ export default function ContactProperty({
             {message.message}
           </h1>
         )}
-        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 md:flex-row'>
+        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 lg:flex-row'>
           <form
             className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'
             onSubmit={handleSubmit(onSubmit)}
@@ -152,7 +197,7 @@ export default function ContactProperty({
                 }}
               />
             </label>
-            <label>
+            <label className='max-w-sm'>
               <div className='select-none'> Correo electrónico*</div>
               <Controller
                 name='email'
@@ -172,33 +217,76 @@ export default function ContactProperty({
                       onChange={onChange}
                       inputRef={ref}
                       name={name}
-                      className={inpStyle}
+                      className={inpStyle + ' w-full'}
                     />
                   );
                 }}
               />
             </label>
             {form === 'reservar' && (
-              <label className='flex flex-col gap-2 w-1/2'>
+              <label className='flex flex-col gap-2'>
                 <div className='select-none'>Selecciona las fechas:</div>
-                <input
-                  className={inpStyle}
-                  type='date'
-                  name='startDate'
-                  {...register('startDate', {
-                    pattern: { message: 'indica la fecha de inicio' },
-                  })}
-                />
-                <input
-                  className={inpStyle}
-                  type='date'
-                  name='endDate'
-                  {...register('endDate', {
-                    pattern: {
-                      massage: 'Ingresa la fecha final de la reserva',
-                    },
-                  })}
-                />
+
+                <LocalizationProvider
+                  locale={esEsLocale}
+                  dateAdapter={AdapterDateFns}
+                >
+                  <DateRangePicker
+                    disablePast
+                    autoOk={true}
+                    label='Advanced keyboard'
+                    value={Value}
+                    shouldDisableDate={(date) =>
+                      date.getTime() === new Date('2021-11-13').getTime()
+                    }
+
+                    inputFormat='dd/MM/yyyy'
+                    onChange={(newValue) => {
+                      if (
+                        new Date(newValue[0]).getTime() >
+                        new Date(newValue[1]).getTime()
+                      ) {
+                        console.error(
+                          'Fecha de entrada mayor a fecha de salida'
+                        );
+                      } else if (
+                        new Date(newValue[0]).getTime() ===
+                        new Date(newValue[1]).getTime()
+                      ) {
+                        console.error('Selecciona fechas diferentes');
+                      } else {
+                        console.warn('FECHAS CORRECTAS');
+                        setPickerValue(newValue);
+
+                        // console.log(format(newValue[0], 'yyyy/MM/dd'));
+                        setValue(
+                          'startDate',
+                          format(newValue[0], 'yyyy/MM/dd')
+                        );
+                        setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
+                      }
+                    }}
+                    renderInput={(startProps, endProps) => (
+
+                      <div className='flex flex-col  sm:flex-row'>
+
+                        <input
+                          className={inpStyle}
+                          name='startDate'
+                          ref={startProps.inputRef}
+                          {...startProps.inputProps}
+                        />
+                        <Box className='p-2 font-medium self-center'> a </Box>
+                        <input
+                          className={inpStyle}
+                          name='endDate'
+                          ref={endProps.inputRef}
+                          {...endProps.inputProps}
+                        />
+                      </div>
+                    )}
+                  />
+                </LocalizationProvider>
               </label>
             )}
             <label>
@@ -217,10 +305,10 @@ export default function ContactProperty({
               />
             </label>
             {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
-            <label className='relative w-min'>
+            <label className='relative w-full sm:w-min pr-2'>
               <div className='select-none'>Comentarios</div>
               <textarea
-                className={`${inpStyle} resize-none w-80`}
+                className={`${inpStyle} resize-none w-full sm:w-80`}
                 name='comments'
                 id='comments'
                 cols='30'
@@ -296,5 +384,31 @@ export default function ContactProperty({
         </div>
       </section>
     </div>
+  );
+}
+
+function getWeeksAfter(date, amount) {
+  return date ? addWeeks(date, amount) : undefined;
+}
+
+function MinMaxDateRangePicker({ value, setValue }) {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DateRangePicker
+        disablePast
+        value={value}
+        maxDate={getWeeksAfter(value[0], 4)}
+        onChange={(newValue) => {
+          setValue(newValue);
+        }}
+        renderInput={(startProps, endProps) => (
+          <>
+            <TextField {...startProps} />
+            <Box sx={{ mx: 2 }}> to </Box>
+            <TextField {...endProps} />
+          </>
+        )}
+      />
+    </LocalizationProvider>
   );
 }

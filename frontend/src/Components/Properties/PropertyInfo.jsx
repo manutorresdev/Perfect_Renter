@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { FaAngleLeft, FaAngleRight, FaChevronRight } from 'react-icons/fa';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Filters from './Filters';
-// import { parseJwt } from '../../Helpers/Api';
-import useUser from '../../Helpers/Hooks/useUser';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 import Property from './Property';
 import { capitalizeFirstLetter } from '../../Helpers/Api';
@@ -15,8 +13,7 @@ export default function PropertyInfo(props) {
     'pisosVisitados',
     []
   );
-  // Recibimos id del usuario que hace la request
-  const [User] = useUser(props.token);
+
   //Overlay de respuestas
   const [message, setMessage] = useState({ status: '', message: '' });
   // Overlay de formularios
@@ -66,12 +63,11 @@ export default function PropertyInfo(props) {
 
     if (prop) {
       setProperty(prop);
-      console.log('\x1b[45m%%%%%%%', prop);
       // if (!pisosVisitados.includes(prop.idProperty)) {
       //   setPisosVisitados({...pisosVisitados, {p: prop.idProperty, }});
       // }
       if (props.token) {
-        if (prop.idUser === User.idUser) {
+        if (prop.idUser === props.User.idUser) {
           setOwner(true);
         } else {
           setOwner(false);
@@ -83,7 +79,7 @@ export default function PropertyInfo(props) {
     Properties,
     property,
     Owner,
-    User,
+    props.User,
     pisosVisitados,
     setPisosVisitados,
     props.token,
@@ -91,7 +87,7 @@ export default function PropertyInfo(props) {
 
   // Styles
   const sliderButtonStyle =
-    'absolute z-10 text-white text-xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md duration-200';
+    'absolute z-0 text-white text-xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md duration-200';
   const buttonStyle =
     'border-2 py-1 px-3 bg-principal-1 hover:bg-gray-500 hover:text-white duration-200';
 
@@ -105,7 +101,7 @@ export default function PropertyInfo(props) {
             form={Overlay.form}
             setOverlay={setOverlay}
             property={Overlay.propertyInfo}
-            user={User}
+            user={props.User}
             pictures={SlideImgs}
             setMessage={setMessage}
             message={message}
@@ -175,7 +171,7 @@ export default function PropertyInfo(props) {
             </div>
             <div className='informacion bg-gray-Primary p-5 bg-opacity-25 text-2xl text-principal-1 flex justify-between'>
               <h2>Piso en {property.city}</h2>
-              <h2>{Number(property.price)}/mes</h2>
+              <h2>{Number(property.price)} €/mes</h2>
             </div>
             <p className='p-5 self-center font-medium text-principal-gris'>
               {`${Number(property.mts)}m² - ${property.rooms} habitaciones - ${
@@ -281,12 +277,15 @@ export default function PropertyInfo(props) {
     </>
   );
 }
+
 function Message({ message }) {
   if (message.status === 'ok') {
     return (
-      <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
+      <div className='fixed w-full bg-gray-400 bg-opacity-75 h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-20'>
         <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-          <h2>Ya esta listo!</h2>
+          <h2 className='w-full text-center border-b-2 border-gray-200 font-medium'>
+            ¡Ya esta listo!
+          </h2>
           <h2>{message.message}</h2>
           <Link
             to='/'
@@ -299,9 +298,11 @@ function Message({ message }) {
     );
   } else if (message.status === 'error') {
     return (
-      <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
+      <div className='fixed bg-gray-400 bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-20'>
         <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-          <h2>Parece que algo va mal!!!</h2>
+          <h2 className='w-full text-center border-b-2 border-gray-200 font-medium'>
+            ¡Parece que algo va mal!
+          </h2>
           <h2>{message.message}</h2>
           <Link
             to='/'
