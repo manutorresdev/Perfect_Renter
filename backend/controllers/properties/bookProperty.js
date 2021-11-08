@@ -254,6 +254,46 @@ const bookProperty = async (req, res, next) => {
             </th>
           </tfoot>
         </table>
+    <table>
+      <tbody>
+        <td>
+          Hola ${property[0].ownerName},
+          un inquilino está interesado en tu vivienda de ${property[0].city}.
+          <br/>
+          Datos del inquilino:
+          <ul>
+            <li><b>Nombre completo:</b> ${name} ${lastName}</li>
+            <li><b>Email:</b> ${email}</li>
+            <li><b>Teléfono:</b> ${tel}</li>
+            <li><b>Fecha de reserva:</b> Entrada: ${startDate} | Salida: ${endDate}</li>
+          </ul>
+          <br/>
+          <b>Información adicional:</b>
+          ${comentarios}
+      </tbody>
+      <tbody>
+          <td>
+            <br/>
+            Tienes a tu disposición el teléfono y el correo electrónico del interesado si deseas responder.
+            <br/>
+            Si quieres aceptar su solicitud de reserva, pulsa en el botón de aceptar reserva.
+            <br/>
+            Si por el contrario no está interesado, pulse el botón de cancelar.
+          </td>
+      </tbody>
+      <tfoot>
+        <th>
+            <button>
+              <a href="http://localhost:3000/alquileres/${bookingCode}/accept"
+            >ACEPTAR RESERVA</a></button>
+            <span><span/>
+            <span><span/>
+            <button>
+              <a href="http://localhost:3000/alquileres/${bookingCode}/cancel"
+            >CANCELAR RESERVA</a></button>
+        </th>
+      </tfoot>
+    </table>
     `;
 
       const emailBodyReq = `
@@ -285,7 +325,7 @@ const bookProperty = async (req, res, next) => {
       <tfoot>
         <th>
         <button>
-            <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/cancel">CANCELAR RESERVA</a>
+            <a href="http://localhost:3000/alquileres/${bookingCode}/cancel">CANCELAR RESERVA</a>
         </button>
         </th>
       </tfoot>

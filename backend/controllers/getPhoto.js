@@ -22,6 +22,7 @@ const getPhoto = async (req, res, next) => {
     //Obtenemos el id de la propiedad.
 
     const { pictureName } = req.params;
+    console.log('hola  ' + req.params);
 
     // Obtenemos el id del usuario que hace la request.
     /* const { idUser } = req.userAuth; */
@@ -35,6 +36,15 @@ const getPhoto = async (req, res, next) => {
       `,
       [pictureName]
     );
+
+    /*  const [picture] = await connection.query(
+      `
+      SELECT
+      name
+      FROM photos WHERE idProperty = 23
+      `
+       [idProperty] 
+    ); */
 
     // Si no existe lanzamos error
 
