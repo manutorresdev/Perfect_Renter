@@ -78,7 +78,7 @@ export default function NewProperty({
     console.log(body);
 
     post(
-      'http://192.168.5.103:4000/properties',
+      'http://localhost:4000/properties',
       CreateFormData(body),
       (data) => {
         alert(data.message);

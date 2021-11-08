@@ -60,6 +60,7 @@ module.exports = {
       },
       boxShadow: {
         perfil: 'rgba(0, 0, 0, 0.25) 0px 25px 50px -12px',
+        white: 'rgba(255, 255, 255, 0.65) 0px 25px 50px -12px',
       },
       outline: {
         contrast: ['1px solid #000000', '0px'],

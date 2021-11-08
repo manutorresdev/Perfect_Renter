@@ -10,7 +10,7 @@ export default function ManageBokking({ match }) {
 
   function acceptBooking() {
     get(
-      `http://192.168.5.103:4000/properties/${match.params.bookingCode}/accept`,
+      `http://localhost:4000/properties/${match.params.bookingCode}/accept`,
       (data) => {
         alert(data.message);
         setBooking(data);
@@ -25,7 +25,7 @@ export default function ManageBokking({ match }) {
 
   function cancelBooking() {
     get(
-      `http://192.168.5.103:4000/properties/${match.params.bookingCode}/cancel`,
+      `http://localhost:4000/properties/${match.params.bookingCode}/cancel`,
       (data) => {
         // alert(data.message);
         setBooking(data);
@@ -57,7 +57,7 @@ export default function ManageBokking({ match }) {
     }
     if (booking.status === 'ok') {
       return (
-        <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
+        <div className=' z-10 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
           <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
             <h2>Ya esta listo!!!</h2>
             <h2>{booking.message}</h2>
@@ -115,7 +115,7 @@ export default function ManageBokking({ match }) {
       );
     }
   } else {
-    /**Si no est validado mostramos el componente login y al entrar vuelve a la misma url de accept o cancel */
+    /**Si no esta validado mostramos el componente login y al entrar vuelve a la misma url de accept o cancel */
     return (
       <>
         <div className='z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>

@@ -1,4 +1,5 @@
 // @ts-nocheck
+const { format } = require('date-fns');
 const getDB = require('../../config/getDB');
 const {
   sendMail,
@@ -29,6 +30,43 @@ const bookProperty = async (req, res, next) => {
     let { name, lastName, email, tel, comentarios, startDate, endDate } =
       req.body;
 
+    const now = formatDate(new Date());
+
+    console.log('fecha inicial: ', startDate);
+    console.log('fecha final: ', endDate);
+
+    console.log('fecha actual: ', now);
+
+    // Comprobamos que los campos obligatorios tengan contenido.
+
+    if (!comentarios) {
+      const error = new Error(
+        'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
+      );
+      error.httpStatus = 400;
+      throw error;
+    }
+    if (!startDate || !endDate) {
+      const error = new Error('Falta definir la fecha de la reserva.');
+      error.httpStatus = 400;
+      throw error;
+    }
+    // Si la fecha reservada es menor a la fecha actual, lanzamos error.
+    if (startDate < now) {
+      const error = new Error('No puedes reservar en el pasado.');
+      error.httpStatus = 403;
+      throw error;
+    }
+
+    // Si la fecha end es menor a la fecha start, lanzamos error.
+    if (endDate < startDate) {
+      const error = new Error(
+        'Fecha de salida debe ser mayor a la fecha de inicio'
+      );
+      error.httpStatus = 403;
+      throw error;
+    }
+
     // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
     const [property] = await connection.query(
       `
@@ -41,10 +79,24 @@ const bookProperty = async (req, res, next) => {
       [idProperty]
     );
 
-    // Comprobamos que no haya una solicitud en proceso de aceptar.
+    //  Comprobamos que no haya una solicitud en proceso de aceptar.
+    const [valiDate] = await connection.query(
+      `
+      SELECT * FROM bookings WHERE (startBookingDate BETWEEN ? AND ?)  OR (endBookingDate BETWEEN ? AND ?)
+        `,
+      [startDate, endDate, startDate, endDate]
+    );
+    if (valiDate.length > 0) {
+      res.send({
+        statu: 'ok',
+        message:
+          'Las fechas seleccionada no estan disponibles para esta propiedad',
+      });
+    }
+
     const [petition] = await connection.query(
       `
-        SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ? AND startBookingDate = ? AND endBookingDate = ?
+      SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ? AND startBookingDate = ? AND endBookingDate = ?
         `,
       [property[0].idUser, idReqUser, idProperty, startDate, endDate]
     );
@@ -58,6 +110,7 @@ const bookProperty = async (req, res, next) => {
           'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.',
       });
     } else {
+      console.log('Esta entrando en este else:::::::########');
       // Si el usuario es el dueño de la vivienda, lanzamos error.
       if (idReqUser === Number(property[0].idUser)) {
         const error = new Error(
@@ -75,7 +128,6 @@ const bookProperty = async (req, res, next) => {
         [idReqUser]
       );
 
-      // Comprobamos que los campos obligatorios tengan contenido.
       if (!name) {
         name = contactUser[0].name;
         if (!name) {
@@ -105,38 +157,6 @@ const bookProperty = async (req, res, next) => {
         if (!tel) {
           tel = 'No especificado.';
         }
-      }
-      if (!comentarios) {
-        const error = new Error(
-          'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
-        );
-        error.httpStatus = 400;
-        throw error;
-      }
-      if (!startDate || !endDate) {
-        const error = new Error('Falta definir la fecha de la reserva.');
-        error.httpStatus = 400;
-        throw error;
-      }
-      // Si la fecha reservada es menor a la fecha actual, lanzamos error.
-      if (
-        new Date(startDate).getMilliseconds < new Date().getMilliseconds ||
-        new Date(endDate).getMilliseconds < new Date().getMilliseconds
-      ) {
-        const error = new Error('No puedes reservar en el pasado.');
-        error.httpStatus = 403;
-        throw error;
-      }
-
-      // Si la fecha end es menor a la fecha start, lanzamos error.
-      if (
-        new Date(endDate).getMilliseconds < new Date(startDate).getMilliseconds
-      ) {
-        const error = new Error(
-          'Hay un error en las fechas, la fecha reservada debe ser posterior a la fecha actual.'
-        );
-        error.httpStatus = 403;
-        throw error;
       }
 
       // Generamos el codigo de reserva,
@@ -173,12 +193,12 @@ const bookProperty = async (req, res, next) => {
       <tfoot>
         <th>
             <button>
-              <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/accept"
+              <a href="http://localhost:3000/alquileres/${bookingCode}/accept"
             >ACEPTAR RESERVA</a></button>
             <span><span/>
             <span><span/>
             <button>
-              <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/cancel"
+              <a href="http://localhost:3000/alquileres/${bookingCode}/cancel"
             >CANCELAR RESERVA</a></button>
         </th>
       </tfoot>
@@ -214,44 +234,44 @@ const bookProperty = async (req, res, next) => {
       <tfoot>
         <th>
         <button>
-            <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/cancel">CANCELAR RESERVA</a>
+            <a href="http://localhost:3000/alquileres/${bookingCode}/cancel">CANCELAR RESERVA</a>
         </button>
         </th>
       </tfoot>
     </table>
     `;
       // Enviamos el correo del usuario que contacta, al usuario a contactar.
-      if (process.env.NODE_ENV !== 'test') {
-        await sendMail({
-          to: property[0].email,
-          subject: 'Solicitud de reserva.',
-          body: emailBody,
-        });
+      // if (process.env.NODE_ENV !== 'test') {
+      //   await sendMail({
+      //     to: property[0].email,
+      //     subject: 'Solicitud de reserva.',
+      //     body: emailBody,
+      //   });
 
-        // VALIDAR CORREO USUARIO QUE RESERVA
-        await sendMail({
-          to: email,
-          subject: 'Solicitud de reserva.',
-          body: emailBodyReq,
-        });
-      }
+      //   // VALIDAR CORREO USUARIO QUE RESERVA
+      //   await sendMail({
+      //     to: email,
+      //     subject: 'Solicitud de reserva.',
+      //     body: emailBodyReq,
+      //   });
+      // }
 
       // Agregamos el código de reserva en la base de datos junto a la posible reserva.
       // CORREGIDO
-      await connection.query(
-        `
-      INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
-      `,
-        [
-          bookingCode,
-          property[0].idUser,
-          idReqUser,
-          formatDate(new Date()),
-          idProperty,
-          startDate,
-          endDate,
-        ]
-      );
+      // await connection.query(
+      //   `
+      // INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
+      // `,
+      //   [
+      //     bookingCode,
+      //     property[0].idUser,
+      //     idReqUser,
+      //     formatDate(new Date()),
+      //     idProperty,
+      //     startDate,
+      //     endDate,
+      //   ]
+      // );
 
       res.send({
         status: 'ok',

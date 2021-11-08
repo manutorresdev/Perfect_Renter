@@ -1,11 +1,20 @@
-import React, { useContext, useState } from 'react';
+// import React, { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FaAngleLeft, FaAngleRight, FaPlus } from 'react-icons/fa';
-import { CreateFormData, post } from '../../Helpers/Api';
+import { CreateFormData, post, get } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import { Link } from 'react-router-dom';
+// material UI calendar
+import addWeeks from 'date-fns/addWeeks';
+import TextField from '@mui/material/TextField';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateRangePicker from '@mui/lab/DateRangePicker';
+import Box from '@mui/material/Box';
+import { useContext, useEffect, useState } from 'react';
+import { format } from 'date-fns';
+// import { format } from 'date-fns';
 
 export default function ContactProperty({
   form,
@@ -19,21 +28,55 @@ export default function ContactProperty({
 }) {
   const [curr, setCurr] = useState(0);
   const [Token] = useContext(TokenContext);
+  const [Value, setPickerValue] = useState([null, null]);
+
   const {
     handleSubmit,
     watch,
     register,
+    setValue,
     formState: { errors },
     control,
   } = useForm({
-    defaultValues: { email: user.email, name: user.name, tel: user.tel },
+    defaultValues: {
+      email: user.email,
+      name: user.name,
+      tel: user.tel,
+    },
   });
+  // const [Bookings, setBookings] = useState();
+  // get(
+  //   `http://localhost:4000/properties/${property.idProperty}/bookings`,
+  //   (data) => {
+  //     console.log(data.message);
+  //     setBookings(data);
+  //   },
+  //   (error) => {
+  //     console.log(error);
+  //   },
+  //   Token
+  // );
+  // useEffect(() => {
+  //   get(
+  //     `http://localhost:4000/properties/${property.idProperty}/bookings`,
+  //     (data) => {
+  //       console.log(data.message);
+  //       setBookings(data);
+  //     },
+  //     (error) => {
+  //       console.log(error);
+  //     },
+  //     Token
+  //   );
+  // }, [Token, property.idProperty]);
+
+  // console.log('\x1b[45m%%%%%%%', property.idProperty, Bookings);
 
   function onSubmit(body, e) {
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
+        `http://localhost:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           alert(data.message);
@@ -48,7 +91,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
+        `http://localhost:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -72,16 +115,18 @@ export default function ContactProperty({
   }
   if (message.status === 'ok') {
     return (
-      <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
+      <div className='z-20 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
         <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
           <h2>Ya esta listo!</h2>
           <h2>{message.message}</h2>
-          <Link
-            to='/'
+          <button
             className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+            onClick={() => {
+              setOverlay({ form: '', shown: false, propertyInfo: {} });
+            }}
           >
             Cerrar
-          </Link>
+          </button>
         </section>
       </div>
     );
@@ -181,24 +226,60 @@ export default function ContactProperty({
             {form === 'reservar' && (
               <label className='flex flex-col gap-2 w-1/2'>
                 <div className='select-none'>Selecciona las fechas:</div>
-                <input
-                  className={inpStyle}
-                  type='date'
-                  name='startDate'
-                  {...register('startDate', {
-                    pattern: { message: 'indica la fecha de inicio' },
-                  })}
-                />
-                <input
-                  className={inpStyle}
-                  type='date'
-                  name='endDate'
-                  {...register('endDate', {
-                    pattern: {
-                      massage: 'Ingresa la fecha final de la reserva',
-                    },
-                  })}
-                />
+
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DateRangePicker
+                    disablePast
+                    label='Advanced keyboard'
+                    value={Value}
+                    shouldDisableDate={(date) =>
+                      date.getTime() === new Date('2021-11-13').getTime()
+                    }
+                    inputFormat='dd/MM/yyyy'
+                    onChange={(newValue) => {
+                      if (
+                        new Date(newValue[0]).getTime() >
+                        new Date(newValue[1]).getTime()
+                      ) {
+                        console.error(
+                          'Fecha de entrada mayor a fecha de salida'
+                        );
+                      } else if (
+                        new Date(newValue[0]).getTime() ===
+                        new Date(newValue[1]).getTime()
+                      ) {
+                        console.error('Selecciona fechas diferentes');
+                      } else {
+                        console.warn('FECHAS CORRECTAS');
+                        setPickerValue(newValue);
+
+                        // console.log(format(newValue[0], 'yyyy/MM/dd'));
+                        setValue(
+                          'startDate',
+                          format(newValue[0], 'yyyy/MM/dd')
+                        );
+                        setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
+                      }
+                    }}
+                    renderInput={(startProps, endProps) => (
+                      <>
+                        <input
+                          className={inpStyle}
+                          name='startDate'
+                          ref={startProps.inputRef}
+                          {...startProps.inputProps}
+                        />
+                        <Box className='p-2 font-medium'> a </Box>
+                        <input
+                          className={inpStyle}
+                          name='endDate'
+                          ref={endProps.inputRef}
+                          {...endProps.inputProps}
+                        />
+                      </>
+                    )}
+                  />
+                </LocalizationProvider>
               </label>
             )}
             <label>
@@ -296,5 +377,31 @@ export default function ContactProperty({
         </div>
       </section>
     </div>
+  );
+}
+
+function getWeeksAfter(date, amount) {
+  return date ? addWeeks(date, amount) : undefined;
+}
+
+function MinMaxDateRangePicker({ value, setValue }) {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DateRangePicker
+        disablePast
+        value={value}
+        maxDate={getWeeksAfter(value[0], 4)}
+        onChange={(newValue) => {
+          setValue(newValue);
+        }}
+        renderInput={(startProps, endProps) => (
+          <>
+            <TextField {...startProps} />
+            <Box sx={{ mx: 2 }}> to </Box>
+            <TextField {...endProps} />
+          </>
+        )}
+      />
+    </LocalizationProvider>
   );
 }

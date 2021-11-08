@@ -64,8 +64,7 @@ export default function Filters({ setOverlay, Overlay }) {
   const inputStyle =
     'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
    */
-  const inputsLabelStyle =
-    'sm:text-gray-600 sm:hover:text-principal-1 text-xl duration-200';
+  const inputsLabelStyle = 'sm:text-principal-1 text-xl duration-200';
   const inputStyle =
     'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
   return (
@@ -86,7 +85,7 @@ export default function Filters({ setOverlay, Overlay }) {
           >
             <FaPlus className='transform rotate-45 ' />
           </button>
-          <h1 className='title self-center select-none  font-semibold sm:text-gray-600 text-2xl underline'>
+          <h1 className='title self-center select-none  font-semibold text-principal-gris sm:text-principal-1 text-2xl underline'>
             Filtros
           </h1>
           <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
