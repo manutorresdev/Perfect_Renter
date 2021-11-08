@@ -29,7 +29,7 @@ export default function Profile({ token, setToken }) {
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
+      `http://localhost:4000/users/${parseJwt(token).idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -38,7 +38,7 @@ export default function Profile({ token, setToken }) {
     );
     if (User.idUser) {
       get(
-        `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
+        `http://localhost:4000/users/${User.idUser}/bookings`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -53,7 +53,7 @@ export default function Profile({ token, setToken }) {
   function onSubmitDeleted(body, e) {
     if (window.confirm('¿Desea eliminar la cuenta?')) {
       del(
-        `http://192.168.5.103:4000/users/${User.idUser}`,
+        `http://localhost:4000/users/${User.idUser}`,
         body,
         (data) => {
           setToken('');
@@ -114,7 +114,7 @@ export default function Profile({ token, setToken }) {
             className='sm:max-w-sm rounded-full  py-4 object-contain'
             src={
               User.avatar
-                ? `http://192.168.5.103:4000/photo/${User.avatar}`
+                ? `http://localhost:4000/photo/${User.avatar}`
                 : require('../../Images/defProfile.png').default
             }
             alt='perfil de usuario'
@@ -336,7 +336,7 @@ function CancelBooking({ setOverlay, info, Token }) {
 
   function Confirm(bookingCode) {
     get(
-      `http://192.168.5.103:4000/properties/${bookingCode}/cancel`,
+      `http://localhost:4000/properties/${bookingCode}/cancel`,
       (data) => {
         setMessage(data.message);
         setOverlay({ shown: false, info: {}, form: '' });

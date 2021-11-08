@@ -18,7 +18,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
     e.preventDefault();
     console.log('\x1b[45m%%%%%%%', body);
     post(
-      `http://192.168.5.103:4000/users/${info.idUser}/contact`,
+      `http://localhost:4000/users/${info.idUser}/contact`,
       CreateFormData(body),
       (data) => {
         alert(data.message);
@@ -199,7 +199,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
               className='w-2/4 rounded-full'
               src={
                 info.avatar
-                  ? `http://192.168.5.103:4000/photo/${info.avatar}`
+                  ? `http://localhost:4000/photo/${info.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt='imagen de perfil'

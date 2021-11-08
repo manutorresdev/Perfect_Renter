@@ -17,7 +17,7 @@ export default function Login() {
   // Enviar datos a backend
   function onSubmit(body) {
     post(
-      'http://192.168.5.103:4000/users/login',
+      'http://localhost:4000/users/login',
       CreateFormData(body),
       (data) => {
         setToken(data.token);
