@@ -35,7 +35,6 @@ export default function FileProperty({
 
           (data) => {
             console.log('Success');
-
             window.location.reload();
           },
           (error) => {
