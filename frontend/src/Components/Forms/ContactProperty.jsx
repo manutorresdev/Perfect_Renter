@@ -5,16 +5,13 @@ import { CreateFormData, post, get } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-// material UI calendar
-import addWeeks from 'date-fns/addWeeks';
-import TextField from '@mui/material/TextField';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { Box } from '@mui/system';
 import DateRangePicker from '@mui/lab/DateRangePicker';
-import Box from '@mui/material/Box';
-import { useContext, useEffect, useState } from 'react';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { format } from 'date-fns';
-// import { format } from 'date-fns';
+import esEsLocale from 'date-fns/locale/es';
+
 
 export default function ContactProperty({
   form,
@@ -27,6 +24,7 @@ export default function ContactProperty({
   Slider,
 }) {
   const [curr, setCurr] = useState(0);
+  const [Value, setPickerValue] = useState([null, null]);
   const [Token] = useContext(TokenContext);
   const [Value, setPickerValue] = useState([null, null]);
 
@@ -37,6 +35,7 @@ export default function ContactProperty({
     setValue,
     formState: { errors },
     control,
+    setValue,
   } = useForm({
     defaultValues: {
       email: user.email,
@@ -79,7 +78,6 @@ export default function ContactProperty({
         `http://localhost:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
-          alert(data.message);
           setMessage(data);
           setOverlay({ form: '', shown: false, propertyInfo: {} });
         },
@@ -113,6 +111,7 @@ export default function ContactProperty({
   function left() {
     setCurr(curr === 0 ? Slider.SlideImgs.length - 1 : curr - 1);
   }
+
   if (message.status === 'ok') {
     return (
       <div className='z-20 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
@@ -132,14 +131,15 @@ export default function ContactProperty({
     );
   }
 
+
   // Styles
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   const comentarios = watch('comentarios');
 
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
-      <section className='contact pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
+    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 pb-2 px-2 overscroll-scroll sm:overflow-hidden'>
+      <section className='contact shadow-custom pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll w-full md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -156,7 +156,7 @@ export default function ContactProperty({
             {message.message}
           </h1>
         )}
-        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 md:flex-row'>
+        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 lg:flex-row'>
           <form
             className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'
             onSubmit={handleSubmit(onSubmit)}
@@ -197,7 +197,7 @@ export default function ContactProperty({
                 }}
               />
             </label>
-            <label>
+            <label className='max-w-sm'>
               <div className='select-none'> Correo electrónico*</div>
               <Controller
                 name='email'
@@ -217,24 +217,29 @@ export default function ContactProperty({
                       onChange={onChange}
                       inputRef={ref}
                       name={name}
-                      className={inpStyle}
+                      className={inpStyle + ' w-full'}
                     />
                   );
                 }}
               />
             </label>
             {form === 'reservar' && (
-              <label className='flex flex-col gap-2 w-1/2'>
+              <label className='flex flex-col gap-2'>
                 <div className='select-none'>Selecciona las fechas:</div>
 
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <LocalizationProvider
+                  locale={esEsLocale}
+                  dateAdapter={AdapterDateFns}
+                >
                   <DateRangePicker
                     disablePast
+                    autoOk={true}
                     label='Advanced keyboard'
                     value={Value}
                     shouldDisableDate={(date) =>
                       date.getTime() === new Date('2021-11-13').getTime()
                     }
+
                     inputFormat='dd/MM/yyyy'
                     onChange={(newValue) => {
                       if (
@@ -262,21 +267,23 @@ export default function ContactProperty({
                       }
                     }}
                     renderInput={(startProps, endProps) => (
-                      <>
+
+                      <div className='flex flex-col  sm:flex-row'>
+
                         <input
                           className={inpStyle}
                           name='startDate'
                           ref={startProps.inputRef}
                           {...startProps.inputProps}
                         />
-                        <Box className='p-2 font-medium'> a </Box>
+                        <Box className='p-2 font-medium self-center'> a </Box>
                         <input
                           className={inpStyle}
                           name='endDate'
                           ref={endProps.inputRef}
                           {...endProps.inputProps}
                         />
-                      </>
+                      </div>
                     )}
                   />
                 </LocalizationProvider>
@@ -298,10 +305,10 @@ export default function ContactProperty({
               />
             </label>
             {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
-            <label className='relative w-min'>
+            <label className='relative w-full sm:w-min pr-2'>
               <div className='select-none'>Comentarios</div>
               <textarea
-                className={`${inpStyle} resize-none w-80`}
+                className={`${inpStyle} resize-none w-full sm:w-80`}
                 name='comments'
                 id='comments'
                 cols='30'

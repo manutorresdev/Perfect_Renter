@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { get } from 'react-hook-form';
 import {
   FaAngleLeft,
   FaAngleRight,
@@ -10,7 +11,12 @@ import { Link } from 'react-router-dom';
 import { del } from '../../Helpers/Api';
 import NewProperty from './NewProperty';
 
-export default function Property({ property, token }) {
+export default function Property({
+  property,
+  token,
+  profileOverlay,
+  setProfileOverlay,
+}) {
   const [curr, setCurr] = useState(0);
   const [SlideImgs, setSlideImgs] = useState([]);
   const slider = useRef();
@@ -18,15 +24,18 @@ export default function Property({ property, token }) {
     shown: false,
     form: '',
   });
+  console.log(property);
 
-  useEffect(() => {
-    setSlideImgs([
-      require('../../Images/defPicture.jpg').default,
-      require('../../Images/defPicture2.jpg').default,
-      require('../../Images/defPicture3.jpg').default,
-    ]);
-  }, []);
-
+  /*   get(
+    `http://localhost:4000/photo/${}`,
+    (data) => {
+      setSlideImgs(data);
+      console.log(data);
+    },
+    (error) => console.log(error),
+    token
+  );  */
+  console.log(SlideImgs);
   function right() {
     console.log('\x1b[43m########\x1b[30m', 'RIGHT');
     setCurr(curr === SlideImgs.length - 1 ? 0 : curr + 1);
@@ -42,22 +51,20 @@ export default function Property({ property, token }) {
   }
 
   function onSubmitDeleted(body, e) {
-    if (window.confirm('¿Desea eliminar el inmueble?')) {
-      del(
-        `http://localhost:4000/properties/${property.idProperty}`,
-        body,
-        (data) => {
-          alert(data.message);
-          window.location.reload();
-        },
-        (error) => console.log(error),
-        token
-      );
-    }
+    del(
+      `http://192.168.5.103:4000/properties/${property.idProperty}`,
+      body,
+      (data) => {
+        alert(data.message);
+        window.location.reload();
+      },
+      (error) => console.log(error),
+      token
+    );
   }
 
   return (
-    <article className='cont-vivienda overflow-hidden border-2 border-white bg-white sm:w-auto min-w-min my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-200'>
+    <article className='cont-vivienda overflow-hidden border-2 max-w-custom sm:max-w-none border-white bg-white sm:w-auto min-w-min hover:max-h-full my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-300'>
       {Overlay.form === 'newProperty' && (
         <NewProperty
           setOverlay={setOverlay}
@@ -65,7 +72,7 @@ export default function Property({ property, token }) {
           EditProperty={property}
         />
       )}
-      <div className='slider w-full relative '>
+      <div className='slider w-full max-w-custom sm:max-w-none relative'>
         <button
           onClick={right}
           className='absolute z-10 text-white text-3xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'
@@ -80,7 +87,7 @@ export default function Property({ property, token }) {
         </button>
         <div
           ref={slider}
-          className={`slider-cont min-w-full flex transition-all transform ease-in}`}
+          className={`slider-cont min-w-xxs flex transition-all transform ease-in}`}
         >
           {/* Hacer un map con los path que nos llegan pintando img */}
           {SlideImgs.map((img, i) => {
@@ -89,7 +96,7 @@ export default function Property({ property, token }) {
                 key={i}
                 className={`${
                   i === curr ? '' : 'absolute opacity-0'
-                } w-auto sm:max-w-xs object-cover obj duration-300`}
+                } w-auto sm:max-w-xs object-cover duration-300`}
                 src={img}
                 alt='default'
               />
@@ -98,7 +105,7 @@ export default function Property({ property, token }) {
         </div>
       </div>
 
-      <div className='relative'>
+      <div className='relative max-w-custom sm:max-w-none'>
         <Link to={`/alquileres/${property.idProperty}`}>
           <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 flex justify-between gap-2'>
             <h3>
@@ -113,15 +120,17 @@ export default function Property({ property, token }) {
                 property.toilets
               } ${property.toilets > 1 ? 'baños' : 'baño'}`}
             </div>
-            <div className='w-72 pt-2'>
-              <p>{property.description.slice(0, 100)}...</p>
+            <div className='sm:w-72 pt-2'>
+              <p className='overflow-hidden'>
+                {property.description.slice(0, 100)}...
+              </p>
             </div>
           </div>
           <footer className='flex p-2 justify-end'>
             {Array(parseInt(property.votes))
               .fill(null)
               .map((value, i) => {
-                return <FaStar key={i} className='text-principal-1'></FaStar>;
+                return <FaStar key={i} className='text-principal-1' />;
               })}
           </footer>
         </Link>
@@ -137,7 +146,13 @@ export default function Property({ property, token }) {
             </button>
             <button
               className='text-xl p-4 hover:text-red-500'
-              onClick={onSubmitDeleted}
+              onClick={() => {
+                setProfileOverlay({
+                  form: 'deleteProperty',
+                  shown: true,
+                  onSubmitDeleted: onSubmitDeleted,
+                });
+              }}
             >
               <FaTrash />
             </button>

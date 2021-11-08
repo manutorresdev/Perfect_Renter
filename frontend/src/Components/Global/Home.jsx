@@ -22,6 +22,29 @@ const descBoxTextStyle = 'text-left p-4';
 const descBoxTitleStyle = 'text-base text-gray-700 pb-3 font-medium';
 const descBoxPStyle = 'text-gray-700 text-sm pl-2';
 
+/**
+ * Componente que devuelve la landing page de la app.
+ * @component
+ * @example
+ *  return (
+ *      <>
+      <Banner />
+      <div
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
+        }}
+        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5 sm:h-full sm:w-full pb-32'
+      >
+        <RentersList />
+        <PropertiesList />
+        <RenterDescription />
+        <PropertyDescription />
+      </div>
+    </>
+ * )
+ *
+ */
 export function Home() {
   return (
     <>
@@ -33,40 +56,52 @@ export function Home() {
         }}
         className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5 sm:h-full sm:w-full pb-32'
       >
-        <HomeRentersList />
-        <HomePropertiesList />
-        <section className={sectionStyle}>
-          <h3 className={sectionTitleStyle}>Renters</h3>
-          <img className={sectionImgStyle} src='/Images/flat.jpg' alt='' />
-          <p className='text-justify'>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Perspiciatis excepturi blanditiis quasi tempore qui et, aperiam,
-            recusandae voluptatum illo, magni aliquid molestias vero ratione
-            distinctio commodi hic deleniti autem quisquam? Repellendus,
-            officia? Fuga quam, provident voluptate laudantium, quis error rem
-            ipsam in labore nobis quaerat autem repellat praesentium excepturi
-            quas possimus voluptates rerum qui mollitia velit nemo corrupti
-            facilis quos. Ut delectus praesentium similique placeat, repellat
-            deserunt quam consectetur neque numquam exercitationem, consequatur
-          </p>
-        </section>
-        <section className={sectionStyle}>
-          <h3 className={sectionTitleStyle}>Alquileres</h3>
-          <img className={sectionImgStyle} src='/Images/flat.jpg' alt='' />
-          <p className='text-justify'>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Perspiciatis excepturi blanditiis quasi tempore qui et, aperiam,
-            recusandae voluptatum illo, magni aliquid molestias vero ratione
-            distinctio commodi hic deleniti autem quisquam? Repellendus,
-            officia? Fuga quam, provident voluptate laudantium, quis error rem
-            ipsam in labore nobis quaerat autem repellat praesentium excepturi
-            quas possimus voluptates rerum qui mollitia velit nemo corrupti
-            facilis quos. Ut delectus praesentium similique placeat, repellat
-            deserunt quam consectetur neque numquam exercitationem, consequatur
-          </p>
-        </section>
+        <RentersList />
+        <PropertiesList />
+        <RenterDescription />
+        <PropertyDescription />
       </div>
     </>
+  );
+}
+
+function PropertyDescription() {
+  return (
+    <section className={sectionStyle}>
+      <h3 className={sectionTitleStyle}>Alquileres</h3>
+      <img className={sectionImgStyle} src='/Images/flat.jpg' alt='' />
+      <p className='text-justify'>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis
+        excepturi blanditiis quasi tempore qui et, aperiam, recusandae
+        voluptatum illo, magni aliquid molestias vero ratione distinctio commodi
+        hic deleniti autem quisquam? Repellendus, officia? Fuga quam, provident
+        voluptate laudantium, quis error rem ipsam in labore nobis quaerat autem
+        repellat praesentium excepturi quas possimus voluptates rerum qui
+        mollitia velit nemo corrupti facilis quos. Ut delectus praesentium
+        similique placeat, repellat deserunt quam consectetur neque numquam
+        exercitationem, consequatur
+      </p>
+    </section>
+  );
+}
+
+function RenterDescription() {
+  return (
+    <section className={sectionStyle}>
+      <h3 className={sectionTitleStyle}>Renters</h3>
+      <img className={sectionImgStyle} src='/Images/flat.jpg' alt='' />
+      <p className='text-justify'>
+        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis
+        excepturi blanditiis quasi tempore qui et, aperiam, recusandae
+        voluptatum illo, magni aliquid molestias vero ratione distinctio commodi
+        hic deleniti autem quisquam? Repellendus, officia? Fuga quam, provident
+        voluptate laudantium, quis error rem ipsam in labore nobis quaerat autem
+        repellat praesentium excepturi quas possimus voluptates rerum qui
+        mollitia velit nemo corrupti facilis quos. Ut delectus praesentium
+        similique placeat, repellat deserunt quam consectetur neque numquam
+        exercitationem, consequatur
+      </p>
+    </section>
   );
 }
 
@@ -131,7 +166,7 @@ function Banner() {
   );
 }
 
-function HomePropertiesList() {
+function PropertiesList() {
   const [properties] = useProperties();
   const [Imgs, setImgs] = useState([]);
 
@@ -144,8 +179,6 @@ function HomePropertiesList() {
     ]);
   }, []);
 
-  console.log('\x1b[43m########\x1b[30m', properties);
-
   return (
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>ALQUILERES</h2>
@@ -153,7 +186,7 @@ function HomePropertiesList() {
         {properties.length > 1 &&
           properties.slice(0, 4).map((property, i) => {
             return (
-              <PropertyDescription key={i}>
+              <Property key={i}>
                 <Link to={`/alquileres/${property.idProperty}`}>
                   <img className='w-full' src={Imgs[i]} alt='' />
                 </Link>
@@ -166,7 +199,7 @@ function HomePropertiesList() {
                     property.toilets
                   } ${property.toilets > 1 ? 'Baños' : 'Baño'}`}
                 </span>
-              </PropertyDescription>
+              </Property>
             );
           })}
       </div>
@@ -177,7 +210,7 @@ function HomePropertiesList() {
   );
 }
 
-function PropertyDescription({ children }) {
+function Property({ children }) {
   return (
     <div className={descBoxStyle}>
       {children[0]}
@@ -189,15 +222,15 @@ function PropertyDescription({ children }) {
   );
 }
 
-function HomeRentersList() {
+function RentersList() {
   return (
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>INQUILINOS</h2>
       <div className={boxItemContStyle}>
-        <RenterDescription />
-        <RenterDescription />
-        <RenterDescription />
-        <RenterDescription />
+        <Renter />
+        <Renter />
+        <Renter />
+        <Renter />
       </div>
       <Link to='/inquilinos' className={boxReadMoreBtnStyle}>
         Ver Mas
@@ -205,7 +238,7 @@ function HomeRentersList() {
     </div>
   );
 }
-function RenterDescription() {
+function Renter() {
   return (
     <div className={descBoxStyle}>
       <img className=' w-full' src='/Images/renter.jpg' alt='' />

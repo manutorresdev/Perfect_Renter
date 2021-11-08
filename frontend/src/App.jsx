@@ -27,17 +27,22 @@ import VerifyUser from './Components/Users/VerifyUser';
 import Filters from './Components/Properties/Filters';
 import PropertyInfo from './Components/Properties/PropertyInfo';
 import Nosotros from './Components/Global/Nosotros';
+import useUser from './Helpers/Hooks/useUser';
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
-
+  const [User] = useUser();
   return (
     <>
       <Router>
         <NavBar token={Token} setToken={setToken} />
         <Switch>
-          <Route path='/register'>
-            {Token ? <Redirect to='/' /> : <Register token={Token} />}
+          <Route path='/registro'>
+            {Token ? (
+              <Redirect to='/' />
+            ) : (
+              <Register token={Token} User={User} />
+            )}
           </Route>
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
@@ -48,7 +53,7 @@ function App() {
             exact
             path='/alquileres/:idProperty'
             render={(routeProps) => (
-              <PropertyInfo {...routeProps} token={Token} />
+              <PropertyInfo {...routeProps} token={Token} User={User} />
             )}
           />
           <Route exact path='/alquileres' component={Properties} />

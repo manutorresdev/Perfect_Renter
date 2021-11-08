@@ -102,9 +102,9 @@ export function parseJwt(token) {
   } else if (typeof token !== 'string') {
     return;
   }
-  var base64Url = token.split('.')[1];
-  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  var jsonPayload = decodeURIComponent(
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
     atob(base64)
       .split('')
       .map(function (c) {
@@ -118,8 +118,21 @@ export function parseJwt(token) {
 
 export function CreateFormData(body) {
   const formData = new FormData();
+
   Object.keys(body).map((prop) => formData.append(prop, body[prop]));
-  console.log('\x1b[45m%%%%%%%', formData, 'DATOS de FORM DATA');
+
+  return formData;
+}
+
+export function CreateFormDataMultipleFiles(files) {
+  const formData = new FormData();
+
+  if (files.photos.length > 1) {
+    files.photos.forEach((file) => {
+      formData.append('photo', file);
+    });
+  }
+
   return formData;
 }
 

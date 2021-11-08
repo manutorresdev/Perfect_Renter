@@ -8,7 +8,7 @@ export default function Password({ register, errors }) {
     <>
       <div className='flex relative items-center'>
         <input
-          className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full'
+          className='px-3 py-3  placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
           type={ShowPass ? 'text' : 'password'}
           name='password'
           placeholder='Contraseña*'
@@ -31,14 +31,14 @@ export default function Password({ register, errors }) {
         />
         {ShowPass ? (
           <FaEye
-            className='absolute right-1'
+            className='absolute right-1 cursor-pointer'
             onClick={() => {
               setShowPass(!ShowPass);
             }}
           />
         ) : (
           <FaEyeSlash
-            className='absolute right-1'
+            className='absolute right-1 cursor-pointer'
             onClick={() => {
               setShowPass(!ShowPass);
             }}

@@ -6,6 +6,25 @@ module.exports = {
       black: theme('colors.black'),
     }),
     extend: {
+      minWidth: {
+        xs: '20rem',
+        xxs: '10rem',
+        xxs2: '8rem',
+      },
+      minHeight: {
+        '6/10': '60%',
+        '20rem': '20rem',
+        lg: '700px',
+      },
+      maxHeight: {
+        xs: '20rem',
+        full: '100%',
+      },
+      maxWidth: {
+        custom: '16rem',
+        xxs: '10rem',
+        xxs2: '8rem',
+      },
       keyframes: {
         LeftX: {
           '0%': { transform: 'translateX(-100%)' },
@@ -49,6 +68,7 @@ module.exports = {
       },
       height: {
         'max-content': 'max-content',
+        min: 'min-content',
         '60vh': '60vh',
         '30vh': '30vh',
         custom: '100px',
@@ -60,7 +80,9 @@ module.exports = {
       },
       boxShadow: {
         perfil: 'rgba(0, 0, 0, 0.25) 0px 25px 50px -12px',
-        white: 'rgba(255, 255, 255, 0.65) 0px 25px 50px -12px',
+        custom:
+          'rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;',
+
       },
       outline: {
         contrast: ['1px solid #000000', '0px'],
@@ -69,6 +91,7 @@ module.exports = {
   },
   variants: {
     extend: {
+      maxHeight: ['hover'],
       padding: ['hover', 'focus'],
       boxShadow: ['active'],
       outline: ['hover', 'active'],

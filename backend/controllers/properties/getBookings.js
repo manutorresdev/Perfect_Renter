@@ -31,7 +31,8 @@ const getBookings = async (req, res, next) => {
         `
       SELECT
       idBooking, idRenter, idTenant, state, startBookingDate, endBookingDate
-      FROM bookings WHERE idProperty = ?
+      FROM bookings
+      WHERE idProperty = ?
       `,
         [idProperty]
       );

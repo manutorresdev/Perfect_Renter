@@ -72,11 +72,11 @@ export default function Filters({ setOverlay, Overlay }) {
       <div
         className={`transform ${
           Overlay.show
-            ? 'translate-y-0 opacity-100'
+            ? 'translate-y-0 opacity-100 bg-gray-500'
             : '-translate-y-full opacity-0'
-        } sm:translate-y-0 sm:opacity-100  bg-opacity-50 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+        } sm:translate-y-0 sm:opacity-100 sm:bg-gray-200 bg-opacity-50 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
       >
-        <section className='filtros sm:bg-transparent overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white relative'>
+        <section className='filtros sm:bg-gray-200 overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white relative'>
           <button
             className='close-overlay absolute top-3 right-3 sm:hidden'
             onClick={() => {
