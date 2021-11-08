@@ -19,6 +19,23 @@ export default function FileProperty({
 
   function uploadFile(body, e) {
     e.preventDefault();
+    console.log(body);
+    console.log(body.photo[0]);
+    console.log(idProperty);
+    if (body.photo[0]) {
+      post(
+        `http://192.168.5.103:4000/properties/11/photos`,
+        CreateFormData({ photos: body.photo[0] }),
+        (data) => {
+          console.log('Success');
+          alert(data.message);
+          window.location.reload();
+        },
+        (error) => {
+          setError(error.message);
+        },
+        Token
+      );
     const photos = [];
 
     Object.keys(body.photo).map((pic, index) => {
@@ -74,25 +91,6 @@ export default function FileProperty({
       },
       Token
     );
-    // if (body.photo) {
-    //   for (let i = 0; i < body.photo.length; i++) {
-    //     put(
-    //       `http://localhost:4000/properties/${editProperty}`,
-    //       CreateFormData({
-    //         photo: body.photo[i],
-    //       }),
-    //       (data) => {
-    //         console.log('Sucess');
-
-    //         window.location.reload();
-    //       },
-    //       (error) => {
-    //         setError(error.message);
-    //       },
-    //       Token
-    //     );
-    //   }
-    // }
   }
 
   return (

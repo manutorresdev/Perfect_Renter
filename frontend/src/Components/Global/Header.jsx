@@ -37,7 +37,7 @@ export default function Header() {
       <Link className='user' to='/login'>
         Login
       </Link>
-      <Link className='register' to='/register'>
+      <Link className='register' to='/registro'>
         Register
       </Link>
     </nav>

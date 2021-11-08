@@ -36,8 +36,9 @@ const userSchema = Joi.object().keys({
           return new Error('La contraseña debe tener entre 8 y 100 caracteres');
       }
     }),
-  tel: Joi.number()
+  tel: Joi.string()
     .min(9)
+    .pattern(/^\s?\+?\s?([0-9][0-9\s]*){9,}$/)
     .error((errors) => {
       return new Error('El teléfono no es válido.');
     }),
@@ -106,8 +107,9 @@ const editUserSchema = Joi.object().keys({
           return new Error('La contraseña debe tener entre 8 y 100 caracteres');
       }
     }),
-  tel: Joi.number()
+  tel: Joi.string()
     .min(9)
+    .pattern(/^\s?\+?\s?([0-9][0-9\s]*){9,}$/)
     .error((errors) => {
       return new Error('El teléfono no es válido.');
     }),

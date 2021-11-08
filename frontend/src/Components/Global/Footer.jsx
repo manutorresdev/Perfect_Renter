@@ -5,7 +5,7 @@ import { MenuElements } from './MenuElements';
 
 export default function Footer({ token, setToken }) {
   return (
-    <footer className='text-principal-1 bottom-0 bg-gray-Primary h-28 absolute w-full flex items-center justify-evenly'>
+    <footer className='text-principal-1 bottom-0 bg-gray-Primary h-28 absolute w-full flex items-center justify-evenly md:justify-between md:px-20'>
       <div className='logo+name h-full flex flex-col items-center justify-center'>
         <Link to='/' className='logo p-1'>
           <img
@@ -18,7 +18,7 @@ export default function Footer({ token, setToken }) {
         <span>Perfect Renter</span>
       </div>
       <div className='links'>
-        <ul>
+        <ul className=' md:flex md:gap-5'>
           {MenuElements.map((item) => {
             if (item.id === 1) {
               return '';
@@ -48,10 +48,18 @@ export default function Footer({ token, setToken }) {
       <div className='redes sociales flex flex-col gap-2'>
         <h3>Siguenos en:</h3>
         <div className='flex gap-2 text-white'>
-          <a href='http://www.instagram.es'>
+          <a
+            rel='noreferrer'
+            target='_blank'
+            href='https://www.instagram.com/perfectrenter/'
+          >
             <FaInstagram />
           </a>
-          <a href='https://github.com/manutowersdev/Perfect_Renter'>
+          <a
+            rel='noreferrer'
+            target='_blank'
+            href='https://github.com/manutowersdev/Perfect_Renter'
+          >
             <FaGithub />
           </a>
         </div>
