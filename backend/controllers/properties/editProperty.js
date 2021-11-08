@@ -70,9 +70,10 @@ const editProperty = async (req, res, next) => {
      * Actualizamos Fotos.
      *
      */
+
     if (req.files && req.files.photo) {
       // Recorremos las fotos recibidas para subirlas.
-      for (const photo of Object.values(req.files)) {
+      for (const photo of Object.values(req.files.photo)) {
         // Obtenemos la cantidad de fotos que tiene esa propiedad.
         const [photos] = await connection.query(
           `
@@ -359,7 +360,7 @@ const editProperty = async (req, res, next) => {
     } else {
       elevator = 0;
     }
-    console.log(elevator);
+
     if (elevator && property[0].elevator !== elevator) {
       // Validamos la información recibida.
       validateData = { elevator };
@@ -380,18 +381,18 @@ const editProperty = async (req, res, next) => {
      *
      */
     //convertimos en número el dato booleanos
-    console.log('llega' + terrace);
+
     if (terrace === 'true') {
       terrace = 1;
     } else {
       terrace = 0;
     }
-    console.log('se transforma' + terrace);
+
     if (terrace && property[0].terrace !== terrace) {
       // Validamos la información recibida.
       validateData = { terrace };
       await validate(editPropertySchema, validateData);
-      console.log(terrace);
+
       // Actualizamos la información en la base de datos.
       await connection.query(
         `UPDATE properties SET terrace = ?, modifiedAt = ? WHERE idProperty = ?`,

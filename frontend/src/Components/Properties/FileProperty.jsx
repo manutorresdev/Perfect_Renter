@@ -1,42 +1,99 @@
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
-import { CreateFormData, post } from '../../Helpers/Api';
+import { CreateFormDataMultipleFiles, post, put } from '../../Helpers/Api';
+import CircularProgress from '@mui/material/CircularProgress';
 
-export default function FileProperty({ setOverlay, idProperty, Token }) {
+export default function FileProperty({
+  setOverlay,
+  idProperty,
+  Token,
+  editProperty,
+}) {
   const [Error, setError] = useState('');
-  const [FileName, setFileName] = useState('');
+  const [Button, setButton] = useState(false);
+  const [FileName, setFileName] = useState([]);
   const hiddenInput = useRef(null);
   const { handleSubmit, register } = useForm();
   const { ref, onChange, ...rest } = register('photo');
 
   function uploadFile(body, e) {
     e.preventDefault();
-    console.log(body);
-    console.log(body.photo[0]);
-    console.log(idProperty);
-    if (body.photo[0]) {
-      post(
-        `http://localhost:4000/properties/11/photos`,
-        CreateFormData({ photos: body.photo[0] }),
-        (data) => {
-          console.log('Success');
-          alert(data.message);
-          window.location.reload();
-        },
-        (error) => {
-          setError(error.message);
-        },
-        Token
-      );
+    const photos = [];
+
+    Object.keys(body.photo).map((pic, index) => {
+      return photos.push(body.photo[index]);
+    });
+
+    if (body.photo) {
+      for (let i = 0; i < body.photo.length; i++) {
+        post(
+          `http://localhost:4000/properties/${idProperty}/photos`,
+          CreateFormDataMultipleFiles({
+            photo: body.photo[i],
+          }),
+
+          (data) => {
+            console.log('Success');
+
+            window.location.reload();
+          },
+          (error) => {
+            setError(error.message);
+          },
+          Token
+        );
+      }
+      /* alert('Las fotos se han subido correctamente'); */
     } else {
       setError('Debes seleccionar un archivo.');
     }
   }
 
-  /*  const registerComponentStyle = Token
-    ? 'overlay z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'
-    : ''; */
+  function editFile(body, e) {
+    e.preventDefault();
+
+    const photos = [];
+
+    Object.keys(body.photo).map((pic, index) => {
+      return photos.push(body.photo[index]);
+    });
+
+    put(
+      `http://localhost:4000/properties/${editProperty}`,
+      CreateFormDataMultipleFiles({ photos: [...photos] }),
+      (data) => {
+        console.log('Sucess');
+        setButton(false);
+
+        // window.location.reload();
+      },
+      (error) => {
+        setButton(false);
+        setError(error.message);
+      },
+      Token
+    );
+    // if (body.photo) {
+    //   for (let i = 0; i < body.photo.length; i++) {
+    //     put(
+    //       `http://localhost:4000/properties/${editProperty}`,
+    //       CreateFormData({
+    //         photo: body.photo[i],
+    //       }),
+    //       (data) => {
+    //         console.log('Sucess');
+
+    //         window.location.reload();
+    //       },
+    //       (error) => {
+    //         setError(error.message);
+    //       },
+    //       Token
+    //     );
+    //   }
+    // }
+  }
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
@@ -55,7 +112,9 @@ export default function FileProperty({ setOverlay, idProperty, Token }) {
 
         <div className='contact-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
           <form
-            onSubmit={handleSubmit(uploadFile)}
+            onSubmit={
+              editProperty ? handleSubmit(editFile) : handleSubmit(uploadFile)
+            }
             className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'
           >
             <div className='flex flex-col gap-5'>
@@ -67,25 +126,28 @@ export default function FileProperty({ setOverlay, idProperty, Token }) {
                 }}
               >
                 <FaRegArrowAltCircleUp className='animate-bounce' />
-                Selecciona los archivo
+                Selecciona los archivos
               </button>
-              <p className='text-center'>
-                {FileName ?? 'Ningún archivo seleccionado.'}
-              </p>
+
+              {FileName ?? (
+                <p className='text-center'>Ningún archivo seleccionado.</p>
+              )}
 
               <input
                 className='hidden'
-                /*  multiple='multiple' */
                 {...rest}
                 onChange={(e) => {
                   onChange(e);
-                  setFileName(hiddenInput.current.files[0].name);
+                  for (const photo of hiddenInput.current.files) {
+                    setFileName([...FileName, photo.name]);
+                  }
                 }}
                 ref={(e) => {
                   ref(e);
                   hiddenInput.current = e;
                 }}
                 type='file'
+                multiple={true}
                 name='photo'
               />
             </div>
@@ -93,10 +155,17 @@ export default function FileProperty({ setOverlay, idProperty, Token }) {
               <p className='text-red-600 font-medium text-center'>{Error}</p>
             )}
             <button
+              onClick={(e) => {
+                setButton(true);
+              }}
               type='submit'
-              className='button font-medium select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
+              className={`${
+                FileName
+                  ? 'bg-principal-1 text-principal-gris cursor-pointer'
+                  : 'text-gray-400 select-none pointer-events-none cursor-default'
+              } font-medium flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
             >
-              Subir
+              Añadir{Button && <CircularProgress style='width: 10px' />}
             </button>
           </form>
         </div>

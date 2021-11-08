@@ -4,12 +4,7 @@ import { FaCamera, FaEuroSign, FaPlus } from 'react-icons/fa';
 import { CreateFormData, post, put } from '../../Helpers/Api';
 import FileProperty from './FileProperty';
 
-export default function NewProperty({
-  setOverlay,
-  Token,
-  EditProperty,
-  property,
-}) {
+export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const {
     register,
     handleSubmit,
@@ -72,19 +67,22 @@ export default function NewProperty({
     form: '',
   });
 
+  const [lastProperty, setLastProperty] = useState('');
   const [Error, setError] = useState('');
 
   function onSubmitProperty(body, e) {
-    console.log(body);
-
     post(
       'http://localhost:4000/properties',
       CreateFormData(body),
       (data) => {
-        alert(data.message);
         reset();
-        console.log(data);
-        window.location.reload();
+        setLastProperty(data.property);
+        setFile({
+          shown: true,
+          userInfo: '',
+          form: 'FileProperty',
+        });
+        /* window.location.reload(); */
       },
       (data) => {
         setError(data.message);
@@ -102,7 +100,7 @@ export default function NewProperty({
       (data) => {
         console.log('Sucess');
         alert(data.message);
-        window.location.reload();
+        /*  window.location.reload(); */
       },
       (error) => {
         setError(error.message);
@@ -120,7 +118,12 @@ export default function NewProperty({
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center  px-12 py-24 overflow-scroll sm:overflow-hidden'>
       {file.form === 'FileProperty' && (
-        <FileProperty setOverlay={setOverlay} Token={Token} />
+        <FileProperty
+          setOverlay={setOverlay}
+          Token={Token}
+          idProperty={lastProperty}
+          editProperty={EditProperty && EditProperty.idProperty}
+        />
       )}
       <section className='pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-4/6'>
         <button
@@ -443,22 +446,6 @@ export default function NewProperty({
                 />
               </label>
             </div>
-            <h6 className={inputsLabelStyle}>
-              ¡Sube fotos para que vean cómo es!
-            </h6>
-            <button
-              className={inpStyle}
-              onClick={() => {
-                setFile({
-                  shown: true,
-                  userInfo: '',
-                  form: 'FileProperty',
-                });
-              }}
-            >
-              La primera fotografía será la principal
-              <FaCamera className='text-4xl ml-10 mb-4' />
-            </button>
 
             <p className={inputsLabelStyle}>¿Qué precio tiene?</p>
             <div className='flex flex-col-2 w-52  gap-2'>
@@ -514,6 +501,26 @@ export default function NewProperty({
               />
             </div>
           </form>
+          {EditProperty && (
+            <div>
+              <h6 className={inputsLabelStyle}>
+                ¡Añade nuevas fotos a tu inmueble!
+              </h6>
+              <button
+                className={inpStyle}
+                onClick={() => {
+                  setFile({
+                    shown: true,
+                    userInfo: '',
+                    form: 'FileProperty',
+                  });
+                }}
+              >
+                La primera fotografía será la principal
+                <FaCamera className='text-4xl ml-10 mb-4' />
+              </button>{' '}
+            </div>
+          )}
         </div>
       </section>
     </div>

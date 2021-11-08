@@ -24,7 +24,7 @@ export default function NavBar({ token, setToken }) {
         className='logo w-10 p-1 sm:col-start-1 sm:col-end-2 col-start-2 justify-self-end xl:justify-self-center'
       >
         <img
-          src='/Images/logo-pr-amarillo.png'
+          src='/Images/logo-amarillo-primary.png'
           alt='logo Perfect renter'
           id='logo'
         />

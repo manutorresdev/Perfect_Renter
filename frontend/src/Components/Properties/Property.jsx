@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { get } from 'react-hook-form';
 import {
   FaAngleLeft,
   FaAngleRight,
@@ -18,15 +19,18 @@ export default function Property({ property, token }) {
     shown: false,
     form: '',
   });
+  console.log(property);
 
-  useEffect(() => {
-    setSlideImgs([
-      require('../../Images/defPicture.jpg').default,
-      require('../../Images/defPicture2.jpg').default,
-      require('../../Images/defPicture3.jpg').default,
-    ]);
-  }, []);
-
+  /*   get(
+    `http://localhost:4000/photo/${}`,
+    (data) => {
+      setSlideImgs(data);
+      console.log(data);
+    },
+    (error) => console.log(error),
+    token
+  );  */
+  console.log(SlideImgs);
   function right() {
     console.log('\x1b[43m########\x1b[30m', 'RIGHT');
     setCurr(curr === SlideImgs.length - 1 ? 0 : curr + 1);
