@@ -87,7 +87,7 @@ export default function PropertyInfo(props) {
 
   // Styles
   const sliderButtonStyle =
-    'absolute z-10 text-white text-xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md duration-200';
+    'absolute z-0 text-white text-xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md duration-200';
   const buttonStyle =
     'border-2 py-1 px-3 bg-principal-1 hover:bg-gray-500 hover:text-white duration-200';
 
@@ -171,7 +171,7 @@ export default function PropertyInfo(props) {
             </div>
             <div className='informacion bg-gray-Primary p-5 bg-opacity-25 text-2xl text-principal-1 flex justify-between'>
               <h2>Piso en {property.city}</h2>
-              <h2>{Number(property.price)}/mes</h2>
+              <h2>{Number(property.price)} €/mes</h2>
             </div>
             <p className='p-5 self-center font-medium text-principal-gris'>
               {`${Number(property.mts)}m² - ${property.rooms} habitaciones - ${

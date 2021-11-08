@@ -125,8 +125,8 @@ function Banner() {
         <h3 className='text-xl font-light'>Encuentra tu</h3>
         <h1 className='text-4xl text-principal-1'>Inquilino Perfecto</h1>
         <p className='w-4/5 text-base font-light'>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat
-          doloribus nostrum rerum quisquam libero fugiat quam.
+          Porque tu o tu propiedad merecen ser valorados. Busca pisos e
+          inquilinos, mira sus reseñas y contacta en solo unos Click's.
         </p>
         <Link
           to='/nosotros'
@@ -154,11 +154,12 @@ function Banner() {
             },
           })}
           placeholder='Escribe aquí tu ciudad favorita...'
-          className='w-full pl-2 bg-gray-Primary border border-gray-300 border-opacity-20 text-white'
+          className='w-full pl-2 bg-principal-1 outline-contras'
         />
+        {/* className='w-full pl-2 bg-gray-Primary border border-gray-300 border-opacity-20 text-white' */}
         <FaSearch
           onClick={handleSubmit(onSubmit)}
-          className='text-gray-300 absolute top-1 right-2 cursor-pointer'
+          className='text-gray-900 absolute top-1 right-2 cursor-pointer'
         />
       </form>
     </div>

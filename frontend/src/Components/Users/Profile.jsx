@@ -69,6 +69,7 @@ export default function Profile({ token, setToken }) {
   }, [token, User.avatar, User.idUser]);
 
   function onSubmitDeleted(body, e) {
+
     del(
       `http://192.168.5.103:4000/users/${User.idUser}`,
       body,
@@ -79,6 +80,7 @@ export default function Profile({ token, setToken }) {
       (error) => console.log(error),
       token
     );
+
   }
 
   const propiedadUsuario = properties.filter(
