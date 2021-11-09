@@ -378,6 +378,7 @@ const bookProperty = async (req, res, next) => {
           ]
         );
 
+
         res.send({
           status: 'ok',
           message: 'Correo electrónico enviado con éxito.',

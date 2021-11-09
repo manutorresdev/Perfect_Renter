@@ -11,9 +11,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { addDays, format } from 'date-fns';
 import esEsLocale from 'date-fns/locale/es';
-
 import { TextField } from '@mui/material';
-
 import { useContext, useEffect, useState } from 'react';
 import MuiDateRangePickerDay from '@mui/lab/DateRangePickerDay';
 import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
@@ -89,7 +87,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/book`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           setMessage(data);
@@ -103,7 +101,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -344,6 +342,36 @@ export default function ContactProperty({
     </div>
   );
 }
+function DatePicker({
+  Value,
+  setPickerValue,
+  setValue,
+  inpStyle,
+  arrayFechas,
+}) {
+  // const DateRangePickerDay = MuiDateRangePickerDay;
+  const DateRangePickerDay = styled(MuiDateRangePickerDay)(
+    ({
+      theme,
+      isHighlighting,
+      isStartOfHighlighting,
+      isEndOfHighlighting,
+    }) => ({
+      ...(isHighlighting && {
+        borderRadius: 0,
+        backgroundColor: 'rgb(213, 213, 213)',
+        color: 'white',
+      }),
+      ...(isStartOfHighlighting && {
+        borderTopLeftRadius: '50%',
+        borderBottomLeftRadius: '50%',
+      }),
+      ...(isEndOfHighlighting && {
+        borderTopRightRadius: '50%',
+        borderBottomRightRadius: '50%',
+      }),
+    })
+  );
 
 function DatePicker({
   Value,
@@ -375,6 +403,7 @@ function DatePicker({
       }),
     })
   );
+
 
   function renderWeekPickerDay(date, dateRangePickerDayProps) {
     if (date.disabled) {
@@ -439,3 +468,9 @@ function DatePicker({
               {...endProps.inputProps}
             />
           </div>
+        )}
+      />
+    </LocalizationProvider>
+  );
+}
+

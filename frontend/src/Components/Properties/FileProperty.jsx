@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
-import { CreateFormDataMultipleFiles, post, put } from '../../Helpers/Api';
+import {
+  CreateFormData,
+  CreateFormDataMultipleFiles,
+  post,
+  put,
+} from '../../Helpers/Api';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function FileProperty({
@@ -50,12 +55,11 @@ export default function FileProperty({
   function editFile(body, e) {
     e.preventDefault();
 
-    const photos = [];
 
-    Object.keys(body.photo).map((pic, index) => {
-      return photos.push(body.photo[index]);
-    });
+    function editFile(body, e) {
+      e.preventDefault();
 
+      const photos = [];
     put(
       `http://192.168.5.103:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
@@ -105,16 +109,18 @@ export default function FileProperty({
           >
             <div className='flex flex-col gap-5 items-center'>
               <button
-                className='font-medium flex items-center gap-2 bg-blue-600 text-white p-1 rounded'
                 onClick={(e) => {
-                  e.preventDefault();
-                  hiddenInput.current.click();
+                  setButton(true);
                 }}
+                type='submit'
+                className={`${
+                  FileName
+                    ? 'bg-principal-1 text-principal-gris cursor-pointer'
+                    : 'text-gray-400 select-none pointer-events-none cursor-default'
+                } font-medium flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
               >
-                <FaRegArrowAltCircleUp className='animate-bounce' />
-                Selecciona los archivos
+                Añadir{Button && <CircularProgress />}
               </button>
-
               <div className='photo-cont flex flex-col gap-2 justify-center'>
                 {photos && (
                   <div className='uploaded-photos-cont flex flex-col gap-1'>

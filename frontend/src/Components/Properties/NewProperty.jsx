@@ -122,7 +122,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
     e.preventDefault();
 
     put(
-      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}`,
+      `http://localhost:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess');
@@ -138,7 +138,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   useEffect(() => {
     get(
-      'http://192.168.5.103:4000/properties/location',
+      'http://localhost:4000/properties/location',
       (data) => {
         setProvinces(data.provinces);
         setCities(data.cities);
