@@ -69,9 +69,8 @@ export default function Profile({ token, setToken }) {
   }, [token, User.avatar, User.idUser]);
 
   function onSubmitDeleted(body, e) {
-
     del(
-      `http://192.168.5.103:4000/users/${User.idUser}`,
+      `http://localhost:4000/users/${User.idUser}`,
       body,
       (data) => {
         setToken('');
@@ -80,7 +79,6 @@ export default function Profile({ token, setToken }) {
       (error) => console.log(error),
       token
     );
-
   }
 
   const propiedadUsuario = properties.filter(
@@ -307,7 +305,7 @@ function Delete({ setOverlay, Overlay, usuario }) {
 
   function onSubmit(body) {
     post(
-      'http://192.168.5.103:4000/users/login',
+      'http://localhost:4000/users/login',
       CreateFormData(body),
       (data) => {
         data.status === 'ok' && setCanDelete(true);
@@ -641,7 +639,7 @@ function EditBooking({ setOverlay, info, Token }) {
           email: info.email,
         };
         put(
-          `http://192.168.5.103:4000/properties/${info.idProperty}/${bookingCode}`,
+          `http://localhost:4000/properties/${info.idProperty}/${bookingCode}`,
           CreateFormData(body),
           (data) => {
             if (data.status === 'ok') {

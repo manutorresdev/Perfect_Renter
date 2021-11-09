@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { get } from 'react-hook-form';
+import React, { useRef, useState } from 'react';
+
 import {
   FaAngleLeft,
   FaAngleRight,
@@ -52,7 +52,7 @@ export default function Property({
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://192.168.5.103:4000/properties/${property.idProperty}`,
+      `http://localhost:4000/properties/${property.idProperty}`,
       body,
       (data) => {
         alert(data.message);

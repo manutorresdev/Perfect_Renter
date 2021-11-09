@@ -92,76 +92,75 @@ const bookProperty = async (req, res, next) => {
         message:
           'Las fechas seleccionada no estan disponibles para esta propiedad',
       });
-    }
-
-    const [petition] = await connection.query(
-      `
+    } else {
+      const [petition] = await connection.query(
+        `
       SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ? AND startBookingDate = ? AND endBookingDate = ?
         `,
-      [property[0].idUser, idReqUser, idProperty, startDate, endDate]
-    );
-    // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
-    if (petition.length > 0) {
-      res.send({
-        status: 'ok',
-        Estado_de_la_peticion: `${petition[0].state}`,
-        message:
-          'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.',
-      });
-    } else {
-      console.log('Esta entrando en este else:::::::########');
-      // Si el usuario es el dueño de la vivienda, lanzamos error.
-      if (idReqUser === Number(property[0].idUser)) {
-        const error = new Error(
-          'No puedes contactar con una vivienda de tu propiedad.'
-        );
-        error.httpStatus = 403;
-        throw error;
-      }
+        [property[0].idUser, idReqUser, idProperty, startDate, endDate]
+      );
+      // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
+      if (petition.length > 0) {
+        res.send({
+          status: 'ok',
+          Estado_de_la_peticion: `${petition[0].state}`,
+          message:
+            'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.',
+        });
+      } else {
+        console.log('Esta entrando en este else:::::::########');
+        // Si el usuario es el dueño de la vivienda, lanzamos error.
+        if (idReqUser === Number(property[0].idUser)) {
+          const error = new Error(
+            'No puedes contactar con una vivienda de tu propiedad.'
+          );
+          error.httpStatus = 403;
+          throw error;
+        }
 
-      // Seleccionamos el nombre completo, el email, el teléfono del usuario que contacta. (PARA EL FRONTEND)
-      const [contactUser] = await connection.query(
-        `
+        // Seleccionamos el nombre completo, el email, el teléfono del usuario que contacta. (PARA EL FRONTEND)
+        const [contactUser] = await connection.query(
+          `
       SELECT name,lastName,tel,email FROM users WHERE idUser = ?
       `,
-        [idReqUser]
-      );
+          [idReqUser]
+        );
 
-      if (!name) {
-        name = contactUser[0].name;
         if (!name) {
-          const error = new Error('Falta el nombre.');
-          error.httpStatus = 400;
-          throw error;
+          name = contactUser[0].name;
+          if (!name) {
+            const error = new Error('Falta el nombre.');
+            error.httpStatus = 400;
+            throw error;
+          }
         }
-      }
-      if (!lastName) {
-        lastName = contactUser[0].lastName;
         if (!lastName) {
-          const error = new Error('Falta el apellido.');
-          error.httpStatus = 400;
-          throw error;
+          lastName = contactUser[0].lastName;
+          if (!lastName) {
+            const error = new Error('Falta el apellido.');
+            error.httpStatus = 400;
+            throw error;
+          }
         }
-      }
-      if (!email) {
-        email = contactUser[0].email;
         if (!email) {
-          const error = new Error('Falta el email.');
-          error.httpStatus = 400;
-          throw error;
+          email = contactUser[0].email;
+          if (!email) {
+            const error = new Error('Falta el email.');
+            error.httpStatus = 400;
+            throw error;
+          }
         }
-      }
-      if (!tel) {
-        tel = contactUser[0].tel;
         if (!tel) {
-          tel = 'No especificado.';
+          tel = contactUser[0].tel;
+          if (!tel) {
+            tel = 'No especificado.';
+          }
         }
-      }
 
-      // Generamos el codigo de reserva,
-      const bookingCode = generateRandomString(10);
-      // Definimos el body del email
-      const emailBody = `
+        // Generamos el codigo de reserva,
+        const bookingCode = generateRandomString(10);
+        // Definimos el body del email
+        const emailBody = `
       <style>
       table {
           display: flex;
@@ -316,7 +315,7 @@ const bookProperty = async (req, res, next) => {
     </table>
     `;
 
-      const emailBodyReq = `
+        const emailBodyReq = `
     <table>
       <tbody>
         <td>
@@ -351,44 +350,45 @@ const bookProperty = async (req, res, next) => {
       </tfoot>
     </table>
     `;
-      // Enviamos el correo del usuario que contacta, al usuario a contactar.
-      // if (process.env.NODE_ENV !== 'test') {
-      //   await sendMail({
-      //     to: property[0].email,
-      //     subject: 'Solicitud de reserva.',
-      //     body: emailBody,
-      //   });
+        // Enviamos el correo del usuario que contacta, al usuario a contactar.
+        // if (process.env.NODE_ENV !== 'test') {
+        //   await sendMail({
+        //     to: property[0].email,
+        //     subject: 'Solicitud de reserva.',
+        //     body: emailBody,
+        //   });
 
-      //   // VALIDAR CORREO USUARIO QUE RESERVA
-      //   await sendMail({
-      //     to: email,
-      //     subject: 'Solicitud de reserva.',
-      //     body: emailBodyReq,
-      //   });
-      // }
+        //   // VALIDAR CORREO USUARIO QUE RESERVA
+        //   await sendMail({
+        //     to: email,
+        //     subject: 'Solicitud de reserva.',
+        //     body: emailBodyReq,
+        //   });
+        // }
 
-      // Agregamos el código de reserva en la base de datos junto a la posible reserva.
-      // CORREGIDO
-      // await connection.query(
-      //   `
-      // INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
-      // `,
-      //   [
-      //     bookingCode,
-      //     property[0].idUser,
-      //     idReqUser,
-      //     formatDate(new Date()),
-      //     idProperty,
-      //     startDate,
-      //     endDate,
-      //   ]
-      // );
+        // Agregamos el código de reserva en la base de datos junto a la posible reserva.
+        // CORREGIDO
+        // await connection.query(
+        //   `
+        // INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
+        // `,
+        //   [
+        //     bookingCode,
+        //     property[0].idUser,
+        //     idReqUser,
+        //     formatDate(new Date()),
+        //     idProperty,
+        //     startDate,
+        //     endDate,
+        //   ]
+        // );
 
-      res.send({
-        status: 'ok',
-        message: 'Correo electrónico enviado con éxito.',
-        bookingCode,
-      });
+        res.send({
+          status: 'ok',
+          message: 'Correo electrónico enviado con éxito.',
+          bookingCode,
+        });
+      }
     }
   } catch (error) {
     next(error);
