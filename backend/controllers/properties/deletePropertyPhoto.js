@@ -17,16 +17,16 @@ const deletePropertyPhoto = async (req, res, next) => {
     connection = await getDB();
 
     // Se obteniene id de la propiedad y de la photo
-    const { idProperty } = req.params;
-    const { idPhoto } = req.params;
+    const { idProperty, photoName } = req.params;
 
     // Comprobamos que la foto existe
 
     const [photo] = await connection.query(
-      `SELECT name FROM photos WHERE idPhoto = ? AND idProperty = ?`,
-      [idPhoto, idProperty]
+      `SELECT idPhoto FROM photos WHERE name = ? AND idProperty = ?`,
+      [photoName, idProperty]
     );
 
+    console.log(photo);
     // Si la foto no existe, lanzamos un error
     if (photo.length < 1) {
       const error = new Error('La foto no existe');
@@ -36,13 +36,13 @@ const deletePropertyPhoto = async (req, res, next) => {
 
     // Borramos la foto del servidor con la función deletePhoto de helpers
 
-    await deletePhoto(photo[0].name);
+    await deletePhoto(photoName);
 
     // Borramos la foto de la base de datos
 
     await connection.query(
       `DELETE FROM photos WHERE idPhoto = ? AND idProperty = ?`,
-      [idPhoto, idProperty]
+      [photo[0].idPhoto, idProperty]
     );
 
     res.send({

@@ -18,7 +18,7 @@ const getPhotos = async (req, res, next) => {
     //Obtenemos el id de la propiedad.
     const { idProperty } = req.params;
 
-    //Obtenemos los datos de las reservas de dicha propiedad.
+    //Obtenemos los datos de las fotos de dicha propiedad.
     const [photos] = await connection.query(
       `
       SELECT

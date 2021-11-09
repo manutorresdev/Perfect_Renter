@@ -5,7 +5,7 @@ import { CreateFormData, post, get } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import { Box } from '@mui/system';
+import { Box, styled } from '@mui/system';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -15,6 +15,8 @@ import esEsLocale from 'date-fns/locale/es';
 import { TextField } from '@mui/material';
 
 import { useContext, useEffect, useState } from 'react';
+import MuiDateRangePickerDay from '@mui/lab/DateRangePickerDay';
+import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
 
 export default function ContactProperty({
   form,
@@ -28,6 +30,8 @@ export default function ContactProperty({
 }) {
   const [curr, setCurr] = useState(0);
   const [Value, setPickerValue] = useState([null, null]);
+  const [Bookings, setBookings] = useState();
+  const [days, setDays] = useState([]);
   const [Token] = useContext(TokenContext);
 
   const {
@@ -44,14 +48,13 @@ export default function ContactProperty({
       tel: user.tel,
     },
   });
-  const [Bookings, setBookings] = useState();
-  const [days, setDays] = useState([]);
 
   useEffect(() => {
     get(
       `http://localhost:4000/properties/${property.idProperty}/bookings`,
       (data) => {
-        setBookings(data);
+        setBookings(data.bookings);
+        console.log(data);
       },
       (error) => {
         console.log(error);
@@ -63,10 +66,11 @@ export default function ContactProperty({
   // ARRAY FECHAS MANU
   const arrayFechas = [];
   if (Bookings) {
-    console.log(Bookings);
-    for (const book of Bookings.bookings) {
+    for (const book of Bookings) {
       let day = book.startBookingDate;
-      arrayFechas.push('START BOOKING ' + book.idBooking);
+
+      // arrayFechas.push('START BOOKING ' + book.idBooking);
+      // 25/12/21 - 24/12/21
       while (
         new Date(day).toLocaleDateString() <=
         new Date(book.endBookingDate).toLocaleDateString()
@@ -76,7 +80,7 @@ export default function ContactProperty({
 
         day = addDays(new Date(day), 1);
       }
-      arrayFechas.push(`FIN BOOKING ${book.idBooking}`);
+      // arrayFechas.push(`FIN BOOKING ${book.idBooking}`);
     }
   }
   // ARRAY FECHAS MANU
@@ -103,7 +107,7 @@ export default function ContactProperty({
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
-          setOverlay({ form: '', show: false, propertyInfo: {} });
+          // setOverlay({ form: '', show: false, propertyInfo: {} });
         },
         (error) => {
           console.log(error);
@@ -122,24 +126,24 @@ export default function ContactProperty({
     setCurr(curr === 0 ? Slider.SlideImgs.length - 1 : curr - 1);
   }
 
-  if (message.status === 'ok') {
-    return (
-      <div className='z-20 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
-        <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-          <h2>Ya esta listo!</h2>
-          <h2>{message.message}</h2>
-          <button
-            className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
-            onClick={() => {
-              setOverlay({ form: '', shown: false, propertyInfo: {} });
-            }}
-          >
-            Cerrar
-          </button>
-        </section>
-      </div>
-    );
-  }
+  // if (message.status === 'ok') {
+  //   return (
+  //     <div className='z-20 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
+  //       <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
+  //         <h2>¡Ya esta listo!</h2>
+  //         <h2>{message.message}</h2>
+  //         <button
+  //           className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+  //           onClick={() => {
+  //             setOverlay({ form: '', shown: false, propertyInfo: {} });
+  //           }}
+  //         >
+  //           Cerrar
+  //         </button>
+  //       </section>
+  //     </div>
+  //   );
+  // }
 
   // Styles
   const inpStyle =
@@ -147,7 +151,7 @@ export default function ContactProperty({
   const comentarios = watch('comentarios');
 
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 pb-2 px-2 overscroll-scroll sm:overflow-hidden'>
+    <div className='overlay z-30 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 pb-2 px-2 overscroll-scroll sm:overflow-hidden'>
       <section className='contact shadow-custom pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll w-full md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
@@ -235,64 +239,13 @@ export default function ContactProperty({
             {form === 'reservar' && (
               <label className='flex flex-col gap-2'>
                 <div className='select-none'>Selecciona las fechas:</div>
-
-                <LocalizationProvider
-                  locale={esEsLocale}
-                  dateAdapter={AdapterDateFns}
-                >
-                  <DateRangePicker
-                    disablePast
-                    autoOk={true}
-                    label='Advanced keyboard'
-                    value={Value}
-                    shouldDisableDate={(date) =>
-                      date.getTime() === new Date('2021-11-13').getTime()
-                    }
-                    inputFormat='dd/MM/yyyy'
-                    onChange={(newValue) => {
-                      if (
-                        new Date(newValue[0]).getTime() >
-                        new Date(newValue[1]).getTime()
-                      ) {
-                        console.error(
-                          'Fecha de entrada mayor a fecha de salida'
-                        );
-                      } else if (
-                        new Date(newValue[0]).getTime() ===
-                        new Date(newValue[1]).getTime()
-                      ) {
-                        console.error('Selecciona fechas diferentes');
-                      } else {
-                        console.warn('FECHAS CORRECTAS');
-                        setPickerValue(newValue);
-
-                        // console.log(format(newValue[0], 'yyyy/MM/dd'));
-                        setValue(
-                          'startDate',
-                          format(newValue[0], 'yyyy/MM/dd')
-                        );
-                        setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
-                      }
-                    }}
-                    renderInput={(startProps, endProps) => (
-                      <div className='flex flex-col  sm:flex-row'>
-                        <input
-                          className={inpStyle}
-                          name='startDate'
-                          ref={startProps.inputRef}
-                          {...startProps.inputProps}
-                        />
-                        <Box className='p-2 font-medium self-center'> a </Box>
-                        <input
-                          className={inpStyle}
-                          name='endDate'
-                          ref={endProps.inputRef}
-                          {...endProps.inputProps}
-                        />
-                      </div>
-                    )}
-                  />
-                </LocalizationProvider>
+                <DatePicker
+                  Value={Value}
+                  setPickerValue={setPickerValue}
+                  setValue={setValue}
+                  inpStyle={inpStyle}
+                  arrayFechas={arrayFechas}
+                />
               </label>
             )}
             <label>
@@ -343,7 +296,7 @@ export default function ContactProperty({
           </form>
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
-            <div className='slider flex flex-col items-center justify-center '>
+            <div className='slider flex flex-col w-full items-center justify-center '>
               <div
                 className={`slider-cont ${
                   Slider.Photo ? 'h-full' : 'h-96'
@@ -365,7 +318,6 @@ export default function ContactProperty({
                   ref={Slider.slider}
                   className={`slider-cont overflow-hidden h-full flex transition-all transform ease-in}`}
                 >
-                  {/* Hacer un map con los path que nos llegan pintando img */}
                   {Slider.SlideImgs.map((img, i) => {
                     return (
                       <img
@@ -373,8 +325,8 @@ export default function ContactProperty({
                         className={`${
                           i === curr ? '' : 'absolute opacity-0'
                         } object-cover w-full duration-300 cursor-pointer`}
-                        src={img}
-                        alt='default'
+                        src={'http://192.168.5.103:4000/photo/' + img.name}
+                        alt='house'
                       />
                     );
                   })}
@@ -393,29 +345,97 @@ export default function ContactProperty({
   );
 }
 
-/* 
-function getWeeksAfter(date, amount) {
-  return date ? addWeeks(date, amount) : undefined;
-}
- */
-function MinMaxDateRangePicker({ value, setValue }) {
+function DatePicker({
+  Value,
+  setPickerValue,
+  setValue,
+  inpStyle,
+  arrayFechas,
+}) {
+  // const DateRangePickerDay = MuiDateRangePickerDay;
+  const DateRangePickerDay = styled(MuiDateRangePickerDay)(
+    ({
+      theme,
+      isHighlighting,
+      isStartOfHighlighting,
+      isEndOfHighlighting,
+    }) => ({
+      ...(isHighlighting && {
+        borderRadius: 0,
+        backgroundColor: 'rgb(213, 213, 213)',
+        color: 'white',
+      }),
+      ...(isStartOfHighlighting && {
+        borderTopLeftRadius: '50%',
+        borderBottomLeftRadius: '50%',
+      }),
+      ...(isEndOfHighlighting && {
+        borderTopRightRadius: '50%',
+        borderBottomRightRadius: '50%',
+      }),
+    })
+  );
+
+  function renderWeekPickerDay(date, dateRangePickerDayProps) {
+    if (date.disabled) {
+      return <DateRangePickerDay {...dateRangePickerDayProps} />;
+    } else {
+      return <DateRangePickerDay {...dateRangePickerDayProps} />;
+    }
+  }
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider locale={esEsLocale} dateAdapter={AdapterDateFns}>
       <DateRangePicker
         disablePast
-        value={value}
-        /*  maxDate={getWeeksAfter(value[0], 4)} */
+        autoOk={true}
+        label='Advanced keyboard'
+        value={Value}
+        shouldDisableDate={(date) =>
+          arrayFechas.includes(format(date, 'dd/MM/yyyy'))
+        }
+        renderLoading={() => <CalendarPickerSkeleton />}
+        renderDay={renderWeekPickerDay}
+        inputFormat='dd/MM/yyyy'
         onChange={(newValue) => {
-          setValue(newValue);
+          if (
+            new Date(newValue[0]).getTime() > new Date(newValue[1]).getTime()
+          ) {
+            console.error('Fecha de entrada mayor a fecha de salida');
+          } else if (
+            new Date(newValue[0]).getTime() === new Date(newValue[1]).getTime()
+          ) {
+            console.error('Selecciona fechas diferentes');
+          } else {
+            console.warn('FECHAS CORRECTAS');
+            setPickerValue(newValue);
+
+            if (
+              newValue[0] &&
+              !isNaN(newValue[0].getTime()) &&
+              newValue[1] &&
+              !isNaN(newValue[1].getTime())
+            ) {
+              setValue('startDate', format(newValue[0], 'yyyy/MM/dd'));
+              setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
+            }
+          }
         }}
         renderInput={(startProps, endProps) => (
-          <>
-            <TextField {...startProps} />
-            <Box sx={{ mx: 2 }}> to </Box>
-            <TextField {...endProps} />
-          </>
-        )}
-      />
-    </LocalizationProvider>
-  );
-}
+          <div className='flex flex-col  sm:flex-row'>
+            <input
+              className={inpStyle}
+              name='startDate'
+              autoComplete='off'
+              ref={startProps.inputRef}
+              {...startProps.inputProps}
+            />
+            <Box className='p-2 font-medium self-center'> a </Box>
+            <input
+              className={inpStyle}
+              name='endDate'
+              autoComplete='off'
+              ref={endProps.inputRef}
+              {...endProps.inputProps}
+            />
+          </div>

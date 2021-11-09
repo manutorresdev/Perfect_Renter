@@ -104,7 +104,7 @@ export default function PropertyInfo(props) {
   return (
     <>
       <article className='w-full pb-10 flex bg-gray-200 bg-opacity-20 '>
-        {Overlay.form && (
+        {Overlay.form && Overlay.form !== 'editProperty' && (
           <ContactProperty
             form={Overlay.form}
             setOverlay={setOverlay}
@@ -130,7 +130,11 @@ export default function PropertyInfo(props) {
             EditProperty={property}
           />
         )}
-        {message.status ? <Message message={message} /> : ''}
+        {message.status ? (
+          <Message message={message} setMessage={setMessage} />
+        ) : (
+          ''
+        )}
         <aside
           className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static absolute left-0 top-20 sm:top-0 mt-5 sm:mt-20`}
         >
@@ -170,7 +174,6 @@ export default function PropertyInfo(props) {
                   ref={slider}
                   className={`slider-cont overflow-hidden h-full flex transition-all transform ease-in}`}
                 >
-                  {/* Hacer un map con los path que nos llegan pintando img */}
                   {SlideImgs.length > 1 ? (
                     SlideImgs.map((img, i) => {
                       return (
@@ -260,7 +263,7 @@ export default function PropertyInfo(props) {
             </div>
             {Owner ? (
               <button
-                className={buttonStyle}
+                className={buttonStyle + ' z-0'}
                 onClick={() => {
                   setOverlay({
                     form: 'editProperty',
@@ -273,7 +276,7 @@ export default function PropertyInfo(props) {
             ) : (
               <>
                 <button
-                  className={buttonStyle}
+                  className={buttonStyle + ' z-0'}
                   onClick={() => {
                     setOverlay({
                       form: 'contact',
@@ -304,21 +307,23 @@ export default function PropertyInfo(props) {
   );
 }
 
-function Message({ message }) {
+function Message({ message, setMessage }) {
   if (message.status === 'ok') {
     return (
-      <div className='fixed w-full bg-gray-400 bg-opacity-75 h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-20'>
+      <div className='fixed w-full bg-gray-400 bg-opacity-75 h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-30'>
         <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
           <h2 className='w-full text-center border-b-2 border-gray-200 font-medium'>
             ¡Ya esta listo!
           </h2>
           <h2>{message.message}</h2>
-          <Link
-            to='/'
+          <button
+            onClick={() => {
+              setMessage({ status: '', message: '' });
+            }}
             className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
           >
             Cerrar
-          </Link>
+          </button>
         </section>
       </div>
     );
