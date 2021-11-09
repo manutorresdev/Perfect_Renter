@@ -11,6 +11,9 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { addDays, format } from 'date-fns';
 import esEsLocale from 'date-fns/locale/es';
+
+import { TextField } from '@mui/material';
+
 import { useContext, useEffect, useState } from 'react';
 
 export default function ContactProperty({
@@ -46,7 +49,7 @@ export default function ContactProperty({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
+      `http://localhost:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data);
       },
@@ -82,7 +85,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
+        `http://localhost:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           setMessage(data);
@@ -96,7 +99,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
+        `http://localhost:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -387,5 +390,32 @@ export default function ContactProperty({
         </div>
       </section>
     </div>
+  );
+}
+
+/* 
+function getWeeksAfter(date, amount) {
+  return date ? addWeeks(date, amount) : undefined;
+}
+ */
+function MinMaxDateRangePicker({ value, setValue }) {
+  return (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DateRangePicker
+        disablePast
+        value={value}
+        /*  maxDate={getWeeksAfter(value[0], 4)} */
+        onChange={(newValue) => {
+          setValue(newValue);
+        }}
+        renderInput={(startProps, endProps) => (
+          <>
+            <TextField {...startProps} />
+            <Box sx={{ mx: 2 }}> to </Box>
+            <TextField {...endProps} />
+          </>
+        )}
+      />
+    </LocalizationProvider>
   );
 }

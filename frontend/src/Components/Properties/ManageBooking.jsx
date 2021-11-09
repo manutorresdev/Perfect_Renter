@@ -10,7 +10,7 @@ export default function ManageBokking({ match }) {
 
   function acceptBooking() {
     get(
-      `http://192.168.5.103:4000/properties/${match.params.bookingCode}/accept`,
+      `http://localhost:4000/properties/${match.params.bookingCode}/accept`,
       (data) => {
         alert(data.message);
         setBooking(data);
@@ -25,7 +25,7 @@ export default function ManageBokking({ match }) {
 
   function cancelBooking() {
     get(
-      `http://192.168.5.103:4000/properties/${match.params.bookingCode}/cancel`,
+      `http://localhost:4000/properties/${match.params.bookingCode}/cancel`,
       (data) => {
         // alert(data.message);
         setBooking(data);
@@ -42,12 +42,14 @@ export default function ManageBokking({ match }) {
     if (booking.status === 'error') {
       return (
         <div className='fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
-          <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-            <h2>Parece que hay un error!!!</h2>
-            <h2>{booking.message}</h2>
+          <section className='contact bg-gray-200 h-auto w-56 py-5 px-5 border border-black flex flex-col gap-5  relative items-center sm:w-2/6 sm:h-4/6'>
+            <h2 className='text-4xl text-principal-gris bg-principal-1-hover p-2 '>
+              Parece que hay un error!!!
+            </h2>
+            <h3 className='text-xl text-principal-gris '>{booking.message}</h3>
             <Link
               to='/'
-              className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+              className='border border-gray-400 w-2/3 p-1 mr-2 sm:mr-4 text-principal-gris  bg-principal-1 hover:bg-principal-gris hover:text-white '
             >
               Cerrar
             </Link>
@@ -57,13 +59,17 @@ export default function ManageBokking({ match }) {
     }
     if (booking.status === 'ok') {
       return (
-        <div className=' z-10 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
-          <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-            <h2>Ya esta listo!!!</h2>
-            <h2>{booking.message}</h2>
+        <div className=' fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
+          <section className='contact bg-gray-200 h-auto w-56 py-5 px-5 border border-black flex flex-col gap-5  relative items-center sm:w-2/6 sm:h-4/6'>
+            <h2 className='text-4xl text-principal-gris bg-principal-1-hover p-2 '>
+              Ya esta listo!!!
+            </h2>
+            <h3 className='text-xl text-principal-gris '>
+              {/* {booking.message}  */}
+            </h3>
             <Link
               to='/'
-              className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+              className='border border-gray-400 w-2/3 p-1 mr-2 sm:mr-4 text-principal-gris  bg-principal-1 hover:bg-principal-gris hover:text-white '
             >
               Cerrar
             </Link>
@@ -74,42 +80,64 @@ export default function ManageBokking({ match }) {
     if (match.path.includes('accept')) {
       return (
         <div className='z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
-          <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-            <h2>Felicidades por tu reserva</h2>
-            <h2>Esperamos que sea el Inquilino perfecto</h2>
-            <button
-              className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white w-72'
-              onClick={acceptBooking}
-            >
-              Aceptar reserva!!!
-            </button>
-            <button
-              className='border-2 py-1 px-3 bg-red-400 hover:bg-gray-500 hover:text-white w-72'
-              onClick={cancelBooking}
-            >
-              Cancelar reserva!!!
-            </button>
+          <section className='contact bg-gray-200 h-auto w-56 py-5 px-5 border border-black flex flex-col gap-5  relative items-center sm:w-2/6 sm:h-4/6'>
+            <h2 className='text-4xl text-principal-gris bg-principal-1-hover p-2 '>
+              Felicidades por tu reserva
+            </h2>
+            <h3 className='text-xl text-principal-gris '>
+              Esperamos que sea el Inquilino perfecto
+              <img
+                className='w-56 pt-2 sm:pt-8 sm:ml-20'
+                src='./Images/llaves-de-la-casa-10.jpg'
+                alt='llaves de casa'
+              />
+            </h3>
+            <div className='flex flex-row p-3  sm:flex-row  sm:justify-between gap-4 sm:pt-24 sm:ml-5 sm:mr-5'>
+              <button
+                className='border border-gray-400 w-2/3 p-1 mr-2 sm:mr-4 text-principal-gris  bg-principal-1 hover:bg-principal-gris hover:text-white '
+                onClick={acceptBooking}
+              >
+                Aceptar reserva!!!
+              </button>
+              <button
+                className='border border-gray-400 w-2/3 p-1  ml-2 sm:ml-4 text-principal-gris  bg-red-400 hover:bg-principal-gris hover:text-white '
+                onClick={cancelBooking}
+              >
+                Cancelar reserva!!!
+              </button>
+            </div>
           </section>
         </div>
       );
     } else {
       return (
         <div className='z-10 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
-          <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-            <h2>Piensatelo Bien!!!</h2>
-            <h2>Puede ser el Inquilino Perfecto!!!</h2>
-            <button
-              className='border-2 py-1 px-3 bg-red-400 hover:bg-gray-500 hover:text-white w-72'
-              onClick={cancelBooking}
-            >
-              Cancelar reserva!!!
-            </button>
-            <button
-              className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white w-72'
-              onClick={acceptBooking}
-            >
-              Me lo pense mejor. Reservar!!!
-            </button>
+          <section className='contact bg-gray-200 h-auto w-56 py-5 px-5 border border-black flex flex-col gap-5  relative items-center sm:w-2/6 sm:h-4/6'>
+            <h2 className='text-4xl text-principal-gris bg-principal-1-hover p-2 '>
+              Piensatelo Bien!!!
+            </h2>
+            <h3 className='text-xl text-principal-gris '>
+              Puede ser el Inquilino Perfecto!!!
+              <img
+                className='w-56 pt-2 sm:pt-8 sm:ml-20'
+                src='./Images/llaves-de-la-casa-10.jpg'
+                alt='llaves de casa'
+              />
+            </h3>
+            <div className='flex flex-row p-3  sm:flex-row  sm:justify-between gap-4 sm:pt-24 sm:ml-5 sm:mr-5'>
+              <button
+                className='border border-gray-400 w-2/3 p-1 mr-2 sm:mr-4 text-principal-gris  bg-principal-1 hover:bg-principal-gris hover:text-white '
+                onClick={acceptBooking}
+              >
+                Aceptar reserva!!!
+              </button>
+              <button
+                className='border border-gray-400 w-2/3 p-1  ml-2 sm:ml-4 text-principal-gris  bg-red-400 hover:bg-principal-gris hover:text-white '
+                onClick={cancelBooking}
+              >
+                Cancelar reserva!!!
+              </button>
+            </div>
           </section>
         </div>
       );

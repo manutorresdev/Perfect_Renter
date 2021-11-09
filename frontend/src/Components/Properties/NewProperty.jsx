@@ -11,7 +11,13 @@ import {
   FaRegCalendarAlt,
   FaRegImages,
 } from 'react-icons/fa';
-import { CreateFormData, get, post, put } from '../../Helpers/Api';
+import {
+  CreateFormData,
+  CreateFormDataMultipleFiles,
+  get,
+  post,
+  put,
+} from '../../Helpers/Api';
 import FileProperty from './FileProperty';
 
 export default function NewProperty({ setOverlay, Token, EditProperty }) {

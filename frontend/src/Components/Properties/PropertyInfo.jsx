@@ -52,7 +52,7 @@ export default function PropertyInfo(props) {
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${Number(
+      `http://localhost:4000/properties/${Number(
         props.match.params.idProperty
       )}/photos`,
       (data) => {
@@ -180,7 +180,7 @@ export default function PropertyInfo(props) {
                             i === curr ? '' : 'absolute opacity-0'
                           } object-cover w-full duration-300 cursor-pointer`}
                           onClick={openPhoto}
-                          src={'http://192.168.5.103:4000/photo/' + img.name}
+                          src={'http://localhost:4000/photo/' + img.name}
                           alt='default'
                         />
                       );
@@ -288,6 +288,7 @@ export default function PropertyInfo(props) {
                   onClick={() => {
                     setOverlay({
                       form: 'reservar',
+                      propertyInfo: property,
                     });
                   }}
                 >
