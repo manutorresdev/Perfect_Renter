@@ -126,8 +126,8 @@ export function CreateFormData(body) {
 
 export function CreateFormDataMultipleFiles(files) {
   const formData = new FormData();
-
-  if (files.photos.length > 1) {
+  console.log(files.photos);
+  if (files.photos.length > 0) {
     files.photos.forEach((file) => {
       formData.append('photo', file);
     });

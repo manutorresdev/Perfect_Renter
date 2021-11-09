@@ -71,15 +71,11 @@ function PropertyDescription() {
       <h3 className={sectionTitleStyle}>Alquileres</h3>
       <img className={sectionImgStyle} src='/Images/flat.jpg' alt='' />
       <p className='text-justify'>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis
-        excepturi blanditiis quasi tempore qui et, aperiam, recusandae
-        voluptatum illo, magni aliquid molestias vero ratione distinctio commodi
-        hic deleniti autem quisquam? Repellendus, officia? Fuga quam, provident
-        voluptate laudantium, quis error rem ipsam in labore nobis quaerat autem
-        repellat praesentium excepturi quas possimus voluptates rerum qui
-        mollitia velit nemo corrupti facilis quos. Ut delectus praesentium
-        similique placeat, repellat deserunt quam consectetur neque numquam
-        exercitationem, consequatur
+        Si tienes una vivienda y quieres ponerla en alquiler... ¡Te damos la
+        bienvenida a Perfect Renter! Encontrarás personas interesadas en una
+        vivienda vacacional y personas que lo que buscan es un hogar. Todas con
+        un historial de votaciones que te ayudarán a tomar la mejor decisión.
+        ¡Estamos aquí para que encuentres a tu inquilino perfecto!
       </p>
     </section>
   );
@@ -89,17 +85,14 @@ function RenterDescription() {
   return (
     <section className={sectionStyle}>
       <h3 className={sectionTitleStyle}>Renters</h3>
-      <img className={sectionImgStyle} src='/Images/flat.jpg' alt='' />
+      <img className={sectionImgStyle} src='/Images/familia.jpg' alt='' />
       <p className='text-justify'>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perspiciatis
-        excepturi blanditiis quasi tempore qui et, aperiam, recusandae
-        voluptatum illo, magni aliquid molestias vero ratione distinctio commodi
-        hic deleniti autem quisquam? Repellendus, officia? Fuga quam, provident
-        voluptate laudantium, quis error rem ipsam in labore nobis quaerat autem
-        repellat praesentium excepturi quas possimus voluptates rerum qui
-        mollitia velit nemo corrupti facilis quos. Ut delectus praesentium
-        similique placeat, repellat deserunt quam consectetur neque numquam
-        exercitationem, consequatur
+        Sabemos que encontrar una vivienda puede ser complicado y queremos
+        ponértelo fácil. Tanto si necesitas un lugar en el que pasar unos días,
+        como si lo que buscas es un hogar para ti o tu familia, en Perfect
+        Renter tenemos lo que necesitas. Un catálogo de viviendas con un
+        historial de votaciones de antiguos inquilinos que te ayudarán a
+        encontrar tu vivivienda perfecta.
       </p>
     </section>
   );
@@ -125,8 +118,8 @@ function Banner() {
         <h3 className='text-xl font-light'>Encuentra tu</h3>
         <h1 className='text-4xl text-principal-1'>Inquilino Perfecto</h1>
         <p className='w-4/5 text-base font-light'>
-          Porque tu o tu propiedad merecen ser valorados. Busca pisos e
-          inquilinos, mira sus reseñas y contacta en solo unos Click's.
+          Porque tú o tu propiedad merecen ser valorados. Busca pisos e
+          inquilinos, mira sus reseñas y contacta con solo unos Click's.
         </p>
         <Link
           to='/nosotros'
@@ -154,7 +147,7 @@ function Banner() {
             },
           })}
           placeholder='Escribe aquí tu ciudad favorita...'
-          className='w-full pl-2 bg-principal-1 outline-contras'
+          className='w-full pl-2 bg-gray-300 outline-contras'
         />
         {/* className='w-full pl-2 bg-gray-Primary border border-gray-300 border-opacity-20 text-white' */}
         <FaSearch

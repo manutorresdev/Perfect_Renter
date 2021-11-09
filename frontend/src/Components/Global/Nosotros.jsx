@@ -16,23 +16,23 @@ export default function Nosotros() {
       <div className='separador bg-principal-1 h-9'></div>
       <div className='contenedor flex flex-wrap md:flex-nowrap text-principal-gris p-10 gap-5'>
         <div className='sm:w-full p-3  shadow-md bg-principal-1'>
-          <h1 className='text-xl font-bold'>Que es perfect renter?</h1>
+          <h1 className='text-xl font-bold'>¿Qué es perfect renter?</h1>
           <p className='pt-1 text-justify'>
             Perfect renter nace de la creencia de la información colaborativa y
             la honestidad de las personas para compartir sus experiencias como
-            inquilinos o caseros siempre con respeto y con la unica intención de
-            ayudar a los demas usuarios a encontrar su inquilino o casero
+            inquilinos o caseros. Siempre con respeto y con la única intención
+            de ayudar a los demás usuarios a encontrar su inquilino o casero
             perfecto.
           </p>
         </div>
         <div className=' sm:w-full p-3 shadow-md bg-principal-1'>
-          <h1 className='text-xl font-bold'>Como funciona?</h1>
+          <h1 className='text-xl font-bold'>¿Cómo funciona?</h1>
           <p className='pt-1 text-justify'>
-            Nuestra App esta diseñada como un canal de comunicación entre los
-            caseros, inquilinos y sus propiedades, asi como una base de datos
-            consultable donde podras saber los pros, contras y detalles a tener
-            en cuenta de de las propiedades y usuarios que hacen aprte de
-            nuestra red.
+            Nuestra App está diseñada para ser un canal de comunicación entre
+            los caseros, los inquilinos y sus propiedades. Así como una base de
+            datos consultable donde podrás saber los pros, los contras y los
+            detalles a tener en cuenta tanto de las propiedades como de los
+            usuarios que forman parte de nuestra red.
           </p>
         </div>
       </div>
@@ -56,12 +56,12 @@ export default function Nosotros() {
           </div>
           <div className='relative flex-col  justify-center  text-center  '>
             <img
-              src='./Images/rochi.jpg'
+              src='./Images/rocio.jpg'
               alt=''
               className='w-48 h-48 rounded-full object-cover content-self-center shadow-perfil'
             />
             <h3 className='text-principal-1 text-2xl absolute bottom-7 bg-gray-Primary'>
-              Rochi Iglesias
+              Rocío Iglesias
             </h3>
             <p className='absolute bottom-1 bg-principal-1'>Desarrollo.</p>
           </div>

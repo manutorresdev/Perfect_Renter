@@ -32,11 +32,6 @@ const bookProperty = async (req, res, next) => {
 
     const now = formatDate(new Date());
 
-    console.log('fecha inicial: ', startDate);
-    console.log('fecha final: ', endDate);
-
-    console.log('fecha actual: ', now);
-
     // Comprobamos que los campos obligatorios tengan contenido.
 
     if (!comentarios) {
@@ -86,11 +81,14 @@ const bookProperty = async (req, res, next) => {
         `,
       [startDate, endDate, startDate, endDate]
     );
+
+    console.log(valiDate);
+
     if (valiDate.length > 0) {
       res.send({
-        statu: 'ok',
+        status: 'ok',
         message:
-          'Las fechas seleccionada no estan disponibles para esta propiedad',
+          'Las fechas seleccionadas no estan disponibles para esta propiedad',
       });
     } else {
       const [petition] = await connection.query(
@@ -99,6 +97,7 @@ const bookProperty = async (req, res, next) => {
         `,
         [property[0].idUser, idReqUser, idProperty, startDate, endDate]
       );
+
       // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
       if (petition.length > 0) {
         res.send({
@@ -108,7 +107,6 @@ const bookProperty = async (req, res, next) => {
             'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.',
         });
       } else {
-        console.log('Esta entrando en este else:::::::########');
         // Si el usuario es el dueño de la vivienda, lanzamos error.
         if (idReqUser === Number(property[0].idUser)) {
           const error = new Error(
@@ -176,7 +174,7 @@ const bookProperty = async (req, res, next) => {
       thead {
           height: 20vh;
           width: 100%;
-          background: linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('http://192.168.5.103:4000/photo/portada-nosotros.jpg');
+          background: linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('http://localhost:4000/photo/portada-nosotros.jpg');
           background-repeat: no-repeat;
           background-size: cover;
           background-position: center;
@@ -210,8 +208,6 @@ const bookProperty = async (req, res, next) => {
           flex-direction: column;
           align-items: center;
       }
-  
-  
       @media screen and (min-width: 600px){
           table {
               font-size: calc((100% + 0.25vw));
@@ -223,7 +219,7 @@ const bookProperty = async (req, res, next) => {
      <thead>
           <tr class="thead-tr">
               <td>
-                  <a href="http://192.168.5.103:3000/home" target="__blank" rel="noreferer"><h1 style="margin-bottom: -10px;">Perfect Renter</h1></a>
+                  <a href="http://localhost:3000/home" target="__blank" rel="noreferer"><h1 style="margin-bottom: -10px;">Perfect Renter</h1></a>
                   <h3>El lugar para encontrar tu hogar</h3>
               </td>
           </tr>
@@ -263,12 +259,12 @@ const bookProperty = async (req, res, next) => {
           <tfoot>
             <th>
                 <button>
-                  <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/accept"
+                  <a href="http://localhost:3000/alquileres/${bookingCode}/accept"
                 >ACEPTAR RESERVA</a></button>
                 <span><span/>
                 <span><span/>
                 <button>
-                  <a href="http://192.168.5.103:3000/alquileres/${bookingCode}/cancel"
+                  <a href="http://localhost:3000/alquileres/${bookingCode}/cancel"
                 >CANCELAR RESERVA</a></button>
             </th>
           </tfoot>
@@ -351,37 +347,37 @@ const bookProperty = async (req, res, next) => {
     </table>
     `;
         // Enviamos el correo del usuario que contacta, al usuario a contactar.
-        // if (process.env.NODE_ENV !== 'test') {
-        //   await sendMail({
-        //     to: property[0].email,
-        //     subject: 'Solicitud de reserva.',
-        //     body: emailBody,
-        //   });
+        if (process.env.NODE_ENV !== 'test') {
+          await sendMail({
+            to: property[0].email,
+            subject: 'Solicitud de reserva.',
+            body: emailBody,
+          });
 
-        //   // VALIDAR CORREO USUARIO QUE RESERVA
-        //   await sendMail({
-        //     to: email,
-        //     subject: 'Solicitud de reserva.',
-        //     body: emailBodyReq,
-        //   });
-        // }
+          // VALIDAR CORREO USUARIO QUE RESERVA
+          await sendMail({
+            to: email,
+            subject: 'Solicitud de reserva.',
+            body: emailBodyReq,
+          });
+        }
 
         // Agregamos el código de reserva en la base de datos junto a la posible reserva.
-        // CORREGIDO
-        // await connection.query(
-        //   `
-        // INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
-        // `,
-        //   [
-        //     bookingCode,
-        //     property[0].idUser,
-        //     idReqUser,
-        //     formatDate(new Date()),
-        //     idProperty,
-        //     startDate,
-        //     endDate,
-        //   ]
-        // );
+        await connection.query(
+          `
+      INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
+      `,
+          [
+            bookingCode,
+            property[0].idUser,
+            idReqUser,
+            formatDate(new Date()),
+            idProperty,
+            startDate,
+            endDate,
+          ]
+        );
+
 
         res.send({
           status: 'ok',

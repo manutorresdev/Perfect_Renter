@@ -60,6 +60,7 @@ const {
   getBookings,
   getLocations,
   editBooking,
+  getPhotos,
 } = require('./controllers/properties/index');
 
 /**
@@ -67,6 +68,16 @@ const {
  * ## PROPERTIES ENDPOINTS ##
  * ##########################
  */
+/**
+ * Obtener nombres de fotos de una propiedad
+ *
+ * @name getPhotos
+ * @path {GET} /properties/:idProperty/photos
+ * @params {idProperty} Número del inmueble del que se quiere obtener las fotos
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response Lista de nombres de fotos
+ */
+app.get('/properties/:idProperty/photos', propertyExists, getPhotos);
 /**
  * Añadir un nuevo alquiler
  *
@@ -242,7 +253,7 @@ app.delete(
  * @name deletePropertyPhoto
  * @path {DELETE} /properties/:idProperty/photos/:idPhoto
  * @params {number} idProperty Número del inmueble del que se quiere eliminar una foto
- * @params {number} idPhoto Número de la foto a eliminar
+ * @params {string} photoName Nombre de la foto a eliminar
  * @header Authorization Es la identificación utlizada para llevar a cabo la request
  * @code {200} Si la respuesta es correcta
  * @code {401} Si la autorización del usuario es errónea
@@ -250,7 +261,7 @@ app.delete(
  * @response {Object} Response Elimina la foto del servidor y la base de datos
  */
 app.delete(
-  '/properties/:idProperty/photos/:idPhoto',
+  '/properties/:idProperty/photos/:photoName',
   authUser,
   canEdit,
   deletePropertyPhoto

@@ -11,6 +11,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { addDays, format } from 'date-fns';
 import esEsLocale from 'date-fns/locale/es';
+import { TextField } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import MuiDateRangePickerDay from '@mui/lab/DateRangePickerDay';
 import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
@@ -48,7 +49,7 @@ export default function ContactProperty({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
+      `http://localhost:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data.bookings);
         console.log(data);
@@ -372,6 +373,38 @@ function DatePicker({
     })
   );
 
+function DatePicker({
+  Value,
+  setPickerValue,
+  setValue,
+  inpStyle,
+  arrayFechas,
+}) {
+  // const DateRangePickerDay = MuiDateRangePickerDay;
+  const DateRangePickerDay = styled(MuiDateRangePickerDay)(
+    ({
+      theme,
+      isHighlighting,
+      isStartOfHighlighting,
+      isEndOfHighlighting,
+    }) => ({
+      ...(isHighlighting && {
+        borderRadius: 0,
+        backgroundColor: 'rgb(213, 213, 213)',
+        color: 'white',
+      }),
+      ...(isStartOfHighlighting && {
+        borderTopLeftRadius: '50%',
+        borderBottomLeftRadius: '50%',
+      }),
+      ...(isEndOfHighlighting && {
+        borderTopRightRadius: '50%',
+        borderBottomRightRadius: '50%',
+      }),
+    })
+  );
+
+
   function renderWeekPickerDay(date, dateRangePickerDayProps) {
     if (date.disabled) {
       return <DateRangePickerDay {...dateRangePickerDayProps} />;
@@ -440,3 +473,4 @@ function DatePicker({
     </LocalizationProvider>
   );
 }
+
