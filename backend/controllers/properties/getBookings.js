@@ -33,6 +33,7 @@ const getBookings = async (req, res, next) => {
       idBooking, idRenter, idTenant, state, startBookingDate, endBookingDate
       FROM bookings
       WHERE idProperty = ?
+      ORDER BY startBookingDate
       `,
         [idProperty]
       );

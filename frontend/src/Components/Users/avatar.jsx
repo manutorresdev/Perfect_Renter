@@ -31,7 +31,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
         });
 
         put(
-          `http://localhost:4000/users/${usuario.idUser}`,
+          `http://192.168.5.103:4000/users/${usuario.idUser}`,
           CreateFormData({ avatar: file }),
           (data) => {
             console.log('Success');

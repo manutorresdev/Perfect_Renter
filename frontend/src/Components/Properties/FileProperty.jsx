@@ -1,7 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
-import { CreateFormDataMultipleFiles, post, put } from '../../Helpers/Api';
+import {
+  CreateFormData,
+  CreateFormDataMultipleFiles,
+  post,
+  put,
+} from '../../Helpers/Api';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function FileProperty({
@@ -19,52 +24,27 @@ export default function FileProperty({
 
   function uploadFile(body, e) {
     e.preventDefault();
-    console.log(body);
-    console.log(body.photo[0]);
-    console.log(idProperty);
-    if (body.photo[0]) {
-      post(
-        `http://192.168.5.103:4000/properties/11/photos`,
-        CreateFormData({ photos: body.photo[0] }),
-        (data) => {
-          console.log('Success');
-          alert(data.message);
-          window.location.reload();
-        },
-        (error) => {
-          setError(error.message);
-        },
-        Token
-      );
+
     const photos = [];
 
     Object.keys(body.photo).map((pic, index) => {
       return photos.push(body.photo[index]);
     });
+    post(
+      `http://192.168.5.103:4000/properties/${idProperty}/photos`,
+      CreateFormDataMultipleFiles({
+        photo: [...photos],
+      }),
+      (data) => {
+        console.log('Success');
 
-    if (body.photo) {
-      for (let i = 0; i < body.photo.length; i++) {
-        post(
-          `http://localhost:4000/properties/${idProperty}/photos`,
-          CreateFormDataMultipleFiles({
-            photo: body.photo[i],
-          }),
-
-          (data) => {
-            console.log('Success');
-
-            window.location.reload();
-          },
-          (error) => {
-            setError(error.message);
-          },
-          Token
-        );
-      }
-      /* alert('Las fotos se han subido correctamente'); */
-    } else {
-      setError('Debes seleccionar un archivo.');
-    }
+        window.location.reload();
+      },
+      (error) => {
+        setError(error.message);
+      },
+      Token
+    );
   }
 
   function editFile(body, e) {
@@ -77,7 +57,7 @@ export default function FileProperty({
     });
 
     put(
-      `http://localhost:4000/properties/${editProperty}`,
+      `http://192.168.5.103:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
       (data) => {
         console.log('Sucess');
@@ -158,12 +138,12 @@ export default function FileProperty({
               }}
               type='submit'
               className={`${
-                FileName
+                !Button
                   ? 'bg-principal-1 text-principal-gris cursor-pointer'
                   : 'text-gray-400 select-none pointer-events-none cursor-default'
               } font-medium flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
             >
-              Añadir{Button && <CircularProgress style='width: 10px' />}
+              Añadir{Button && <CircularProgress />}
             </button>
           </form>
         </div>

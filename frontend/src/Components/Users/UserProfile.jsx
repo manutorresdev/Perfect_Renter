@@ -14,7 +14,7 @@ export default function UserProfile({ match, property }) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/users/${match.params.idUser}`,
+      `http://192.168.5.103:4000/users/${match.params.idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -41,7 +41,7 @@ export default function UserProfile({ match, property }) {
               className='w-2/4 rounded-full'
               src={
                 user.avatar
-                  ? `http://localhost:4000/photo/${user.avatar}`
+                  ? `http://192.168.5.103:4000/photo/${user.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt='imagen de perfil'
