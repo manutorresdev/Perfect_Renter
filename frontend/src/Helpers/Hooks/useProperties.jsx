@@ -8,7 +8,7 @@ export default function useProperties() {
   useEffect(() => {
     if (location.search) {
       get(
-        `http://localhost:4000/properties${location.search}`,
+        `http://192.168.5.103:4000/properties${location.search}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setProperty(data.properties);
@@ -20,7 +20,7 @@ export default function useProperties() {
       );
     } else {
       get(
-        'http://localhost:4000/properties',
+        'http://192.168.5.103:4000/properties',
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setProperty(data.properties);

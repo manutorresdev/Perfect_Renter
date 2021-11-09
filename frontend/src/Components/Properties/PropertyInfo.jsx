@@ -7,6 +7,8 @@ import Filters from './Filters';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
 import Property from './Property';
 import { capitalizeFirstLetter } from '../../Helpers/Api';
+import { get } from '../../Helpers/Api';
+import NewProperty from './NewProperty';
 
 export default function PropertyInfo(props) {
   const [pisosVisitados, setPisosVisitados] = useLocalStorage(
@@ -49,12 +51,18 @@ export default function PropertyInfo(props) {
   }
 
   useEffect(() => {
-    setSlideImgs([
-      require('../../Images/defPicture.jpg').default,
-      require('../../Images/defPicture2.jpg').default,
-      require('../../Images/defPicture3.jpg').default,
-    ]);
-  }, []);
+    get(
+      `http://192.168.5.103:4000/properties/${Number(
+        props.match.params.idProperty
+      )}/photos`,
+      (data) => {
+        setSlideImgs(data.photos);
+      },
+      (error) => console.log(error),
+      null
+    );
+  }, [props.match.params.idProperty]);
+
   useEffect(() => {
     const prop = Properties.find(
       (property) =>
@@ -87,7 +95,7 @@ export default function PropertyInfo(props) {
 
   // Styles
   const sliderButtonStyle =
-    'absolute z-0 text-white text-xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md duration-200';
+    'absolute z-10 text-white text-4xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md duration-200';
   const buttonStyle =
     'border-2 py-1 px-3 bg-principal-1 hover:bg-gray-500 hover:text-white duration-200';
 
@@ -115,11 +123,17 @@ export default function PropertyInfo(props) {
             }}
           />
         )}
+        {Overlay.form === 'editProperty' && (
+          <NewProperty
+            setOverlay={setOverlay}
+            Token={props.token}
+            EditProperty={property}
+          />
+        )}
         {message.status ? <Message message={message} /> : ''}
         <aside
           className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static absolute left-0 top-20 sm:top-0 mt-5 sm:mt-20`}
         >
-          {/* acabo de quitar del aside: relative */}
           <FaChevronRight
             className='text-white text-xl w-10 h-full p-2 sm:hidden'
             onClick={() => {
@@ -136,36 +150,48 @@ export default function PropertyInfo(props) {
                   Photo ? 'h-full' : 'h-96'
                 }  transition-all transform ease-linear duration-300`}
               >
-                <button
-                  onClick={right}
-                  className={`${sliderButtonStyle} right-0`}
-                >
-                  <FaAngleRight />
-                </button>
-                <button
-                  onClick={left}
-                  className={`${sliderButtonStyle} left-0`}
-                >
-                  <FaAngleLeft />
-                </button>
+                {SlideImgs.length > 1 && (
+                  <>
+                    <button
+                      onClick={right}
+                      className={`${sliderButtonStyle} right-0`}
+                    >
+                      <FaAngleRight />
+                    </button>
+                    <button
+                      onClick={left}
+                      className={`${sliderButtonStyle} left-0`}
+                    >
+                      <FaAngleLeft />
+                    </button>
+                  </>
+                )}
                 <div
                   ref={slider}
                   className={`slider-cont overflow-hidden h-full flex transition-all transform ease-in}`}
                 >
                   {/* Hacer un map con los path que nos llegan pintando img */}
-                  {SlideImgs.map((img, i) => {
-                    return (
-                      <img
-                        key={i}
-                        className={`${
-                          i === curr ? '' : 'absolute opacity-0'
-                        } object-cover w-full duration-300 cursor-pointer`}
-                        onClick={openPhoto}
-                        src={img}
-                        alt='default'
-                      />
-                    );
-                  })}
+                  {SlideImgs.length > 1 ? (
+                    SlideImgs.map((img, i) => {
+                      return (
+                        <img
+                          key={i}
+                          className={`${
+                            i === curr ? '' : 'absolute opacity-0'
+                          } object-cover w-full duration-300 cursor-pointer`}
+                          onClick={openPhoto}
+                          src={'http://192.168.5.103:4000/photo/' + img.name}
+                          alt='default'
+                        />
+                      );
+                    })
+                  ) : (
+                    <img
+                      className='w-auto sm:max-w-xs object-cover'
+                      src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+                      alt='default home'
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -206,7 +232,7 @@ export default function PropertyInfo(props) {
             <p>Ya has visitado este piso.</p>
           )} */}
           </div>
-          <div className='buttons-cont p-5 flex justify-around items-center'>
+          <div className='buttons-cont z-20 font-medium p-5 flex justify-around items-center'>
             <div className='grid grid-cols-2 grid-rows-2 gap-1 fixed right-5 bottom-0 select-none z-10'>
               <Link
                 to={`/alquileres/${Number(props.match.params.idProperty) - 1}`}
@@ -236,10 +262,10 @@ export default function PropertyInfo(props) {
               <button
                 className={buttonStyle}
                 onClick={() => {
-                  // setOverlay({
-                  //   form: 'editar',
-                  //   propertyInfo: property,
-                  // });
+                  setOverlay({
+                    form: 'editProperty',
+                    propertyInfo: property,
+                  });
                 }}
               >
                 Editar
@@ -262,7 +288,6 @@ export default function PropertyInfo(props) {
                   onClick={() => {
                     setOverlay({
                       form: 'reservar',
-                      propertyInfo: property,
                     });
                   }}
                 >

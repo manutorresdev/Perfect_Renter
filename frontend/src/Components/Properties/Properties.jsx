@@ -32,7 +32,11 @@ export default function Properties() {
         <div className='cont-alquileres  justify-center flex flex-wrap w-full gap-5'>
           {Properties.length > 0 ? (
             Properties.map((property) => (
-              <Property key={property.idProperty} property={property} />
+              <Property
+                key={property.idProperty}
+                property={property}
+                mountOn={'propertiesList'}
+              />
             ))
           ) : (
             <div>No hay conicidencias para su busqueda.</div>
