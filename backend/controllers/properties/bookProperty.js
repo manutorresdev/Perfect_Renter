@@ -81,7 +81,9 @@ const bookProperty = async (req, res, next) => {
         `,
       [startDate, endDate, startDate, endDate]
     );
+
     console.log(valiDate);
+
     if (valiDate.length > 0) {
       res.send({
         status: 'ok',

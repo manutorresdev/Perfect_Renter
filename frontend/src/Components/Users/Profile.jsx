@@ -410,7 +410,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
           return (
             <span key={booking.idBooking} className='max-w-xs'>
               <article
-                className={`animate-fadeIn h-1/3 max-w-xs flex flex-col items-start justify-between shadow-2xl
+                className={`animate-fadeIn shadow-custom h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
                 lg:flex-row lg:max-w-md lg:w-full`}
               >

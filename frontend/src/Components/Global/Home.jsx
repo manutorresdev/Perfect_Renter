@@ -154,7 +154,7 @@ function Banner() {
             },
           })}
           placeholder='Escribe aquí tu ciudad favorita...'
-          className='w-full pl-2 bg-principal-1 outline-contras'
+          className='w-full pl-2 bg-gray-200 outline-contras'
         />
         {/* className='w-full pl-2 bg-gray-Primary border border-gray-300 border-opacity-20 text-white' */}
         <FaSearch

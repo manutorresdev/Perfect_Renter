@@ -31,7 +31,7 @@ export default function Property({
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
           setSlideImgs(data.photos.slice(0, 5));
-        } else if (data.status === 'ok' && mountOn === 'propertyInfo') {
+        } else if (data.status === 'ok' && mountOn !== 'propertiesList') {
           setSlideImgs(data.photos);
         }
       },
@@ -70,11 +70,11 @@ export default function Property({
 
   return (
     <article
-      className={`cont-vivienda overflow-hidden border-2 max-w-custom sm:max-w-none border-white bg-white sm:w-auto min-w-min ${
-        mountOn === 'profile' ? ' md:max-h-96 ' : ' h-96'
-      } hover:max-h-full my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-300`}
+      className={`cont-vivienda overflow-hidden border-2 max-w-xs bg-white sm:w-auto min-w-min ${
+        mountOn === 'profile' ? ' md:max-h-96 ' : ''
+      } hover:max-h-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`}
     >
-      {Overlay.form === 'newProperty' && (
+      {Overlay.form === 'editProperty' && (
         <NewProperty
           setOverlay={setOverlay}
           Token={token}
@@ -96,7 +96,7 @@ export default function Property({
         </button>
         <div
           ref={slider}
-          className={`slider-cont min-w-xxs h-40 flex transition-all transform ease-in}`}
+          className={`slider-cont min-w-xxs h-48 flex transition-all transform ease-in}`}
         >
           {SlideImgs.length > 0 ? (
             SlideImgs.slice(0, 5).map((img, i) => {
@@ -113,7 +113,7 @@ export default function Property({
             })
           ) : (
             <img
-              className='w-auto sm:max-w-xs object-cover'
+              className='object-cover w-full'
               src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
               alt='default home'
             />
@@ -129,7 +129,7 @@ export default function Property({
             </h3>
             <h3>{Number(property.price)} €/mes</h3>
           </div>
-          <div className='pl-2 pb-2'>
+          <div className='pl-2'>
             {property.province}
             <div className='text-black font-medium'>
               {`${property.mts}m² - ${property.rooms} habitaciones - ${
@@ -155,7 +155,7 @@ export default function Property({
             <button
               className='text-xl p-4 hover:text-blue-700'
               onClick={() => {
-                setOverlay({ shown: true, form: 'newProperty' });
+                setOverlay({ shown: true, form: 'editProperty' });
               }}
             >
               <FaPencilAlt />

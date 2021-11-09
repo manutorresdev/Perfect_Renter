@@ -1,3 +1,4 @@
+import { CircularProgress } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -11,7 +12,7 @@ import {
   FaRegCalendarAlt,
   FaRegImages,
 } from 'react-icons/fa';
-import { CreateFormData, get, post, put } from '../../Helpers/Api';
+import { CreateFormData, del, get, post, put } from '../../Helpers/Api';
 import FileProperty from './FileProperty';
 
 export default function NewProperty({ setOverlay, Token, EditProperty }) {
@@ -77,6 +78,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
     form: '',
   });
 
+  const [Loader, setLoader] = useState(false);
   // Provincias
   const [Provinces, setProvinces] = useState([]);
   const provRef = useRef(null);
@@ -91,6 +93,9 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const [lastProperty, setLastProperty] = useState('');
   const [Error, setError] = useState('');
   const cpRef = useRef(null);
+
+  // Fotos en caso de entrar en EditProperty
+  const [Photos, setPhotos] = useState([]);
 
   function onSubmitProperty(body, e) {
     post(
@@ -137,13 +142,45 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
       (data) => {
         setProvinces(data.provinces);
         setCities(data.cities);
-        console.log('\x1b[45m%%%%%%%', data.provinces);
       },
       (error) => {
-        console.log('\x1b[43m########\x1b[30m', error);
+        console.error(error);
       }
     );
   }, []);
+
+  useEffect(() => {
+    if (EditProperty) {
+      get(
+        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos`,
+        (data) => {
+          if (data.status === 'ok') {
+            setPhotos(data.photos);
+          }
+        }
+      );
+    }
+  }, [EditProperty]);
+
+  function deletePhoto(name) {
+    del(
+      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos/${name}`,
+      null,
+      (data) => {
+        if (data.status === 'ok') {
+          setPhotos(Photos.filter((photo) => photo.name !== name));
+          setTimeout(() => {
+            setLoader(false);
+          }, 1500);
+        }
+      },
+      (error) => {
+        console.warn(error);
+      },
+      Token
+    );
+  }
+
   // Province React Hook Form
   const {
     onChange: onChangeProvince,
@@ -194,12 +231,22 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   return (
     <div className='overlay z-30 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
+      ´
+      {Loader && (
+        <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
+          <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
+        </div>
+      )}
       {file.form === 'FileProperty' && (
         <FileProperty
           setOverlay={setOverlay}
           Token={Token}
           idProperty={lastProperty}
           editProperty={EditProperty && EditProperty.idProperty}
+          setFile={setFile}
+          photos={Photos}
+          deletePhoto={deletePhoto}
+          setLoaderDiv={setLoader}
         />
       )}
       <section className='pt-20 border-2 shadow-custom border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll  md:w-4/6'>
@@ -344,7 +391,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                             city.cp.length === 4
                               ? (cpRef.current.value = `0${city.cp}`)
                               : (cpRef.current.value = city.cp);
-                            // setCitiesOverlay(false);
                           }}
                         >
                           {city.poblacion},{' '}
@@ -474,7 +520,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                 placeholder='Escalera'
                 {...register('stair', {
                   pattern: {
-                    /* value: /^\s?\+?\s?([0-9\s]*){9,}$/, */
                     message: 'Debes introducir un número válido.',
                   },
                 })}
@@ -486,7 +531,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                 placeholder='Puerta'
                 {...register('gate', {
                   pattern: {
-                    /* value: /^\s?\+?\s?([0-9\s]*){9,}$/, */
                     message: 'Debes introducir un número válido.',
                   },
                 })}
@@ -605,11 +649,15 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
             </div>
             <h6 className={inputsLabelStyle}>
               <FaRegImages className='min-w-min m-1 sm:m-0' />
-              ¡Sube fotos para que vean cómo es!
+              {EditProperty
+                ? 'Fotografías de la vivienda'
+                : '¡Sube fotos para que vean cómo es!'}
             </h6>
-            <button
+            <div
               className={inpStyle + ' flex items-center justify-between'}
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 setFile({
                   shown: true,
                   userInfo: '',
@@ -617,9 +665,39 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                 });
               }}
             >
-              La primera fotografía será la principal
-              <FaCamera className='text-4xl' />
-            </button>
+              {!EditProperty && 'La primera fotografía será la principal'}
+              <div className='flex flex-wrap gap-2 justify-center'>
+                {EditProperty && Photos
+                  ? Photos.map((photo) => {
+                      return (
+                        <div key={photo.name} className='relative'>
+                          <button
+                            className='delete-photo absolute top-0 right-0 bg-principal-1'
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              deletePhoto(photo.name);
+                              setLoader(true);
+                            }}
+                          >
+                            <FaPlus className='transform rotate-45' />
+                          </button>
+                          <img
+                            src={
+                              'http://192.168.5.103:4000/photo/' + photo.name
+                            }
+                            alt='prueba'
+                            className='w-20 h-20 object-cover'
+                          />
+                        </div>
+                      );
+                    })
+                  : ''}
+              </div>
+              <FaCamera
+                className={`text-4xl ${EditProperty && 'w-80'} cursor-pointer`}
+              />
+            </div>
 
             <p className={inputsLabelStyle}>
               <FaMoneyCheckAlt />
@@ -680,26 +758,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
               />
             </div>
           </form>
-          {EditProperty && (
-            <div>
-              <h6 className={inputsLabelStyle}>
-                ¡Añade nuevas fotos a tu inmueble!
-              </h6>
-              <button
-                className={inpStyle}
-                onClick={() => {
-                  setFile({
-                    shown: true,
-                    userInfo: '',
-                    form: 'FileProperty',
-                  });
-                }}
-              >
-                La primera fotografía será la principal
-                <FaCamera className='text-4xl ml-10 mb-4' />
-              </button>{' '}
-            </div>
-          )}
         </div>
       </section>
     </div>

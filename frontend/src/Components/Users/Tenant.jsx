@@ -5,7 +5,7 @@ import { capitalizeFirstLetter } from '../../Helpers/Api';
 
 export default function Tenant({ user, setOverlay, relation }) {
   return (
-    <article className='user-card flex gap-2 text-xs items-center p-1 bg-gray-100 bg-opacity-30'>
+    <article className='user-card flex gap-2 text-xs shadow-custom items-center p-1 bg-gray-100 bg-opacity-30'>
       <div className='user-info-cont flex items-center font-medium relative flex-grow-0 md:flex-grow w-9/12'>
         <Link className='user-avatar ' to={`/inquilinos/${user.idUser}`}>
           <img
@@ -43,9 +43,9 @@ export default function Tenant({ user, setOverlay, relation }) {
           natus eaque rem ad, minima iure.
         </p>
       </div>
-      <div className='buttons-cont flex flex-col justify-around w-full h-full'>
+      <div className='buttons-cont flex flex-col items-end justify-around w-full h-full'>
         <button
-          className='bg-principal-1 self-center px-2 py-2 font-medium'
+          className='bg-principal-1 px-5 hover:px-7 duration-300  py-2 font-medium rounded-bl-md rounded-tl-md'
           onClick={() => {
             setOverlay({ shown: true, info: user, form: 'contact' });
           }}
@@ -54,7 +54,7 @@ export default function Tenant({ user, setOverlay, relation }) {
         </button>
         {relation.length > 0 && (
           <button
-            className='bg-principal-1 self-center px-2 py-1 fm font-medium'
+            className='bg-principal-1 px-7 hover:px-8 duration-300 py-2 fm font-medium rounded-bl-md rounded-tl-md'
             onClick={() => {
               setOverlay({
                 shown: true,

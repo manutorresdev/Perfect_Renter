@@ -105,7 +105,7 @@ export default function UsersList() {
         <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
           Inquilinos
         </h1>
-        <div className='flex flex-col gap-5 justify-center items-center'>
+        <div className='flex flex-col gap-5 justify-center items-center pt-2'>
           {!Loaded &&
             Array(10)
               .fill(null)
