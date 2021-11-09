@@ -15,7 +15,7 @@ export default function ContactUs() {
   function onSubmit(body, e) {
     e.preventDefault();
     post(
-      'http://192.168.5.103:4000/contact',
+      'http://localhost:4000/contact',
       CreateFormData(body),
       (data) => {
         console.log(data);
@@ -42,11 +42,11 @@ export default function ContactUs() {
           <h1 className='w-3/4 self-center font-medium text-3xl border-b-4 border-gray-700'>
             Contacto
           </h1>
-          <p className='pt-4'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi
-            mollitia saepe consequatur molestiae animi. Nihil, ea vitae totam
-            voluptate tempora omnis animi earum sequi iste, maiores cum officia
-            sunt est.
+          <p className='pt-4 text-xl'>
+            El equipo de Perfect Renter está encantado de que te pongas en
+            contacto con nosotros para cualquier duda o sugerencia que quieras
+            transmitirnos.
+            <br /> Intentaremos responderte en la mayor brevedad posible.
           </p>
         </div>
         <form

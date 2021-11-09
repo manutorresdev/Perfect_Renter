@@ -47,7 +47,7 @@ export default function Profile({ token, setToken }) {
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
+      `http://localhost:4000/users/${parseJwt(token).idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -56,7 +56,7 @@ export default function Profile({ token, setToken }) {
     );
     if (User.idUser) {
       get(
-        `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
+        `http://localhost:4000/users/${User.idUser}/bookings`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -70,7 +70,7 @@ export default function Profile({ token, setToken }) {
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://192.168.5.103:4000/users/${User.idUser}`,
+      `http://localhost:4000/users/${User.idUser}`,
       body,
       (data) => {
         setToken('');
@@ -150,7 +150,7 @@ export default function Profile({ token, setToken }) {
             className='w-full h-full rounded-full'
             src={
               User.avatar
-                ? `http://192.168.5.103:4000/photo/${User.avatar}`
+                ? `http://localhost:4000/photo/${User.avatar}`
                 : require('../../Images/defProfile.png').default
             }
             alt='perfil de usuario'
@@ -306,7 +306,7 @@ function Delete({ setOverlay, Overlay, usuario }) {
 
   function onSubmit(body) {
     post(
-      'http://192.168.5.103:4000/users/login',
+      'http://localhost:4000/users/login',
       CreateFormData(body),
       (data) => {
         data.status === 'ok' && setCanDelete(true);
@@ -511,7 +511,7 @@ function CancelBooking({ setOverlay, info, Token }) {
 
   function Confirm(bookingCode) {
     get(
-      `http://192.168.5.103:4000/properties/${bookingCode}/cancel`,
+      `http://localhost:4000/properties/${bookingCode}/cancel`,
       (data) => {
         setMessage(data.message);
         setOverlay({ shown: false, info: {}, form: '' });
@@ -640,7 +640,7 @@ function EditBooking({ setOverlay, info, Token }) {
           email: info.email,
         };
         put(
-          `http://192.168.5.103:4000/properties/${info.idProperty}/${bookingCode}`,
+          `http://localhost:4000/properties/${info.idProperty}/${bookingCode}`,
           CreateFormData(body),
           (data) => {
             if (data.status === 'ok') {

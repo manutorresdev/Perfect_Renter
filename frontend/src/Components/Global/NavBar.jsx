@@ -156,7 +156,7 @@ export default function NavBar({ token, setToken }) {
 //     // if (body.photo) {
 //     //   for (let i = 0; i < body.photo.length; i++) {
 //     //     post(
-//     //       `http://192.168.5.103:4000/properties/${idProperty}/photos`,
+//     //       `http://localhost:4000/properties/${idProperty}/photos`,
 //     //       CreateFormData({
 //     //         photo: body.photo[i],
 //     //       }),
@@ -188,7 +188,7 @@ export default function NavBar({ token, setToken }) {
 //     });
 
 //     put(
-//       `http://192.168.5.103:4000/properties/${editProperty}`,
+//       `http://localhost:4000/properties/${editProperty}`,
 //       CreateFormData({ photos: [...photos] }),
 //       (data) => {
 //         console.log('Sucess');
@@ -204,7 +204,7 @@ export default function NavBar({ token, setToken }) {
 //     // if (body.photo) {
 //     //   for (let i = 0; i < body.photo.length; i++) {
 //     //     put(
-//     //       `http://192.168.5.103:4000/properties/${editProperty}`,
+//     //       `http://localhost:4000/properties/${editProperty}`,
 //     //       CreateFormData({
 //     //         photo: body.photo[i],
 //     //       }),
