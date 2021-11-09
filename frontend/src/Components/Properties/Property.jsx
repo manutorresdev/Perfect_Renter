@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { get } from 'react-hook-form';
 import {
   FaAngleLeft,
   FaAngleRight,
@@ -8,7 +7,7 @@ import {
   FaTrash,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { del } from '../../Helpers/Api';
+import { del, get } from '../../Helpers/Api';
 import NewProperty from './NewProperty';
 
 export default function Property({
@@ -16,6 +15,7 @@ export default function Property({
   token,
   profileOverlay,
   setProfileOverlay,
+  mountOn,
 }) {
   const [curr, setCurr] = useState(0);
   const [SlideImgs, setSlideImgs] = useState([]);
@@ -24,20 +24,25 @@ export default function Property({
     shown: false,
     form: '',
   });
-  console.log(property);
 
-  /*   get(
-    `http://localhost:4000/photo/${}`,
-    (data) => {
-      setSlideImgs(data);
-      console.log(data);
-    },
-    (error) => console.log(error),
-    token
-  );  */
-  console.log(SlideImgs);
+  useEffect(() => {
+    get(
+      `http://localhost:4000/properties/${property.idProperty}/photos`,
+      (data) => {
+        if (data.status === 'ok' && mountOn === 'propertiesList') {
+          setSlideImgs(data.photos.slice(0, 5));
+        } else if (data.status === 'ok' && mountOn === 'propertyInfo') {
+          setSlideImgs(data.photos);
+        }
+      },
+      (error) => console.log(error),
+      null
+    );
+  }, [property.idProperty, mountOn]);
   function right() {
     console.log('\x1b[43m########\x1b[30m', 'RIGHT');
+    console.log(curr);
+    console.log('\x1b[45m%%%%%%%', SlideImgs.length);
     setCurr(curr === SlideImgs.length - 1 ? 0 : curr + 1);
   }
 
@@ -64,7 +69,11 @@ export default function Property({
   }
 
   return (
-    <article className='cont-vivienda overflow-hidden border-2 max-w-custom sm:max-w-none border-white bg-white sm:w-auto min-w-min hover:max-h-full my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-300'>
+    <article
+      className={`cont-vivienda overflow-hidden border-2 max-w-custom sm:max-w-none border-white bg-white sm:w-auto min-w-min ${
+        mountOn === 'profile' ? ' md:max-h-96 ' : ' h-96'
+      } hover:max-h-full my-5 shadow-2xl text-gray-400 hover:text-gray-900 duration-300`}
+    >
       {Overlay.form === 'newProperty' && (
         <NewProperty
           setOverlay={setOverlay}
@@ -87,21 +96,28 @@ export default function Property({
         </button>
         <div
           ref={slider}
-          className={`slider-cont min-w-xxs flex transition-all transform ease-in}`}
+          className={`slider-cont min-w-xxs h-40 flex transition-all transform ease-in}`}
         >
-          {/* Hacer un map con los path que nos llegan pintando img */}
-          {SlideImgs.map((img, i) => {
-            return (
-              <img
-                key={i}
-                className={`${
-                  i === curr ? '' : 'absolute opacity-0'
-                } w-auto sm:max-w-xs object-cover duration-300`}
-                src={img}
-                alt='default'
-              />
-            );
-          })}
+          {SlideImgs.length > 0 ? (
+            SlideImgs.slice(0, 5).map((img, i) => {
+              return (
+                <img
+                  key={i}
+                  className={`${
+                    i === curr ? '' : 'absolute opacity-0'
+                  } object-cover w-full duration-300`}
+                  src={'http://localhost:4000/photo/' + img.name}
+                  alt='default'
+                />
+              );
+            })
+          ) : (
+            <img
+              className='w-auto sm:max-w-xs object-cover'
+              src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+              alt='default home'
+            />
+          )}
         </div>
       </div>
 

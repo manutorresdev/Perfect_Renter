@@ -198,9 +198,9 @@ export default function Profile({ token, setToken }) {
       <div className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25 '>
         ALQUILERES
       </div>
-      <div>
+      <div className='flex flex-col'>
         <section className='alquileres'>
-          <div className='flex flex-col lg:flex-row'>
+          <div className='flex flex-col lg:flex-row md:h-60vh'>
             <div className='contenedor-alquileres flex flex-wrap justify-center gap-5 sm:max-w-none sm:justify-start sm:pl-2 px-2 pb-10'>
               {propiedadUsuario.length > 0 ? (
                 propiedadUsuario.map((property) => (
@@ -210,6 +210,7 @@ export default function Profile({ token, setToken }) {
                     key={property.idProperty}
                     property={property}
                     token={token}
+                    mountOn={'profile'}
                   />
                 ))
               ) : (

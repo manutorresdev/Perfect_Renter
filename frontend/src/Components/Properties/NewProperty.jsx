@@ -11,7 +11,13 @@ import {
   FaRegCalendarAlt,
   FaRegImages,
 } from 'react-icons/fa';
-import { CreateFormData, get, post, put } from '../../Helpers/Api';
+import {
+  CreateFormData,
+  CreateFormDataMultipleFiles,
+  get,
+  post,
+  put,
+} from '../../Helpers/Api';
 import FileProperty from './FileProperty';
 
 export default function NewProperty({ setOverlay, Token, EditProperty }) {
@@ -88,14 +94,13 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const [Cities, setCities] = useState([]);
   const [CitiesFound, setFound] = useState([]);
   const [CitiesOverlay, setCitiesOverlay] = useState(false);
-
   const [lastProperty, setLastProperty] = useState('');
   const [Error, setError] = useState('');
   const cpRef = useRef(null);
 
   function onSubmitProperty(body, e) {
     post(
-      'http://localhost:4000/properties',
+      'http://192.168.5.103:4000/properties',
       CreateFormData(body),
       (data) => {
         reset();
@@ -118,7 +123,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
     e.preventDefault();
 
     put(
-      `http://localhost:4000/properties/${EditProperty.idProperty}`,
+      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess');
@@ -134,7 +139,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   useEffect(() => {
     get(
-      'http://localhost:4000/properties/location',
+      'http://192.168.5.103:4000/properties/location',
       (data) => {
         setProvinces(data.provinces);
         setCities(data.cities);
@@ -194,7 +199,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const description = watch('description');
 
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
+    <div className='overlay z-30 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
       {file.form === 'FileProperty' && (
         <FileProperty
           setOverlay={setOverlay}

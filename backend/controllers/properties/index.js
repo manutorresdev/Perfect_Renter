@@ -15,9 +15,11 @@ const contactProperty = require('./contactProperty');
 const getBookings = require('./getBookings');
 const getLocations = require('./getLocations');
 const editBooking = require('./editBooking');
+const getPhotos = require('./getPhotos');
 
 module.exports = {
   addPropertyPhoto,
+  getPhotos,
   contactProperty,
   bookProperty,
   newProperty,

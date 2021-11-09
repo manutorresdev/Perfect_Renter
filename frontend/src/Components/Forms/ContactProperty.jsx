@@ -9,10 +9,12 @@ import { Box } from '@mui/system';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 import esEsLocale from 'date-fns/locale/es';
-import { useContext, useState } from 'react';
+
 import { TextField } from '@mui/material';
+
+import { useContext, useEffect, useState } from 'react';
 
 export default function ContactProperty({
   form,
@@ -42,33 +44,42 @@ export default function ContactProperty({
       tel: user.tel,
     },
   });
-  // const [Bookings, setBookings] = useState();
-  // get(
-  //   `http://localhost:4000/properties/${property.idProperty}/bookings`,
-  //   (data) => {
-  //     console.log(data.message);
-  //     setBookings(data);
-  //   },
-  //   (error) => {
-  //     console.log(error);
-  //   },
-  //   Token
-  // );
-  // useEffect(() => {
-  //   get(
-  //     `http://localhost:4000/properties/${property.idProperty}/bookings`,
-  //     (data) => {
-  //       console.log(data.message);
-  //       setBookings(data);
-  //     },
-  //     (error) => {
-  //       console.log(error);
-  //     },
-  //     Token
-  //   );
-  // }, [Token, property.idProperty]);
+  const [Bookings, setBookings] = useState();
+  const [days, setDays] = useState([]);
 
-  // console.log('\x1b[45m%%%%%%%', property.idProperty, Bookings);
+  useEffect(() => {
+    get(
+      `http://localhost:4000/properties/${property.idProperty}/bookings`,
+      (data) => {
+        setBookings(data);
+      },
+      (error) => {
+        console.log(error);
+      },
+      Token
+    );
+  }, [Token, property.idProperty]);
+
+  // ARRAY FECHAS MANU
+  const arrayFechas = [];
+  if (Bookings) {
+    console.log(Bookings);
+    for (const book of Bookings.bookings) {
+      let day = book.startBookingDate;
+      arrayFechas.push('START BOOKING ' + book.idBooking);
+      while (
+        new Date(day).toLocaleDateString() <=
+        new Date(book.endBookingDate).toLocaleDateString()
+      ) {
+        // setDays([...days, new Date(day).toLocaleDateString()]);
+        arrayFechas.push(new Date(day).toLocaleDateString());
+
+        day = addDays(new Date(day), 1);
+      }
+      arrayFechas.push(`FIN BOOKING ${book.idBooking}`);
+    }
+  }
+  // ARRAY FECHAS MANU
 
   function onSubmit(body, e) {
     e.preventDefault();
@@ -381,6 +392,7 @@ export default function ContactProperty({
     </div>
   );
 }
+
 /* 
 function getWeeksAfter(date, amount) {
   return date ? addWeeks(date, amount) : undefined;

@@ -60,6 +60,7 @@ const {
   getBookings,
   getLocations,
   editBooking,
+  getPhotos,
 } = require('./controllers/properties/index');
 
 /**
@@ -67,6 +68,16 @@ const {
  * ## PROPERTIES ENDPOINTS ##
  * ##########################
  */
+/**
+ * Obtener nombres de fotos de una propiedad
+ *
+ * @name getPhotos
+ * @path {GET} /properties/:idProperty/photos
+ * @params {idProperty} Número del inmueble del que se quiere obtener las fotos
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response Lista de nombres de fotos
+ */
+app.get('/properties/:idProperty/photos', propertyExists, getPhotos);
 /**
  * Añadir un nuevo alquiler
  *
