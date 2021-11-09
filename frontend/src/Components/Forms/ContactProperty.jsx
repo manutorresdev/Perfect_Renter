@@ -11,7 +11,8 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { format } from 'date-fns';
 import esEsLocale from 'date-fns/locale/es';
-
+import { useContext, useState } from 'react';
+import { TextField } from '@mui/material';
 
 export default function ContactProperty({
   form,
@@ -26,7 +27,6 @@ export default function ContactProperty({
   const [curr, setCurr] = useState(0);
   const [Value, setPickerValue] = useState([null, null]);
   const [Token] = useContext(TokenContext);
-  const [Value, setPickerValue] = useState([null, null]);
 
   const {
     handleSubmit,
@@ -35,7 +35,6 @@ export default function ContactProperty({
     setValue,
     formState: { errors },
     control,
-    setValue,
   } = useForm({
     defaultValues: {
       email: user.email,
@@ -130,7 +129,6 @@ export default function ContactProperty({
       </div>
     );
   }
-
 
   // Styles
   const inpStyle =
@@ -239,7 +237,6 @@ export default function ContactProperty({
                     shouldDisableDate={(date) =>
                       date.getTime() === new Date('2021-11-13').getTime()
                     }
-
                     inputFormat='dd/MM/yyyy'
                     onChange={(newValue) => {
                       if (
@@ -267,9 +264,7 @@ export default function ContactProperty({
                       }
                     }}
                     renderInput={(startProps, endProps) => (
-
                       <div className='flex flex-col  sm:flex-row'>
-
                         <input
                           className={inpStyle}
                           name='startDate'
@@ -386,18 +381,18 @@ export default function ContactProperty({
     </div>
   );
 }
-
+/* 
 function getWeeksAfter(date, amount) {
   return date ? addWeeks(date, amount) : undefined;
 }
-
+ */
 function MinMaxDateRangePicker({ value, setValue }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DateRangePicker
         disablePast
         value={value}
-        maxDate={getWeeksAfter(value[0], 4)}
+        /*  maxDate={getWeeksAfter(value[0], 4)} */
         onChange={(newValue) => {
           setValue(newValue);
         }}

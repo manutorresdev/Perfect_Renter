@@ -19,12 +19,12 @@ export default function FileProperty({
 
   function uploadFile(body, e) {
     e.preventDefault();
-    console.log(body);
+    /* console.log(body);
     console.log(body.photo[0]);
     console.log(idProperty);
     if (body.photo[0]) {
       post(
-        `http://192.168.5.103:4000/properties/11/photos`,
+        `http://localhost:4000/properties/11/photos`,
         CreateFormData({ photos: body.photo[0] }),
         (data) => {
           console.log('Success');
@@ -35,7 +35,7 @@ export default function FileProperty({
           setError(error.message);
         },
         Token
-      );
+      ); */
     const photos = [];
 
     Object.keys(body.photo).map((pic, index) => {
