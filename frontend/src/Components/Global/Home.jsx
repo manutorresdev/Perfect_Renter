@@ -125,12 +125,12 @@ function Banner() {
             },
           })}
           placeholder='Escribe aquí tu ciudad favorita...'
-          className='w-full pl-2 bg-gray-300 outline-contras'
+          className='w-full pl-2 p-2 bg-gray-300 outline-contras'
         />
         {/* className='w-full pl-2 bg-gray-Primary border border-gray-300 border-opacity-20 text-white' */}
         <FaSearch
           onClick={handleSubmit(onSubmit)}
-          className='text-gray-900 absolute top-1 right-2 cursor-pointer'
+          className='text-gray-900 absolute top-3 right-2 cursor-pointer'
         />
       </form>
     </div>

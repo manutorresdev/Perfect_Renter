@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
 import { CreateFormDataMultipleFiles, post, put } from '../../Helpers/Api';
 import CircularProgress from '@mui/material/CircularProgress';
-import Compressor from 'compressorjs';
 
 export default function FileProperty({
   setOverlay,
