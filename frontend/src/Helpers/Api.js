@@ -1,5 +1,5 @@
 export const post = (url, body, onSuccess, onError, token) => {
-  console.log('Enviado.', token);
+  // console.log('Enviado.', token);
 
   fetch(url, {
     method: 'POST',
@@ -9,14 +9,14 @@ export const post = (url, body, onSuccess, onError, token) => {
     body: body,
   })
     .then((res) => {
-      console.log('Respuesta de api.js/fetch', res);
+      // console.log('Respuesta de api.js/fetch', res);
       return res.json();
     })
     .then((data) => {
       if (data.status !== 'error') {
         onSuccess(data);
       } else {
-        console.log('Data de api.js/fetch', data);
+        // console.log('Data de api.js/fetch', data);
         onError(data);
       }
       return data;
@@ -32,14 +32,14 @@ export const get = (url, onSuccess, onError, token) => {
     },
   })
     .then((res) => {
-      console.log('Respuesta de api.js/fetch', res);
+      // console.log('Respuesta de api.js/fetch', res);
       return res.json();
     })
     .then((data) => {
       if (data.status !== 'error') {
         onSuccess(data);
       } else {
-        console.log('Data de api.js/fetch', data);
+        // console.log('Data de api.js/fetch', data);
         onError(data);
       }
       return data;
@@ -48,8 +48,8 @@ export const get = (url, onSuccess, onError, token) => {
 };
 
 export const put = (url, body, onSuccess, onError, token) => {
-  console.log('Enviado.');
-  console.log(token);
+  // console.log('Enviado.');
+  // console.log(token);
   fetch(url, {
     method: 'PUT',
     headers: {
@@ -58,14 +58,14 @@ export const put = (url, body, onSuccess, onError, token) => {
     body: body,
   })
     .then((res) => {
-      console.log('Respuesta de api.js/fetch', res);
+      // console.log('Respuesta de api.js/fetch', res);
       return res.json();
     })
     .then((data) => {
       if (data.status !== 'error') {
         onSuccess(data);
       } else {
-        console.log('Data de api.js/fetch', data);
+        // console.log('Data de api.js/fetch', data);
         onError(data);
       }
       return data;
@@ -81,14 +81,14 @@ export const del = (url, body, onSuccess, onError, token) => {
     },
   })
     .then((res) => {
-      console.log('Respuesta de api.js/fetch', res);
+      // console.log('Respuesta de api.js/fetch', res);
       return res.json();
     })
     .then((data) => {
       if (data.status !== 'error') {
         onSuccess(data);
       } else {
-        console.log('Data de api.js/fetch', data);
+        // console.log('Data de api.js/fetch', data);
         onError(data);
       }
       return data;
@@ -107,7 +107,7 @@ export function parseJwt(token) {
   const jsonPayload = decodeURIComponent(
     atob(base64)
       .split('')
-      .map(function (c) {
+      .map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       })
       .join('')
@@ -126,7 +126,7 @@ export function CreateFormData(body) {
 
 export function CreateFormDataMultipleFiles(files) {
   const formData = new FormData();
-  console.log(files.photos);
+  // console.log(files.photos);
   if (files.photos.length > 0) {
     files.photos.forEach((file) => {
       formData.append('photo', file);

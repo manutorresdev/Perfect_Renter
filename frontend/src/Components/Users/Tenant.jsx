@@ -45,18 +45,7 @@ export default function Tenant({ user, setOverlay, relation }) {
           natus eaque rem ad, minima iure.
         </p>
       </div>
-      <div className='buttons-cont flex flex-col items-end justify-around w-full h-full'>
-        <button
-          className='bg-principal-1 px-5 hover:pl-7 duration-300  py-2 font-medium rounded-bl-md rounded-tl-md'
-          onClick={() => {
-            setOverlay({ shown: true, info: user, form: 'contact' });
-          }}
-        >
-          Contactar
-        </button>
-        {relation.length > 0 && (
-          <button
-            className='bg-principal-1 px-7 hover:pl-8 duration-300 py-2 fm font-medium rounded-bl-md rounded-tl-md'
+
       {relation ? (
         <div className='buttons-cont flex flex-col items-end justify-around w-full h-full'>
           <button
@@ -88,3 +77,17 @@ export default function Tenant({ user, setOverlay, relation }) {
     </article>
   );
 }
+
+
+// <div className='buttons-cont flex flex-col items-end justify-around w-full h-full'>
+// <button
+//   className='bg-principal-1 px-5 hover:pl-7 duration-300  py-2 font-medium rounded-bl-md rounded-tl-md'
+//   onClick={() => {
+//     setOverlay({ shown: true, info: user, form: 'contact' });
+//   }}
+// >
+//   Contactar
+// </button>
+// {relation.length > 0 && (
+//   <button
+//     className='bg-principal-1 px-7 hover:pl-8 duration-300 py-2 fm font-medium rounded-bl-md rounded-tl-md'
