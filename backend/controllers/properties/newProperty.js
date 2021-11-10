@@ -135,8 +135,6 @@ const newProperty = async (req, res, next) => {
     // Generamos la fecha de creación
     const createdAt = formatDate(new Date());
 
-    console.log('\x1b[43m########\x1b[30m', typeof mts);
-
     // Guardamos la propiedad en la base de datos.
     await connection.query(
       `INSERT INTO properties (

@@ -115,8 +115,7 @@ function Banner() {
           type='text'
           {...register('city', {
             pattern: {
-              value:
-                /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+              value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
               message:
                 'La ciudad no puede contener carácteres especiales ni números.',
             },

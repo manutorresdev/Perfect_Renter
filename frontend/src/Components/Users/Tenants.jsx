@@ -8,11 +8,8 @@ import VoteForm from '../Forms/VoteForm';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router';
 import { FaPlus } from 'react-icons/fa';
-import useProperties from '../../Helpers/Hooks/useProperties';
 
 export default function UsersList() {
-  const [Bookings, setBookings] = useState([]);
-  const [Properties] = useProperties();
   const [Token] = useContext(TokenContext);
   const [Overlay, setOverlay] = useState({
     shown: false,
@@ -20,6 +17,7 @@ export default function UsersList() {
     info: {},
   });
 
+  const [Bookings, setBookings] = useState([]);
   const [Users, setUsers] = useState([]);
   const [Loaded, setLoaded] = useState(false);
   const location = useLocation();
@@ -28,7 +26,7 @@ export default function UsersList() {
   useEffect(() => {
     if (location.search) {
       get(
-        `http://localhost:4000/users${location.search}`,
+        `http://192.168.5.103:4000/users${location.search}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -42,7 +40,7 @@ export default function UsersList() {
       );
     } else {
       get(
-        'http://localhost:4000/users',
+        'http://192.168.5.103:4000/users',
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -55,7 +53,9 @@ export default function UsersList() {
         Token
       );
       get(
-        `http://localhost:4000/users/${parseJwt(Token).idUser}/bookings/renter`,
+        `http://192.168.5.103:4000/users/${
+          parseJwt(Token).idUser
+        }/bookings/renter`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -67,10 +67,6 @@ export default function UsersList() {
     }
   }, [Token, location.search]);
 
-  const userProperties = Properties.filter(
-    (property) => property.idUser === parseJwt(Token).idUser
-  );
-
   return (
     <main className='pb-28 pt-20 flex w-full'>
       {Overlay.form === 'contact' && (
@@ -78,7 +74,6 @@ export default function UsersList() {
           setOverlay={setOverlay}
           info={Overlay.info}
           Token={Token}
-          properties={userProperties}
         />
       )}
       {Overlay.form === 'vote' && (
@@ -171,13 +166,6 @@ function Filters({ setOverlay, Overlay }) {
     }
   }
 
-  /**
-   * copy of form whit bg white, input gray and text yellow
-   * const inputsLabelStyle =
-    'sm:text-gray-600 sm:hover:text-principal-1 text-xl duration-200';
-  const inputStyle =
-    'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
-   */
   const inputsLabelStyle =
     'sm:text-gray-600 sm:hover:text-principal-1 text-xl duration-200';
   const inputStyle =
@@ -251,8 +239,7 @@ function Filters({ setOverlay, Overlay }) {
                 defaultValue={Filters.ciudad ?? ''}
                 {...register('ciudad', {
                   pattern: {
-                    value:
-                      /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                    value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
                       'La ciudad no puede contener carácteres especiales ni números.',
                   },

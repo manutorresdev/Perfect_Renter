@@ -31,7 +31,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
         });
 
         put(
-          `http://localhost:4000/users/${usuario.idUser}`,
+          `http://192.168.5.103:4000/users/${usuario.idUser}`,
           CreateFormData({ avatar: file }),
           (data) => {
             console.log('Success');
@@ -48,13 +48,15 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
   }
 
   function imageHandler(e) {
-    const reader = new FileReader();
-    reader.onload = (d) => {
-      if (reader.readyState === 2) {
-        setImgPreview(reader.result);
-      }
-    };
-    reader.readAsDataURL(e.target.files[0]);
+    if (e.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (d) => {
+        if (reader.readyState === 2) {
+          setImgPreview(reader.result);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
   }
 
   return (

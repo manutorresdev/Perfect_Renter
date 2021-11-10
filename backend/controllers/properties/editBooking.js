@@ -92,12 +92,12 @@ const editBooking = async (req, res, next) => {
       <tfoot>
         <th>
             <button>
-              <a href="http://localhost:3000/alquileres/${newBookingCode}/accept"
+              <a href="http://192.168.5.103:3000/alquileres/${newBookingCode}/accept"
             >ACEPTAR RESERVA</a></button>
             <span><span/>
             <span><span/>
             <button>
-              <a href="http://localhost:3000/alquileres/${newBookingCode}/cancel"
+              <a href="http://192.168.5.103:3000/alquileres/${newBookingCode}/cancel"
             >CANCELAR RESERVA</a></button>
         </th>
       </tfoot>
@@ -130,7 +130,7 @@ const editBooking = async (req, res, next) => {
       <tfoot>
         <th>
         <button>
-            <a href="http://localhost:3000/alquileres/${newBookingCode}/cancel">CANCELAR RESERVA</a>
+            <a href="http://192.168.5.103:3000/alquileres/${newBookingCode}/cancel">CANCELAR RESERVA</a>
         </button>
         </th>
       </tfoot>
@@ -151,23 +151,18 @@ const editBooking = async (req, res, next) => {
         body: emailBodyReq,
       });
     }
-    console.log(startDate);
     // Editamos los eventos SQL
     await connection.query(
       `
-    ALTER
-    EVENT ${bookingCode}_event_start
-    ON SCHEDULE AT "${startDate}"
-    RENAME TO ${newBookingCode}_event_start
+    DROP EVENT ${bookingCode}_event_start
     `
     );
 
-    await connection.query(`
-    ALTER
-    EVENT ${bookingCode}_event_end
-    ON SCHEDULE AT "${endDate}"
-    RENAME TO ${newBookingCode}_event_end
-    `);
+    await connection.query(
+      `
+    DROP EVENT ${bookingCode}_event_end
+    `
+    );
     // Editamos los datos de la reserva a la nueva reserva
     await connection.query(
       `
