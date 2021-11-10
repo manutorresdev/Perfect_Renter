@@ -25,6 +25,15 @@ const descBoxTitleStyle = 'text-base text-gray-700 pb-3 font-medium';
 const descBoxPStyle = 'text-gray-700 text-sm pl-2';
 
 export function Home() {
+  // fetch('https://randomuser.me/api/?inc=picture')
+  //   .then((res) => {
+  //     console.log('fetch de avatar', res);
+  //     res.json();
+  //   })
+  //   .then((data) => {
+  //     console.log(data.results);
+  //   });
+
   return (
     <>
       <Banner />
