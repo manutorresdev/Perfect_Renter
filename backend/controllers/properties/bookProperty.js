@@ -347,26 +347,26 @@ const bookProperty = async (req, res, next) => {
     </table>
     `;
         // Enviamos el correo del usuario que contacta, al usuario a contactar.
-        if (process.env.NODE_ENV !== 'test') {
-          await sendMail({
-            to: property[0].email,
-            subject: 'Solicitud de reserva.',
-            body: emailBody,
-          });
+        //   if (process.env.NODE_ENV !== 'test') {
+        //     await sendMail({
+        //       to: property[0].email,
+        //       subject: 'Solicitud de reserva.',
+        //       body: emailBody,
+        //     });
 
-          // VALIDAR CORREO USUARIO QUE RESERVA
-          await sendMail({
-            to: email,
-            subject: 'Solicitud de reserva.',
-            body: emailBodyReq,
-          });
-        }
+        //     // VALIDAR CORREO USUARIO QUE RESERVA
+        //     await sendMail({
+        //       to: email,
+        //       subject: 'Solicitud de reserva.',
+        //       body: emailBodyReq,
+        //     });
+        //   }
 
-        // Agregamos el código de reserva en la base de datos junto a la posible reserva.
+        //   // Agregamos el código de reserva en la base de datos junto a la posible reserva.
         await connection.query(
           `
-      INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
-      `,
+        INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
+        `,
           [
             bookingCode,
             property[0].idUser,
@@ -377,7 +377,6 @@ const bookProperty = async (req, res, next) => {
             endDate,
           ]
         );
-
 
         res.send({
           status: 'ok',
