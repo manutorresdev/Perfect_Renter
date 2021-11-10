@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>controllers/properties/bookProperty.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Database.html">Database</a></li><li></li><li><a href="module-Entries.html">Entries</a><ul class='methods'><li data-type='method'><a href="module-Entries.html#~acceptBooking">acceptBooking</a></li><li data-type='method'><a href="module-Entries.html#~addPropertyPhoto">addPropertyPhoto</a></li><li data-type='method'><a href="module-Entries.html#~bookProperty">bookProperty</a></li><li data-type='method'><a href="module-Entries.html#~contactProperty">contactProperty</a></li><li data-type='method'><a href="module-Entries.html#~deleteProperty">deleteProperty</a></li><li data-type='method'><a href="module-Entries.html#~deletePropertyPhoto">deletePropertyPhoto</a></li><li data-type='method'><a href="module-Entries.html#~editBooking">editBooking</a></li><li data-type='method'><a href="module-Entries.html#~editProperty">editProperty</a></li><li data-type='method'><a href="module-Entries.html#~getBookings">getBookings</a></li><li data-type='method'><a href="module-Entries.html#~getLocations">getLocations</a></li><li data-type='method'><a href="module-Entries.html#~getPhotos">getPhotos</a></li><li data-type='method'><a href="module-Entries.html#~getProperty">getProperty</a></li><li data-type='method'><a href="module-Entries.html#~listProperties">listProperties</a></li><li data-type='method'><a href="module-Entries.html#~listPropertyVotes">listPropertyVotes</a></li><li data-type='method'><a href="module-Entries.html#~newProperty">newProperty</a></li><li data-type='method'><a href="module-Entries.html#~newVote">newVote</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li><a href="module-Global.html">Global</a><ul class='methods'><li data-type='method'><a href="module-Global.html#~contactUs">contactUs</a></li><li data-type='method'><a href="module-Global.html#~getPhoto">getPhoto</a></li></ul></li><li></li><li><a href="module-Helpers.html">Helpers</a><ul class='methods'><li data-type='method'><a href="module-Helpers.html#~authUser">authUser</a></li><li data-type='method'><a href="module-Helpers.html#~canEdit">canEdit</a></li><li data-type='method'><a href="module-Helpers.html#~deletePhoto">deletePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~formatDate">formatDate</a></li><li data-type='method'><a href="module-Helpers.html#~generateRandomString">generateRandomString</a></li><li data-type='method'><a href="module-Helpers.html#~getRandomValue">getRandomValue</a></li><li data-type='method'><a href="module-Helpers.html#~propertyExist">propertyExist</a></li><li data-type='method'><a href="module-Helpers.html#~savePhoto">savePhoto</a></li><li data-type='method'><a href="module-Helpers.html#~sendMail">sendMail</a></li><li data-type='method'><a href="module-Helpers.html#~userExists">userExists</a></li><li data-type='method'><a href="module-Helpers.html#~validate">validate</a></li></ul></li><li></li><li></li><li></li><li></li><li><a href="module-Routes.html">Routes</a></li><li><a href="module-Schemas.html">Schemas</a></li><li></li><li></li><li><a href="module-Users.html">Users</a><ul class='methods'><li data-type='method'><a href="module-Users.html#~contactUser">contactUser</a></li><li data-type='method'><a href="module-Users.html#~deleteUser">deleteUser</a></li><li data-type='method'><a href="module-Users.html#~editUser">editUser</a></li><li data-type='method'><a href="module-Users.html#~editUserPass">editUserPass</a></li><li data-type='method'><a href="module-Users.html#~getUser">getUser</a></li><li data-type='method'><a href="module-Users.html#~listBookedProperties">listBookedProperties</a></li><li data-type='method'><a href="module-Users.html#~listUsers">listUsers</a></li><li data-type='method'><a href="module-Users.html#~listUserVotes">listUserVotes</a></li><li data-type='method'><a href="module-Users.html#~loginUser">loginUser</a></li><li data-type='method'><a href="module-Users.html#~newUser">newUser</a></li><li data-type='method'><a href="module-Users.html#~passUserRecover">passUserRecover</a></li><li data-type='method'><a href="module-Users.html#~recoverUserPass">recoverUserPass</a></li><li data-type='method'><a href="module-Users.html#~validateUser">validateUser</a></li></ul></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">controllers/properties/bookProperty.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// @ts-nocheck
+const { format } = require('date-fns');
+const getDB = require('../../config/getDB');
+const {
+  sendMail,
+  generateRandomString,
+  formatDate,
+} = require('../../libs/helpers');
+/**
+ * @module Entries
+ */
+/**
+ * Middleware que pide unos datos al usuario para enviarle la solicitud de contacto a un alquiler.
+ * @param {*} req Como "requests", se requiere el id de la vivienda y los datos de contacto del usuario que contacta.
+ * @param {*} res El servidor lanza como respuesta un correo al usuario a contactar.
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
+ */
+const bookProperty = async (req, res, next) => {
+  let connection;
+  try {
+    connection = await getDB();
+
+    // Obtenemos el id de la vivienda a contactar.
+    const { idProperty } = req.params;
+
+    // Obtenemos el id del usuario que contacta.
+    const { idUser: idReqUser } = req.userAuth;
+
+    // Obtenemos los datos del usuario que contacta.
+    let { name, lastName, email, tel, comentarios, startDate, endDate } =
+      req.body;
+
+    const now = formatDate(new Date());
+
+    // Comprobamos que los campos obligatorios tengan contenido.
+
+    if (!comentarios) {
+      const error = new Error(
+        'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
+      );
+      error.httpStatus = 400;
+      throw error;
+    }
+    if (!startDate || !endDate) {
+      const error = new Error('Falta definir la fecha de la reserva.');
+      error.httpStatus = 400;
+      throw error;
+    }
+    // Si la fecha reservada es menor a la fecha actual, lanzamos error.
+    if (startDate &lt; now) {
+      const error = new Error('No puedes reservar en el pasado.');
+      error.httpStatus = 403;
+      throw error;
+    }
+
+    // Si la fecha end es menor a la fecha start, lanzamos error.
+    if (endDate &lt; startDate) {
+      const error = new Error(
+        'Fecha de salida debe ser mayor a la fecha de inicio'
+      );
+      error.httpStatus = 403;
+      throw error;
+    }
+
+    // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
+    const [property] = await connection.query(
+      `
+        SELECT photos.name,properties.city, users.name AS ownerName, properties.idUser, users.email
+        FROM properties
+        LEFT JOIN photos ON properties.idProperty = photos.idProperty
+        LEFT JOIN users ON users.idUser = properties.idUser
+        WHERE properties.idProperty = ?
+        `,
+      [idProperty]
+    );
+
+    //  Comprobamos que no haya una solicitud en proceso de aceptar.
+    const [valiDate] = await connection.query(
+      `
+      SELECT * FROM bookings WHERE (startBookingDate BETWEEN ? AND ?)  OR (endBookingDate BETWEEN ? AND ?)
+        `,
+      [startDate, endDate, startDate, endDate]
+    );
+
+    if (valiDate.length > 0) {
+      res.send({
+        status: 'ok',
+        message:
+          'Las fechas seleccionadas no estan disponibles para esta propiedad',
+      });
+    } else {
+      const [petition] = await connection.query(
+        `
+      SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ? AND startBookingDate = ? AND endBookingDate = ?
+        `,
+        [property[0].idUser, idReqUser, idProperty, startDate, endDate]
+      );
+
+      // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
+      if (petition.length > 0) {
+        res.send({
+          status: 'ok',
+          Estado_de_la_peticion: `${petition[0].state}`,
+          message:
+            'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.',
+        });
+      } else {
+        // Si el usuario es el dueño de la vivienda, lanzamos error.
+        if (idReqUser === Number(property[0].idUser)) {
+          const error = new Error(
+            'No puedes contactar con una vivienda de tu propiedad.'
+          );
+          error.httpStatus = 403;
+          throw error;
+        }
+
+        // Seleccionamos el nombre completo, el email, el teléfono del usuario que contacta. (PARA EL FRONTEND)
+        const [contactUser] = await connection.query(
+          `
+      SELECT name,lastName,tel,email FROM users WHERE idUser = ?
+      `,
+          [idReqUser]
+        );
+
+        if (!name) {
+          name = contactUser[0].name;
+          if (!name) {
+            const error = new Error('Falta el nombre.');
+            error.httpStatus = 400;
+            throw error;
+          }
+        }
+        if (!lastName) {
+          lastName = contactUser[0].lastName;
+          if (!lastName) {
+            const error = new Error('Falta el apellido.');
+            error.httpStatus = 400;
+            throw error;
+          }
+        }
+        if (!email) {
+          email = contactUser[0].email;
+          if (!email) {
+            const error = new Error('Falta el email.');
+            error.httpStatus = 400;
+            throw error;
+          }
+        }
+        if (!tel) {
+          tel = contactUser[0].tel;
+          if (!tel) {
+            tel = 'No especificado.';
+          }
+        }
+
+        // Generamos el codigo de reserva,
+        const bookingCode = generateRandomString(10);
+        // Definimos el body del email
+        const emailBody = `
+      &lt;style>
+      table {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-family: sans-serif;
+          font-size: calc((60% + 0.25vw));
+          width: 100%;
+          max-width: 50vw;
+          height: 100%;
+          box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+      }
+      thead {
+          height: 20vh;
+          width: 100%;
+          background: linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('http://192.168.5.103:4000/photo/portada-nosotros.jpg');
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: center;
+          position: relative;
+      }
+      .thead-tr {
+          color: rgba(237,203,84,1);
+          top: 0px;
+          bottom: 0px;
+          left: 0px;
+          right: 0px;
+          padding-left: 10%;
+          padding-top: 10%;
+          position: absolute;
+          z-index: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0px;
+          opacity: 95%;
+      }
+      .thead-tr a {
+          text-decoration: none;
+          color: rgba(237,203,84,1);
+      }
+      .thead-tr a h3 {
+          opacity: 90%;
+          padding-left: 20px;
+      }
+      tbody {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+      @media screen and (min-width: 600px){
+          table {
+              font-size: calc((100% + 0.25vw));
+              max-width: 100vw;
+              }
+      }
+  &lt;/style>
+   &lt;table>
+     &lt;thead>
+          &lt;tr class="thead-tr">
+              &lt;td>
+                  &lt;a href="http://192.168.5.103:3000/home" target="__blank" rel="noreferer">&lt;h1 style="margin-bottom: -10px;">Perfect Renter&lt;/h1>&lt;/a>
+                  &lt;h3>El lugar para encontrar tu hogar&lt;/h3>
+              &lt;/td>
+          &lt;/tr>
+      &lt;/thead>
+      &lt;tbody style="width:100%; background-color: rgba(16, 16, 16, 0.02);">
+          &lt;td style="padding: 1rem;">
+          &lt;p>
+              Hola &lt;span style="font-weight: bold;">${property[0].ownerName}&lt;/span>,
+              &lt;br />
+             un inquilino está interesado en tu vivienda de &lt;span style="font-weight: bold;">${property[0].city}&lt;/span>.
+          &lt;/p>
+          &lt;tr style="background-color: rgba(16, 16, 16, 0.05); width: 100%;">
+              &lt;td>
+                  Datos del inquilino:
+                  &lt;ul>
+                    &lt;li>&lt;b>Nombre completo:&lt;/b> ${name} ${lastName}&lt;/li>
+                    &lt;li>&lt;b>Email:&lt;/b> ${email}&lt;/li>
+                    &lt;li>&lt;b>Teléfono:&lt;/b> ${tel}&lt;/li>
+                    &lt;li>&lt;b>Fecha de reserva:&lt;/b> Entrada: ${startDate} | Salida: ${endDate}&lt;/li>
+                  &lt;/ul>
+                  &lt;br/>
+                  &lt;b>Información adicional:&lt;/b>
+                  ${comentarios}
+              &lt;/td>
+          &lt;/tr>
+          &lt;tr>
+              &lt;td>
+                &lt;br/>
+                Tienes a tu disposición el teléfono y el correo electrónico del interesado si deseas responder.
+                &lt;br/>
+                Si quieres aceptar su solicitud de reserva, pulsa en el botón de aceptar reserva.
+                &lt;br/>
+                Si por el contrario no está interesado, pulse el botón de cancelar.
+              &lt;/td>
+          &lt;/tr>
+          &lt;/tbody>
+          &lt;tfoot>
+            &lt;th>
+                &lt;button>
+                  &lt;a href="http://192.168.5.103:3000/alquileres/${bookingCode}/accept"
+                >ACEPTAR RESERVA&lt;/a>&lt;/button>
+                &lt;span>&lt;span/>
+                &lt;span>&lt;span/>
+                &lt;button>
+                  &lt;a href="http://192.168.5.103:3000/alquileres/${bookingCode}/cancel"
+                >CANCELAR RESERVA&lt;/a>&lt;/button>
+            &lt;/th>
+          &lt;/tfoot>
+        &lt;/table>
+    `;
+
+        const emailBodyReq = `
+    &lt;table>
+      &lt;tbody>
+        &lt;td>
+          Hola ${contactUser[0].name},
+          Se ha solicitado con éxito la reserva de la vivienda en ${property[0].city}
+          &lt;br/>
+          Datos de la reserva:
+          &lt;ul>
+          &lt;li>&lt;b>Código de reserva:&lt;/b> ${bookingCode}&lt;/li>
+            &lt;li>&lt;b>Nombre completo:&lt;/b> ${name} ${lastName}&lt;/li>
+            &lt;li>&lt;b>Email:&lt;/b> ${email}&lt;/li>
+            &lt;li>&lt;b>Teléfono:&lt;/b> ${tel}&lt;/li>
+            &lt;li>&lt;b>Fecha de reserva:&lt;/b> Entrada: ${startDate} | Salida: ${endDate}&lt;/li>
+          &lt;/ul>
+          &lt;br/>
+          &lt;b>Información adicional:&lt;/b>
+          ${comentarios}
+      &lt;/tbody>
+      &lt;tbody>
+          &lt;td>
+            &lt;br/>
+            Si quieres cancelar la solicitud de reserva, pulsa en el botón de cancelar reserva.
+            &lt;br/>
+          &lt;/td>
+      &lt;/tbody>
+      &lt;tfoot>
+        &lt;th>
+        &lt;button>
+            &lt;a href="http://192.168.5.103:3000/alquileres/${bookingCode}/cancel">CANCELAR RESERVA&lt;/a>
+        &lt;/button>
+        &lt;/th>
+      &lt;/tfoot>
+    &lt;/table>
+    `;
+        // Enviamos el correo del usuario que contacta, al usuario a contactar.
+        if (process.env.NODE_ENV !== 'test') {
+          await sendMail({
+            to: property[0].email,
+            subject: 'Solicitud de reserva.',
+            body: emailBody,
+          });
+
+          // VALIDAR CORREO USUARIO QUE RESERVA
+          await sendMail({
+            to: email,
+            subject: 'Solicitud de reserva.',
+            body: emailBodyReq,
+          });
+        }
+
+        // Agregamos el código de reserva en la base de datos junto a la posible reserva.
+        await connection.query(
+          `
+      INSERT INTO bookings(bookingCode,idRenter,idTenant,createdAt,idProperty,startBookingDate,endBookingDate) VALUES (?,?,?,?,?,?,?);
+      `,
+          [
+            bookingCode,
+            property[0].idUser,
+            idReqUser,
+            formatDate(new Date()),
+            idProperty,
+            startDate,
+            endDate,
+          ]
+        );
+
+        res.send({
+          status: 'ok',
+          message: 'Correo electrónico enviado con éxito.',
+          bookingCode,
+        });
+      }
+    }
+  } catch (error) {
+    next(error);
+  } finally {
+    if (connection) connection.release();
+  }
+};
+
+module.exports = bookProperty;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Wed Nov 10 2021 17:12:09 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

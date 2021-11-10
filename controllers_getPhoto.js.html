@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>config/getDB.js - Documentation</title>
+    <title>controllers/getPhoto.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -32,7 +32,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">config/getDB.js</h1>
+    <h1 class="page-title">controllers/getPhoto.js</h1>
     
 
     
@@ -42,44 +42,76 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>require('dotenv').config();
+            <pre class="prettyprint source linenums"><code>const getDB = require('../config/getDB');
+const { uploadsDir } = require('../libs/helpers');
 
-const mysql = require('mysql2/promise');
+const path = require('path');
 
-const {
-  MYSQL_HOST,
-  MYSQL_USER,
-  MYSQL_PASSWORD,
-  MYSQL_DATABASE,
-  MYSQL_DATABASE_TEST,
-  NODE_ENV,
-} = process.env;
-let pool;
 /**
- * @module Database
+ * @module Global
  */
 /**
- * Conexión a base de datos.
- * @name DatabaseConnection
- * @returns {Promise} Devuelve una conexión a la base de datos.
+ * Middleware para listar las reservas de una propiedad en concreto
+ * @param {*} req Se encuentra el id de la propiedad a obtener información en los path params
+ * @param {*} req Se recibe como request el ID del usuario que hace la petición, que debe ser el dueño de la propiedad
+ * @param {*} res Como respuesta, obtienes un objeto con los datos de la propiedad si existe o mensaje si no se encuentra
+ * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
+ * @returns {Promise} Devuelve un objeto con los datos
  */
-const getDB = async () => {
-  if (!pool) {
-    pool = mysql.createPool({
-      multipleStatements: true,
-      connectionLimit: 10,
-      host: MYSQL_HOST,
-      user: MYSQL_USER,
-      password: MYSQL_PASSWORD,
-      database: NODE_ENV === 'test' ? MYSQL_DATABASE_TEST : MYSQL_DATABASE,
-      timezone: 'Z',
+const getPhoto = async (req, res, next) => {
+  let connection;
+  try {
+    connection = await getDB();
+
+    //Obtenemos el id de la propiedad.
+
+    const { pictureName } = req.params;
+    console.log('hola  ' + req.params);
+
+    // Obtenemos el id del usuario que hace la request.
+    /* const { idUser } = req.userAuth; */
+
+    // Verificamos que la foto exista.
+    const [picture] = await connection.query(
+      `
+      SELECT
+      avatar
+      FROM users WHERE avatar = ?
+      `,
+      [pictureName]
+    );
+
+    /*  const [picture] = await connection.query(
+      `
+      SELECT
+      name
+      FROM photos WHERE idProperty = 23
+      `
+       [idProperty] 
+    ); */
+
+    // Si no existe lanzamos error
+
+    if (picture.length &lt; 1) {
+      const error = new Error('La foto no existe.');
+      error.httpStatus = 404;
+      throw error;
+    }
+
+    const photo = path.join(uploadsDir, pictureName);
+
+    res.send({
+      status: 'ok',
+      photo,
     });
+  } catch (error) {
+    next(error);
+  } finally {
+    if (connection) connection.release();
   }
-
-  return await pool.getConnection();
 };
 
-module.exports = getDB;
+module.exports = getPhoto;
 </code></pre>
         </article>
     </section>
