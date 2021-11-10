@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
-import {
-  CreateFormData,
-  CreateFormDataMultipleFiles,
-  post,
-  put,
-} from '../../Helpers/Api';
+import { CreateFormDataMultipleFiles, post, put } from '../../Helpers/Api';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function FileProperty({
@@ -38,7 +33,7 @@ export default function FileProperty({
       return photos.push(body.photo[index]);
     });
     post(
-      `http://192.168.5.103:4000/properties/${idProperty}/photos`,
+      `http://localhost:4000/properties/${idProperty}/photos`,
       CreateFormDataMultipleFiles({
         photo: [...photos],
       }),
@@ -55,13 +50,14 @@ export default function FileProperty({
   function editFile(body, e) {
     e.preventDefault();
 
+    const photos = [];
 
-    function editFile(body, e) {
-      e.preventDefault();
+    Object.keys(body.photo).map((pic, index) => {
+      return photos.push(body.photo[index]);
+    });
 
-      const photos = [];
     put(
-      `http://192.168.5.103:4000/properties/${editProperty}`,
+      `http://localhost:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
       (data) => {
         if (data.status === 'ok') {
@@ -70,6 +66,7 @@ export default function FileProperty({
             setButton(false);
             setLoader(false);
             setFileName('');
+            window.location.reload();
           }, 500);
           setMessage({ status: 'ok', message: '¡Fotos subidas con éxito!' });
         }
@@ -109,18 +106,16 @@ export default function FileProperty({
           >
             <div className='flex flex-col gap-5 items-center'>
               <button
+                className='font-medium flex items-center gap-2 bg-blue-600 text-white p-1 rounded'
                 onClick={(e) => {
-                  setButton(true);
+                  e.preventDefault();
+                  hiddenInput.current.click();
                 }}
-                type='submit'
-                className={`${
-                  FileName
-                    ? 'bg-principal-1 text-principal-gris cursor-pointer'
-                    : 'text-gray-400 select-none pointer-events-none cursor-default'
-                } font-medium flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
               >
-                Añadir{Button && <CircularProgress />}
+                <FaRegArrowAltCircleUp className='animate-bounce' />
+                Selecciona los archivos
               </button>
+
               <div className='photo-cont flex flex-col gap-2 justify-center'>
                 {photos && (
                   <div className='uploaded-photos-cont flex flex-col gap-1'>
@@ -143,9 +138,7 @@ export default function FileProperty({
                               <FaPlus className='transform rotate-45' />
                             </button>
                             <img
-                              src={
-                                'http://192.168.5.103:4000/photo/' + photo.name
-                              }
+                              src={'http://localhost:4000/photo/' + photo.name}
                               alt='prueba'
                               className='w-20 h-20 object-cover'
                             />
