@@ -1,51 +1,39 @@
-import { React, useEffect, useState } from 'react';
+import { React, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useHistory } from 'react-router-dom';
-import { capitalizeFirstLetter } from '../../Helpers/Api';
 import useProperties from '../../Helpers/Hooks/useProperties';
+import Property from '../Properties/Property';
+import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
+import { get } from '../../Helpers/Api';
 
 // Styles
 const sectionStyle =
   'h-max-content p-5 text-principal-1 overflow-y-auto bg-gray-Primary';
 const sectionTitleStyle = 'pb-5 text-3xl font-medium';
 const sectionImgStyle = 'w-2/5 float-right pl-3';
-const boxContStyle = 'flex flex-col gap-5';
+const boxContStyle = 'row-span-2 flex flex-col gap-5 b';
 const boxContTitleStyle =
-  'w-full text-center pb-3 text-principal-1 underline text-xl';
+  'w-full text-center pt-4 pb-3 text-principal-1 underline text-xl';
 const boxItemContStyle =
   'grid grid-cols-1 grid-rows-auto gap-2 justify-items-center sm:grid-cols-2';
 const boxReadMoreBtnStyle =
   'm-auto text-xl bg-gray-Primary text-principal-1 border-2 border-gray-800 max-w-max px-6 py-2 hover:bg-principal-1 hover:text-gray-700 duration-300';
-const descBoxStyle = 'content-center w-3/4 h-full bg-principal-1';
+const descBoxStyle = 'content-center w-3/4 h-full bg-principal-1-hover';
 const descBoxTextStyle = 'text-left p-4';
 const descBoxTitleStyle = 'text-base text-gray-700 pb-3 font-medium';
 const descBoxPStyle = 'text-gray-700 text-sm pl-2';
 
-/**
- * Componente que devuelve la landing page de la app.
- * @component
- * @example
- *  return (
- *      <>
-      <Banner />
-      <div
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
-        }}
-        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5 sm:h-full sm:w-full pb-32'
-      >
-        <RentersList />
-        <PropertiesList />
-        <RenterDescription />
-        <PropertyDescription />
-      </div>
-    </>
- * )
- *
- */
 export function Home() {
+  // fetch('https://randomuser.me/api/?inc=picture')
+  //   .then((res) => {
+  //     console.log('fetch de avatar', res);
+  //     res.json();
+  //   })
+  //   .then((data) => {
+  //     console.log(data.results);
+  //   });
+
   return (
     <>
       <Banner />
@@ -54,7 +42,7 @@ export function Home() {
           backgroundImage:
             "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
         }}
-        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5 sm:h-full sm:w-full pb-32'
+        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-3 sm:pt-5  sm:w-full pb-32'
       >
         <RentersList />
         <PropertiesList />
@@ -130,7 +118,7 @@ function Banner() {
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className='relative col-start-2 col-end-10 sm:col-start-4 sm:col-end-8 row-start-7 row-end-8 self-end w-full'
+        className='relative col-start-2 col-end-10 mt-14 sm:col-start-4 sm:col-end-8 row-start-7 row-end-8 self-end w-full'
       >
         <input
           type='text'
@@ -159,42 +147,22 @@ function Banner() {
 }
 
 function PropertiesList() {
-  const [properties] = useProperties();
-  const [Imgs, setImgs] = useState([]);
-
-  useEffect(() => {
-    setImgs([
-      require('../../Images/defPicture.jpg').default,
-      require('../../Images/defPicture2.jpg').default,
-      require('../../Images/defPicture4.jpg').default,
-      require('../../Images/defPicture3.jpg').default,
-    ]);
-  }, []);
+  const [Properties] = useProperties();
 
   return (
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>ALQUILERES</h2>
       <div className={boxItemContStyle}>
-        {properties.length > 1 &&
-          properties.slice(0, 4).map((property, i) => {
-            return (
-              <Property key={i}>
-                <Link to={`/alquileres/${property.idProperty}`}>
-                  <img className='w-full' src={Imgs[i]} alt='' />
-                </Link>
-                <span>
-                  {property.type && capitalizeFirstLetter(property.type)} en{' '}
-                  {property.city}
-                </span>
-                <span>
-                  {`${Number(property.mts)}m² - ${property.rooms} Hab - ${
-                    property.toilets
-                  } ${property.toilets > 1 ? 'Baños' : 'Baño'}`}
-                </span>
-              </Property>
-            );
-          })}
+        {Properties.length > 0 &&
+          Properties.slice(0, 4).map((property) => (
+            <Property
+              key={property.idProperty}
+              property={property}
+              mountOn={'propertiesList'}
+            />
+          ))}
       </div>
+
       <Link to='/alquileres' className={boxReadMoreBtnStyle}>
         <button>Ver Mas</button>
       </Link>
@@ -202,41 +170,47 @@ function PropertiesList() {
   );
 }
 
-function Property({ children }) {
-  return (
-    <div className={descBoxStyle}>
-      {children[0]}
-      <div className={descBoxTextStyle}>
-        <h2 className={descBoxTitleStyle}>{children[1]}</h2>
-        <p className={descBoxPStyle}>{children[2]}</p>
-      </div>
-    </div>
-  );
-}
-
 function RentersList() {
+  const [Token] = useContext(TokenContext);
+  const [Users, setUsers] = useState([]);
+
+  useEffect(() => {
+    console.log('hhhooolllaaaaaa');
+    get(
+      'http://localhost:4000/users',
+      (data) => {
+        console.log('esta es la data: ', data);
+        setUsers(data.users);
+      },
+      (error) => console.log(error),
+      Token
+    );
+  }, [Token]);
+
+  console.log('Users', Users);
+
   return (
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>INQUILINOS</h2>
       <div className={boxItemContStyle}>
-        <Renter />
-        <Renter />
-        <Renter />
-        <Renter />
+        {Users.length
+          ? Users.slice(0, 4).map((user) => <Renter user={user} />)
+          : ''}
       </div>
-      <Link to='/inquilinos' className={boxReadMoreBtnStyle}>
-        Ver Mas
-      </Link>
     </div>
   );
 }
-function Renter() {
+function Renter({ user }) {
   return (
     <div className={descBoxStyle}>
-      <img className=' w-full' src='/Images/renter.jpg' alt='' />
+      <img
+        className=' w-full'
+        src={'http://localhost:4000/photo/' + user.avatar}
+        alt=''
+      />
       <div className={descBoxTextStyle}>
-        <h2 className={descBoxTitleStyle}>Title renter</h2>
-        <p className={descBoxPStyle}>Description del Renter</p>
+        <h2 className={descBoxTitleStyle}>{user.name}</h2>
+        <p className={descBoxPStyle}>{user.city}</p>
       </div>
     </div>
   );

@@ -53,7 +53,7 @@ export default function Properties() {
               <Property
                 key={property.idProperty}
                 property={property}
-                mountOn={'propertiesList'}
+                mountOn={'home'}
               />
             ))
           ) : (

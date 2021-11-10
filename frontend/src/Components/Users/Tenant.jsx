@@ -57,18 +57,34 @@ export default function Tenant({ user, setOverlay, relation }) {
         {relation.length > 0 && (
           <button
             className='bg-principal-1 px-7 hover:pl-8 duration-300 py-2 fm font-medium rounded-bl-md rounded-tl-md'
+      {relation ? (
+        <div className='buttons-cont flex flex-col items-end justify-around w-full h-full'>
+          <button
+            className='bg-principal-1 px-5 hover:px-7 duration-300  py-2 font-medium rounded-bl-md rounded-tl-md'
             onClick={() => {
-              setOverlay({
-                shown: true,
-                info: { ...user, relation: relation },
-                form: 'vote',
-              });
+              setOverlay({ shown: true, info: user, form: 'contact' });
             }}
           >
-            Valorar
+            Contactar
           </button>
-        )}
-      </div>
+          {relation.length > 0 && (
+            <button
+              className='bg-principal-1 px-7 hover:px-8 duration-300 py-2 fm font-medium rounded-bl-md rounded-tl-md'
+              onClick={() => {
+                setOverlay({
+                  shown: true,
+                  info: { ...user, relation: relation },
+                  form: 'vote',
+                });
+              }}
+            >
+              Valorar
+            </button>
+          )}
+        </div>
+      ) : (
+        ''
+      )}
     </article>
   );
 }

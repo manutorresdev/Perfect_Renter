@@ -338,8 +338,7 @@ function DatePicker({
     }) => ({
       ...(isHighlighting && {
         borderRadius: 0,
-        backgroundColor: 'rgb(213, 213, 213)',
-        color: 'white',
+        backgroundColor: 'rgba(49, 47, 47, 0.84)',
       }),
       ...(isStartOfHighlighting && {
         borderTopLeftRadius: '50%',
@@ -359,14 +358,34 @@ function DatePicker({
       return <DateRangePickerDay {...dateRangePickerDayProps} />;
     }
   }
+  // function validaFecha(reservadas, inicio, fin) {
+  //   for (const res of reservadas) {
+  //     let day = inicio;
+  //     while (
+  //       new Date(day).toLocaleDateString() <= new Date(fin).toLocaleDateString()
+  //     ) {
+  //       if (new Date(day).getTime() === new Date(res).getTime()) {
+  //         console.log(day, ':', res, ' comparacion', '   True');
+  //         return true;
+  //       }
+
+  //       day = addDays(new Date(day), 1);
+  //     }
+  //   }
+  //   return false;
+  // }
+
   return (
     <LocalizationProvider locale={esEsLocale} dateAdapter={AdapterDateFns}>
       <DateRangePicker
         disablePast
-        autoOk={true}
+        autoOk
         label='Advanced keyboard'
         value={Value}
         shouldDisableDate={(date) =>
+
+          // (date) => date.getTime() === new Date('2021-11-12').getTime()
+
           arrayFechas.includes(format(date, 'dd/MM/yyyy')) ||
           arrayFechas.includes(format(date, 'd/MM/yyyy'))
         }
@@ -392,8 +411,12 @@ function DatePicker({
               newValue[1] &&
               !isNaN(newValue[1].getTime())
             ) {
+              // if (!validaFecha(arrayFechas, newValue[0], newValue[1])) {
               setValue('startDate', format(newValue[0], 'yyyy/MM/dd'));
               setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
+              // } else {
+              //   <p>No seleccione las fechas desabilitadas.</p>;
+              // }
             }
           }
         }}
