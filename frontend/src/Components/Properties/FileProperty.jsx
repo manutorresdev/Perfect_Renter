@@ -34,7 +34,7 @@ export default function FileProperty({
       return photos.push(body.photo[index]);
     });
     post(
-      `http://localhost:4000/properties/${idProperty}/photos`,
+      `http://192.168.5.103:4000/properties/${idProperty}/photos`,
       CreateFormDataMultipleFiles({
         photo: [...photos],
       }),
@@ -58,7 +58,7 @@ export default function FileProperty({
     });
 
     put(
-      `http://localhost:4000/properties/${editProperty}`,
+      `http://192.168.5.103:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
       (data) => {
         if (data.status === 'ok') {
@@ -145,7 +145,9 @@ export default function FileProperty({
                               <FaPlus className='transform rotate-45' />
                             </button>
                             <img
-                              src={'http://localhost:4000/photo/' + photo.name}
+                              src={
+                                'http://192.168.5.103:4000/photo/' + photo.name
+                              }
                               alt='prueba'
                               className='w-20 h-20 object-cover'
                             />
@@ -234,11 +236,9 @@ export default function FileProperty({
             )}
 
             <span
-              className={`self-center ${
-                TotalPhotos >= 30 &&
+              className={`self-center ${TotalPhotos >= 30 &&
                 FileName.length > 0 &&
-                ' text-red-500 animate-pulse'
-              }`}
+                ' text-red-500 animate-pulse'}`}
             >
               Fotos: {TotalPhotos}/30
             </span>
@@ -253,10 +253,8 @@ export default function FileProperty({
                 Button
                   ? 'bg-principal-1 text-principal-gris cursor-pointer'
                   : 'text-gray-400 select-none pointer-events-none cursor-default'
-              } ${
-                TotalPhotos >= 30 &&
-                'text-gray-400 select-none pointer-events-none cursor-default '
-              } font-medium relative flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
+              } ${TotalPhotos >= 30 &&
+                'text-gray-400 select-none pointer-events-none cursor-default '} font-medium relative flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
             >
               Añadir
               {Loader && (
