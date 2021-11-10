@@ -47,7 +47,7 @@ export default function ContactProperty({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
+      `http://localhost:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data.bookings);
         console.log(data);
@@ -80,7 +80,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
+        `http://localhost:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           setMessage(data);
@@ -94,7 +94,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
+        `http://localhost:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -146,7 +146,8 @@ export default function ContactProperty({
                 rules={{
                   required: 'Debes escribir un nombre.',
                   pattern: {
-                    value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                    value:
+                      /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
                       'El nombre no puede contener carácteres especiales ni números.',
                   },
@@ -294,7 +295,7 @@ export default function ContactProperty({
                       <img
                         key={i}
                         className='object-cover w-full h-96'
-                        src={'http://192.168.5.103:4000/photo/' + img.name}
+                        src={'http://localhost:4000/photo/' + img.name}
                         alt='default'
                       />
                     );
@@ -383,7 +384,6 @@ function DatePicker({
         label='Advanced keyboard'
         value={Value}
         shouldDisableDate={(date) =>
-
           // (date) => date.getTime() === new Date('2021-11-12').getTime()
 
           arrayFechas.includes(format(date, 'dd/MM/yyyy')) ||

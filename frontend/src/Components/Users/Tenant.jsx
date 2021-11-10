@@ -12,7 +12,7 @@ export default function Tenant({ user, setOverlay, relation }) {
             className='w-32 h-28 rounded-full object-scale-down'
             src={
               user.avatar
-                ? `http://192.168.5.103:4000/photo/${user.avatar}`
+                ? `http://localhost:4000/photo/${user.avatar}`
                 : require('../../Images/defProfile.png').default
             }
             alt={'perfil ' + user.name + user.lastName}
@@ -45,7 +45,7 @@ export default function Tenant({ user, setOverlay, relation }) {
           natus eaque rem ad, minima iure.
         </p>
       </div>
-      <div className='buttons-cont flex flex-col items-end justify-around w-full h-full'>
+      {/* <div className='buttons-cont flex flex-col items-end justify-around w-full h-full'>
         <button
           className='bg-principal-1 px-5 hover:pl-7 duration-300  py-2 font-medium rounded-bl-md rounded-tl-md'
           onClick={() => {
@@ -56,7 +56,7 @@ export default function Tenant({ user, setOverlay, relation }) {
         </button>
         {relation.length > 0 && (
           <button
-            className='bg-principal-1 px-7 hover:pl-8 duration-300 py-2 fm font-medium rounded-bl-md rounded-tl-md'
+            className='bg-principal-1 px-7 hover:pl-8 duration-300 py-2 fm font-medium rounded-bl-md rounded-tl-md' */}
       {relation ? (
         <div className='buttons-cont flex flex-col items-end justify-around w-full h-full'>
           <button
