@@ -1,6 +1,6 @@
 // import React, { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { FaPlus } from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight, FaPlus } from 'react-icons/fa';
 import { CreateFormData, post, get } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
@@ -14,6 +14,7 @@ import esEsLocale from 'date-fns/locale/es';
 import { useContext, useEffect, useState } from 'react';
 import MuiDateRangePickerDay from '@mui/lab/DateRangePickerDay';
 import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
+import Carousel from 'react-material-ui-carousel';
 
 export default function ContactProperty({
   form,
@@ -63,19 +64,14 @@ export default function ContactProperty({
   if (Bookings) {
     for (const book of Bookings) {
       let day = book.startBookingDate;
-
-      // arrayFechas.push('START BOOKING ' + book.idBooking);
-      // 25/12/21 - 24/12/21
       while (
         new Date(day).toLocaleDateString() <=
         new Date(book.endBookingDate).toLocaleDateString()
       ) {
-        // setDays([...days, new Date(day).toLocaleDateString()]);
         arrayFechas.push(new Date(day).toLocaleDateString());
 
         day = addDays(new Date(day), 1);
       }
-      // arrayFechas.push(`FIN BOOKING ${book.idBooking}`);
     }
   }
   // ARRAY FECHAS MANU
@@ -150,8 +146,7 @@ export default function ContactProperty({
                 rules={{
                   required: 'Debes escribir un nombre.',
                   pattern: {
-                    value:
-                      /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                    value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
                       'El nombre no puede contener carácteres especiales ni números.',
                   },
@@ -264,43 +259,56 @@ export default function ContactProperty({
           </form>
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
-            <div className='slider flex flex-col w-full items-center justify-center '>
-              {/* <div
-                className={`slider-cont ${
-                  Slider.Photo ? 'h-full' : 'h-96'
-                }  transition-all transform ease-linear duration-300`}
+            <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
+              <Carousel
+                navButtonsAlwaysVisible
+                indicators={false}
+                autoPlay={false}
+                animation='slide'
+                NavButton={({ onClick, className, style, next, prev }) => {
+                  if (next) {
+                    return (
+                      <FaAngleRight
+                        onClick={onClick}
+                        className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'
+                      >
+                        {next && 'Next'}
+                      </FaAngleRight>
+                    );
+                  } else {
+                    return (
+                      <FaAngleLeft
+                        onClick={onClick}
+                        className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md left-0 pl-2 duration-200'
+                      >
+                        {prev && 'Previous'}
+                      </FaAngleLeft>
+                    );
+                  }
+                }}
+                className='slider-cont min-w-xxs h-48 sm:h-96 transition-all transform ease-in'
               >
-                <button
-                  onClick={right}
-                  className={`${Slider.sliderButtonStyle} right-0`}
-                >
-                  <FaAngleRight />
-                </button>
-                <button
-                  onClick={left}
-                  className={`${Slider.sliderButtonStyle} left-0`}
-                >
-                  <FaAngleLeft />
-                </button>
-                <div
-                  ref={Slider.slider}
-                  className={`slider-cont overflow-hidden h-full flex transition-all transform ease-in}`}
-                >
-                  {Slider.SlideImgs.map((img, i) => {
+                {Slider.SlideImgs.length > 0 ? (
+                  Slider.SlideImgs.map((img, i) => {
                     return (
                       <img
                         key={i}
-                        className={`${
-                          i === curr ? '' : 'absolute opacity-0'
-                        } object-cover w-full duration-300 cursor-pointer`}
+                        className='object-cover w-full h-96'
                         src={'http://192.168.5.103:4000/photo/' + img.name}
-                        alt='house'
+                        alt='default'
                       />
                     );
-                  })}
-                </div>
-              </div> */}
+                  })
+                ) : (
+                  <img
+                    className='object-fit h-48 w-full'
+                    src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+                    alt='default home'
+                  />
+                )}
+              </Carousel>
             </div>
+
             <h2 className='informacion w-full bg-gray-Primary bg-opacity-25 text-2xl text-principal-1 flex justify-center'>
               {property.city
                 ? `Vivienda en ${property.city}`
@@ -351,7 +359,6 @@ function DatePicker({
       return <DateRangePickerDay {...dateRangePickerDayProps} />;
     }
   }
-  console.log('\x1b[45m%%%%%%%', arrayFechas);
   return (
     <LocalizationProvider locale={esEsLocale} dateAdapter={AdapterDateFns}>
       <DateRangePicker

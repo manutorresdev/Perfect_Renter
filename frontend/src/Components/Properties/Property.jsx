@@ -104,7 +104,7 @@ export default function Property({
               return (
                 <img
                   key={i}
-                  className='object-cover w-full h-48 '
+                  className='object-cover w-full h-48'
                   src={'http://192.168.5.103:4000/photo/' + img.name}
                   alt='default'
                 />

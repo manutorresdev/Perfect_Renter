@@ -139,7 +139,7 @@ const acceptBooking = async (req, res, next) => {
     CREATE EVENT ${bookingCode}_event_end
     ON SCHEDULE AT "${format(booking[0].endBookingDate, 'yyyy-MM-dd')}"
     DO
-    UPDATE bookings SET state = "finalizado", modifiedAt = ? WHERE bookingCode = ?
+    UPDATE bookings SET state = "finalizada", modifiedAt = ? WHERE bookingCode = ?
     `,
       [formatDate(new Date()), bookingCode]
     );

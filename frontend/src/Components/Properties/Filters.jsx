@@ -2,12 +2,10 @@ import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa';
 import { useHistory } from 'react-router';
-import { DatePicker } from '@mui/material';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import { format } from 'date-fns';
 import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
-import { Box } from '@mui/system';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import esEsLocale from 'date-fns/locale/es';
 
@@ -33,6 +31,8 @@ export default function Filters({ setOverlay, Overlay }) {
       garaje: '',
       baños: '',
       m2: '',
+      entrada: '',
+      salida: '',
     },
   });
 
@@ -165,11 +165,8 @@ export default function Filters({ setOverlay, Overlay }) {
                         newValue[1] &&
                         !isNaN(newValue[1].getTime())
                       ) {
-                        setValue(
-                          'startDate',
-                          format(newValue[0], 'yyyy/MM/dd')
-                        );
-                        setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
+                        setValue('entrada', format(newValue[0], 'yyyy/MM/dd'));
+                        setValue('salida', format(newValue[1], 'yyyy/MM/dd'));
                       }
                     }
                   }}
@@ -189,7 +186,7 @@ export default function Filters({ setOverlay, Overlay }) {
                       </label>
                       <label>
                         <span className={inputsLabelStyle}>
-                          Fecha de entrada:
+                          Fecha de salida:
                         </span>
                         <input
                           className={inputStyle}

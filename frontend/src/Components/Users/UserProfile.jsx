@@ -5,18 +5,46 @@ import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 import ContactTenant from '../Forms/ContactTenant';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';
+import { Link } from 'react-router-dom';
 
-export default function UserProfile({ match, property }) {
+export default function UserProfile({ match }) {
   const [Token] = useContext(TokenContext);
   const [user, setUser] = useState({});
   const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
+  const [Bookings, setBookings] = useState([]);
   const [properties] = useProperties([]);
+  const [Votes, setVotes] = useState([]);
 
   useEffect(() => {
     get(
       `http://192.168.5.103:4000/users/${match.params.idUser}`,
       (data) => {
         setUser(data.userInfo);
+      },
+      (error) => {
+        console.log(error);
+      },
+      Token
+    );
+    get(
+      `http://192.168.5.103:4000/users/${match.params.idUser}/bookings/renter`,
+      (data) => {
+        if (data.status === 'ok') {
+          setBookings(data.bookings);
+        }
+      },
+      (error) => {
+        console.log(error);
+      },
+      Token
+    );
+    get(
+      `http://192.168.5.103:4000/users/${match.params.idUser}/votes`,
+      (data) => {
+        if (data.status === 'ok') {
+          setVotes(data.Valoraciones);
+          console.log(data, 'VOTOS');
+        }
       },
       (error) => {
         console.log(error);
@@ -32,9 +60,13 @@ export default function UserProfile({ match, property }) {
   return (
     <>
       {Overlay.shown && (
-        <ContactTenant setOverlay={setOverlay} info={Overlay.userInfo} />
+        <ContactTenant
+          setOverlay={setOverlay}
+          info={Overlay.info}
+          Token={Token}
+        />
       )}
-      <main className='pb-28  py-20 flex items-center flex-col justify-center'>
+      <main className='pb-28 py-20 flex flex-col items-center justify-center max-w-5xl m-auto'>
         <div className='perfil flex flex-col items-center justify-center'>
           <article className=' flex flex-col gap-5 items-center justic'>
             <img
@@ -66,35 +98,111 @@ export default function UserProfile({ match, property }) {
                   );
                 })}
               </div>
-              <p className=''>
-                {user.bio} Lorem ipsum dolor sit amet consectetur adipisicing
-                elit. Repellendus obcaecati dignissimos ratione labore rem
-                nesciunt architecto illo a quos, iure quibusdam aliquid quo
-                impedit dolorum quam assumenda minus beatae voluptate!
+              <h2 className='text-2xl border-b border-gray-200 text-principal-gris bg-principal-1 w-full p-1 font-semibold'>
+                Biografía
+              </h2>
+              <p className='p-2'>
+                {user.bio}
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Repellendus obcaecati dignissimos ratione labore rem nesciunt
+                architecto illo a quos, iure quibusdam aliquid quo impedit
+                dolorum quam assumenda minus beatae voluptate!
               </p>
             </section>
           </article>
         </div>
 
-        <section>
-          <h2 className='p-5 text-2xl underline'>Historial viviendas</h2>
-          <div className='flex items-center'>
-            <img
-              className='w-10'
-              src='../../Images/flat.jpg'
-              alt='imagen vivienda'
-            />
-            <img
-              className='w-10'
-              src='../../Images/flat.jpg'
-              alt='imagen vivienda'
-            />
+        <section className='w-full pt-2'>
+          <h2 className='text-2xl border-b border-gray-200 text-principal-gris bg-principal-1 w-full p-1 font-semibold'>
+            Historial viviendas
+          </h2>
+          <div
+            className='
+      bookings-cont p-5 flex flex-col items-center  gap-5
+      sm:justify-start sm:flex-row sm:flex-wrap lg:justify-start'
+          >
+            {Bookings.length ? (
+              Bookings.map((booking) => {
+                return (
+                  <span key={booking.idBooking} className='max-w-xs'>
+                    <article
+                      className={`animate-fadeIn shadow-custom h-1/3 max-w-xs flex flex-col items-start justify-between
+                sm:w- sm:max-w-xs
+                lg:flex-row lg:max-w-md lg:w-full`}
+                    >
+                      <div className='flex flex-col flex-grow lg:w-5/12 w-full'>
+                        <h2 className='bg-gray-Primary text-principal-1 text-lg w-full pl-2'>
+                          {capitalizeFirstLetter(booking.type)} en{' '}
+                          {booking.city}
+                        </h2>
+                        <p>
+                          {booking.address}, {booking.number}
+                        </p>
+                        <p>Precio: {Number(booking.price)}€</p>
+                        <p>
+                          Entrada:{' '}
+                          {new Date(
+                            booking.startBookingDate
+                          ).toLocaleDateString()}
+                        </p>
+                        <p>
+                          Salida:
+                          {new Date(
+                            booking.endBookingDate
+                          ).toLocaleDateString()}
+                        </p>
+                      </div>
+                      <div className='border-r-2 border-opacity-75 border-gray-700'></div>
+                      <Link
+                        to={`/alquileres/${booking.idProperty}`}
+                        className='lg:h-40 w-full relative flex flex-col flex-grow justify-between lg:w-4/12'
+                      >
+                        <img
+                          className='flex-grow object-cover w-full h-full'
+                          src={
+                            booking.photo
+                              ? 'http://192.168.5.103:4000/photo/' +
+                                booking.photo
+                              : require('../../Images/defPicture.jpg').default
+                          }
+                          alt='alquiler'
+                        />
+                        <div className='flex justify-end bg-gray-Primary w-full p-2'>
+                          {booking.votes > 0 ? (
+                            Array(parseInt(booking.votes))
+                              .fill(null)
+                              .map((value, i) => {
+                                return (
+                                  <FaStar
+                                    key={i}
+                                    className='text-principal-1'
+                                  ></FaStar>
+                                );
+                              })
+                          ) : (
+                            <div className='h-4'></div>
+                          )}
+                        </div>
+                      </Link>
+                    </article>
+                    {Bookings.length > 1 && (
+                      <div className='separador bg-principal-1 h-4 mt-5 w-full sm:w-0 max-w-xs'></div>
+                    )}
+                  </span>
+                );
+              })
+            ) : (
+              <h2 className='p-2'>
+                Este inquilino no ha estado no ha viajado aún.
+              </h2>
+            )}
           </div>
         </section>
-
-        <section>
-          <h2 className='p-5 text-2xl underline'>Alquileres</h2>
-          <div className='flex flex-wrap gap-5'>
+        <section className='w-full '>
+          <h2 className='text-2xl border-b border-gray-200 text-principal-gris bg-principal-1 w-full p-1 font-semibold'>
+            Aquileres
+          </h2>
+          <div className='flex flex-wrap gap-5 justify-center'>
             {propiedadUsuario.length > 0 ? (
               propiedadUsuario.map((property) => (
                 <Property key={property.idProperty} property={property}>
@@ -130,70 +238,70 @@ export default function UserProfile({ match, property }) {
                 </Property>
               ))
             ) : (
-              <div>No hay ningún inmueble</div>
+              <div className='font-medium p-2'>No hay ningún inmueble</div>
             )}
           </div>
         </section>
 
-        <section>
-          <h2 className='p-5 text-2xl underline'>Opiniones</h2>
-          <div className='flex flex-col items-center justify-center'>
-            <article>
-              <img
-                className='w-10 py-20 float-left '
-                src={require('../../Images/defProfile.png').default}
-                alt='imagen de perfil'
-              />
-              <section className='p-20'>
-                <h1 className='font-bold'>Manuel</h1>
-
-                <p className=''>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Repellendus obcaecati dignissimos ratione labore rem nesciunt
-                  architecto illo a quos, iure quibusdam aliquid quo impedit
-                  dolorum quam assumenda minus beatae voluptate!
-                </p>
-                <div className='flex text-xs self-center'>
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                </div>
-              </section>
-            </article>
-            <article>
-              <img
-                className='w-10 py-20 float-left '
-                src={require('../../Images/defProfile.png').default}
-                alt='imagen de perfil'
-              />
-              <section className='p-20'>
-                <h1 className='font-bold'>Julián</h1>
-
-                <p className=''>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Repellendus obcaecati dignissimos ratione labore rem nesciunt
-                  architecto illo a quos, iure quibusdam aliquid quo impedit
-                  dolorum quam assumenda minus beatae voluptate!
-                </p>
-                <div className='flex text-xs self-center'>
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                </div>
-              </section>
-            </article>
+        <section className='w-full'>
+          <h2 className='text-2xl border-b border-gray-200 text-principal-gris bg-principal-1 w-full p-1 font-semibold'>
+            Opiniones
+          </h2>
+          <div className='votes-cont pt-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
+            {Votes.length ? (
+              Votes.map((vote) => {
+                console.log(vote);
+                return (
+                  <article
+                    className='flex w-10/12 shadow-xl max-w-xs'
+                    key={vote.idVote}
+                  >
+                    <img
+                      className='w-14 h-14 rounded-full m-2'
+                      src={
+                        vote.avatar
+                          ? 'http://192.168.5.103:4000/photo/' + vote.avatar
+                          : require('../../Images/defProfile.png').default
+                      }
+                      alt='imagen de perfil'
+                    />
+                    <section className=''>
+                      <h1 className='font-bold'>
+                        {vote.name} {vote.lastName}
+                      </h1>
+                      <p className=''>{vote.commentRenter}</p>
+                      <div className='flex text-xs self-center py-2'>
+                        {vote.voteValueRenter > 0 ? (
+                          Array(parseInt(vote.voteValueRenter))
+                            .fill(null)
+                            .map((value, i) => {
+                              return (
+                                <FaStar
+                                  key={i}
+                                  className='text-principal-1 text-xl'
+                                ></FaStar>
+                              );
+                            })
+                        ) : (
+                          <div className='h-4'>
+                            <FaStar className='text-gray-200' />
+                          </div>
+                        )}
+                      </div>
+                    </section>
+                  </article>
+                );
+              })
+            ) : (
+              <p className='font-medium p-2'>Aún no tiene valoraciones</p>
+            )}
           </div>
         </section>
 
         <button
-          // 'btn-submit  text-xl bg-none p- border-yellow-400 border-2 h-2/4 hover:bg-principal-1 hover:border-white hover:text-gray-600 duration-300'
-          className=' relative bottom-10 left-16 place-self-center select-none text-center border border-gray-400 text-white rounded-full p-5 bg-gray-600 hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
+          className='my-10 select-none text-center p-3 border border-gray-400 text-principal-1 bg-gray-Primary hover:bg-principal-1-hover hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
           onClick={() => {
-            setOverlay({ shown: true, userInfo: user });
+            setOverlay({ shown: true, info: user, form: 'contact' });
           }}
         >
           Contactar

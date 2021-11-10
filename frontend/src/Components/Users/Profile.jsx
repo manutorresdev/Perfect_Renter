@@ -44,6 +44,7 @@ export default function Profile({ token, setToken }) {
   const [Bookings, setBookings] = useState([]);
   const [ShownBookings, setShownBookings] = useState('proximas');
   const [properties] = useProperties([]);
+  const [Votes, setVotes] = useState([]);
 
   useEffect(() => {
     get(
@@ -59,6 +60,18 @@ export default function Profile({ token, setToken }) {
         `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
         (data) => {
           setBookings(data.bookings);
+        },
+        (error) => {
+          console.log(error);
+        },
+        token
+      );
+      get(
+        `http://192.168.5.103:4000/users/${User.idUser}/votes`,
+        (data) => {
+          if (data.status === 'ok') {
+            setVotes(data.Valoraciones);
+          }
         },
         (error) => {
           console.log(error);
@@ -86,7 +99,7 @@ export default function Profile({ token, setToken }) {
   );
 
   return (
-    <article className='pt-24 pb-32 flex flex-col w-full justify-center'>
+    <article className='pt-24 pb-32 flex flex-col w-full justify-center max-w-5xl m-auto'>
       {Overlay.form === 'deleteProperty' && (
         <Delete
           setOverlay={setOverlay}
@@ -195,12 +208,12 @@ export default function Profile({ token, setToken }) {
           </ul>
         </section>
       </div>
-      <div className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25 '>
+      <div className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25'>
         ALQUILERES
       </div>
       <div className='flex flex-col'>
         <section className='alquileres'>
-          <div className='flex flex-col lg:flex-row md:h-60vh'>
+          <div className='flex flex-col sm:flex-row lg:h-60vh'>
             <div className='contenedor-alquileres flex flex-wrap justify-center gap-5 sm:max-w-none sm:justify-start sm:pl-2 px-2 pb-10'>
               {propiedadUsuario.length > 0 ? (
                 propiedadUsuario.map((property) => (
@@ -217,7 +230,7 @@ export default function Profile({ token, setToken }) {
                 <div>No hay ningún inmueble</div>
               )}
             </div>
-            <div className='text-gray-400 flex flex-col items-center gap-2 m-auto pb-5 lg:flex-grow lg:items-start'>
+            <div className='text-gray-400 flex flex-col items-center gap-2 m-auto pb-5 lg:flex-grow'>
               <button
                 onClick={() => {
                   setOverlay({
@@ -265,9 +278,62 @@ export default function Profile({ token, setToken }) {
           />
         </section>
       </div>
+      <section className='w-full'>
+        <h2 className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25  '>
+          Opiniones
+        </h2>
+        <div className='votes-cont pt-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
+          {Votes.length ? (
+            Votes.map((vote) => {
+              return (
+                <article
+                  className='flex w-10/12 shadow-xl max-w-xs'
+                  key={vote.idVote}
+                >
+                  <img
+                    className='w-14 h-14 rounded-full m-2'
+                    src={
+                      vote.avatar
+                        ? 'http://192.168.5.103:4000/photo/' + vote.avatar
+                        : require('../../Images/defProfile.png').default
+                    }
+                    alt='imagen de perfil'
+                  />
+                  <section className=''>
+                    <h1 className='font-bold'>
+                      {vote.name} {vote.lastName}
+                    </h1>
+                    <p className=''>{vote.commentRenter}</p>
+                    <div className='flex text-xs self-center py-2'>
+                      {vote.voteValueRenter > 0 ? (
+                        Array(parseInt(vote.voteValueRenter))
+                          .fill(null)
+                          .map((value, i) => {
+                            return (
+                              <FaStar
+                                key={i}
+                                className='text-principal-1 text-xl'
+                              ></FaStar>
+                            );
+                          })
+                      ) : (
+                        <div className='h-4'>
+                          <FaStar className='text-gray-200' />
+                        </div>
+                      )}
+                    </div>
+                  </section>
+                </article>
+              );
+            })
+          ) : (
+            <p className='font-medium p-2'>Aún no tiene valoraciones</p>
+          )}
+        </div>
+      </section>
       <div className='flex justify-center sm:justify-end sm:pr-2'>
         <button
-          className='py-4 px-2 rounded-full text-principal-1 bg-gray-Primary flex items-center justify-around'
+          className='py-4 px-2 my-5 rounded-full text-principal-1 bg-gray-Primary flex items-center justify-around'
           onClick={() => {
             setOverlay({
               form: 'deleteAccount',
@@ -467,8 +533,16 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
                   className='lg:h-40 w-full relative flex flex-col flex-grow justify-between lg:w-4/12'
                 >
                   <img
-                    className='flex-grow object-cover w-full h-full'
-                    src={require('../../Images/defPicture.jpg').default}
+                    className={
+                      booking.photo
+                        ? 'h-32 w-44 object-cover'
+                        : 'flex-grow object-cover w-full h-full'
+                    }
+                    src={
+                      booking.photo
+                        ? 'http://192.168.5.103:4000/photo/' + booking.photo
+                        : require('../../Images/defPicture.jpg').default
+                    }
                     alt='alquiler'
                   />
                   <div className='flex justify-end bg-gray-Primary w-full p-2'>
@@ -608,7 +682,6 @@ function EditBooking({ setOverlay, info, Token }) {
   const [Message, setMessage] = useState({ status: '', message: '' });
   const [pickerValue, setPickerValue] = useState([null, null]);
   const [newDates, setNewDates] = useState([null, null]);
-  console.log(info);
 
   function Confirm(bookingCode, dates) {
     // Fechas a comparar
@@ -627,8 +700,6 @@ function EditBooking({ setOverlay, info, Token }) {
         startBookingDate !== newStartBookingDate ||
         endBookingDate !== newEndBookingDate
       ) {
-        console.log('\x1b[45m%%%%%%%', 'CAMBIADAS');
-        console.log(newStartBookingDate);
         const body = {
           startDate: format(dates[0], 'yyyy/MM/dd'),
           endDate: format(dates[1], 'yyyy/MM/dd'),

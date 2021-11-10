@@ -77,13 +77,12 @@ const bookProperty = async (req, res, next) => {
     //  Comprobamos que no haya una solicitud en proceso de aceptar.
     const [valiDate] = await connection.query(
       `
-      SELECT * FROM bookings WHERE (startBookingDate BETWEEN ? AND ?)  OR (endBookingDate BETWEEN ? AND ?)
+      SELECT * FROM bookings WHERE ((startBookingDate BETWEEN ? AND ?)  OR (endBookingDate BETWEEN ? AND ?)) AND idProperty = ?
         `,
-      [startDate, endDate, startDate, endDate]
+      [startDate, endDate, startDate, endDate, idProperty]
     );
 
     console.log(valiDate);
-
     if (valiDate.length > 0) {
       res.send({
         status: 'ok',

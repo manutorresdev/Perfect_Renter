@@ -29,7 +29,7 @@ export default function PropertyInfo(props) {
   // Verificar si User es dueño de la propiedad
   const [Owner, setOwner] = useState(false);
   // Ampliar fotos
-  const [Photo, setPhoto] = useState(false);
+  const [Photo, setPhoto] = useState(true);
   // Información de la propiedad
   const [property, setProperty] = useState({});
   // Array de propiedades
@@ -141,8 +141,8 @@ export default function PropertyInfo(props) {
             <div className={`slider pt-20 w-full h-full`}>
               <Carousel
                 className={`slider-cont sm:max-w-7xl w-full h-full ${
-                  Photo ? 'max-h-96' : 'max-h-full'
-                } flex transition-all transform ease-in duration-300`}
+                  Photo ? 'max-h-96' : 'max-h-full bg-gray-Primary'
+                } flex transition-all transform ease-in duration-300 `}
                 navButtonsAlwaysVisible
                 indicators={false}
                 autoPlay={false}
@@ -152,7 +152,11 @@ export default function PropertyInfo(props) {
                     return (
                       <FaAngleRight
                         onClick={onClick}
-                        className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'
+                        className={`${
+                          Photo
+                            ? ' text-5xl pr-2 text-white'
+                            : ' text-7xl pr-5 text-principal-gris bg-gray-100 bg-opacity-10'
+                        } absolute z-10  cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0  duration-200`}
                       >
                         {next && 'Next'}
                       </FaAngleRight>
@@ -161,7 +165,11 @@ export default function PropertyInfo(props) {
                     return (
                       <FaAngleLeft
                         onClick={onClick}
-                        className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md left-0 pl-2 duration-200'
+                        className={`${
+                          Photo
+                            ? ' text-5xl pl-2 text-white'
+                            : ' text-7xl pl-5 text-principal-gris bg-gray-100 bg-opacity-10 '
+                        } absolute z-10 cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md left-0 duration-200`}
                       >
                         {prev && 'Previous'}
                       </FaAngleLeft>
@@ -175,7 +183,11 @@ export default function PropertyInfo(props) {
                       <img
                         key={i}
                         onClick={openPhoto}
-                        className={`object-cover w-96 sm:w-full h-96 duration-300 cursor-pointer ${Photo}`}
+                        className={`object-cover duration-300 cursor-pointer ${
+                          Photo
+                            ? ' h-96 w-full'
+                            : ' sm:h-full w-full sm:max-h-lg max-w-2xl object-contain m-auto'
+                        }`}
                         src={'http://192.168.5.103:4000/photo/' + img.name}
                         alt='default'
                       />
