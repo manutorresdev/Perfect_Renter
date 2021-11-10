@@ -25,15 +25,6 @@ const descBoxTitleStyle = 'text-base text-gray-700 pb-3 font-medium';
 const descBoxPStyle = 'text-gray-700 text-sm pl-2';
 
 export function Home() {
-  // fetch('https://randomuser.me/api/?inc=picture')
-  //   .then((res) => {
-  //     console.log('fetch de avatar', res);
-  //     res.json();
-  //   })
-  //   .then((data) => {
-  //     console.log(data.results);
-  //   });
-
   return (
     <>
       <Banner />
@@ -176,7 +167,6 @@ function RentersList() {
   const [Users, setUsers] = useState([]);
 
   useEffect(() => {
-    console.log('hhhooolllaaaaaa');
     get(
       'http://localhost:4000/users',
       (data) => {
@@ -198,6 +188,9 @@ function RentersList() {
           ? Users.slice(0, 4).map((user) => <Renter user={user} />)
           : ''}
       </div>
+      <Link to='/inquilinos' className={boxReadMoreBtnStyle}>
+        <button>Ver Mas</button>
+      </Link>
     </div>
   );
 }
