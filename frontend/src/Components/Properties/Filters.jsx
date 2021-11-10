@@ -1,16 +1,24 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa';
 import { useHistory } from 'react-router';
 import { DatePicker } from '@mui/material';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateRangePicker from '@mui/lab/DateRangePicker';
+import { format } from 'date-fns';
+import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
+import { Box } from '@mui/system';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import esEsLocale from 'date-fns/locale/es';
 
 export default function Filters({ setOverlay, Overlay }) {
   const pMinVal = useRef();
   const history = useHistory();
-
+  const [pickerValue, setPickerValue] = useState([null, null]);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -58,13 +66,6 @@ export default function Filters({ setOverlay, Overlay }) {
     }
   }
 
-  /**
-   * copy of form whit bg white, input gray and text yellow
-   * const inputsLabelStyle =
-    'sm:text-gray-600 sm:hover:text-principal-1 text-xl duration-200';
-  const inputStyle =
-    'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
-   */
   const inputsLabelStyle = ' text-xl duration-200';
   const inputStyle =
     'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
@@ -132,16 +133,76 @@ export default function Filters({ setOverlay, Overlay }) {
                   </option>
                 </select>
               </label>
-              <label className='dispDate'>
-                <div className={inputsLabelStyle}>Fecha de entrada:</div>
-                {/* {A GESTIONAR} */}
-                <input type='date' name='dispDate' className={inputStyle} />
-              </label>
-              <label className='dispDate'>
-                <div className={inputsLabelStyle}>Fecha de salida:</div>
-                {/* {A GESTIONAR} */}
-                <input type='date' name='dispDate' className={inputStyle} />
-              </label>
+              <LocalizationProvider
+                locale={esEsLocale}
+                dateAdapter={AdapterDateFns}
+              >
+                <DateRangePicker
+                  disablePast
+                  autoOk={true}
+                  label='Advanced keyboard'
+                  value={pickerValue}
+                  renderLoading={() => <CalendarPickerSkeleton />}
+                  inputFormat='dd/MM/yyyy'
+                  onChange={(newValue) => {
+                    if (
+                      new Date(newValue[0]).getTime() >
+                      new Date(newValue[1]).getTime()
+                    ) {
+                      console.error('Fecha de entrada mayor a fecha de salida');
+                    } else if (
+                      new Date(newValue[0]).getTime() ===
+                      new Date(newValue[1]).getTime()
+                    ) {
+                      console.error('Selecciona fechas diferentes');
+                    } else {
+                      console.warn('FECHAS CORRECTAS');
+                      setPickerValue(newValue);
+
+                      if (
+                        newValue[0] &&
+                        !isNaN(newValue[0].getTime()) &&
+                        newValue[1] &&
+                        !isNaN(newValue[1].getTime())
+                      ) {
+                        setValue(
+                          'startDate',
+                          format(newValue[0], 'yyyy/MM/dd')
+                        );
+                        setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
+                      }
+                    }
+                  }}
+                  renderInput={(startProps, endProps) => (
+                    <div className='flex flex-col'>
+                      <label>
+                        <span className={inputsLabelStyle}>
+                          Fecha de entrada:
+                        </span>
+                        <input
+                          className={inputStyle}
+                          name='startDate'
+                          autoComplete='off'
+                          ref={startProps.inputRef}
+                          {...startProps.inputProps}
+                        />
+                      </label>
+                      <label>
+                        <span className={inputsLabelStyle}>
+                          Fecha de entrada:
+                        </span>
+                        <input
+                          className={inputStyle}
+                          name='endDate'
+                          autoComplete='off'
+                          ref={endProps.inputRef}
+                          {...endProps.inputProps}
+                        />
+                      </label>
+                    </div>
+                  )}
+                />
+              </LocalizationProvider>
               <div className={inputsLabelStyle}>Ciudad:</div>
               <label className='city'>
                 <input

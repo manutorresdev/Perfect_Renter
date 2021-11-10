@@ -171,7 +171,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
           setPhotos(Photos.filter((photo) => photo.name !== name));
           setTimeout(() => {
             setLoader(false);
-          }, 1500);
+          }, 3000);
         }
       },
       (error) => {
@@ -379,11 +379,11 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
               {CitiesOverlay && (
                 <div className='cities-cont absolute z-20 flex flex-col items-start overflow-y-scroll max-h-96  w-full border-2 border-black border-t-0 bg-white'>
                   {CitiesFound.length > 0 ? (
-                    CitiesFound.slice(0, 100).map((city) => {
+                    CitiesFound.slice(0, 100).map((city, i) => {
                       return (
                         <button
+                          key={city.cp + i}
                           className='bg-white w-full text-left p-2 border'
-                          key={city.internalid}
                           onMouseDown={() => {
                             console.log('\x1b[45m%%%%%%%', city.cp);
                             cityRef.current.value = city.poblacion;

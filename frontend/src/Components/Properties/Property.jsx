@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FaAngleLeft,
   FaAngleRight,
@@ -9,7 +9,7 @@ import {
 import { Link } from 'react-router-dom';
 import { del, get } from '../../Helpers/Api';
 import NewProperty from './NewProperty';
-
+import Carousel from 'react-material-ui-carousel';
 export default function Property({
   property,
   token,
@@ -17,9 +17,7 @@ export default function Property({
   setProfileOverlay,
   mountOn,
 }) {
-  const [curr, setCurr] = useState(0);
   const [SlideImgs, setSlideImgs] = useState([]);
-  const slider = useRef();
   const [Overlay, setOverlay] = useState({
     shown: false,
     form: '',
@@ -27,11 +25,13 @@ export default function Property({
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties/${property.idProperty}/photos`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}/photos`,
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
           setSlideImgs(data.photos.slice(0, 5));
-        } else if (data.status === 'ok' && mountOn !== 'propertiesList') {
+        } else if (data.status === 'ok' && mountOn === 'profile') {
+          setSlideImgs(data.photos);
+        } else {
           setSlideImgs(data.photos);
         }
       },
@@ -39,17 +39,6 @@ export default function Property({
       null
     );
   }, [property.idProperty, mountOn]);
-  function right() {
-    console.log('\x1b[43m########\x1b[30m', 'RIGHT');
-    console.log(curr);
-    console.log('\x1b[45m%%%%%%%', SlideImgs.length);
-    setCurr(curr === SlideImgs.length - 1 ? 0 : curr + 1);
-  }
-
-  function left() {
-    console.log('\x1b[43m########\x1b[30m', 'LEFT');
-    setCurr(curr === 0 ? SlideImgs.length - 1 : curr - 1);
-  }
 
   function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
@@ -57,7 +46,7 @@ export default function Property({
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://localhost:4000/properties/${property.idProperty}`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}`,
       body,
       (data) => {
         alert(data.message);
@@ -70,9 +59,9 @@ export default function Property({
 
   return (
     <article
-      className={`cont-vivienda overflow-hidden border-2 max-w-xs bg-white sm:w-auto min-w-min ${
+      className={`cont-vivienda overflow-hidden max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
         mountOn === 'profile' ? ' md:max-h-96 ' : ''
-      } hover:max-h-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`}
+      } hover:max-h-full w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`}
     >
       {Overlay.form === 'editProperty' && (
         <NewProperty
@@ -81,47 +70,57 @@ export default function Property({
           EditProperty={property}
         />
       )}
-      <div className='slider w-full max-w-custom sm:max-w-none relative'>
-        <button
-          onClick={right}
-          className='absolute z-10 text-white text-3xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'
-        >
-          <FaAngleRight />
-        </button>
-        <button
-          onClick={left}
-          className='absolute z-10 text-white text-3xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md left-0 pl-2 duration-200'
-        >
-          <FaAngleLeft />
-        </button>
-        <div
-          ref={slider}
-          className={`slider-cont min-w-xxs h-48 flex transition-all transform ease-in}`}
+      <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
+        <Carousel
+          navButtonsAlwaysVisible
+          indicators={false}
+          autoPlay={false}
+          animation='slide'
+          NavButton={({ onClick, className, style, next, prev }) => {
+            if (next) {
+              return (
+                <FaAngleRight
+                  onClick={onClick}
+                  className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'
+                >
+                  {next && 'Next'}
+                </FaAngleRight>
+              );
+            } else {
+              return (
+                <FaAngleLeft
+                  onClick={onClick}
+                  className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md left-0 pl-2 duration-200'
+                >
+                  {prev && 'Previous'}
+                </FaAngleLeft>
+              );
+            }
+          }}
+          className='slider-cont min-w-xxs h-48 transition-all transform ease-in'
         >
           {SlideImgs.length > 0 ? (
-            SlideImgs.slice(0, 5).map((img, i) => {
+            SlideImgs.map((img, i) => {
               return (
                 <img
                   key={i}
-                  className={`${
-                    i === curr ? '' : 'absolute opacity-0'
-                  } object-cover w-full duration-300`}
-                  src={'http://localhost:4000/photo/' + img.name}
+                  className='object-cover w-full h-48 '
+                  src={'http://192.168.5.103:4000/photo/' + img.name}
                   alt='default'
                 />
               );
             })
           ) : (
             <img
-              className='object-cover w-full'
+              className='object-fit h-48 w-full'
               src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
               alt='default home'
             />
           )}
-        </div>
+        </Carousel>
       </div>
 
-      <div className='relative max-w-custom sm:max-w-none'>
+      <div className='relative sm:max-w-custom md:max-w-none'>
         <Link to={`/alquileres/${property.idProperty}`}>
           <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 flex justify-between gap-2'>
             <h3>
@@ -136,11 +135,13 @@ export default function Property({
                 property.toilets
               } ${property.toilets > 1 ? 'baños' : 'baño'}`}
             </div>
-            <div className='sm:w-72 pt-2'>
-              <p className='overflow-hidden'>
-                {property.description.slice(0, 100)}...
-              </p>
-            </div>
+            {!(mountOn === 'bestPropertiesList') && (
+              <div className='sm:w-72 pt-2'>
+                <p className='overflow-hidden'>
+                  {property.description.slice(0, 100)}...
+                </p>
+              </div>
+            )}
           </div>
           <footer className='flex p-2 justify-end'>
             {Array(parseInt(property.votes))

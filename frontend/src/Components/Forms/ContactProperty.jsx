@@ -1,6 +1,6 @@
 // import React, { useContext, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { FaAngleLeft, FaAngleRight, FaPlus } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import { CreateFormData, post, get } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
@@ -11,9 +11,6 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { addDays, format } from 'date-fns';
 import esEsLocale from 'date-fns/locale/es';
-
-import { TextField } from '@mui/material';
-
 import { useContext, useEffect, useState } from 'react';
 import MuiDateRangePickerDay from '@mui/lab/DateRangePickerDay';
 import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
@@ -28,10 +25,8 @@ export default function ContactProperty({
   message,
   Slider,
 }) {
-  const [curr, setCurr] = useState(0);
   const [Value, setPickerValue] = useState([null, null]);
   const [Bookings, setBookings] = useState();
-  const [days, setDays] = useState([]);
   const [Token] = useContext(TokenContext);
 
   const {
@@ -51,7 +46,7 @@ export default function ContactProperty({
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties/${property.idProperty}/bookings`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data.bookings);
         console.log(data);
@@ -89,7 +84,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/book`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           setMessage(data);
@@ -103,7 +98,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -117,33 +112,6 @@ export default function ContactProperty({
       );
     }
   }
-
-  function right() {
-    setCurr(curr === Slider.SlideImgs.length - 1 ? 0 : curr + 1);
-  }
-
-  function left() {
-    setCurr(curr === 0 ? Slider.SlideImgs.length - 1 : curr - 1);
-  }
-
-  // if (message.status === 'ok') {
-  //   return (
-  //     <div className='z-20 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
-  //       <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-  //         <h2>¡Ya esta listo!</h2>
-  //         <h2>{message.message}</h2>
-  //         <button
-  //           className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
-  //           onClick={() => {
-  //             setOverlay({ form: '', shown: false, propertyInfo: {} });
-  //           }}
-  //         >
-  //           Cerrar
-  //         </button>
-  //       </section>
-  //     </div>
-  //   );
-  // }
 
   // Styles
   const inpStyle =
@@ -297,7 +265,7 @@ export default function ContactProperty({
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
             <div className='slider flex flex-col w-full items-center justify-center '>
-              <div
+              {/* <div
                 className={`slider-cont ${
                   Slider.Photo ? 'h-full' : 'h-96'
                 }  transition-all transform ease-linear duration-300`}
@@ -331,7 +299,7 @@ export default function ContactProperty({
                     );
                   })}
                 </div>
-              </div>
+              </div> */}
             </div>
             <h2 className='informacion w-full bg-gray-Primary bg-opacity-25 text-2xl text-principal-1 flex justify-center'>
               {property.city
@@ -383,7 +351,7 @@ function DatePicker({
       return <DateRangePickerDay {...dateRangePickerDayProps} />;
     }
   }
-
+  console.log('\x1b[45m%%%%%%%', arrayFechas);
   return (
     <LocalizationProvider locale={esEsLocale} dateAdapter={AdapterDateFns}>
       <DateRangePicker
@@ -392,7 +360,8 @@ function DatePicker({
         label='Advanced keyboard'
         value={Value}
         shouldDisableDate={(date) =>
-          arrayFechas.includes(format(date, 'dd/MM/yyyy'))
+          arrayFechas.includes(format(date, 'dd/MM/yyyy')) ||
+          arrayFechas.includes(format(date, 'd/MM/yyyy'))
         }
         renderLoading={() => <CalendarPickerSkeleton />}
         renderDay={renderWeekPickerDay}
@@ -439,3 +408,8 @@ function DatePicker({
               {...endProps.inputProps}
             />
           </div>
+        )}
+      />
+    </LocalizationProvider>
+  );
+}

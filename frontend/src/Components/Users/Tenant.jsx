@@ -12,7 +12,7 @@ export default function Tenant({ user, setOverlay, relation }) {
             className='w-32 h-28 rounded-full object-scale-down'
             src={
               user.avatar
-                ? `http://localhost:4000/photo/${user.avatar}`
+                ? `http://192.168.5.103:4000/photo/${user.avatar}`
                 : require('../../Images/defProfile.png').default
             }
             alt={'perfil ' + user.name + user.lastName}
@@ -34,7 +34,9 @@ export default function Tenant({ user, setOverlay, relation }) {
           <div className='font-bold text-base  text-principal-gris py-1 pl-1 border-b-2 flex-grow w-max'>
             {capitalizeFirstLetter(user.name)}{' '}
             {capitalizeFirstLetter(user.lastName)},{' '}
-            {new Date().getFullYear() - new Date(user.birthDate).getFullYear()}
+            {Math.abs(
+              new Date().getFullYear() - new Date(user.birthDate).getFullYear()
+            )}
           </div>
           <span className='pl-2 font-medium text-sm'>{user.city}</span>
         </Link>

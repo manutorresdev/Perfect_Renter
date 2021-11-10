@@ -132,7 +132,7 @@ const acceptBooking = async (req, res, next) => {
       [formatDate(new Date()), bookingCode]
     );
 
-    // // Encargamos a SQL de hacer el cambio de "alquilado" a "finalizado"
+    // Encargamos a SQL de hacer el cambio de "alquilado" a "finalizado"
 
     await connection.query(
       `

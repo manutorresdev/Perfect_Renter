@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
 import { CreateFormDataMultipleFiles, post, put } from '../../Helpers/Api';
 import CircularProgress from '@mui/material/CircularProgress';
+import Compressor from 'compressorjs';
 
 export default function FileProperty({
   setOverlay,
@@ -66,6 +67,7 @@ export default function FileProperty({
             setButton(false);
             setLoader(false);
             setFileName('');
+            window.location.reload();
           }, 500);
           setMessage({ status: 'ok', message: '¡Fotos subidas con éxito!' });
         }
@@ -78,12 +80,18 @@ export default function FileProperty({
       Token
     );
   }
+
   useEffect(() => {
     setTotalPhotos(photos.length + FileName.length);
   }, [FileName.length, photos.length]);
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
+      {Loader && (
+        <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
+          <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
+        </div>
+      )}
       <section className=' pt-2 shadow-custom border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 right-3'
@@ -163,12 +171,16 @@ export default function FileProperty({
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
+                                setLoader(true);
                                 setFileName(
                                   FileName.filter(
                                     (fileToRemove) =>
                                       fileToRemove.name !== file.name
                                   )
                                 );
+                                setTimeout(() => {
+                                  setLoader(false);
+                                }, 1000);
                               }}
                             >
                               <FaPlus className='transform rotate-45' />
@@ -192,13 +204,18 @@ export default function FileProperty({
                 className='hidden'
                 {...rest}
                 onChange={(e) => {
+                  setLoader(true);
                   const arrayPhotos = [];
                   onChange(e);
                   for (const photo of hiddenInput.current.files) {
+                    console.log(photo);
                     arrayPhotos.push(photo);
                   }
                   setFileName(arrayPhotos);
                   setButton(true);
+                  setTimeout(() => {
+                    setLoader(false);
+                  }, 5000);
                 }}
                 ref={(e) => {
                   ref(e);
