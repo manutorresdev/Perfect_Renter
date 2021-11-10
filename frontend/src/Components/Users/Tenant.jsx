@@ -13,7 +13,7 @@ export default function Tenant({ user, setOverlay, relation }) {
             src={
               user.avatar
                 ? `http://localhost:4000/photo/${user.avatar}`
-                : require('../../Images/defProfile.png').default
+                : `https://randomuser.me/api/portraits/med/men/${user.idUser}.jpg`
             }
             alt={'perfil ' + user.name + user.lastName}
           />

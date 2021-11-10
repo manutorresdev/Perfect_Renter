@@ -59,6 +59,9 @@ module.exports = {
         auto: 'auto',
         8: 'repeat(8, minmax(0, 1fr))',
       },
+      gridTemplatesColumns: {
+        1: 'repeat(2, minmax(0, 0.5fr))',
+      },
       backgroundImage: {
         // 'fondo-gris':
         // "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
