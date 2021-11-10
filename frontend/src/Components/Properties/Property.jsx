@@ -70,9 +70,9 @@ export default function Property({
 
   return (
     <article
-      className={`cont-vivienda overflow-hidden border-2 max-w-xs bg-white sm:w-auto min-w-min ${
+      className={`cont-vivienda overflow-hidden cont-vivienda content-center w-3/4 h-full bg-principal-1-hover  ${
         mountOn === 'profile' ? ' md:max-h-96 ' : ''
-      } hover:max-h-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`}
+      } hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
     >
       {Overlay.form === 'editProperty' && (
         <NewProperty
