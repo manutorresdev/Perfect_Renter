@@ -392,10 +392,11 @@ describe('User GET endpoints', () => {
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
+
     const res = await api.get(`/users/1/votes`).set({ authorization: token3 });
+
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('Valoraciones');
-    expect(res.body.Valoraciones).toBe('Aún no tiene valoraciones.');
   });
 
   test('Listar reservas de un usuario.', async () => {
@@ -911,12 +912,22 @@ describe('Properties POST Endpoints', () => {
       .send({
         comentarios:
           'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-10-01',
+        endDate: '2022-10-02',
       });
 
-    expect(resBook.statusCode).toEqual(200);
-    expect(resBook.body.message).toBe(
+    const resBook2 = await api
+      .post(`/properties/${idProperty}/book`)
+      .set({ authorization: token3 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-01',
+        endDate: '2022-10-02',
+      });
+
+    expect(resBook2.statusCode).toEqual(200);
+    expect(resBook2.body.message).toBe(
       'Las fechas seleccionadas no estan disponibles para esta propiedad'
     );
   });
