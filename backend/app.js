@@ -549,15 +549,15 @@ app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
  * @response {Object} Response listando las propiedades de ese renter
  */
 app.get('/users/:idUser/properties', userExists, listProperties);
-// /**
-//  * Listar las reservas de un usuario
-//  *
-//  * @name getBookings
-//  * @path {GET} /properties/:idProperty/bookings
-//  * @params {number} idProperty Número del inmueble del que se quiere visualizar las reservas
-//  * @code {200} Si la respuesta es correcta
-//  * @response {Object} Response Lista de reservas
-//  */
+/**
+ * Listar las reservas finalizadas de un usuario
+ *
+ * @name getBookings
+ * @path {GET} /properties/:idProperty/bookings
+ * @params {number} idProperty Número del inmueble del que se quiere visualizar las reservas
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response Lista de reservas
+ */
 app.get('/users/:idUser/bookings/renter', authUser, getBookings);
 
 /**
@@ -615,7 +615,7 @@ app.use((req, res) => {
  * ####################
  */
 const server = app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+  console.log(`Server listening at http://192.168.5.103:${PORT}`);
 });
 
 module.exports = { server, app };

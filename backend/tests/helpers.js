@@ -67,6 +67,7 @@ async function createProperty(
     toilets: '1',
     energyCertificate: '0',
     //availabilityDate:2021-10-20
+    description: 'Piso en' + city + flat,
     price: '650',
     state: 'reservado',
   };
@@ -74,7 +75,6 @@ async function createProperty(
     .post('/properties')
     .set({ authorization: token })
     .send(bodyProp);
-
   return resProp.body.property;
 }
 
