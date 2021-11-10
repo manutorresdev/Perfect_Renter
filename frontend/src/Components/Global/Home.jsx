@@ -2,10 +2,8 @@ import { React, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useHistory } from 'react-router-dom';
-import { capitalizeFirstLetter, parseJwt } from '../../Helpers/Api';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';
-import Tenant from '../Users/Tenant';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 import { get } from '../../Helpers/Api';
 
@@ -14,7 +12,7 @@ const sectionStyle =
   'h-max-content p-5 text-principal-1 overflow-y-auto bg-gray-Primary';
 const sectionTitleStyle = 'pb-5 text-3xl font-medium';
 const sectionImgStyle = 'w-2/5 float-right pl-3';
-const boxContStyle = 'flex flex-col gap-5';
+const boxContStyle = 'row-span-2 flex flex-col gap-5 b';
 const boxContTitleStyle =
   'w-full text-center pt-4 pb-3 text-principal-1 underline text-xl';
 const boxItemContStyle =
@@ -35,7 +33,7 @@ export function Home() {
           backgroundImage:
             "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
         }}
-        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5  sm:w-full pb-32'
+        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-3 sm:pt-5  sm:w-full pb-32'
       >
         <RentersList />
         <PropertiesList />
@@ -190,7 +188,6 @@ function RentersList() {
         {Users.length
           ? Users.slice(0, 4).map((user) => <Renter user={user} />)
           : ''}
-        ;
       </div>
     </div>
   );
