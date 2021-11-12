@@ -27,7 +27,7 @@ export default function Properties() {
   return (
     <main className='flex flex-col sm:flex-row pb-28 sm:gap-2'>
       <aside
-        className={`w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static fixed right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20`}
+        className={` w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static fixed right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20`}
       >
         <button
           className='text-white text-xl min-w-min h-full p-2 sm:hidden'

@@ -2,7 +2,6 @@ import { React, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useHistory } from 'react-router-dom';
-
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
@@ -17,15 +16,13 @@ const boxContStyle = 'row-span-2 flex flex-col gap-5 b';
 const boxContTitleStyle =
   'w-full text-center pt-4 pb-3 text-principal-1 underline text-xl';
 const boxItemContStyle =
-  'grid grid-cols-1 grid-rows-auto gap-10 justify-items-center sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2';
+  'grid grid-cols-1 grid-rows-auto gap-2 justify-items-center sm:grid-cols-2';
 const boxReadMoreBtnStyle =
   'm-auto text-xl bg-gray-Primary text-principal-1 border-2 border-gray-800 max-w-max px-6 py-2 hover:bg-principal-1 hover:text-gray-700 duration-300';
-
 const descBoxStyle = 'content-center w-3/4 h-full bg-principal-1-hover';
-
 const descBoxTextStyle = 'text-left p-4';
-const descBoxTitleStyle = 'text-xl text-gray-700 pb-3 font-medium';
-const descBoxPStyle = 'text-gray-700 text-l pl-2';
+const descBoxTitleStyle = 'text-base text-gray-700 pb-3 font-medium';
+const descBoxPStyle = 'text-gray-700 text-sm pl-2';
 
 export function Home() {
   return (

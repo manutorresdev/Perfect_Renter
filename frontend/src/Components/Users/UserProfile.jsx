@@ -70,7 +70,7 @@ export default function UserProfile({ match }) {
         <div className='perfil flex flex-col items-center justify-center'>
           <article className=' flex flex-col gap-5 items-center justic'>
             <img
-              className='w-1/5 rounded-full'
+              className='w-2/4 rounded-full'
               src={
                 user.avatar
                   ? `http://localhost:4000/photo/${user.avatar}`
