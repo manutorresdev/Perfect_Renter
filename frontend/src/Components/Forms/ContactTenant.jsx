@@ -25,7 +25,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
   function onSubmit(body, e) {
     e.preventDefault();
     post(
-      `http://192.168.5.103:4000/users/${info.idUser}/contact`,
+      `http://localhost:4000/users/${info.idUser}/contact`,
       CreateFormData(body),
       (data) => {
         alert(data.message);
@@ -81,7 +81,8 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
                 rules={{
                   required: 'Debes escribir un nombre.',
                   pattern: {
-                    value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                    value:
+                      /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
                       'El nombre no puede contener carácteres especiales ni números.',
                   },
@@ -215,7 +216,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
               className='w-2/4 rounded-full'
               src={
                 info.avatar
-                  ? `http://192.168.5.103:4000/photo/${info.avatar}`
+                  ? `http://localhost:4000/photo/${info.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt='imagen de perfil'
