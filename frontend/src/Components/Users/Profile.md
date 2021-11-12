@@ -351,7 +351,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
           }
         }).map((booking) => {
           return (
-            <span key={booking.idBooking} className='max-w-xs'>
+            <span key={Math.random()} className='max-w-xs'>
               <article
                 className={`animate-fadeIn shadow-custom h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
@@ -418,7 +418,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
                         .map((value, i) => {
                           return (
                             <FaStar
-                              key={i}
+                              key={Math.random()}
                               className='text-principal-1'
                             ></FaStar>
                           );
@@ -485,7 +485,10 @@ function CancelBooking({ setOverlay, info, Token }) {
                   .fill(null)
                   .map((value, i) => {
                     return (
-                      <FaStar key={i} className='text-principal-1'></FaStar>
+                      <FaStar
+                        key={Math.random()}
+                        className='text-principal-1'
+                      ></FaStar>
                     );
                   })
               ) : (
@@ -602,7 +605,10 @@ function EditBooking({ setOverlay, info, Token }) {
                   .fill(null)
                   .map((value, i) => {
                     return (
-                      <FaStar key={i} className='text-principal-1'></FaStar>
+                      <FaStar
+                        key={Math.random()}
+                        className='text-principal-1'
+                      ></FaStar>
                     );
                   })
               ) : (
@@ -750,6 +756,7 @@ function EditBooking({ setOverlay, info, Token }) {
           {propiedadUsuario.length > 0 ? (
             propiedadUsuario.map((property) => (
               <article
+                key={Math.random()}
                 className={`${
                   mountOn === 'home'
                     ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
@@ -791,7 +798,7 @@ function EditBooking({ setOverlay, info, Token }) {
                       SlideImgs.map((img, i) => {
                         return (
                           <img
-                            key={i}
+                            key={Math.random()}
                             className='object-cover w-full h-48'
                             src={img}
                             alt='default'
@@ -838,7 +845,10 @@ function EditBooking({ setOverlay, info, Token }) {
                         .fill(null)
                         .map((value, i) => {
                           return (
-                            <FaStar key={i} className='text-principal-1' />
+                            <FaStar
+                              key={Math.random()}
+                              className='text-principal-1'
+                            />
                           );
                         })}
                     </footer>
@@ -918,6 +928,7 @@ function EditBooking({ setOverlay, info, Token }) {
         Votes.map((vote) => {
           return (
             <article
+              key={Math.random()}
               className='flex w-10/12 shadow-xl max-w-xs'
               key={vote.idVote}
             >
@@ -938,7 +949,7 @@ function EditBooking({ setOverlay, info, Token }) {
                       .map((value, i) => {
                         return (
                           <FaStar
-                            key={i}
+                            key={Math.random()}
                             className='text-principal-1 text-xl'
                           ></FaStar>
                         );

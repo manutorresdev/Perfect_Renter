@@ -103,7 +103,7 @@ const Propertiess = [
   },
 ];
 
-<main className='flex flex-col sm:flex-row pb-28 sm:gap-2'>
+<main className='flex flex-col sm:flex-row relative pb-28 sm:gap-2'>
   <section
     className={`ALQUILERES ${
       Overlay.show && 'overflow-hidden'
@@ -116,6 +116,7 @@ const Propertiess = [
       {Propertiess.length > 0 ? (
         Propertiess.map((property) => (
           <article
+          key={Math.random()}
             className={`
       ${
         mountOn === 'home'
@@ -160,7 +161,7 @@ const Propertiess = [
                   SlideImgs.map((img, i) => {
                     return (
                       <img
-                        key={i}
+                        key={Math.random()}
                         className='object-cover w-full h-48'
                         src={img}
                         alt='default'
@@ -253,6 +254,7 @@ const Propertiess = [
         {Propertiess.length > 0 &&
           Propertiess.slice(0, 3).map((property) => (
             <article
+            key={Math.random()}
               className={`${
                 mountOn === 'home'
                   ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
@@ -294,7 +296,7 @@ const Propertiess = [
                     SlideImgs.map((img, i) => {
                       return (
                         <img
-                          key={i}
+                          key={Math.random()}
                           className='object-cover w-full h-48'
                           src={img}
                           alt='default'

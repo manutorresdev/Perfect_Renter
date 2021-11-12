@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateFormData, post, put } from '../../Helpers/Api';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 
 // Import inputs controlados
 import Email from './Inputs/Email';
@@ -13,6 +14,10 @@ import {
   FaRegCalendarAlt,
   FaUserAlt,
 } from 'react-icons/fa';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { Box } from '@mui/system';
+import { format } from 'date-fns';
 
 export default function Register({ Token, usuario, setOverlay }) {
   const {
@@ -21,6 +26,7 @@ export default function Register({ Token, usuario, setOverlay }) {
     formState: { errors },
     control,
     reset,
+    setValue,
   } = useForm(
     Token
       ? {
@@ -50,26 +56,30 @@ export default function Register({ Token, usuario, setOverlay }) {
 
   // States
   const [Error, setError] = useState('');
-
+  const [Value, setDateValue] = useState([null, null]);
   // Enviar datos a backend
   function onSubmitRegister(body, e) {
     e.preventDefault();
-
-    post(
-      'http://192.168.5.103:4000/users',
-      CreateFormData(body),
-      (data) => {
-        console.log('Success');
-        alert(data.message);
-        window.location.reload();
-        reset();
-        setOverlay({ shown: false, userInfo: {} });
-      },
-      (data) => {
-        setError(data.message);
-      },
-      Token
-    );
+    const age = new Date().getYear() - new Date(body.birthDate).getYear();
+    if (age < 17) {
+      setError('Debes ser mayor de edad.');
+    } else {
+      post(
+        'http://192.168.5.103:4000/users',
+        CreateFormData(body),
+        (data) => {
+          console.log('Success');
+          alert(data.message);
+          window.location.reload();
+          reset();
+          setOverlay({ shown: false, userInfo: {} });
+        },
+        (data) => {
+          setError(data.message);
+        },
+        Token
+      );
+    }
   }
 
   function onSubmitEdited(body, e) {
@@ -332,19 +342,29 @@ export default function Register({ Token, usuario, setOverlay }) {
               Fecha de nacimiento:
             </h3>
           )}
-          <input
-            className={inpStyle}
-            type='date'
-            name='birthDate'
-            placeholder='Fecha de nacimiento*'
-            {...register('birthDate', {
-              required: 'Debes añadir la fecha de nacimiento.',
-              pattern: {
-                value: /^[0-9].*$/,
-                message: 'Debes añadir una fecha de nacimiento correcta.',
-              },
-            })}
-          />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DesktopDatePicker
+              label='Custom input'
+              value={Value}
+              onChange={(newValue) => {
+                setDateValue(format(new Date(newValue), 'dd/MM/yyyy'));
+                setValue('birthDate', format(new Date(newValue), 'yyyy/MM/dd'));
+              }}
+              renderInput={({ inputRef, inputProps, InputProps }) => (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <input
+                    className={inpStyle}
+                    ref={inputRef}
+                    {...inputProps}
+                    name='birthDate'
+                    placeholder='dd/mm/yyyy'
+                  />
+                  {InputProps?.endAdornment}
+                </Box>
+              )}
+            />
+          </LocalizationProvider>
+
           {errors.birthDate && (
             <p className='text-red-500'>{errors.birthDate.message}</p>
           )}

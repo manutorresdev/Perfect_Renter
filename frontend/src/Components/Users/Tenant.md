@@ -34,7 +34,9 @@ const relation = [1, 2, 3];
         {Array(parseInt(user.votes))
           .fill(null)
           .map((value, i) => {
-            return <FaStar key={i} className='text-principal-1'></FaStar>;
+            return (
+              <FaStar key={Math.random()} className='text-principal-1'></FaStar>
+            );
           })}
       </div>
     </button>

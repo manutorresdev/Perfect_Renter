@@ -24,7 +24,7 @@ const token = 1;
         if (item.id === 3 && !token) {
           return (
             <li
-              key={item.id}
+              key={Math.random()}
               className='text-gray-400 select-none pointer-events-none cursor-default sm:w-auto text-center sm:p-0'
             >
               <button to={item.path}>{item.title}</button>
@@ -33,7 +33,7 @@ const token = 1;
         } else {
           return (
             <li
-              key={item.id}
+              key={Math.random()}
               className='text-principal-1 cursor-pointer hover:text-white duration-300 ease-in-out w-full sm:w-auto text-center sm:p-0'
             >
               <button to={item.path}>{item.title}</button>

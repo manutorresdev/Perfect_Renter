@@ -47,7 +47,7 @@ const buttonStyle =
       if (item.id === 3 && !token) {
         return (
           <li
-            key={item.id}
+            key={Math.random()}
             className='text-gray-400 select-none pointer-events-none cursor-default py-10 w-full sm:w-auto text-center sm:p-0'
           >
             <button to={item.path} onClick={showMenu}>
@@ -106,7 +106,7 @@ const buttonStyle =
   ) : (
     <>
       <button
-        className={`${buttonStyle} col-start-4 col-end-6 row-start-1 sm:col-start-8 sm:col-end-9 justify-self-end px-6 sm:px-8 hover:px-10`}
+        className={`${buttonStyle} col-start-4 col-end-6 row-start-1 sm:col-start-8 sm:col-end-9 justify-self-end px-6 sm:px-6 hover:px-8`}
         to='/login'
         onClick={(e) => {
           setToken('token');
@@ -116,7 +116,7 @@ const buttonStyle =
       </button>
 
       <button
-        className={`${buttonStyle} col-start-6 col-end-8 row-start-1 sm:col-start-9 sm:col-end-10 justify-self-center px-4 sm:px-6 hover:px-8`}
+        className={`${buttonStyle} col-start-6 col-end-8 row-start-1 sm:col-start-9 sm:col-end-10 justify-self-center px-4 sm:px-3 hover:px-5`}
         to='/registro'
       >
         Register

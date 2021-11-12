@@ -107,7 +107,7 @@ const pageIteratorButtonsStyle = `border-2 p-3 rounded-full hover:bg-gray-500 ho
               SlideImgs.map((img, i) => {
                 return (
                   <img
-                    key={i}
+                    key={Math.random()}
                     onClick={openPhoto}
                     className={`object-cover duration-300 cursor-pointer ${
                       Photo

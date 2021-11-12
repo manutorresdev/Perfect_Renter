@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
-import { CreateFormDataMultipleFiles, post, put } from '../../Helpers/Api';
+import { CreateFormDataMultipleFiles, put } from '../../Helpers/Api';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function FileProperty({
@@ -11,6 +11,7 @@ export default function FileProperty({
   editProperty,
   setFile,
   photos,
+  setPhotosOnUpload,
   deletePhoto,
   setLoaderDiv,
 }) {
@@ -32,19 +33,18 @@ export default function FileProperty({
     Object.keys(body.photo).map((pic, index) => {
       return photos.push(body.photo[index]);
     });
-    post(
-      `http://192.168.5.103:4000/properties/${idProperty}/photos`,
-      CreateFormDataMultipleFiles({
-        photo: [...photos],
-      }),
-      (data) => {
-        console.log('Success');
-      },
-      (error) => {
-        setError(error.message);
-      },
-      Token
-    );
+
+    if (photos) {
+      setPhotosOnUpload(photos);
+      setTimeout(() => {
+        setLoader(false);
+      }, 1000);
+      setFile({
+        shown: false,
+        userInfo: '',
+        form: '',
+      });
+    }
   }
 
   function editFile(body, e) {
@@ -55,7 +55,7 @@ export default function FileProperty({
     Object.keys(body.photo).map((pic, index) => {
       return photos.push(body.photo[index]);
     });
-
+    console.log(photos[0]);
     put(
       `http://192.168.5.103:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
@@ -82,7 +82,7 @@ export default function FileProperty({
 
   useEffect(() => {
     setTotalPhotos(photos.length + FileName.length);
-  }, [FileName.length, photos.length]);
+  }, [FileName.length, photos.length, FileName]);
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
@@ -177,6 +177,7 @@ export default function FileProperty({
                                       fileToRemove.name !== file.name
                                   )
                                 );
+
                                 setTimeout(() => {
                                   setLoader(false);
                                 }, 1000);
@@ -207,7 +208,6 @@ export default function FileProperty({
                   const arrayPhotos = [];
                   onChange(e);
                   for (const photo of hiddenInput.current.files) {
-                    console.log(photo);
                     arrayPhotos.push(photo);
                   }
                   setFileName(arrayPhotos);
@@ -235,9 +235,11 @@ export default function FileProperty({
             )}
 
             <span
-              className={`self-center ${TotalPhotos >= 30 &&
+              className={`self-center ${
+                TotalPhotos >= 30 &&
                 FileName.length > 0 &&
-                ' text-red-500 animate-pulse'}`}
+                ' text-red-500 animate-pulse'
+              }`}
             >
               Fotos: {TotalPhotos}/30
             </span>
@@ -252,13 +254,12 @@ export default function FileProperty({
                 Button
                   ? 'bg-principal-1 text-principal-gris cursor-pointer'
                   : 'text-gray-400 select-none pointer-events-none cursor-default'
-              } ${TotalPhotos >= 30 &&
-                'text-gray-400 select-none pointer-events-none cursor-default '} font-medium relative flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
+              } ${
+                (TotalPhotos >= 30 || FileName.length < 1) &&
+                'text-gray-400 select-none pointer-events-none cursor-default '
+              } font-medium relative flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
             >
               Añadir
-              {Loader && (
-                <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />
-              )}
             </button>
           </form>
         </div>

@@ -211,7 +211,7 @@ const propiedadUsuario = [
           {[1, 2, 3, 4, 5].map((value, i) => {
             return (
               <FaStar
-                key={value}
+                key={Math.random()}
                 className={`text-principal-1 duration-200 text-2xl cursor-pointer`}
               />
             );
@@ -238,7 +238,7 @@ const propiedadUsuario = [
       {Bookings.length ? (
         Bookings.map((booking) => {
           return (
-            <span key={booking.idBooking} className='max-w-xs'>
+            <span key={Math.random()} className='max-w-xs'>
               <article
                 className={`animate-fadeIn shadow-custom h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
@@ -278,7 +278,7 @@ const propiedadUsuario = [
                         .map((value, i) => {
                           return (
                             <FaStar
-                              key={i}
+                              key={Math.random()}
                               className='text-principal-1'
                             ></FaStar>
                           );
@@ -308,6 +308,7 @@ const propiedadUsuario = [
       {propiedadUsuario.length > 0 ? (
         propiedadUsuario.map((property) => (
           <article
+            key={Math.random()}
             className={`${
               mountOn === 'home'
                 ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
@@ -349,7 +350,7 @@ const propiedadUsuario = [
                   SlideImgs.map((img, i) => {
                     return (
                       <img
-                        key={i}
+                        key={Math.random()}
                         className='object-cover w-full h-48'
                         src={img}
                         alt='default'
@@ -393,7 +394,12 @@ const propiedadUsuario = [
                   {Array(parseInt(property.votes))
                     .fill(null)
                     .map((value, i) => {
-                      return <FaStar key={i} className='text-principal-1' />;
+                      return (
+                        <FaStar
+                          key={Math.random()}
+                          className='text-principal-1'
+                        />
+                      );
                     })}
                 </footer>
               </button>
@@ -425,11 +431,10 @@ const propiedadUsuario = [
     <div className='votes-cont pt-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
       {Votes.length ? (
         Votes.map((vote) => {
-          console.log(vote);
           return (
             <article
               className='flex w-10/12 shadow-xl max-w-xs'
-              key={vote.idVote}
+              key={Math.random()}
             >
               <img
                 className='w-14 h-14 rounded-full m-2'
@@ -448,7 +453,7 @@ const propiedadUsuario = [
                       .map((value, i) => {
                         return (
                           <FaStar
-                            key={i}
+                            key={Math.random()}
                             className='text-principal-1 text-xl'
                           ></FaStar>
                         );

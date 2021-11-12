@@ -49,6 +49,7 @@ const listUsers = async (req, res, next) => {
         `SELECT users.idUser,users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
         FROM users
         LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
+        WHERE users.name != "[deleted]"
         group by users.idUser
         ORDER BY users.birthDate ${orderDirection}
         `
@@ -60,7 +61,7 @@ const listUsers = async (req, res, next) => {
         `SELECT users.idUser,users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
       FROM users
       LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
-      WHERE city LIKE ?
+      WHERE city LIKE ? AND users.name != "[deleted]"
       group by users.idUser
       ORDER BY ${orderBy} ${orderDirection}
       `,
@@ -72,6 +73,7 @@ const listUsers = async (req, res, next) => {
         `SELECT users.idUser,users.name, users.lastName,users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
       FROM users
       LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
+      WHERE users.name != "[deleted]"
       group by users.idUser
       order by votes ${orderDirection}
       `

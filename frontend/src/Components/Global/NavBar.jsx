@@ -105,7 +105,7 @@ export default function NavBar({ token, setToken }) {
             className={`hidden sm:block text-white p-1 hover:text-principal-1 sm:col-start-9 lg:col-start-9 lg:col-end-10 justify-self-start sm:justify-self-end lg:justify-self-center`}
             onClick={() => {
               setToken('');
-              // window.location.reload();
+              window.location.reload();
             }}
           >
             Salir

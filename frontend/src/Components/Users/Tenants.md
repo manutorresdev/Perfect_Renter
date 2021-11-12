@@ -361,7 +361,7 @@ const inputStyle =
     <VoteForm setOverlay={setOverlay} info={Overlay.info} Token={Token} />
   )}
   <aside
-    className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static fixed right-0 top-20 mt-5 sm:top-0 ${
+    className={`bg-gray-Primary w-min sm:bg-transparent relative flex-grow-0 sm:static right-0 top-20 mt-5 sm:top-0 ${
       Overlay.form ? 'z-0' : 'z-20'
     }`}
   >
@@ -456,7 +456,10 @@ const inputStyle =
       {Users.length ? (
         Users.map((user) => {
           return (
-            <article className='user-card max-w-3xl flex gap-2 text-xs shadow-custom items-center p-1 bg-gray-100 bg-opacity-30'>
+            <article
+              key={Math.random()}
+              className='user-card max-w-3xl flex gap-2 text-xs shadow-custom items-center p-1 bg-gray-100 bg-opacity-30'
+            >
               <div className='user-info-cont flex items-center font-medium relative flex-grow-0 md:flex-grow w-9/12'>
                 <button
                   className='user-avatar '
@@ -475,7 +478,10 @@ const inputStyle =
                       .fill(null)
                       .map((value, i) => {
                         return (
-                          <FaStar key={i} className='text-principal-1'></FaStar>
+                          <FaStar
+                            key={Math.random()}
+                            className='text-principal-1'
+                          ></FaStar>
                         );
                       })}
                   </div>

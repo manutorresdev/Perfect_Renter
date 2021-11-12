@@ -31,7 +31,6 @@ function editFile(body, e) {
 
 useEffect(() => {
   setTotalPhotos(photos + FileName.length);
-  console.log(photos);
 }, [FileName.length, photos]);
 
 // Return
@@ -75,7 +74,7 @@ useEffect(() => {
                 <div className='flex flex-wrap gap-2 justify-center'>
                   {photos.map((photo, index) => {
                     return (
-                      <div key={photo.name} className='relative'>
+                      <div key={Math.random()} className='relative'>
                         <button
                           className='delete-photo absolute top-0 right-0 bg-principal-1'
                           onClick={(e) => {
@@ -86,7 +85,7 @@ useEffect(() => {
                           <FaPlus className='transform rotate-45' />
                         </button>
                         <img
-                          src={'http://192.168.5.103:4000/photo/' + photo.name}
+                          src={photo}
                           alt='prueba'
                           className='w-20 h-20 object-cover'
                         />
@@ -104,7 +103,7 @@ useEffect(() => {
                 <div className='selected-photos-cont flex flex-wrap gap-2 justify-center'>
                   {FileName.map((file, index) => {
                     return (
-                      <div key={file.name} className='relative w-20'>
+                      <div key={Math.random()} className='relative w-20'>
                         <button
                           className='delete-photo absolute top-0 right-0 bg-principal-1'
                           onClick={(e) => {
