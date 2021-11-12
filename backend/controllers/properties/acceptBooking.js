@@ -132,14 +132,14 @@ const acceptBooking = async (req, res, next) => {
       [formatDate(new Date()), bookingCode]
     );
 
-    // // Encargamos a SQL de hacer el cambio de "alquilado" a "finalizado"
+    // Encargamos a SQL de hacer el cambio de "alquilado" a "finalizado"
 
     await connection.query(
       `
     CREATE EVENT ${bookingCode}_event_end
     ON SCHEDULE AT "${format(booking[0].endBookingDate, 'yyyy-MM-dd')}"
     DO
-    UPDATE bookings SET state = "finalizado", modifiedAt = ? WHERE bookingCode = ?
+    UPDATE bookings SET state = "finalizada", modifiedAt = ? WHERE bookingCode = ?
     `,
       [formatDate(new Date()), bookingCode]
     );

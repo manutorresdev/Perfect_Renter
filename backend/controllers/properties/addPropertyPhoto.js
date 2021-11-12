@@ -19,9 +19,6 @@ const addPropertyPhoto = async (req, res, next) => {
     // Obtenemos id del inmueble
     const { idProperty } = req.params;
 
-    console.log(idProperty);
-    console.log(req.files);
-
     // Si no recibimos foto lanzamos error
     if (!req.files.photo) {
       const error = new Error('No se ha encontrado el archivo');

@@ -549,15 +549,15 @@ app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
  * @response {Object} Response listando las propiedades de ese renter
  */
 app.get('/users/:idUser/properties', userExists, listProperties);
-// /**
-//  * Listar las reservas de un usuario
-//  *
-//  * @name getBookings
-//  * @path {GET} /properties/:idProperty/bookings
-//  * @params {number} idProperty Número del inmueble del que se quiere visualizar las reservas
-//  * @code {200} Si la respuesta es correcta
-//  * @response {Object} Response Lista de reservas
-//  */
+/**
+ * Listar las reservas finalizadas de un usuario
+ *
+ * @name getBookings
+ * @path {GET} /properties/:idProperty/bookings
+ * @params {number} idProperty Número del inmueble del que se quiere visualizar las reservas
+ * @code {200} Si la respuesta es correcta
+ * @response {Object} Response Lista de reservas
+ */
 app.get('/users/:idUser/bookings/renter', authUser, getBookings);
 
 /**

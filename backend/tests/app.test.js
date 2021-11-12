@@ -238,9 +238,6 @@ describe('User POST Endpoints', () => {
         endDate: '2022-10-29',
       });
 
-    console.log('\x1b[43m########\x1b[30m', idProperty, 'PROPIEDAD');
-    console.log('\x1b[43m########\x1b[30m', idUser, 'INQUILINO');
-
     const res = await api
       .post(`/users/${idUser}/votes`)
       .set({ authorization: token })
@@ -291,8 +288,8 @@ describe('User POST Endpoints', () => {
       .send({
         comentarios:
           'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-12-03',
+        endDate: '2022-12-29',
       });
 
     const res = await api
@@ -395,10 +392,11 @@ describe('User GET endpoints', () => {
         startDate: '2022-10-03',
         endDate: '2022-10-29',
       });
+
     const res = await api.get(`/users/1/votes`).set({ authorization: token3 });
+
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty('Valoraciones');
-    expect(res.body.Valoraciones).toBe('Aún no tiene valoraciones.');
   });
 
   test('Listar reservas de un usuario.', async () => {
@@ -683,6 +681,7 @@ describe('Properties POST Endpoints', () => {
       toilets: '1',
       energyCertificate: '0',
       //availabilityDate:2021-10-20
+      description: 'Piso en',
       price: '650',
       state: 'reservado',
     };
@@ -713,6 +712,7 @@ describe('Properties POST Endpoints', () => {
       toilets: '1',
       energyCertificate: '0',
       //availabilityDate:2021-10-20
+      description: 'si',
       price: '650',
       state: 'reservado',
     };
@@ -742,6 +742,7 @@ describe('Properties POST Endpoints', () => {
       toilets: '1',
       energyCertificate: '0',
       //availabilityDate:2021-10-20
+      description: 'si',
       price: '650',
       state: 'reservado',
     };
@@ -772,6 +773,7 @@ describe('Properties POST Endpoints', () => {
       toilets: '1',
       energyCertificate: '0',
       //availabilityDate:2021-10-20
+      description: 'si',
       price: '650',
       state: 'reservado',
     };
@@ -848,8 +850,8 @@ describe('Properties POST Endpoints', () => {
       .send({
         comentarios:
           'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-10-01',
+        endDate: '2022-10-02',
       });
 
     expect(resBook.statusCode).toEqual(200);
@@ -893,7 +895,40 @@ describe('Properties POST Endpoints', () => {
 
     expect(resBook2.statusCode).toEqual(200);
     expect(resBook2.body.message).toBe(
-      'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.'
+      'Las fechas seleccionadas no estan disponibles para esta propiedad'
+    );
+  });
+
+  test('Hacer una reserva con fechas no disponibles.', async () => {
+    // token
+    const token = await getToken();
+    const idProperty = await createProperty(19, 'Cadiz', 'Cadiz');
+    // token3
+    const { id: idUser, token: token3 } = await getToken3();
+
+    const resBook = await api
+      .post(`/properties/${idProperty}/book`)
+      .set({ authorization: token3 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-01',
+        endDate: '2022-10-02',
+      });
+
+    const resBook2 = await api
+      .post(`/properties/${idProperty}/book`)
+      .set({ authorization: token3 })
+      .send({
+        comentarios:
+          'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
+        startDate: '2022-10-01',
+        endDate: '2022-10-02',
+      });
+
+    expect(resBook2.statusCode).toEqual(200);
+    expect(resBook2.body.message).toBe(
+      'Las fechas seleccionadas no estan disponibles para esta propiedad'
     );
   });
 
@@ -924,11 +959,9 @@ describe('Properties POST Endpoints', () => {
       .send({
         comentarios:
           'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-10-11',
+        endDate: '2022-10-12',
       });
-
-    console.log('\x1b[43m########\x1b[30m', resBook.body, 'RESPUESTA RESERVA');
 
     const res = await api
       .post(`/properties/${idProperty}/votes`)
@@ -960,8 +993,8 @@ describe('Properties POST Endpoints', () => {
       .send({
         comentarios:
           'Hola, veo que tienes disponibilidad en estas fechas, ¿podemos cuadrar la hora de llegada?',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-11-03',
+        endDate: '2022-11-04',
       });
     const res = await api
       .post(`/properties/${idProperty}/votes`)
@@ -984,8 +1017,8 @@ describe('Properties GET Endpoints', () => {
       .set({ authorization: token2 })
       .send({
         comentarios: 'Hola',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-07-03',
+        endDate: '2022-07-29',
       });
     const resAccept = await api
       .get(`/properties/${resBook.body.bookingCode}/accept`)
@@ -997,13 +1030,14 @@ describe('Properties GET Endpoints', () => {
     const token2 = await getToken2();
     const token = await getToken();
     const idProperty = await createProperty(9);
+
     const resBook = await api
       .post(`/properties/${idProperty}/book`)
       .set({ authorization: token2 })
       .send({
         comentarios: 'Hola',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-12-09',
+        endDate: '2022-12-12',
       });
     const resCancel = await api
       .get(`/properties/${resBook.body.bookingCode}/cancel`)
@@ -1022,8 +1056,8 @@ describe('Properties GET Endpoints', () => {
       .set({ authorization: token2 })
       .send({
         comentarios: 'Hola',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-09-27',
+        endDate: '2022-09-29',
       });
     const resAccept = await api
       .get(`/properties/${resBook.body.bookingCode}/cancel`)
@@ -1042,8 +1076,8 @@ describe('Properties GET Endpoints', () => {
       .set({ authorization: token2 })
       .send({
         comentarios: 'Hola',
-        startDate: '2022-10-03',
-        endDate: '2022-10-29',
+        startDate: '2022-01-11',
+        endDate: '2022-01-12',
       });
     const resCancelOwner = await api
       .get(`/properties/${resBook.body.bookingCode}/cancel`)

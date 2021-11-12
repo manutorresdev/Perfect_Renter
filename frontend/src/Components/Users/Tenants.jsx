@@ -8,11 +8,8 @@ import VoteForm from '../Forms/VoteForm';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router';
 import { FaPlus } from 'react-icons/fa';
-import useProperties from '../../Helpers/Hooks/useProperties';
 
 export default function UsersList() {
-  const [Bookings, setBookings] = useState([]);
-  const [Properties] = useProperties();
   const [Token] = useContext(TokenContext);
   const [Overlay, setOverlay] = useState({
     shown: false,
@@ -20,6 +17,7 @@ export default function UsersList() {
     info: {},
   });
 
+  const [Bookings, setBookings] = useState([]);
   const [Users, setUsers] = useState([]);
   const [Loaded, setLoaded] = useState(false);
   const location = useLocation();
@@ -46,6 +44,7 @@ export default function UsersList() {
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
+            console.log(data.users);
             setLoaded(true);
           } else {
             setUsers([]);
@@ -67,10 +66,6 @@ export default function UsersList() {
     }
   }, [Token, location.search]);
 
-  const userProperties = Properties.filter(
-    (property) => property.idUser === parseJwt(Token).idUser
-  );
-
   return (
     <main className='pb-28 pt-20 flex w-full'>
       {Overlay.form === 'contact' && (
@@ -78,7 +73,6 @@ export default function UsersList() {
           setOverlay={setOverlay}
           info={Overlay.info}
           Token={Token}
-          properties={userProperties}
         />
       )}
       {Overlay.form === 'vote' && (
@@ -103,7 +97,7 @@ export default function UsersList() {
         <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
           Inquilinos
         </h1>
-        <div className='flex flex-col gap-5 justify-center items-center pt-2'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 grid-rows-auto gap-5 justify-items-center items-center pt-2'>
           {!Loaded &&
             Array(10)
               .fill(null)
@@ -171,13 +165,6 @@ function Filters({ setOverlay, Overlay }) {
     }
   }
 
-  /**
-   * copy of form whit bg white, input gray and text yellow
-   * const inputsLabelStyle =
-    'sm:text-gray-600 sm:hover:text-principal-1 text-xl duration-200';
-  const inputStyle =
-    'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
-   */
   const inputsLabelStyle =
     'sm:text-gray-600 sm:hover:text-principal-1 text-xl duration-200';
   const inputStyle =

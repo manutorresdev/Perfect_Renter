@@ -11,12 +11,10 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { addDays, format } from 'date-fns';
 import esEsLocale from 'date-fns/locale/es';
-
-import { TextField } from '@mui/material';
-
 import { useContext, useEffect, useState } from 'react';
 import MuiDateRangePickerDay from '@mui/lab/DateRangePickerDay';
 import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
+import Carousel from 'react-material-ui-carousel';
 
 export default function ContactProperty({
   form,
@@ -28,10 +26,8 @@ export default function ContactProperty({
   message,
   Slider,
 }) {
-  const [curr, setCurr] = useState(0);
   const [Value, setPickerValue] = useState([null, null]);
   const [Bookings, setBookings] = useState();
-  const [days, setDays] = useState([]);
   const [Token] = useContext(TokenContext);
 
   const {
@@ -68,19 +64,14 @@ export default function ContactProperty({
   if (Bookings) {
     for (const book of Bookings) {
       let day = book.startBookingDate;
-
-      // arrayFechas.push('START BOOKING ' + book.idBooking);
-      // 25/12/21 - 24/12/21
       while (
         new Date(day).toLocaleDateString() <=
         new Date(book.endBookingDate).toLocaleDateString()
       ) {
-        // setDays([...days, new Date(day).toLocaleDateString()]);
         arrayFechas.push(new Date(day).toLocaleDateString());
 
         day = addDays(new Date(day), 1);
       }
-      // arrayFechas.push(`FIN BOOKING ${book.idBooking}`);
     }
   }
   // ARRAY FECHAS MANU
@@ -118,41 +109,14 @@ export default function ContactProperty({
     }
   }
 
-  function right() {
-    setCurr(curr === Slider.SlideImgs.length - 1 ? 0 : curr + 1);
-  }
-
-  function left() {
-    setCurr(curr === 0 ? Slider.SlideImgs.length - 1 : curr - 1);
-  }
-
-  // if (message.status === 'ok') {
-  //   return (
-  //     <div className='z-20 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
-  //       <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-  //         <h2>¡Ya esta listo!</h2>
-  //         <h2>{message.message}</h2>
-  //         <button
-  //           className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
-  //           onClick={() => {
-  //             setOverlay({ form: '', shown: false, propertyInfo: {} });
-  //           }}
-  //         >
-  //           Cerrar
-  //         </button>
-  //       </section>
-  //     </div>
-  //   );
-  // }
-
   // Styles
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+    'px-3 py-3 w-11/12 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   const comentarios = watch('comentarios');
 
   return (
-    <div className='overlay z-30 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 pb-2 px-2 overscroll-scroll sm:overflow-hidden'>
-      <section className='contact shadow-custom pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll w-full md:w-3/4'>
+    <div className='overlay z-30 bg-white bg-opacity-70 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-32 pb-2 px-2 overflow-auto sm:overflow-hidden'>
+      <section className='contact p-8 shadow-perfil pt-2 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto w-full md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -169,7 +133,7 @@ export default function ContactProperty({
             {message.message}
           </h1>
         )}
-        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 lg:flex-row'>
+        <div className='contact-card-container flex justify-around flex-col-reverse gap-2 lg:flex-row'>
           <form
             className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'
             onSubmit={handleSubmit(onSubmit)}
@@ -210,7 +174,7 @@ export default function ContactProperty({
                 }}
               />
             </label>
-            <label className='max-w-sm'>
+            <label className='w-11/12'>
               <div className='select-none'> Correo electrónico*</div>
               <Controller
                 name='email'
@@ -289,50 +253,63 @@ export default function ContactProperty({
               <p className='text-red-500'>{errors.comentarios.message}</p>
             )}
             <input
-              className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
+              className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black p-2 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
               type='submit'
-              value='Contactar'
+              value='Enviar'
             />
           </form>
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
-            <div className='slider flex flex-col w-full items-center justify-center '>
-              <div
-                className={`slider-cont ${
-                  Slider.Photo ? 'h-full' : 'h-96'
-                }  transition-all transform ease-linear duration-300`}
+            <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
+              <Carousel
+                navButtonsAlwaysVisible
+                indicators={false}
+                autoPlay={false}
+                animation='slide'
+                NavButton={({ onClick, className, style, next, prev }) => {
+                  if (next) {
+                    return (
+                      <FaAngleRight
+                        onClick={onClick}
+                        className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'
+                      >
+                        {next && 'Next'}
+                      </FaAngleRight>
+                    );
+                  } else {
+                    return (
+                      <FaAngleLeft
+                        onClick={onClick}
+                        className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md left-0 pl-2 duration-200'
+                      >
+                        {prev && 'Previous'}
+                      </FaAngleLeft>
+                    );
+                  }
+                }}
+                className='slider-cont min-w-xxs h-48 sm:h-96 transition-all transform ease-in'
               >
-                <button
-                  onClick={right}
-                  className={`${Slider.sliderButtonStyle} right-0`}
-                >
-                  <FaAngleRight />
-                </button>
-                <button
-                  onClick={left}
-                  className={`${Slider.sliderButtonStyle} left-0`}
-                >
-                  <FaAngleLeft />
-                </button>
-                <div
-                  ref={Slider.slider}
-                  className={`slider-cont overflow-hidden h-full flex transition-all transform ease-in}`}
-                >
-                  {Slider.SlideImgs.map((img, i) => {
+                {Slider.SlideImgs.length > 0 ? (
+                  Slider.SlideImgs.map((img, i) => {
                     return (
                       <img
                         key={i}
-                        className={`${
-                          i === curr ? '' : 'absolute opacity-0'
-                        } object-cover w-full duration-300 cursor-pointer`}
+                        className='object-cover w-full h-96'
                         src={'http://localhost:4000/photo/' + img.name}
-                        alt='house'
+                        alt='default'
                       />
                     );
-                  })}
-                </div>
-              </div>
+                  })
+                ) : (
+                  <img
+                    className='object-fit h-48 w-full'
+                    src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+                    alt='default home'
+                  />
+                )}
+              </Carousel>
             </div>
+
             <h2 className='informacion w-full bg-gray-Primary bg-opacity-25 text-2xl text-principal-1 flex justify-center'>
               {property.city
                 ? `Vivienda en ${property.city}`
@@ -362,8 +339,7 @@ function DatePicker({
     }) => ({
       ...(isHighlighting && {
         borderRadius: 0,
-        backgroundColor: 'rgb(213, 213, 213)',
-        color: 'white',
+        backgroundColor: 'rgba(49, 47, 47, 0.84)',
       }),
       ...(isStartOfHighlighting && {
         borderTopLeftRadius: '50%',
@@ -388,11 +364,14 @@ function DatePicker({
     <LocalizationProvider locale={esEsLocale} dateAdapter={AdapterDateFns}>
       <DateRangePicker
         disablePast
-        autoOk={true}
+        autoOk
         label='Advanced keyboard'
         value={Value}
         shouldDisableDate={(date) =>
-          arrayFechas.includes(format(date, 'dd/MM/yyyy'))
+          // (date) => date.getTime() === new Date('2021-11-12').getTime()
+
+          arrayFechas.includes(format(date, 'dd/MM/yyyy')) ||
+          arrayFechas.includes(format(date, 'd/MM/yyyy'))
         }
         renderLoading={() => <CalendarPickerSkeleton />}
         renderDay={renderWeekPickerDay}
@@ -416,8 +395,12 @@ function DatePicker({
               newValue[1] &&
               !isNaN(newValue[1].getTime())
             ) {
+              // if (!validaFecha(arrayFechas, newValue[0], newValue[1])) {
               setValue('startDate', format(newValue[0], 'yyyy/MM/dd'));
               setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
+              // } else {
+              //   <p>No seleccione las fechas desabilitadas.</p>;
+              // }
             }
           }
         }}

@@ -20,7 +20,6 @@ const getBookings = async (req, res, next) => {
      * ### BOOKINGS PROPERTY ##
      * ########################
      */
-    console.log('\x1b[45m%%%%%%% Hemos entrado');
 
     if (req.route.path.includes('properties')) {
       //Obtenemos el id de la propiedad.
@@ -61,22 +60,25 @@ const getBookings = async (req, res, next) => {
         bookings.idTenant,
         idBooking,
         bookingCode,
+        price,
         city,
         address,
         number,
         type,
         bookings.state,
         startBookingDate,
-        endBookingDate
+        endBookingDate,
+        (SELECT * FROM
+          (SELECT name FROM photos WHERE photos.idProperty = properties.idProperty LIMIT 1) as prePhoto)
+            as photo
         FROM properties
         LEFT JOIN votes AS property_votes ON (properties.idProperty = property_votes.idProperty)
         LEFT JOIN bookings ON properties.idProperty = bookings.idProperty
-        WHERE bookings.idRenter = ? AND (bookings.state = "reservado" OR bookings.state = "alquilada" OR bookings.state = "finalizada")
+        WHERE bookings.idRenter = ? AND bookings.state = "finalizada"
         GROUP BY bookings.idBooking;
         `,
         [idReqUser]
       );
-
       res.send({
         status: 'ok',
         bookings,

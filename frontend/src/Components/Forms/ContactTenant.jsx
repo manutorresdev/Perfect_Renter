@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { capitalizeFirstLetter, CreateFormData, post } from '../../Helpers/Api';
+import {
+  capitalizeFirstLetter,
+  CreateFormData,
+  parseJwt,
+  post,
+} from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { FaPlus } from 'react-icons/fa';
+import useProperties from '../../Helpers/Hooks/useProperties';
 
 export default function ContactTenant({ info, setOverlay, Token, properties }) {
   const {
@@ -13,10 +19,11 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
     formState: { errors },
     control,
   } = useForm();
+  const [Properties] = useProperties();
+  const [userProperties, setUserProperties] = useState([]);
 
   function onSubmit(body, e) {
     e.preventDefault();
-    console.log('\x1b[45m%%%%%%%', body);
     post(
       `http://localhost:4000/users/${info.idUser}/contact`,
       CreateFormData(body),
@@ -30,6 +37,16 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
       Token
     );
   }
+
+  useEffect(() => {
+    if (Properties) {
+      const newArray = Properties.filter((property) => {
+        return property.idUser === parseJwt(Token).idUser;
+      });
+
+      setUserProperties(newArray);
+    }
+  }, [Properties, Token]);
 
   // Styles
   const inpStyle =
@@ -133,8 +150,8 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
                 <option default value='Ninguno' disabled>
                   Ninguno
                 </option>
-                {properties.length > 0 &&
-                  properties.map((property) => {
+                {userProperties.length > 0 &&
+                  userProperties.map((property) => {
                     return (
                       <option
                         key={property.idProperty}

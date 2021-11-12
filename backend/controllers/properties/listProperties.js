@@ -27,6 +27,8 @@ const listProperties = async (req, res, next) => {
       garaje: filtGarage,
       baños: filtToilets,
       m2: filtMts,
+      entrada: startDate,
+      salida: endDate,
     } = req.query;
 
     // Cambiamos valores para encajar con backend.
@@ -107,11 +109,84 @@ const listProperties = async (req, res, next) => {
       );
       /*********** Final usuario propietario *****************/
     } else {
-      // Obtenemos los datos de todas las propiedades
+      // Si hay filtro por fechas, comprobamos que propiedades están disponibles para dichas fechas.
+      if (startDate && endDate) {
+        // Seleccionamos las propiedades que tienen esas fechas libres
+        const [propertiesWithDatesFree] = await connection.query(
+          `
+          SELECT idProperty FROM properties
+          WHERE NOT idProperty = ANY (
+          SELECT idProperty FROM bookings
+           WHERE (startBookingDate BETWEEN ? AND ?)
+           AND state != "finalizada"
+           OR (endBookingDate BETWEEN ? AND ?)
+           AND state != "finalizada"
+           GROUP BY idProperty)
+           GROUP BY idProperty;
+          `,
+          [startDate, endDate, startDate, endDate]
+        );
+        // Obtenemos los datos de las propiedades
 
-      [properties] = await connection.query(
-        `
-        SELECT properties.idProperty,
+        const propertiesToFilter = [];
+        for (const property of propertiesWithDatesFree) {
+          propertiesToFilter.push(property.idProperty);
+        }
+
+        [properties] = await connection.query(
+          `
+          SELECT properties.idProperty,
+          properties.idUser,
+          description,
+          city,
+          province,
+          address,
+          zipCode,
+          number,
+          type,
+          stair,
+          elevator,
+          flat,
+          gate,
+          mts,
+          rooms,
+          garage,
+          terrace,
+          toilets,
+          energyCertificate,
+          availabilityDate,
+          price,
+          state,
+          AVG(IFNULL(property_vote.voteValue, 0)) AS votes,
+          properties.createdAt
+          FROM properties
+          LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
+          WHERE properties.idProperty IN (?) AND city LIKE ? AND province LIKE ? AND type LIKE ? AND rooms >= ? AND (price BETWEEN ?
+            AND ?) AND garage >= ? AND toilets >= ? AND mts >= ?
+            GROUP BY properties.idProperty
+            ORDER BY  ${
+              order === 'votes' ? 'votes' : `properties.${orderBy}`
+            } ${orderDirection}
+            `,
+          [
+            propertiesToFilter,
+            city,
+            province,
+            type,
+            rooms,
+            pmin,
+            pmax,
+            garage,
+            toilets,
+            mts,
+          ]
+        );
+      } else {
+        // Obtenemos los datos de todas las propiedades
+
+        [properties] = await connection.query(
+          `
+          SELECT properties.idProperty,
           properties.idUser,
           description,
           city,
@@ -139,26 +214,27 @@ const listProperties = async (req, res, next) => {
           LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
           WHERE city LIKE ? AND province LIKE ? AND type LIKE ? AND rooms >= ? AND (price BETWEEN ?
             AND ?) AND garage >= ? AND toilets >= ? AND mts >= ?
-          GROUP BY properties.idProperty
-          ORDER BY  ${
-            order === 'votes' ? 'votes' : `properties.${orderBy}`
-          } ${orderDirection}
-          `,
-        [city, province, type, rooms, pmin, pmax, garage, toilets, mts]
-      );
-    }
+            GROUP BY properties.idProperty
+            ORDER BY  ${
+              order === 'votes' ? 'votes' : `properties.${orderBy}`
+            } ${orderDirection}
+            `,
+          [city, province, type, rooms, pmin, pmax, garage, toilets, mts]
+        );
+      }
 
-    //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
-    if (properties.length === 0) {
-      res.send({
-        status: 'ok',
-        message: 'No hay conicidencias para su busqueda',
-      });
-    } else {
-      res.send({
-        status: 'ok',
-        properties,
-      });
+      //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
+      if (properties.length === 0) {
+        res.send({
+          status: 'ok',
+          message: 'No hay conicidencias para su busqueda',
+        });
+      } else {
+        res.send({
+          status: 'ok',
+          properties,
+        });
+      }
     }
   } catch (error) {
     next(error);

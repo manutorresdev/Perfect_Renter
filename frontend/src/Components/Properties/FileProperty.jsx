@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
-import { CreateFormDataMultipleFiles, post, put } from '../../Helpers/Api';
+import { CreateFormDataMultipleFiles, put } from '../../Helpers/Api';
 import CircularProgress from '@mui/material/CircularProgress';
 
 export default function FileProperty({
@@ -11,6 +11,7 @@ export default function FileProperty({
   editProperty,
   setFile,
   photos,
+  setPhotosOnUpload,
   deletePhoto,
   setLoaderDiv,
 }) {
@@ -32,19 +33,18 @@ export default function FileProperty({
     Object.keys(body.photo).map((pic, index) => {
       return photos.push(body.photo[index]);
     });
-    post(
-      `http://localhost:4000/properties/${idProperty}/photos`,
-      CreateFormDataMultipleFiles({
-        photo: [...photos],
-      }),
-      (data) => {
-        console.log('Success');
-      },
-      (error) => {
-        setError(error.message);
-      },
-      Token
-    );
+
+    if (photos) {
+      setPhotosOnUpload(photos);
+      setTimeout(() => {
+        setLoader(false);
+      }, 1000);
+      setFile({
+        shown: false,
+        userInfo: '',
+        form: '',
+      });
+    }
   }
 
   function editFile(body, e) {
@@ -55,7 +55,7 @@ export default function FileProperty({
     Object.keys(body.photo).map((pic, index) => {
       return photos.push(body.photo[index]);
     });
-
+    console.log(photos[0]);
     put(
       `http://localhost:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
@@ -66,6 +66,7 @@ export default function FileProperty({
             setButton(false);
             setLoader(false);
             setFileName('');
+            window.location.reload();
           }, 500);
           setMessage({ status: 'ok', message: '¡Fotos subidas con éxito!' });
         }
@@ -78,12 +79,18 @@ export default function FileProperty({
       Token
     );
   }
+
   useEffect(() => {
     setTotalPhotos(photos.length + FileName.length);
-  }, [FileName.length, photos.length]);
+  }, [FileName.length, photos.length, FileName]);
 
   return (
     <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
+      {Loader && (
+        <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
+          <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
+        </div>
+      )}
       <section className=' pt-2 shadow-custom border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 right-3'
@@ -161,12 +168,17 @@ export default function FileProperty({
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
+                                setLoader(true);
                                 setFileName(
                                   FileName.filter(
                                     (fileToRemove) =>
                                       fileToRemove.name !== file.name
                                   )
                                 );
+
+                                setTimeout(() => {
+                                  setLoader(false);
+                                }, 1000);
                               }}
                             >
                               <FaPlus className='transform rotate-45' />
@@ -190,6 +202,7 @@ export default function FileProperty({
                 className='hidden'
                 {...rest}
                 onChange={(e) => {
+                  setLoader(true);
                   const arrayPhotos = [];
                   onChange(e);
                   for (const photo of hiddenInput.current.files) {
@@ -197,6 +210,9 @@ export default function FileProperty({
                   }
                   setFileName(arrayPhotos);
                   setButton(true);
+                  setTimeout(() => {
+                    setLoader(false);
+                  }, 5000);
                 }}
                 ref={(e) => {
                   ref(e);
@@ -237,14 +253,11 @@ export default function FileProperty({
                   ? 'bg-principal-1 text-principal-gris cursor-pointer'
                   : 'text-gray-400 select-none pointer-events-none cursor-default'
               } ${
-                TotalPhotos >= 30 &&
+                (TotalPhotos >= 30 || FileName.length < 1) &&
                 'text-gray-400 select-none pointer-events-none cursor-default '
               } font-medium relative flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
             >
               Añadir
-              {Loader && (
-                <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />
-              )}
             </button>
           </form>
         </div>

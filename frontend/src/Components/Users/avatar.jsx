@@ -48,13 +48,15 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
   }
 
   function imageHandler(e) {
-    const reader = new FileReader();
-    reader.onload = (d) => {
-      if (reader.readyState === 2) {
-        setImgPreview(reader.result);
-      }
-    };
-    reader.readAsDataURL(e.target.files[0]);
+    if (e.target.files.length > 0) {
+      const reader = new FileReader();
+      reader.onload = (d) => {
+        if (reader.readyState === 2) {
+          setImgPreview(reader.result);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
   }
 
   return (

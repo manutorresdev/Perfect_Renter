@@ -95,10 +95,12 @@ function getRandomValue(min, max) {
 async function savePhoto(image) {
   //comprabamos que directorio de salida de imagenes existe
   await ensureDir(uploadsDir);
-
+  console.log('\x1b[43m########\x1b[30m', image, 'FOTOS');
   // Convertimos la imagen a un objeto sharp
+  console.log('\x1b[45m%%%%%%%', 'PRE-SHARP');
+  console.log(sharp(image.data), 'SHARPED');
   const sharpImage = sharp(image.data);
-
+  console.log('\x1b[45m%%%%%%%', sharpImage);
   //accedemos a los metadatos de la imagen para comprobar su anchura
   const imageInfo = await sharpImage.metadata();
 
@@ -114,6 +116,7 @@ async function savePhoto(image) {
   //guardamos la imagen en el directorio uploads
   await sharpImage.toFile(imagePath);
   //retornamos el nombre del fichero
+  console.log('ERROR POR AQUI');
   return imageName;
 }
 

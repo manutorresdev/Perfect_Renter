@@ -22,19 +22,22 @@ const listUserVotes = async (req, res, next) => {
     const idReqUser = req.userAuth.idUser;
 
     // Obtenemos los votos del usuario a visualizar
-    let [votes] = await connection.query(
+    const [votes] = await connection.query(
       `
-      SELECT voteValueRenter, commentRenter
+      SELECT
+      votes.idVote,
+      votes.commentRenter,
+      votes.idRenter,
+      votes.voteValueRenter,
+      users.name,
+      users.lastName,
+      users.avatar
       FROM votes
-      WHERE idRenter = ?
+      LEFT JOIN users ON votes.idRenter = users.idUser
+      WHERE idTenant = ?
       `,
       [idUser]
     );
-
-    // Si no hay votos, damos un valor vacío.
-    if (votes.length < 1) {
-      votes = 'Aún no tiene valoraciones.';
-    }
 
     res.send({
       status: 'ok',

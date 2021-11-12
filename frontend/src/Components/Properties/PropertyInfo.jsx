@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom';
 import ContactProperty from '../Forms/ContactProperty';
 import { useEffect, useRef, useState } from 'react';
-import { FaAngleLeft, FaAngleRight, FaChevronRight } from 'react-icons/fa';
+import {
+  FaAngleLeft,
+  FaAngleRight,
+  FaChevronRight,
+  FaFilter,
+} from 'react-icons/fa';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Filters from './Filters';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
@@ -9,6 +14,7 @@ import Property from './Property';
 import { capitalizeFirstLetter } from '../../Helpers/Api';
 import { get } from '../../Helpers/Api';
 import NewProperty from './NewProperty';
+import Carousel from 'react-material-ui-carousel';
 
 export default function PropertyInfo(props) {
   const [pisosVisitados, setPisosVisitados] = useLocalStorage(
@@ -28,23 +34,14 @@ export default function PropertyInfo(props) {
   // Verificar si User es dueño de la propiedad
   const [Owner, setOwner] = useState(false);
   // Ampliar fotos
-  const [Photo, setPhoto] = useState(false);
+  const [Photo, setPhoto] = useState(true);
   // Información de la propiedad
   const [property, setProperty] = useState({});
   // Array de propiedades
   const [Properties] = useProperties();
   // Slider
-  const [curr, setCurr] = useState(0);
   const [SlideImgs, setSlideImgs] = useState([]);
   const slider = useRef();
-
-  function right() {
-    setCurr(curr === SlideImgs.length - 1 ? 0 : curr + 1);
-  }
-
-  function left() {
-    setCurr(curr === 0 ? SlideImgs.length - 1 : curr - 1);
-  }
 
   function openPhoto() {
     setPhoto(!Photo);
@@ -95,15 +92,15 @@ export default function PropertyInfo(props) {
 
   // Styles
   const sliderButtonStyle =
-    'absolute z-10 text-white text-4xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md duration-200';
+    'absolute z-10 text-white text-4xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full duration-200';
   const buttonStyle =
-    'border-2 py-1 px-3 bg-principal-1 hover:bg-gray-500 hover:text-white duration-200';
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   const pageIteratorButtonsStyle = `border-2 p-3 rounded-full hover:bg-gray-500 hover:text-white duration-200  `;
 
   return (
     <>
-      <article className='w-full pb-10 flex bg-gray-200 bg-opacity-20 '>
+      <article className='w-full pb-10 flex  bg-opacity-20'>
         {Overlay.form && Overlay.form !== 'editProperty' && (
           <ContactProperty
             form={Overlay.form}
@@ -115,11 +112,9 @@ export default function PropertyInfo(props) {
             message={message}
             Slider={{
               Photo: Photo,
-              right: right,
               sliderButtonStyle: sliderButtonStyle,
               slider: slider,
               SlideImgs: SlideImgs,
-              curr: curr,
             }}
           />
         )}
@@ -136,69 +131,85 @@ export default function PropertyInfo(props) {
           ''
         )}
         <aside
-          className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static absolute left-0 top-20 sm:top-0 mt-5 sm:mt-20`}
+          className={` flex pl-6 justify-center max-w-min items-center bg-principal-1 boreder-2 border-yellow-300 text-principal-gris text-xl w-10/12 sm:bg-transparent flex-grow-0 sm:static fixed z-20 right-1/3 bottom-0 sm:top-0 mt-5 sm:mt-20`}
         >
-          <FaChevronRight
-            className='text-white text-xl w-10 h-full p-2 sm:hidden'
+          <span className='sm:hidden '>Filtrar</span>
+          <FaFilter
+            className=' w-10 h-full p-2 sm:hidden'
             onClick={() => {
               setOverlay({ show: true });
             }}
           />
           <Filters setOverlay={setOverlay} Overlay={Overlay} />
         </aside>
-        <section className='self-start flex-grow flex flex-col justify-between'>
-          <div className='shadow-xl flex flex-col'>
-            <div className='slider pt-20 flex flex-col items-center justify-center '>
-              <div
-                className={`slider-cont ${
-                  Photo ? 'h-full' : 'h-96'
-                }  transition-all transform ease-linear duration-300`}
+        <section className='self-start flex-grow flex flex-col items-center justify-between max-w-7xl'>
+          <div className='flex flex-col w-11/12 bg-white items-center h-full filter drop-shadow-2xl'>
+            <div className={`slider pt-20 w-full h-full`}>
+              <Carousel
+                className={`slider-cont sm:max-w-7xl w-full h-full ${
+                  Photo ? 'max-h-96' : 'max-h-full bg-gray-Primary'
+                } flex transition-all transform ease-in duration-300 `}
+                navButtonsAlwaysVisible
+                indicators={false}
+                autoPlay={false}
+                animation='slide'
+                NavButton={({ onClick, className, style, next, prev }) => {
+                  if (next) {
+                    return (
+                      <FaAngleRight
+                        onClick={onClick}
+                        className={`${
+                          Photo
+                            ? ' text-5xl pr-2 text-white'
+                            : ' text-7xl pr-5 text-principal-gris bg-gray-100 bg-opacity-10'
+                        } absolute z-10  cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full right-0  duration-200`}
+                      >
+                        {next && 'Next'}
+                      </FaAngleRight>
+                    );
+                  } else {
+                    return (
+                      <FaAngleLeft
+                        onClick={onClick}
+                        className={`${
+                          Photo
+                            ? ' text-5xl pl-2 text-white'
+                            : ' text-7xl pl-5 text-principal-gris bg-gray-100 bg-opacity-10 '
+                        } absolute z-10 cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full left-0 duration-200`}
+                      >
+                        {prev && 'Previous'}
+                      </FaAngleLeft>
+                    );
+                  }
+                }}
               >
-                {SlideImgs.length > 1 && (
-                  <>
-                    <button
-                      onClick={right}
-                      className={`${sliderButtonStyle} right-0`}
-                    >
-                      <FaAngleRight />
-                    </button>
-                    <button
-                      onClick={left}
-                      className={`${sliderButtonStyle} left-0`}
-                    >
-                      <FaAngleLeft />
-                    </button>
-                  </>
+                {SlideImgs.length > 0 ? (
+                  SlideImgs.map((img, i) => {
+                    return (
+                      <img
+                        key={i}
+                        onClick={openPhoto}
+                        className={`object-cover duration-300 cursor-pointer ${
+                          Photo
+                            ? ' h-96 w-full'
+                            : ' sm:h-full w-full sm:max-h-lg max-w-2xl object-contain m-auto'
+                        }`}
+                        src={'http://localhost:4000/photo/' + img.name}
+                        alt='default'
+                      />
+                    );
+                  })
+                ) : (
+                  <img
+                    className=' object-cover w-full h-full duration-300 cursor-pointer'
+                    onClick={openPhoto}
+                    src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+                    alt='default home'
+                  />
                 )}
-                <div
-                  ref={slider}
-                  className={`slider-cont overflow-hidden h-full flex transition-all transform ease-in}`}
-                >
-                  {SlideImgs.length > 1 ? (
-                    SlideImgs.map((img, i) => {
-                      return (
-                        <img
-                          key={i}
-                          className={`${
-                            i === curr ? '' : 'absolute opacity-0'
-                          } object-cover w-full duration-300 cursor-pointer`}
-                          onClick={openPhoto}
-                          src={'http://localhost:4000/photo/' + img.name}
-                          alt='default'
-                        />
-                      );
-                    })
-                  ) : (
-                    <img
-                      className='w-auto sm:max-w-xs object-cover'
-                      src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
-                      alt='default home'
-                    />
-                  )}
-                </div>
-              </div>
+              </Carousel>
             </div>
-            <div className='informacion bg-gray-Primary p-5 bg-opacity-25 text-2xl text-principal-1 flex justify-between'>
+            <div className='informacion w-full bg-gray-Primary p-2 bg-opacity-25 text-xl text-principal-1 flex justify-between'>
               <h2>Piso en {property.city}</h2>
               <h2>{Number(property.price)} €/mes</h2>
             </div>
@@ -207,16 +218,20 @@ export default function PropertyInfo(props) {
                 property.toilets
               } ${property.toilets > 1 ? 'baños' : 'baño'}`}
             </p>
-            <p className='px-5 text-xl'>{property.description}</p>
+            <p className='px-5 text-base text-justify'>
+              {property.description}
+            </p>
             <span className='pt-5 px-5 underline font-medium'>
               Informacion detallada:
             </span>
-            <ul className='p-5 pt-2 pl-10'>
-              <li>Ciudad: {property.province}</li>
+            <ul className='p-5 pt-2 pl-10 w-2/3 text-center'>
+              <li className='bg-gray-200 h-7'>Ciudad: {property.province}</li>
               <li>{property.terrace === 0 ? 'Sin' : 'Con'} terraza</li>
-              <li>{property.garage === 0 ? 'Sin' : 'Con'} garaje</li>
+              <li className='bg-gray-200'>
+                {property.garage === 0 ? 'Sin' : 'Con'} garaje
+              </li>
               <li>{property.elevator === 0 ? 'Sin' : 'Con'} ascensor</li>
-              <li>
+              <li className='bg-gray-200'>
                 Estado:{' '}
                 {property.state && capitalizeFirstLetter(property.state)}
               </li>
@@ -226,7 +241,7 @@ export default function PropertyInfo(props) {
                   'es-ES'
                 )}
               </li>
-              <li>
+              <li className='bg-gray-200'>
                 Certificado de energía:{' '}
                 {property.energyCertificate === 0 ? 'Sin especificar' : 'Si'}
               </li>
@@ -235,7 +250,7 @@ export default function PropertyInfo(props) {
             <p>Ya has visitado este piso.</p>
           )} */}
           </div>
-          <div className='buttons-cont z-20 font-medium p-5 flex justify-around items-center'>
+          <div className='buttons-cont z-10 font-medium p-5 flex justify-around items-center'>
             <div className='grid grid-cols-2 grid-rows-2 gap-1 fixed right-5 bottom-0 select-none z-10'>
               <Link
                 to={`/alquileres/${Number(props.match.params.idProperty) - 1}`}
@@ -275,28 +290,56 @@ export default function PropertyInfo(props) {
               </button>
             ) : (
               <>
-                <button
-                  className={buttonStyle + ' z-0'}
-                  onClick={() => {
-                    setOverlay({
-                      form: 'contact',
-                      propertyInfo: property,
-                    });
-                  }}
-                >
-                  Contactar
-                </button>
-                <button
-                  className={buttonStyle}
-                  onClick={() => {
-                    setOverlay({
-                      form: 'reservar',
-                      propertyInfo: property,
-                    });
-                  }}
-                >
-                  Reservar
-                </button>
+                <div className='flex flex-col gap-y-3'>
+                  <button
+                    className={buttonStyle + ' z-0'}
+                    onClick={() => {
+                      setOverlay({
+                        form: 'contact',
+                        propertyInfo: property,
+                      });
+                    }}
+                  >
+                    Contactar
+                  </button>
+                  {props.token ? (
+                    <button
+                      className={buttonStyle}
+                      onClick={() => {
+                        setOverlay({
+                          form: 'reservar',
+                          propertyInfo: property,
+                        });
+                      }}
+                    >
+                      Reservar
+                    </button>
+                  ) : (
+                    <>
+                      <div className='flex flex-col items-center gap-y-3'>
+                        <p className='text-red-600'>
+                          Inicia sessión o Registrate para reservar esta
+                          propiedad
+                        </p>
+                        <div>
+                          <Link
+                            className={`${buttonStyle} col-start-4 col-end-6 row-start-1 sm:col-start-8 sm:col-end-9 justify-self-end px-6 sm:px-8 hover:px-10`}
+                            to='/login'
+                          >
+                            Login
+                          </Link>
+
+                          <Link
+                            className={`${buttonStyle} col-start-6 col-end-8 row-start-1 sm:col-start-9 sm:col-end-10 justify-self-center px-4 sm:px-6 hover:px-8`}
+                            to='/registro'
+                          >
+                            Register
+                          </Link>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
               </>
             )}
           </div>
@@ -354,8 +397,10 @@ function RelatedProperties({ properties, city }) {
     if (related.length > 0) {
       return (
         <div className='flex flex-col items-center p-8 overflow-hidden pb-28'>
-          <h1 className='text-center'>Algunos pisos relacionados</h1>
-          <div className='w-10/12 flex flex-row gap-4 place-content-center shadow-sm overflow-x-auto'>
+          <h1 className='text-2xl text-principal-gris pt-10 md:pt-10 bg-principal-1 w-full text-center p-10 font-semibold'>
+            Algunos pisos relacionados
+          </h1>
+          <div className='w-10/12 flex flex-row flex-wrap gap-4 place-content-center min-w-full overflow-x-auto'>
             {related.map((relationFlat) => (
               <Property key={relationFlat.idProperty} property={relationFlat} />
             ))}

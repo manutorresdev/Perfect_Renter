@@ -2,26 +2,27 @@ import { React, useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
 import { Link, useHistory } from 'react-router-dom';
-import { capitalizeFirstLetter, get, parseJwt } from '../../Helpers/Api';
+
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Property from '../Properties/Property';
-import Tenant from '../Users/Tenant';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
+import { get } from '../../Helpers/Api';
 
 // Styles
 const sectionStyle =
   'h-max-content p-5 text-principal-1 overflow-y-auto bg-gray-Primary';
 const sectionTitleStyle = 'pb-5 text-3xl font-medium';
 const sectionImgStyle = 'w-2/5 float-right pl-3';
-const boxContStyle = 'flex flex-col gap-5';
+const boxContStyle = 'row-span-2 flex flex-col gap-5 b';
 const boxContTitleStyle =
   'w-full text-center pt-4 pb-3 text-principal-1 underline text-xl';
 const boxItemContStyle =
   'grid grid-cols-1 grid-rows-auto gap-10 justify-items-center sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 xl:grid-cols-2';
 const boxReadMoreBtnStyle =
   'm-auto text-xl bg-gray-Primary text-principal-1 border-2 border-gray-800 max-w-max px-6 py-2 hover:bg-principal-1 hover:text-gray-700 duration-300';
-const descBoxStyle =
-  'content-center w-2/5 sm:w-3/5 border-2 h-full bg-principal-1-hover';
+
+const descBoxStyle = 'content-center w-3/4 h-full bg-principal-1-hover';
+
 const descBoxTextStyle = 'text-left p-4';
 const descBoxTitleStyle = 'text-xl text-gray-700 pb-3 font-medium';
 const descBoxPStyle = 'text-gray-700 text-l pl-2';
@@ -35,7 +36,7 @@ export function Home() {
           backgroundImage:
             "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
         }}
-        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-2 sm:pt-5  sm:w-full pb-32'
+        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-3 sm:pt-5  sm:w-full pb-32'
       >
         <RentersList />
         <PropertiesList />
@@ -46,7 +47,7 @@ export function Home() {
   );
 }
 
-function PropertyDescription() {
+export function PropertyDescription() {
   return (
     <section className={sectionStyle}>
       <h3 className={sectionTitleStyle}>Alquileres</h3>
@@ -62,7 +63,7 @@ function PropertyDescription() {
   );
 }
 
-function RenterDescription() {
+export function RenterDescription() {
   return (
     <section className={sectionStyle}>
       <h3 className={sectionTitleStyle}>Renters</h3>
@@ -79,7 +80,7 @@ function RenterDescription() {
   );
 }
 
-function Banner() {
+export function Banner() {
   const history = useHistory();
   const { register, handleSubmit } = useForm();
 
@@ -128,19 +129,18 @@ function Banner() {
             },
           })}
           placeholder='Escribe aquí tu ciudad favorita...'
-          className='w-full pl-2 bg-gray-300 outline-contras'
+          className='w-full pl-2 p-2 bg-gray-300 outline-contras'
         />
-        {/* className='w-full pl-2 bg-gray-Primary border border-gray-300 border-opacity-20 text-white' */}
         <FaSearch
           onClick={handleSubmit(onSubmit)}
-          className='text-gray-900 absolute top-1 right-2 cursor-pointer'
+          className='text-gray-900 absolute top-3 right-2 cursor-pointer'
         />
       </form>
     </div>
   );
 }
 
-function PropertiesList() {
+export function PropertiesList() {
   const [Properties] = useProperties();
 
   return (
@@ -152,7 +152,7 @@ function PropertiesList() {
             <Property
               key={property.idProperty}
               property={property}
-              mountOn={'propertiesList'}
+              mountOn={'home'}
             />
           ))}
       </div>
@@ -164,16 +164,14 @@ function PropertiesList() {
   );
 }
 
-function RentersList() {
+export function RentersList() {
   const [Token] = useContext(TokenContext);
   const [Users, setUsers] = useState([]);
 
   useEffect(() => {
-    console.log('hhhooolllaaaaaa');
     get(
       'http://localhost:4000/users',
       (data) => {
-        console.log('esta es la data: ', data);
         setUsers(data.users);
       },
       (error) => console.log(error),
@@ -181,16 +179,15 @@ function RentersList() {
     );
   }, [Token]);
 
-  console.log('Users', Users);
-
   return (
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>INQUILINOS</h2>
       <div className={boxItemContStyle}>
         {Users.length
-          ? Users.slice(0, 4).map((user) => <Renter user={user} />)
+          ? Users.slice(0, 4).map((user) => (
+              <Renter key={user.idUser} user={user} />
+            ))
           : ''}
-        ;
       </div>
       <Link to='/inquilinos' className={boxReadMoreBtnStyle}>
         <button>Ver Mas</button>
@@ -198,20 +195,19 @@ function RentersList() {
     </div>
   );
 }
-function Renter({ user }) {
+
+export function Renter({ user }) {
   return (
     <div className={descBoxStyle}>
       <img
         className=' w-full'
-        src={`https://randomuser.me/api/portraits/men/${user.idUser}.jpg`}
-        alt='foto inquilino'
+        src={'http://localhost:4000/photo/' + user.avatar}
+        alt=''
       />
-      <Link to={`/inquilinos/${user.idUser}`}>
-        <div className={descBoxTextStyle}>
-          <h2 className={descBoxTitleStyle}>{user.name}</h2>
-          <p className={descBoxPStyle}>{user.city}</p>
-        </div>
-      </Link>
+      <div className={descBoxTextStyle}>
+        <h2 className={descBoxTitleStyle}>{user.name}</h2>
+        <p className={descBoxPStyle}>{user.city}</p>
+      </div>
     </div>
   );
 }

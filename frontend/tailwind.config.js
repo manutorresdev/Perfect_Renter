@@ -17,8 +17,10 @@ module.exports = {
         lg: '700px',
       },
       maxHeight: {
+        100: '28rem',
         xs: '20rem',
         lg: '40rem',
+        xl: '80rem',
         full: '100%',
       },
       maxWidth: {

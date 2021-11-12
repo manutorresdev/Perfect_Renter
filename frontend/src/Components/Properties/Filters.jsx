@@ -1,16 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaPlus } from 'react-icons/fa';
 import { useHistory } from 'react-router';
-import { DatePicker } from '@mui/material';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateRangePicker from '@mui/lab/DateRangePicker';
+import { format } from 'date-fns';
+import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import esEsLocale from 'date-fns/locale/es';
 
 export default function Filters({ setOverlay, Overlay }) {
   const pMinVal = useRef();
   const history = useHistory();
-
+  const [pickerValue, setPickerValue] = useState([null, null]);
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -25,6 +31,8 @@ export default function Filters({ setOverlay, Overlay }) {
       garaje: '',
       baños: '',
       m2: '',
+      entrada: '',
+      salida: '',
     },
   });
 
@@ -58,16 +66,9 @@ export default function Filters({ setOverlay, Overlay }) {
     }
   }
 
-  /**
-   * copy of form whit bg white, input gray and text yellow
-   * const inputsLabelStyle =
-    'sm:text-gray-600 sm:hover:text-principal-1 text-xl duration-200';
+  const inputsLabelStyle = 'text-lg duration-200';
   const inputStyle =
-    'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
-   */
-  const inputsLabelStyle = ' text-xl duration-200';
-  const inputStyle =
-    'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
+    'bg-black bg-opacity-70 w-48 px-2 placeholder-yellow-300 mix-blend-multiply text-principal-1 font-light text-lg';
   return (
     <>
       <div
@@ -75,9 +76,9 @@ export default function Filters({ setOverlay, Overlay }) {
           Overlay.show
             ? 'translate-y-0 opacity-100 '
             : '-translate-y-full opacity-0'
-        } sm:translate-y-0 bg-gray-200 sm:bg-white sm:opacity-100 bg-opacity-50 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+        }  sm:translate-y-0 bg-yellow-300 sm:bg-white sm:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
       >
-        <section className='filtros shadow-custom sm:shadow-none overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
+        <section className='filtros overflow-scroll overflow-x-hidden sm:overflow-hidden p-2  flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
           <button
             className='close-overlay absolute top-3 right-3 sm:hidden'
             onClick={() => {
@@ -91,7 +92,7 @@ export default function Filters({ setOverlay, Overlay }) {
           </h1>
           <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
             <form
-              className='flex flex-col gap-4 p-2'
+              className='flex flex-col gap-y-3 p-2 items-center'
               onSubmit={handleSubmit(onSubmit)}
             >
               <label>
@@ -132,16 +133,73 @@ export default function Filters({ setOverlay, Overlay }) {
                   </option>
                 </select>
               </label>
-              <label className='dispDate'>
-                <div className={inputsLabelStyle}>Fecha de entrada:</div>
-                {/* {A GESTIONAR} */}
-                <input type='date' name='dispDate' className={inputStyle} />
-              </label>
-              <label className='dispDate'>
-                <div className={inputsLabelStyle}>Fecha de salida:</div>
-                {/* {A GESTIONAR} */}
-                <input type='date' name='dispDate' className={inputStyle} />
-              </label>
+              <LocalizationProvider
+                locale={esEsLocale}
+                dateAdapter={AdapterDateFns}
+              >
+                <DateRangePicker
+                  disablePast
+                  autoOk={true}
+                  label='Advanced keyboard'
+                  value={pickerValue}
+                  renderLoading={() => <CalendarPickerSkeleton />}
+                  inputFormat='dd/MM/yyyy'
+                  onChange={(newValue) => {
+                    if (
+                      new Date(newValue[0]).getTime() >
+                      new Date(newValue[1]).getTime()
+                    ) {
+                      console.error('Fecha de entrada mayor a fecha de salida');
+                    } else if (
+                      new Date(newValue[0]).getTime() ===
+                      new Date(newValue[1]).getTime()
+                    ) {
+                      console.error('Selecciona fechas diferentes');
+                    } else {
+                      console.warn('FECHAS CORRECTAS');
+                      setPickerValue(newValue);
+
+                      if (
+                        newValue[0] &&
+                        !isNaN(newValue[0].getTime()) &&
+                        newValue[1] &&
+                        !isNaN(newValue[1].getTime())
+                      ) {
+                        setValue('entrada', format(newValue[0], 'yyyy/MM/dd'));
+                        setValue('salida', format(newValue[1], 'yyyy/MM/dd'));
+                      }
+                    }
+                  }}
+                  renderInput={(startProps, endProps) => (
+                    <div className='flex flex-col w-full justify-center pl-12 sm:pl-8'>
+                      <label>
+                        <span className={inputsLabelStyle}>
+                          Fecha de entrada:
+                        </span>
+                        <input
+                          className={inputStyle}
+                          name='startDate'
+                          autoComplete='off'
+                          ref={startProps.inputRef}
+                          {...startProps.inputProps}
+                        />
+                      </label>
+                      <label>
+                        <span className={inputsLabelStyle}>
+                          Fecha de salida:
+                        </span>
+                        <input
+                          className={inputStyle}
+                          name='endDate'
+                          autoComplete='off'
+                          ref={endProps.inputRef}
+                          {...endProps.inputProps}
+                        />
+                      </label>
+                    </div>
+                  )}
+                />
+              </LocalizationProvider>
               <div className={inputsLabelStyle}>Ciudad:</div>
               <label className='city'>
                 <input
@@ -271,13 +329,15 @@ export default function Filters({ setOverlay, Overlay }) {
                   placeholder='Hab...'
                 />
               </label>
-              <label className='parking flex gap-2 items-center'>
-                <div className={inputsLabelStyle}>Garaje:</div>
+              <label className='parking flex'>
+                <div className={inputsLabelStyle + 'object-center'}>
+                  Garaje:
+                </div>
                 <input
                   {...register('garaje')}
                   type='checkbox'
                   name='garaje'
-                  className={inputStyle}
+                  className={inputStyle + ''}
                   placeholder='Garaje...'
                 />
               </label>
@@ -308,8 +368,8 @@ export default function Filters({ setOverlay, Overlay }) {
               <div className='flex justify-center items-center self-center sticky bottom-0 w-full h-28 bg-white sm:bg-transparent'>
                 <input
                   type='submit'
-                  value='Aplicar filtros'
-                  className='btn-submit text-xl bg-none p-2 font-medium text-principal-gris border-gray-700 border-2 h-2/4 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
+                  value='Buscar'
+                  className='btn-submit text-lg bg-none px-4  font-medium text-principal-gris border-yellow-300 border-2 h-1/3 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
                 />
               </div>
             </form>
