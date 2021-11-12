@@ -49,7 +49,7 @@ export default function PropertyInfo(props) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties/${Number(
+      `http://192.168.5.103:4000/properties/${Number(
         props.match.params.idProperty
       )}/photos`,
       (data) => {
@@ -194,7 +194,7 @@ export default function PropertyInfo(props) {
                             ? ' h-96 w-full'
                             : ' sm:h-full w-full sm:max-h-lg max-w-2xl object-contain m-auto'
                         }`}
-                        src={'http://localhost:4000/photo/' + img.name}
+                        src={'http://192.168.5.103:4000/photo/' + img.name}
                         alt='default'
                       />
                     );

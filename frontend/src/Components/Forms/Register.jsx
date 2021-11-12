@@ -60,7 +60,6 @@ export default function Register({ Token, usuario, setOverlay }) {
   // Enviar datos a backend
   function onSubmitRegister(body, e) {
     e.preventDefault();
-<<<<<<< HEAD
     const age = new Date().getYear() - new Date(body.birthDate).getYear();
     if (age < 17) {
       setError('Debes ser mayor de edad.');
@@ -81,30 +80,12 @@ export default function Register({ Token, usuario, setOverlay }) {
         Token
       );
     }
-=======
-
-    post(
-      'http://localhost:4000/users',
-      CreateFormData(body),
-      (data) => {
-        console.log('Success');
-        alert(data.message);
-        window.location.reload();
-        reset();
-        setOverlay({ shown: false, userInfo: {} });
-      },
-      (data) => {
-        setError(data.message);
-      },
-      Token
-    );
->>>>>>> origin
   }
 
   function onSubmitEdited(body, e) {
     e.preventDefault();
     put(
-      `http://localhost:4000/users/${usuario.idUser}`,
+      `http://192.168.5.103:4000/users/${usuario.idUser}`,
       CreateFormData(body),
       (data) => {
         console.log('Success');

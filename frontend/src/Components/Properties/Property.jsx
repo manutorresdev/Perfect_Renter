@@ -25,7 +25,7 @@ export default function Property({
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties/${property.idProperty}/photos`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}/photos`,
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
           setSlideImgs(data.photos.slice(0, 5));
@@ -46,7 +46,7 @@ export default function Property({
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://localhost:4000/properties/${property.idProperty}`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}`,
       body,
       (data) => {
         alert(data.message);
@@ -62,10 +62,10 @@ export default function Property({
       className={`
       ${
         mountOn === 'home'
-          ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
-          : `cont-vivienda overflow-hidden max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
-              mountOn === 'profile' ? ' md:max-h-96 ' : ''
-            } hover:max-h-full w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`
+          ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
+          : `cont-vivienda overflow-hidden relative max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
+              mountOn === 'profile' ? 'pb-10 lg:h-5/6' : 'h-100  '
+            } w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`
       }
       `}
       // className={`cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
@@ -112,7 +112,7 @@ export default function Property({
                 <img
                   key={i}
                   className='object-cover w-full h-48'
-                  src={'http://localhost:4000/photo/' + img.name}
+                  src={'http://192.168.5.103:4000/photo/' + img.name}
                   alt='default'
                 />
               );
@@ -127,7 +127,7 @@ export default function Property({
         </Carousel>
       </div>
 
-      <div className='relative sm:max-w-custom md:max-w-none'>
+      <div className='sm:max-w-custom md:max-w-none'>
         <Link to={`/alquileres/${property.idProperty}`}>
           <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 flex justify-between gap-2'>
             <h3>
@@ -142,8 +142,8 @@ export default function Property({
                 property.toilets
               } ${property.toilets > 1 ? 'baños' : 'baño'}`}
             </div>
-            {!(mountOn === 'bestPropertiesList') && (
-              <div className='sm:w-72 pt-2'>
+            {(mountOn === 'profile' || mountOn === 'propertiesList') && (
+              <div className='sm:w-72 pt-2 text-base'>
                 <p className='overflow-hidden'>
                   {property.description.slice(0, 100)}...
                 </p>
@@ -159,7 +159,7 @@ export default function Property({
           </footer>
         </Link>
         {token ? (
-          <div className='flex flex-row justify-between'>
+          <div className='flex justify-between w-full absolute bottom-1 '>
             <button
               className='text-xl p-4 hover:text-blue-700'
               onClick={() => {
