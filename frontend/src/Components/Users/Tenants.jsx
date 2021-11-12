@@ -26,7 +26,7 @@ export default function UsersList() {
   useEffect(() => {
     if (location.search) {
       get(
-        `http://192.168.5.103:4000/users${location.search}`,
+        `http://localhost:4000/users${location.search}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -40,7 +40,7 @@ export default function UsersList() {
       );
     } else {
       get(
-        'http://192.168.5.103:4000/users',
+        'http://localhost:4000/users',
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -53,9 +53,7 @@ export default function UsersList() {
         Token
       );
       get(
-        `http://192.168.5.103:4000/users/${
-          parseJwt(Token).idUser
-        }/bookings/renter`,
+        `http://localhost:4000/users/${parseJwt(Token).idUser}/bookings/renter`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -98,7 +96,7 @@ export default function UsersList() {
         <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
           Inquilinos
         </h1>
-        <div className='flex flex-col gap-5 justify-center items-center pt-2'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 grid-rows-auto gap-5 justify-items-center items-center pt-2'>
           {!Loaded &&
             Array(10)
               .fill(null)
@@ -239,7 +237,8 @@ function Filters({ setOverlay, Overlay }) {
                 defaultValue={Filters.ciudad ?? ''}
                 {...register('ciudad', {
                   pattern: {
-                    value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                    value:
+                      /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
                       'La ciudad no puede contener carácteres especiales ni números.',
                   },

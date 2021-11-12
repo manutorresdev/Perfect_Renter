@@ -99,7 +99,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   function onSubmitProperty(body, e) {
     post(
-      'http://192.168.5.103:4000/properties',
+      'http://localhost:4000/properties',
       CreateFormData(body),
       (data) => {
         reset();
@@ -122,7 +122,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
     e.preventDefault();
 
     put(
-      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}`,
+      `http://localhost:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess');
@@ -138,7 +138,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   useEffect(() => {
     get(
-      'http://192.168.5.103:4000/properties/location',
+      'http://localhost:4000/properties/location',
       (data) => {
         setProvinces(data.provinces);
         setCities(data.cities);
@@ -152,7 +152,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   useEffect(() => {
     if (EditProperty) {
       get(
-        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos`,
+        `http://localhost:4000/properties/${EditProperty.idProperty}/photos`,
         (data) => {
           if (data.status === 'ok') {
             setPhotos(data.photos);
@@ -164,7 +164,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   function deletePhoto(name) {
     del(
-      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos/${name}`,
+      `http://localhost:4000/properties/${EditProperty.idProperty}/photos/${name}`,
       null,
       (data) => {
         if (data.status === 'ok') {
@@ -190,7 +190,8 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   } = register('province', {
     required: 'Debes escribir la provincia',
     pattern: {
-      value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+      value:
+        /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
       message:
         'La provincia no puede contener carácteres especiales ni números.',
     },
@@ -203,7 +204,8 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const { onChange, ref, onBlur, ...restCity } = register('city', {
     required: 'Debes escribir una ciudad',
     pattern: {
-      value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+      value:
+        /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
       message: 'La ciudad no puede contener carácteres especiales ni números.',
     },
     maxLength: {
@@ -467,7 +469,8 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
               {...register('address', {
                 required: 'Debes escribir la dirección',
                 pattern: {
-                  value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                  value:
+                    /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                   message:
                     'La dirección no puede contener carácteres especiales ni números.',
                 },
@@ -680,9 +683,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                             <FaPlus className='transform rotate-45' />
                           </button>
                           <img
-                            src={
-                              'http://192.168.5.103:4000/photo/' + photo.name
-                            }
+                            src={'http://localhost:4000/photo/' + photo.name}
                             alt='prueba'
                             className='w-20 h-20 object-cover'
                           />

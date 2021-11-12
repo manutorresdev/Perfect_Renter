@@ -115,7 +115,8 @@ function Banner() {
           type='text'
           {...register('city', {
             pattern: {
-              value: /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+              value:
+                /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
               message:
                 'La ciudad no puede contener carácteres especiales ni números.',
             },
@@ -167,7 +168,7 @@ function RentersList() {
 
   useEffect(() => {
     get(
-      'http://192.168.5.103:4000/users',
+      'http://localhost:4000/users',
       (data) => {
         setUsers(data.users);
       },
@@ -186,6 +187,9 @@ function RentersList() {
             ))
           : ''}
       </div>
+      <Link to='/inquilinos' className={boxReadMoreBtnStyle}>
+        <button>Ver Mas</button>
+      </Link>
     </div>
   );
 }
@@ -194,7 +198,7 @@ function Renter({ user }) {
     <div className={descBoxStyle}>
       <img
         className=' w-full'
-        src={'http://192.168.5.103:4000/photo/' + user.avatar}
+        src={'http://localhost:4000/photo/' + user.avatar}
         alt=''
       />
       <div className={descBoxTextStyle}>
@@ -375,7 +379,7 @@ function Renter({ user }) {
 //   useEffect(() => {
 //     console.log('hhhooolllaaaaaa');
 //     get(
-//       'http://192.168.5.103:4000/users',
+//       'http://localhost:4000/users',
 //       (data) => {
 //         console.log('esta es la data: ', data);
 //         setUsers(data.users);
@@ -403,7 +407,7 @@ function Renter({ user }) {
 //     <div className={descBoxStyle}>
 //       <img
 //         className=' w-full'
-//         src={'http://192.168.5.103:4000/photo/' + user.avatar}
+//         src={'http://localhost:4000/photo/' + user.avatar}
 //         alt=''
 //       />
 //       <div className={descBoxTextStyle}>

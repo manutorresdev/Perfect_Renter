@@ -66,9 +66,9 @@ export default function Filters({ setOverlay, Overlay }) {
     }
   }
 
-  const inputsLabelStyle = ' text-xl duration-200';
+  const inputsLabelStyle = 'text-lg duration-200';
   const inputStyle =
-    'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
+    'bg-black bg-opacity-70 w-48 px-2 placeholder-yellow-300 mix-blend-multiply text-principal-1 font-light text-lg';
   return (
     <>
       <div
@@ -76,9 +76,9 @@ export default function Filters({ setOverlay, Overlay }) {
           Overlay.show
             ? 'translate-y-0 opacity-100 '
             : '-translate-y-full opacity-0'
-        } sm:translate-y-0 bg-gray-200 sm:bg-white sm:opacity-100 bg-opacity-50 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+        }  sm:translate-y-0 bg-yellow-300 sm:bg-white sm:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
       >
-        <section className='filtros shadow-custom sm:shadow-none overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
+        <section className='filtros overflow-scroll overflow-x-hidden sm:overflow-hidden p-2  flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
           <button
             className='close-overlay absolute top-3 right-3 sm:hidden'
             onClick={() => {
@@ -92,7 +92,7 @@ export default function Filters({ setOverlay, Overlay }) {
           </h1>
           <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
             <form
-              className='flex flex-col gap-4 p-2'
+              className='flex flex-col gap-y-3 p-2 items-center'
               onSubmit={handleSubmit(onSubmit)}
             >
               <label>
@@ -171,7 +171,7 @@ export default function Filters({ setOverlay, Overlay }) {
                     }
                   }}
                   renderInput={(startProps, endProps) => (
-                    <div className='flex flex-col'>
+                    <div className='flex flex-col w-full justify-center pl-12 sm:pl-8'>
                       <label>
                         <span className={inputsLabelStyle}>
                           Fecha de entrada:
@@ -329,13 +329,15 @@ export default function Filters({ setOverlay, Overlay }) {
                   placeholder='Hab...'
                 />
               </label>
-              <label className='parking flex gap-2 items-center'>
-                <div className={inputsLabelStyle}>Garaje:</div>
+              <label className='parking flex'>
+                <div className={inputsLabelStyle + 'object-center'}>
+                  Garaje:
+                </div>
                 <input
                   {...register('garaje')}
                   type='checkbox'
                   name='garaje'
-                  className={inputStyle}
+                  className={inputStyle + ''}
                   placeholder='Garaje...'
                 />
               </label>
@@ -366,8 +368,8 @@ export default function Filters({ setOverlay, Overlay }) {
               <div className='flex justify-center items-center self-center sticky bottom-0 w-full h-28 bg-white sm:bg-transparent'>
                 <input
                   type='submit'
-                  value='Aplicar filtros'
-                  className='btn-submit text-xl bg-none p-2 font-medium text-principal-gris border-gray-700 border-2 h-2/4 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
+                  value='Buscar'
+                  className='btn-submit text-lg bg-none px-4  font-medium text-principal-gris border-yellow-300 border-2 h-1/3 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
                 />
               </div>
             </form>
