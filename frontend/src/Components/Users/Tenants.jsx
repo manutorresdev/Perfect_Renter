@@ -44,6 +44,7 @@ export default function UsersList() {
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
+            console.log(data.users);
             setLoaded(true);
           } else {
             setUsers([]);

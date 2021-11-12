@@ -51,6 +51,7 @@ export default function Profile({ token, setToken }) {
       `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
       (data) => {
         setUser(data.userInfo);
+        console.log('\x1b[45m%%%%%%%', data);
       },
       (error) => console.log(error),
       token
@@ -458,7 +459,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
   function capitalizeFirstLetter(string) {
     return string[0].toUpperCase() + string.slice(1);
   }
-
+  console.log(Bookings);
   return (
     <div
       className='
