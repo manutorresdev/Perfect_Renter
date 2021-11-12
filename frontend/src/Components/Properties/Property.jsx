@@ -59,12 +59,16 @@ export default function Property({
 
   return (
     <article
-      className={`cont-vivienda overflow-hidden max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
-        mountOn === 'profile' ? ' md:max-h-96 ' : ''
-      } hover:max-h-full w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`}
-      // className={`cont-vivienda overflow-hidden cont-vivienda content-center w-3/4 h-full bg-principal-1-hover  ${
-      //   mountOn === 'profile' ? ' md:max-h-96 ' : ''
-      //  } hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
+      className={`
+      ${
+        mountOn === 'home'
+          ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
+          : `cont-vivienda overflow-hidden max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
+              mountOn === 'profile' ? ' md:max-h-96 ' : ''
+            } hover:max-h-full w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`
+      }
+      `}
+      // className={`cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
     >
       {Overlay.form === 'editProperty' && (
         <NewProperty

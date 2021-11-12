@@ -40,9 +40,8 @@ export default function Properties() {
         <Filters setOverlay={setOverlay} Overlay={Overlay} />
       </aside>
       <section
-        className={`ALQUILERES ${
-          Overlay.show && 'overflow-hidden'
-        } flex flex-col items-center mt-20 flex-grow max-w-7xl`}
+        className={`ALQUILERES ${Overlay.show &&
+          'overflow-hidden'} flex flex-col items-center mt-20 flex-grow max-w-7xl`}
       >
         <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
           Viviendas en alquiler
@@ -53,7 +52,7 @@ export default function Properties() {
               <Property
                 key={property.idProperty}
                 property={property}
-                mountOn={'home'}
+                mountOn={'propertiesList'}
               />
             ))
           ) : (
@@ -61,9 +60,8 @@ export default function Properties() {
           )}
         </div>
         <aside
-          className={`ALQUILERES ${
-            Overlay.show && 'overflow-hidden'
-          } flex flex-col items-center mt-20 flex-grow max-w-7xl`}
+          className={`ALQUILERES ${Overlay.show &&
+            'overflow-hidden'} flex flex-col items-center mt-20 flex-grow max-w-7xl`}
         >
           <h1 className='text-2xl text-principal-gris pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
             Viviendas destacadas

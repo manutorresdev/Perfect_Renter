@@ -111,12 +111,12 @@ export default function ContactProperty({
 
   // Styles
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+    'px-3 py-3 w-11/12 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   const comentarios = watch('comentarios');
 
   return (
-    <div className='overlay z-30 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 pb-2 px-2 overscroll-scroll sm:overflow-hidden'>
-      <section className='contact shadow-custom pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll w-full md:w-3/4'>
+    <div className='overlay z-30 bg-white bg-opacity-70 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-32 pb-2 px-2 overscroll-scroll sm:overflow-hidden'>
+      <section className='contact p-8 shadow-perfil pt-2 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-scroll w-full md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -133,7 +133,7 @@ export default function ContactProperty({
             {message.message}
           </h1>
         )}
-        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 lg:flex-row'>
+        <div className='contact-card-container flex justify-around flex-col-reverse gap-2 lg:flex-row'>
           <form
             className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'
             onSubmit={handleSubmit(onSubmit)}
@@ -174,7 +174,7 @@ export default function ContactProperty({
                 }}
               />
             </label>
-            <label className='max-w-sm'>
+            <label className='w-11/12'>
               <div className='select-none'> Correo electrónico*</div>
               <Controller
                 name='email'
@@ -253,9 +253,9 @@ export default function ContactProperty({
               <p className='text-red-500'>{errors.comentarios.message}</p>
             )}
             <input
-              className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
+              className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black p-2 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
               type='submit'
-              value='Contactar'
+              value='Enviar'
             />
           </form>
 
@@ -359,22 +359,6 @@ function DatePicker({
       return <DateRangePickerDay {...dateRangePickerDayProps} />;
     }
   }
-  // function validaFecha(reservadas, inicio, fin) {
-  //   for (const res of reservadas) {
-  //     let day = inicio;
-  //     while (
-  //       new Date(day).toLocaleDateString() <= new Date(fin).toLocaleDateString()
-  //     ) {
-  //       if (new Date(day).getTime() === new Date(res).getTime()) {
-  //         console.log(day, ':', res, ' comparacion', '   True');
-  //         return true;
-  //       }
-
-  //       day = addDays(new Date(day), 1);
-  //     }
-  //   }
-  //   return false;
-  // }
 
   return (
     <LocalizationProvider locale={esEsLocale} dateAdapter={AdapterDateFns}>
