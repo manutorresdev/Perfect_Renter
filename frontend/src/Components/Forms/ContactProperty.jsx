@@ -47,7 +47,7 @@ export default function ContactProperty({
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties/${property.idProperty}/bookings`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data.bookings);
         console.log(data);
@@ -80,7 +80,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/book`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           setMessage(data);
@@ -94,7 +94,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -115,8 +115,8 @@ export default function ContactProperty({
   const comentarios = watch('comentarios');
 
   return (
-    <div className='overlay z-30 bg-white bg-opacity-70 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-32 pb-2 px-2 overscroll-scroll sm:overflow-hidden'>
-      <section className='contact p-8 shadow-perfil pt-2 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-scroll w-full md:w-3/4'>
+    <div className='overlay z-30 bg-white bg-opacity-70 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-32 pb-2 px-2 overflow-auto sm:overflow-hidden'>
+      <section className='contact p-8 shadow-perfil pt-2 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto w-full md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -295,7 +295,7 @@ export default function ContactProperty({
                       <img
                         key={i}
                         className='object-cover w-full h-96'
-                        src={'http://localhost:4000/photo/' + img.name}
+                        src={'http://192.168.5.103:4000/photo/' + img.name}
                         alt='default'
                       />
                     );

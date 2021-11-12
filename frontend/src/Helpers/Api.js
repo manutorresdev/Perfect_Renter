@@ -1,6 +1,5 @@
 export const post = (url, body, onSuccess, onError, token) => {
   // console.log('Enviado.', token);
-
   fetch(url, {
     method: 'POST',
     headers: {
@@ -107,7 +106,7 @@ export function parseJwt(token) {
   const jsonPayload = decodeURIComponent(
     atob(base64)
       .split('')
-      .map(function(c) {
+      .map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       })
       .join('')
@@ -126,7 +125,6 @@ export function CreateFormData(body) {
 
 export function CreateFormDataMultipleFiles(files) {
   const formData = new FormData();
-  // console.log(files.photos);
   if (files.photos.length > 0) {
     files.photos.forEach((file) => {
       formData.append('photo', file);

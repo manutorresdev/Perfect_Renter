@@ -9,7 +9,7 @@ export default function useUser() {
   useEffect(() => {
     if (token) {
       get(
-        `http://localhost:4000/users/${parseJwt(token).idUser}`,
+        `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUser(data.userInfo);

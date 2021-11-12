@@ -12,7 +12,14 @@ import {
   FaRegCalendarAlt,
   FaRegImages,
 } from 'react-icons/fa';
-import { CreateFormData, del, get, post, put } from '../../Helpers/Api';
+import {
+  CreateFormData,
+  CreateFormDataMultipleFiles,
+  del,
+  get,
+  post,
+  put,
+} from '../../Helpers/Api';
 import FileProperty from './FileProperty';
 
 export default function NewProperty({ setOverlay, Token, EditProperty }) {
@@ -22,6 +29,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
     watch,
     formState: { errors },
     reset,
+    setValue,
   } = useForm(
     EditProperty
       ? {
@@ -90,26 +98,46 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const [Cities, setCities] = useState([]);
   const [CitiesFound, setFound] = useState([]);
   const [CitiesOverlay, setCitiesOverlay] = useState(false);
-  const [lastProperty, setLastProperty] = useState('');
-  const [Error, setError] = useState('');
   const cpRef = useRef(null);
+
+  const [Error, setError] = useState('');
+  const [lastProperty] = useState('');
 
   // Fotos en caso de entrar en EditProperty
   const [Photos, setPhotos] = useState([]);
+  // Fotos en caso de entrar en newProperty
+  const [PhotosOnUpload, setPhotosOnUpload] = useState([]);
 
   function onSubmitProperty(body, e) {
+    setLoader(true);
     post(
-      'http://localhost:4000/properties',
+      'http://192.168.5.103:4000/properties',
       CreateFormData(body),
       (data) => {
-        reset();
-        setLastProperty(data.property);
-        setFile({
-          shown: true,
-          userInfo: '',
-          form: 'FileProperty',
-        });
-        /* window.location.reload(); */
+        if (PhotosOnUpload) {
+          put(
+            `http://192.168.5.103:4000/properties/${data.property}`,
+            CreateFormDataMultipleFiles({
+              photos: PhotosOnUpload,
+            }),
+            (data) => {
+              console.log('Success');
+              reset();
+              alert('Inmueble subido con éxito.');
+              setTimeout(() => {
+                setLoader(false);
+                window.location.reload();
+              }, 1500);
+            },
+            (error) => {
+              setError(error.message);
+            },
+            Token
+          );
+        } else {
+          reset();
+          alert('Inmueble subido con éxito.');
+        }
       },
       (data) => {
         setError(data.message);
@@ -122,7 +150,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
     e.preventDefault();
 
     put(
-      `http://localhost:4000/properties/${EditProperty.idProperty}`,
+      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess');
@@ -138,7 +166,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   useEffect(() => {
     get(
-      'http://localhost:4000/properties/location',
+      'http://192.168.5.103:4000/properties/location',
       (data) => {
         setProvinces(data.provinces);
         setCities(data.cities);
@@ -152,7 +180,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   useEffect(() => {
     if (EditProperty) {
       get(
-        `http://localhost:4000/properties/${EditProperty.idProperty}/photos`,
+        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos`,
         (data) => {
           if (data.status === 'ok') {
             setPhotos(data.photos);
@@ -163,22 +191,29 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   }, [EditProperty]);
 
   function deletePhoto(name) {
-    del(
-      `http://localhost:4000/properties/${EditProperty.idProperty}/photos/${name}`,
-      null,
-      (data) => {
-        if (data.status === 'ok') {
-          setPhotos(Photos.filter((photo) => photo.name !== name));
-          setTimeout(() => {
-            setLoader(false);
-          }, 3000);
-        }
-      },
-      (error) => {
-        console.warn(error);
-      },
-      Token
-    );
+    if (EditProperty) {
+      del(
+        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos/${name}`,
+        null,
+        (data) => {
+          if (data.status === 'ok') {
+            setPhotos(Photos.filter((photo) => photo.name !== name));
+            setTimeout(() => {
+              setLoader(false);
+            }, 3000);
+          }
+        },
+        (error) => {
+          console.warn(error);
+        },
+        Token
+      );
+    } else {
+      setPhotos(Photos.filter((photo) => photo.name !== name));
+      setTimeout(() => {
+        setLoader(false);
+      }, 3000);
+    }
   }
 
   // Province React Hook Form
@@ -244,6 +279,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
           idProperty={lastProperty}
           editProperty={EditProperty && EditProperty.idProperty}
           setFile={setFile}
+          setPhotosOnUpload={setPhotosOnUpload}
           photos={Photos}
           deletePhoto={deletePhoto}
           setLoaderDiv={setLoader}
@@ -263,6 +299,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
         </h1>
         <div className='newProperty-card-container flex justify-around flex-col-reverse gap-10 '>
           <form
+            autoComplete='new-password'
             className='flex flex-col gap-4 p-6'
             onSubmit={
               EditProperty
@@ -385,12 +422,17 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                           key={city.cp + i}
                           className='bg-white w-full text-left p-2 border'
                           onMouseDown={() => {
-                            console.log('\x1b[45m%%%%%%%', city.cp);
+                            setValue('city', city.poblacion);
+                            setValue('province', city.provincia);
                             cityRef.current.value = city.poblacion;
                             provRef.current.value = city.provincia;
-                            city.cp.length === 4
-                              ? (cpRef.current.value = `0${city.cp}`)
-                              : (cpRef.current.value = city.cp);
+                            if (city.cp.length === 4) {
+                              cpRef.current.value = `0${city.cp}`;
+                              setValue('zipCode', `0${city.cp}`);
+                            } else {
+                              cpRef.current.value = city.cp;
+                              setValue('zipCode', city.cp);
+                            }
                           }}
                         >
                           {city.poblacion},{' '}
@@ -409,6 +451,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
             <label className='relative'>
               <input
                 type='text'
+                autoComplete='new-password'
                 name='province'
                 className={inpStyle}
                 placeholder='Provincia'
@@ -445,6 +488,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                           className='bg-white w-full text-left p-2 border'
                           key={province.provinciaid}
                           onMouseDown={() => {
+                            setValue('province', province.provincia);
                             provRef.current.value = province.provincia;
                           }}
                         >
@@ -463,6 +507,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
             )}
             <input
               type='text'
+              autoComplete='new-password'
               name='address'
               className={inpStyle}
               placeholder='Dirección'
@@ -487,6 +532,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
               <input
                 type='num'
                 name='number'
+                autoComplete='new-password'
                 className={inpStyle}
                 placeholder='Nº'
                 {...register('number', {
@@ -665,7 +711,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                 });
               }}
             >
-              {!EditProperty && 'La primera fotografía será la principal'}
               <div className='flex flex-wrap gap-2 justify-center'>
                 {EditProperty && Photos
                   ? Photos.map((photo) => {
@@ -683,7 +728,9 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                             <FaPlus className='transform rotate-45' />
                           </button>
                           <img
-                            src={'http://localhost:4000/photo/' + photo.name}
+                            src={
+                              'http://192.168.5.103:4000/photo/' + photo.name
+                            }
                             alt='prueba'
                             className='w-20 h-20 object-cover'
                           />
@@ -691,6 +738,39 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                       );
                     })
                   : ''}
+                {PhotosOnUpload.length > 0
+                  ? PhotosOnUpload.map((file, index) => {
+                      return (
+                        <div key={file.name} className='relative w-20'>
+                          <button
+                            className='delete-photo absolute top-0 right-0 bg-principal-1'
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setLoader(true);
+                              setPhotosOnUpload(
+                                PhotosOnUpload.filter(
+                                  (fileToRemove) =>
+                                    fileToRemove.name !== file.name
+                                )
+                              );
+
+                              setTimeout(() => {
+                                setLoader(false);
+                              }, 1000);
+                            }}
+                          >
+                            <FaPlus className='transform rotate-45' />
+                          </button>
+                          <img
+                            src={URL.createObjectURL(file)}
+                            alt='prueba'
+                            className='w-20 h-20 object-cover'
+                          />
+                        </div>
+                      );
+                    })
+                  : 'La primera fotografía será la principal.'}
               </div>
               <FaCamera
                 className={`text-4xl ${EditProperty && 'w-80'} cursor-pointer`}

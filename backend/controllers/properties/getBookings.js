@@ -79,7 +79,6 @@ const getBookings = async (req, res, next) => {
         `,
         [idReqUser]
       );
-      console.log('\x1b[45m%%%%%%%', bookings);
       res.send({
         status: 'ok',
         bookings,
