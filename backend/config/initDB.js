@@ -180,7 +180,7 @@ async function main() {
 
     // Insertamos el usuario administrador.
     await connection.query(`
-    INSERT INTO users ( name, lastName, tel, email, password, role, createdAt, city, birthDate)
+    INSERT INTO users ( name, lastName, tel, email, password, role, createdAt, city, birthDate,avatar, bio)
     VALUES (
         "david",
         "losas",
@@ -190,12 +190,25 @@ async function main() {
         "admin",
         "${format(new Date(), 'yyyy-MM-dd HH:mm:ss')}",
         "A coruña",
-        "1900-01-30"
+        "1900-01-30",
+        "davidlosas.jpg",
+        "Solo acepto ofertas de viviendas procedentes de Guijuelo. Municipio y localidad española de la provincia de Salamanca, en la comunidad autónoma de Castilla y León."
     )
 `);
     // Nº de usuarios que queremos introducir.
     const USERS = 10;
-
+    const pictures = [
+      'fotoperfil1.jpg',
+      'fotoperfil2.jpg',
+      'fotoperfil3.jpg',
+      'fotoperfil4.jpg',
+      'fotoperfil5.jpg',
+      'fotoperfil6.jpg',
+      'fotoperfil7.jpg',
+      'fotoperfil8.jpg',
+      'fotoperfil9.jpg',
+      'fotoperfil10.jpg',
+    ];
     // Insertamos los usuarios.
     for (let i = 0; i < USERS; i++) {
       // Datos de faker.
@@ -205,14 +218,18 @@ async function main() {
       const email = faker.internet.email();
       const password = faker.internet.password();
       const city = faker.address.cityName();
-      const birthDate = format(faker.datatype.datetime(), 'yyyy-MM-dd');
-
+      const birthDate = format(
+        faker.date.between('1970-01-01', '2001-12-31'),
+        'yyyy/MM/dd'
+      );
+      const bio =
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet natus eaque rem ad, minima iure.';
+      const picture = pictures[i];
       // Fecha de creación.
       const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
-
       await connection.query(`
-        INSERT INTO users ( name, lastName, tel, email, password, createdAt, city, birthDate)
-        VALUES ( "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}" )
+        INSERT INTO users ( name, lastName, tel, email, password, createdAt, city, birthDate, avatar, bio)
+        VALUES ( "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}", "${picture}", "${bio}" )
     `);
     }
     console.log('Usuarios creados');

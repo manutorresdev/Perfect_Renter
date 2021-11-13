@@ -1,11 +1,43 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FaGithub, FaInstagram } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { MenuElements } from './MenuElements';
 
-export default function Footer({ token, setToken }) {
+export function useOnScreen(ref) {
+  const [isIntersecting, setIntersecting] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) =>
+      setIntersecting(entry.isIntersecting)
+    );
+    observer.observe(ref.current);
+    // Remove the observer as soon as the component is unmounted
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref]);
+
+  return isIntersecting;
+}
+
+export default function Footer({
+  token,
+  setToken,
+  setIsFooterVisible,
+  IsFooterVisible,
+}) {
+  const footer = useRef();
+  const isVisible = useOnScreen(footer);
+
+  useEffect(() => {
+    setIsFooterVisible(isVisible);
+  }, [isVisible, setIsFooterVisible]);
+
   return (
-    <footer className='text-principal-1 bottom-0 bg-gray-Primary h-28 absolute w-full flex items-center justify-evenly md:justify-between md:px-20'>
+    <footer
+      ref={footer}
+      className='text-principal-1 bottom-0 bg-gray-Primary h-28 absolute w-full flex items-center justify-evenly md:justify-between '
+    >
       <div className='logo+name h-full flex flex-col items-center justify-center'>
         <Link to='/' className='logo p-1'>
           <img
