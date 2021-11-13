@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { FaFilter } from 'react-icons/fa';
 import { get } from '../../Helpers/Api';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Filters from './Filters';
 import Property from './Property';
 
-export default function Properties() {
+export default function Properties(props) {
   const [Overlay, setOverlay] = useState({ show: false });
   const [Properties] = useProperties();
   const [bestRatedProperties, setBestRatedProperties] = useState([]);
@@ -25,17 +26,20 @@ export default function Properties() {
   }, []);
 
   return (
-    <main className='flex flex-col sm:flex-row pb-28 sm:gap-2'>
+    <main className='flex flex-col sm:flex-row pb-40 sm:gap-2 max-w-customXL relative flex-grow'>
       <aside
-        className={` w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static fixed right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20`}
+        className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static  ${
+          props.IsFooterVisible ? 'absolute bottom-28 ' : ' fixed bottom-0 '
+        } z-20 right-0 left-0 mx-auto lg:top-0 mt-5 lg:mt-20`}
       >
         <button
-          className='text-white text-xl min-w-min h-full p-2 sm:hidden'
+          className='lg:hidden flex pl-6'
           onClick={() => {
             setOverlay({ show: true });
           }}
         >
-          Filtros
+          Filtrar
+          <FaFilter className='w-10 h-full p-2 lg:hidden' />
         </button>
         <Filters setOverlay={setOverlay} Overlay={Overlay} />
       </aside>

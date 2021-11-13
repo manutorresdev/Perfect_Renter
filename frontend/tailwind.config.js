@@ -6,12 +6,30 @@ module.exports = {
       black: theme('colors.black'),
     }),
     extend: {
+      screens: {
+        xs: '540px',
+      },
       minWidth: {
+        '1/7': '14.2857143%',
+        '2/7': '28.5714286%',
+        '3/7': '42.8571429%',
+        '4/7': '57.1428571%',
+        '5/7': '71.4285714%',
+        '6/7': '85.7142857%',
+        28: '6rem',
+        32: '8rem',
         xs: '20rem',
         xxs: '10rem',
         xxs2: '8rem',
       },
       minHeight: {
+        '1/7': '14.2857143%',
+        '2/7': '28.5714286%',
+        '3/7': '42.8571429%',
+        '4/7': '57.1428571%',
+        '5/7': '71.4285714%',
+        '6/7': '85.7142857%',
+        32: '8rem',
         '6/10': '60%',
         '20rem': '20rem',
         lg: '700px',
@@ -27,6 +45,7 @@ module.exports = {
         custom: '16rem',
         xxs: '10rem',
         xxs2: '8rem',
+        customXL: '1650px',
       },
       keyframes: {
         LeftX: {
@@ -56,6 +75,9 @@ module.exports = {
         4: '4',
         10: '10',
         20: '20',
+      },
+      gridTemplateColumns: {
+        custom: 'repeat(2,minmax(0,350px))',
       },
       gridTemplateRows: {
         auto: 'auto',
