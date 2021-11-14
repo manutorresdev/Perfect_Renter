@@ -167,7 +167,7 @@ export function RentersList() {
 
   useEffect(() => {
     get(
-      'http://localhost:4000/users',
+      'http://192.168.5.103:4000/users',
       (data) => {
         setUsers(data.users);
       },
@@ -198,7 +198,7 @@ export function Renter({ user }) {
     <div className={descBoxStyle}>
       <img
         className=' w-full'
-        src={'http://localhost:4000/photo/' + user.avatar}
+        src={'http://192.168.5.103:4000/photo/' + user.avatar}
         alt=''
       />
       <div className={descBoxTextStyle}>

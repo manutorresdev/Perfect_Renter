@@ -35,47 +35,6 @@ const getLocations = async (req, res, next) => {
       provinces,
       cities,
     });
-    // if (req.route.path.includes('provincias')) {
-    //   // Obtenemos la provincia que está introduciendo el usuario
-    //   const { provincia } = req.body;
-
-    //   // Seleccionamos las provincias que contengan los carácteres introducidos
-    //   const [provinces] = await connection.query(
-    //     `
-    //     SELECT provincia
-    //     FROM provincias
-    //     WHERE provincia LIKE ?
-    //     `,
-    //     [provincia]
-    //   );
-
-    //   // Si hay provincias, las enviamos
-    //   if (provinces) {
-    //     console.log('\x1b[45m%%%%%%%', provinces);
-    //     res.send({
-    //       status: 'ok',
-    //       provinces,
-    //     });
-    //   }
-    //   if (req.route.path.includes('ciudades')) {
-    //     const { ciudad } = req.body;
-
-    //     //Obtenemos la ciudad que desea escribir el usuario
-    //     const [cities] = await connection.query(
-    //       `
-    //     SELECT poblacion
-    //     FROM municipios
-    //     WHERE poblacion LIKE ? ;
-    //     `,
-    //       [ciudad]
-    //     );
-
-    //     res.send({
-    //       status: 'ok',
-    //       cities,
-    //     });
-    //   }
-    // }
   } catch (error) {
     next(error);
   } finally {

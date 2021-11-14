@@ -38,19 +38,12 @@ const editUser = async (req, res, next) => {
     // Validamos los datos recibidos.
     await validate(editUserSchema, req.body);
 
-    console.log(req.body, 'ESTO ES HEADEEEEEEEERS');
-    console.log(req.files, 'ESTO ES REEEQ FILES');
-
-    console.log(req);
-
     // Lanzamos un error en caso de que no seamos dueños de este usuario.
     if (Number(idUser) !== idReqUser) {
       const error = new Error('No tienes permisos para editar este usuario');
       error.httpStatus = 403;
       throw error;
     }
-    console.log(req);
-    // console.log('\x1b[43m########\x1b[30m', req.files.avatar, 'ARCHIVO--');
     // Si no llega ningún dato lanzamos un error.
     if (
       !name &&

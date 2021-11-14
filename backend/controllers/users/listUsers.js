@@ -15,18 +15,18 @@ const listUsers = async (req, res, next) => {
     connection = await getDB();
 
     // Obtenemos los queryParams en caso de que haya.
-    let { ciudad: city, orden: order, direccion: direction } = req.query;
+    let { ciudad: filtCity, orden: order, direccion: direction } = req.query;
 
     // Cambiamos valores para encajar con backend.
     if (order === 'creacion') {
-      order = 'createdAt';
+      order = 'users.createdAt';
     } else if (order === 'valoraciones') {
       order = 'votes';
     } else if (order === 'edad') {
-      order = 'birthDate';
+      order = 'users.birthDate';
     }
     // Establecemos opciones de validación de orden.
-    const validOrderOptions = ['city', 'votes', 'birthDate'];
+    const validOrderOptions = ['users.createdAt', 'votes', 'users.birthDate'];
 
     // Establecemos opciones de valicadión de dirección
     const validDirectionOptions = ['DESC', 'ASC'];
@@ -35,50 +35,69 @@ const listUsers = async (req, res, next) => {
     const orderBy = validOrderOptions.includes(order) ? order : 'votes';
 
     // Establecemos una dirección por defecto
-    const orderDirection = validDirectionOptions.includes(direction)
+    let orderDirection = validDirectionOptions.includes(direction)
       ? direction
       : 'DESC';
+    const city = filtCity ?? '%';
 
     let users;
-
+    console.log('ORDEN', orderBy);
+    console.log('DIRECCION', orderDirection);
     // Obtenemos los datos de todos los usuarios
-    if (!city && order === 'birthDate') {
-      // Filtrado por fecha de nacimiento.
-      console.log('Ordenado por fecha de nacimiento.');
+    // if (!city && order === 'birthDate') {
+    // Filtrado por fecha de nacimiento.
+    // console.log('Ordenado por fecha de nacimiento.');
+
+    if (order === 'users.birthDate') {
+      orderDirection = orderDirection === 'ASC' ? 'DESC' : 'ASC';
+      console.log('CAMBIO DIRECCION', orderDirection);
+      [users] = await connection.query(
+        `SELECT users.bio,users.idUser,users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
+          FROM users
+          LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
+          WHERE users.name != "[deleted]" AND city LIKE ?
+          group by users.idUser
+          ORDER BY ${orderBy} ${orderDirection}
+          `,
+        [city, orderBy, orderDirection]
+      );
+    } else {
       [users] = await connection.query(
         `SELECT users.bio,users.idUser,users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
         FROM users
         LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
-        WHERE users.name != "[deleted]"
+        WHERE users.name != "[deleted]" AND city LIKE ?
         group by users.idUser
-        ORDER BY users.birthDate ${orderDirection}
-        `
-      );
-    } else if (city) {
-      // Filtrado por ciudad
-      console.log('Filtrado por ciudad.');
-      [users] = await connection.query(
-        `SELECT users.bio,users.idUser,users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
-      FROM users
-      LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
-      WHERE city LIKE ? AND users.name != "[deleted]"
-      group by users.idUser
-      ORDER BY ${orderBy} ${orderDirection}
-      `,
-        [`%${city}%`]
-      );
-    } else {
-      console.log('Ordenado por votos');
-      [users] = await connection.query(
-        `SELECT users.bio,users.idUser,users.name, users.lastName,users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
-      FROM users
-      LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
-      WHERE users.name != "[deleted]"
-      group by users.idUser
-      order by votes ${orderDirection}
-      `
+        ORDER BY ${orderBy} ${orderDirection}
+        `,
+        [city, orderBy, orderDirection]
       );
     }
+    // } else if (city) {
+    //   // Filtrado por ciudad
+    //   console.log('Filtrado por ciudad.');
+    //   [users] = await connection.query(
+    //     `SELECT users.bio,users.idUser,users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
+    //   FROM users
+    //   LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
+    //   WHERE city LIKE ? AND users.name != "[deleted]"
+    //   group by users.idUser
+    //   ORDER BY ${orderBy} ${orderDirection}
+    //   `,
+    //     [`%${city}%`]
+    //   );
+    // } else {
+    //   console.log('Ordenado por votos');
+    //   [users] = await connection.query(
+    //     `SELECT users.bio,users.idUser,users.name, users.lastName,users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
+    //   FROM users
+    //   LEFT JOIN votes AS user_vote ON (users.idUser = user_vote.idTenant)
+    //   WHERE users.name != "[deleted]"
+    //   group by users.idUser
+    //   order by votes ${orderDirection}
+    //   `
+    //   );
+    // }
 
     res.send({
       status: 'ok',

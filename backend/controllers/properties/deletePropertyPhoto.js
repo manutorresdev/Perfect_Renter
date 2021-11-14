@@ -26,7 +26,6 @@ const deletePropertyPhoto = async (req, res, next) => {
       [photoName, idProperty]
     );
 
-    console.log(photo);
     // Si la foto no existe, lanzamos un error
     if (photo.length < 1) {
       const error = new Error('La foto no existe');

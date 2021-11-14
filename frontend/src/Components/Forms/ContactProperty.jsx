@@ -5,14 +5,13 @@ import { CreateFormData, post, get } from '../../Helpers/Api';
 import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import { Box, styled } from '@mui/system';
+import { Box } from '@mui/system';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { addDays, format } from 'date-fns';
 import esEsLocale from 'date-fns/locale/es';
 import { useContext, useEffect, useState } from 'react';
-import MuiDateRangePickerDay from '@mui/lab/DateRangePickerDay';
 import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
 import Carousel from 'react-material-ui-carousel';
 
@@ -47,7 +46,7 @@ export default function ContactProperty({
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties/${property.idProperty}/bookings`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data.bookings);
         console.log(data);
@@ -80,7 +79,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/book`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           setMessage(data);
@@ -94,7 +93,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://localhost:4000/properties/${property.idProperty}/contact`,
+        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -295,7 +294,7 @@ export default function ContactProperty({
                       <img
                         key={i}
                         className='object-cover w-full h-96'
-                        src={'http://localhost:4000/photo/' + img.name}
+                        src={'http://192.168.5.103:4000/photo/' + img.name}
                         alt='default'
                       />
                     );
@@ -329,36 +328,7 @@ function DatePicker({
   inpStyle,
   arrayFechas,
 }) {
-  // const DateRangePickerDay = MuiDateRangePickerDay;
-  const DateRangePickerDay = styled(MuiDateRangePickerDay)(
-    ({
-      theme,
-      isHighlighting,
-      isStartOfHighlighting,
-      isEndOfHighlighting,
-    }) => ({
-      ...(isHighlighting && {
-        borderRadius: 0,
-        backgroundColor: 'rgba(49, 47, 47, 0.84)',
-      }),
-      ...(isStartOfHighlighting && {
-        borderTopLeftRadius: '50%',
-        borderBottomLeftRadius: '50%',
-      }),
-      ...(isEndOfHighlighting && {
-        borderTopRightRadius: '50%',
-        borderBottomRightRadius: '50%',
-      }),
-    })
-  );
-
-  function renderWeekPickerDay(date, dateRangePickerDayProps) {
-    if (date.disabled) {
-      return <DateRangePickerDay {...dateRangePickerDayProps} />;
-    } else {
-      return <DateRangePickerDay {...dateRangePickerDayProps} />;
-    }
-  }
+  const [TriggerDatePicker, setTriggerDatePicker] = useState(false);
 
   return (
     <LocalizationProvider locale={esEsLocale} dateAdapter={AdapterDateFns}>
@@ -367,6 +337,10 @@ function DatePicker({
         autoOk
         label='Advanced keyboard'
         value={Value}
+        open={TriggerDatePicker}
+        onClose={() => {
+          setTriggerDatePicker(false);
+        }}
         shouldDisableDate={(date) =>
           // (date) => date.getTime() === new Date('2021-11-12').getTime()
 
@@ -374,7 +348,7 @@ function DatePicker({
           arrayFechas.includes(format(date, 'd/MM/yyyy'))
         }
         renderLoading={() => <CalendarPickerSkeleton />}
-        renderDay={renderWeekPickerDay}
+        // renderDay={renderWeekPickerDay}
         inputFormat='dd/MM/yyyy'
         onChange={(newValue) => {
           if (
@@ -395,21 +369,24 @@ function DatePicker({
               newValue[1] &&
               !isNaN(newValue[1].getTime())
             ) {
-              // if (!validaFecha(arrayFechas, newValue[0], newValue[1])) {
               setValue('startDate', format(newValue[0], 'yyyy/MM/dd'));
               setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
-              // } else {
-              //   <p>No seleccione las fechas desabilitadas.</p>;
-              // }
+
+              setTriggerDatePicker(false);
             }
           }
         }}
         renderInput={(startProps, endProps) => (
-          <div className='flex flex-col w-full sm:flex-row'>
+          <div
+            className='flex flex-col w-full sm:flex-row'
+            onClick={(e) => {
+              setTriggerDatePicker(true);
+            }}
+          >
             <input
               className={inpStyle}
               name='startDate'
-              autoComplete='off'
+              autoComplete='new-password'
               ref={startProps.inputRef}
               {...startProps.inputProps}
             />
@@ -417,7 +394,7 @@ function DatePicker({
             <input
               className={inpStyle}
               name='endDate'
-              autoComplete='off'
+              autoComplete='new-password'
               ref={endProps.inputRef}
               {...endProps.inputProps}
             />

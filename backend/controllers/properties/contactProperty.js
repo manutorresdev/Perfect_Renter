@@ -19,12 +19,10 @@ const contactProperty = async (req, res, next) => {
     const { idProperty } = req.params;
 
     // Obtenemos el id del usuario que contacta.
-    const { idUser: idReqUser } = req.userAuth;
+    // const { idUser: idReqUser } = req.userAuth;
 
     // Obtenemos los datos del usuario que contacta.
     let { name, lastName, email, tel, comentarios } = req.body;
-
-    console.log('Entre al contact property: \x1b[43m########\x1b[30m', name);
 
     // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
     const [property] = await connection.query(
@@ -39,7 +37,7 @@ const contactProperty = async (req, res, next) => {
     );
 
     // Si el usuario es el dueño de la vivienda, lanzamos error.
-    if (idReqUser === Number(property[0].idUser)) {
+    if (idReqUser && idReqUser === Number(property[0].idUser)) {
       const error = new Error(
         'No puedes contactar con una vivienda de tu propiedad.'
       );

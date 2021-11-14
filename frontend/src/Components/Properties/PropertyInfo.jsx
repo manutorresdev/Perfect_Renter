@@ -44,7 +44,7 @@ export default function PropertyInfo(props) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties/${Number(
+      `http://192.168.5.103:4000/properties/${Number(
         props.match.params.idProperty
       )}/photos`,
       (data) => {
@@ -129,7 +129,7 @@ export default function PropertyInfo(props) {
         <aside
           className={`flex justify-center items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static z-20 right-0 ${
             props.IsFooterVisible ? 'bottom-28 absolute' : 'bottom-0 fixed'
-          } left-0 mx-auto mt-5 sm:mt-20`}
+          } left-0 mx-auto mt-5 sm:mt-20 `}
         >
           <span
             className='lg:hidden flex pl-6'
@@ -195,7 +195,7 @@ export default function PropertyInfo(props) {
                             ? ' h-96 w-full'
                             : ' sm:h-full w-full sm:max-h-lg max-w-2xl object-contain m-auto'
                         }`}
-                        src={'http://localhost:4000/photo/' + img.name}
+                        src={'http://192.168.5.103:4000/photo/' + img.name}
                         alt='default'
                       />
                     );

@@ -11,7 +11,6 @@ export function useOnScreen(ref) {
       setIntersecting(entry.isIntersecting)
     );
     observer.observe(ref.current);
-    // Remove the observer as soon as the component is unmounted
     return () => {
       observer.disconnect();
     };
@@ -36,12 +35,12 @@ export default function Footer({
   return (
     <footer
       ref={footer}
-      className='text-principal-1 bottom-0 bg-gray-Primary h-28 absolute w-full flex items-center justify-evenly md:justify-between '
+      className='text-principal-1 bottom-0 grid grid-cols-9 items-center bg-gray-Primary h-28 absolute w-full'
     >
-      <div className='logo+name h-full flex flex-col items-center justify-center'>
-        <Link to='/' className='logo p-1'>
+      <div className='logo+name sm:col-start-1 sm:col-end-2 col-start-2 justify-self-end xl:justify-self-center h-full flex flex-col items-center justify-center'>
+        <Link to='/' className='logo w-10 p-1'>
           <img
-            className='w-10'
+            className=''
             src='/Images/logo-amarillo-primary.png'
             alt='logo Perfect renter'
             id='logo'
@@ -49,8 +48,8 @@ export default function Footer({
         </Link>
         <span>Perfect Renter</span>
       </div>
-      <div className='links'>
-        <ul className=' md:flex md:gap-5'>
+      <div className=' links col-start-5 sm:col-start-4 sm:col-end-7'>
+        <ul className=' sm:flex sm:justify-between'>
           {MenuElements.map((item) => {
             if (item.id === 1) {
               return '';
@@ -77,8 +76,8 @@ export default function Footer({
           })}
         </ul>
       </div>
-      <div className='redes sociales flex flex-col gap-2'>
-        <h3>Síguenos en:</h3>
+      <div className=' redes sociales flex flex-col gap-2 col-start-8 sm:col-start-9'>
+        <h3>Siguenos en:</h3>
         <div className='flex gap-2 text-white'>
           <a
             rel='noreferrer'
