@@ -42,7 +42,7 @@ export default function Footer({
         <Link to='/' className='logo p-1'>
           <img
             className='w-10'
-            src='/Images/logo-pr-amarillo.png'
+            src='/Images/logo-amarillo-primary.png'
             alt='logo Perfect renter'
             id='logo'
           />
