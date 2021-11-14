@@ -266,7 +266,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   return (
     <div className='overlay z-30 bg-white bg-opacity-75 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
-      ´
       {Loader && (
         <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
           <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}

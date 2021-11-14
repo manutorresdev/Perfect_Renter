@@ -48,7 +48,6 @@ export default function PropertyInfo(props) {
         props.match.params.idProperty
       )}/photos`,
       (data) => {
-        console.log(data);
         setSlideImgs(data.photos);
       },
       (error) => console.log(error),
@@ -185,7 +184,6 @@ export default function PropertyInfo(props) {
               >
                 {SlideImgs.length > 0 ? (
                   SlideImgs.map((img, i) => {
-                    console.log(img);
                     return (
                       <img
                         key={i}
@@ -297,18 +295,12 @@ export default function PropertyInfo(props) {
                           Inicia sesión o regístrate para reservar esta
                           propiedad
                         </p>
-                        <div>
-                          <Link
-                            className={`${buttonStyle} col-start-4 col-end-6 row-start-1 sm:col-start-8 sm:col-end-9 justify-self-end px-6 sm:px-8 hover:px-10`}
-                            to='/login'
-                          >
+                        <div className='flex gap-5 w-full'>
+                          <Link className={`${buttonStyle}`} to='/login'>
                             Acceso
                           </Link>
 
-                          <Link
-                            className={`${buttonStyle} col-start-6 col-end-8 row-start-1 sm:col-start-9 sm:col-end-10 justify-self-center px-4 sm:px-6 hover:px-8`}
-                            to='/registro'
-                          >
+                          <Link className={`${buttonStyle}`} to='/registro'>
                             Registro
                           </Link>
                         </div>
@@ -401,7 +393,7 @@ function RelatedProperties({ properties, city }) {
     related = properties.filter((property) => property.city === city);
     if (related.length > 0) {
       return (
-        <div className='flex flex-col items-center p-8 overflow-hidden pb-28 w-screen'>
+        <div className='flex flex-col items-center p-8 overflow-hidden pb-44 w-screen'>
           <h1 className='text-2xl text-principal-gris py-2 bg-principal-1 w-screen text-center font-semibold'>
             Algunos pisos relacionados
           </h1>

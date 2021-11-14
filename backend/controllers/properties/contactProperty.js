@@ -18,9 +18,6 @@ const contactProperty = async (req, res, next) => {
     // Obtenemos el id de la vivienda a contactar.
     const { idProperty } = req.params;
 
-    // Obtenemos el id del usuario que contacta.
-    // const { idUser: idReqUser } = req.userAuth;
-
     // Obtenemos los datos del usuario que contacta.
     let { name, lastName, email, tel, comentarios } = req.body;
 
