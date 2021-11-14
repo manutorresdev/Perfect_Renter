@@ -57,7 +57,7 @@ export default function FileProperty({
     });
     console.log(photos[0]);
     put(
-      `http://192.168.5.103:4000/properties/${editProperty}`,
+      `http://localhost:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
       (data) => {
         if (data.status === 'ok') {
@@ -144,9 +144,7 @@ export default function FileProperty({
                               <FaPlus className='transform rotate-45' />
                             </button>
                             <img
-                              src={
-                                'http://192.168.5.103:4000/photo/' + photo.name
-                              }
+                              src={'http://localhost:4000/photo/' + photo.name}
                               alt='prueba'
                               className='w-20 h-20 object-cover'
                             />
