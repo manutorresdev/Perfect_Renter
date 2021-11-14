@@ -80,9 +80,9 @@ export default function UsersList(props) {
         <VoteForm setOverlay={setOverlay} info={Overlay.info} Token={Token} />
       )}
       <aside
-        className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:bg-transparent flex-grow-0 lg:static  ${
+        className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static  ${
           props.IsFooterVisible ? 'absolute bottom-28 ' : ' fixed bottom-0 '
-        } z-20 right-0 left-0 mx-auto lg:m-0 lg:top-0 mt-5 lg:mt-20`}
+        } z-20 lg:z-0 right-0 left-0 mx-auto lg:m-0 lg:top-0 mt-5 lg:mt-20`}
       >
         <button
           className='lg:hidden flex pl-6'

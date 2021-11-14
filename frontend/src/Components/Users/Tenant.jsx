@@ -5,8 +5,8 @@ import { capitalizeFirstLetter } from '../../Helpers/Api';
 
 export default function Tenant({ user, setOverlay, relation }) {
   return (
-    <article className='user-card lg:w-3/4 max-w-xs lg:max-w-lg lg:max-h-52 flex flex-col gap-2 text-xs shadow-lg p-4 bg-white bg-opacity-30'>
-      <div className='flex flex-row flex-grow min-w-full '>
+    <article className='user-card lg:w-3/4 md:min-h-15rem xl:min-h-0 max-w-xs lg:max-w-lg lg:max-h-52 flex flex-col gap-2 text-xs shadow-lg p-4 bg-white bg-opacity-30'>
+      <div className='flex flex-row flex-grow min-w-full'>
         <div className='user-info-cont flex items-center font-medium relative flex-grow-0 md:flex-grow'>
           <Link
             className='user-avatar w-20 h-20 sm:w-32 sm:h-32 flex-grow'
@@ -35,7 +35,7 @@ export default function Tenant({ user, setOverlay, relation }) {
         </div>
         <div className='user-info flex flex-col w-40 sm:w-32 md:w-full'>
           <Link
-            className='self-start w-40 sm:w-32'
+            className='self-start w-40 sm:w-32 md:w-full'
             to={`/inquilinos/${user.idUser}`}
           >
             <div className='font-bold text-base  text-principal-gris py-1 pl-1 border-b-2 flex-grow'>
