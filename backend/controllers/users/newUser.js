@@ -44,7 +44,7 @@ const newUser = async (req, res, next) => {
 
     // Si el email existe lanzamos un error.
     if (user.length > 0) {
-      const error = new Error('Ya existe un usuario registrado con ese email');
+      const error = new Error('Ya existe un usuario registrado con ese email.');
       error.httpStatus = 409;
       throw error;
     }
@@ -76,8 +76,8 @@ const newUser = async (req, res, next) => {
         </thead>
         <tbody>
             <td>
-              Bienvenido/a ${name}
-              Te acabas de registrar en Perfect Renter
+              Bienvenido/a ${name},
+              te acabas de registrar en Perfect Renter
               ¡Pulsa el botón para verificar tu cuenta!
             </td>
         </tbody>
@@ -96,17 +96,17 @@ const newUser = async (req, res, next) => {
       try {
         await sendMail({
           to: email,
-          subject: 'Activa tu usuario de Perfect Renter',
+          subject: 'Activa tu usuario de Perfect Renter.',
           body: emailBody,
         });
       } catch (error) {
-        throw new Error('Error enviando el mensaje de verificación');
+        throw new Error('Error enviando el mensaje de verificación.');
       }
     }
 
     res.send({
       status: 'ok',
-      message: 'Usuario registrado, comprueba tu email para activarlo',
+      message: 'Usuario registrado, comprueba tu email para activarlo.',
       registrationCode,
     });
   } catch (error) {

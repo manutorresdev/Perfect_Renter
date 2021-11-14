@@ -63,7 +63,7 @@ export function PropertyDescription() {
 export function RenterDescription() {
   return (
     <section className={sectionStyle}>
-      <h3 className={sectionTitleStyle}>Renters</h3>
+      <h3 className={sectionTitleStyle}>Inquilinos</h3>
       <img className={sectionImgStyle} src='/Images/familia.jpg' alt='' />
       <p className='text-justify'>
         Sabemos que encontrar una vivienda puede ser complicado y queremos
@@ -155,7 +155,7 @@ export function PropertiesList() {
       </div>
 
       <Link to='/alquileres' className={boxReadMoreBtnStyle}>
-        <button>Ver Mas</button>
+        <button>Ver más</button>
       </Link>
     </div>
   );
@@ -187,7 +187,7 @@ export function RentersList() {
           : ''}
       </div>
       <Link to='/inquilinos' className={boxReadMoreBtnStyle}>
-        <button>Ver Mas</button>
+        <button>Ver más</button>
       </Link>
     </div>
   );

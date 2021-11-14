@@ -28,7 +28,6 @@ export default function Properties(props) {
   return (
     <>
       <main className='flex flex-col sm:flex-row sm:gap-2'>
-
         <aside
           className={` w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static fixed right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20`}
         >
@@ -60,7 +59,7 @@ export default function Properties(props) {
                 />
               ))
             ) : (
-              <div>No hay conicidencias para su busqueda.</div>
+              <div>No hay conicidencias para su búsqueda.</div>
             )}
           </div>
         </section>

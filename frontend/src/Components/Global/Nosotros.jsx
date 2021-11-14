@@ -16,9 +16,9 @@ export default function Nosotros() {
       <div className='separador bg-principal-1 h-9'></div>
       <div className='contenedor flex flex-wrap md:flex-nowrap text-principal-gris p-10 gap-5'>
         <div className='sm:w-full p-3  shadow-md bg-principal-1'>
-          <h1 className='text-xl font-bold'>¿Qué es perfect renter?</h1>
+          <h1 className='text-xl font-bold'>¿Qué es Perfect Renter?</h1>
           <p className='pt-1 text-justify'>
-            Perfect renter nace de la creencia de la información colaborativa y
+            Perfect Renter nace de la creencia de la información colaborativa y
             la honestidad de las personas para compartir sus experiencias como
             inquilinos o caseros. Siempre con respeto y con la única intención
             de ayudar a los demás usuarios a encontrar su inquilino o casero

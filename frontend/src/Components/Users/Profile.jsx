@@ -280,7 +280,7 @@ export default function Profile({ token, setToken }) {
       </div>
       <section className='w-full'>
         <h2 className='bg-principal-1 text-principal-gris font-medium text-3xl pl-5 bg-opacity-25  '>
-          Opiniones
+          OPINIONES
         </h2>
         <div className='votes-cont pt-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
           {Votes.length ? (

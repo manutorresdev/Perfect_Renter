@@ -207,7 +207,7 @@ function Filters({ setOverlay, Overlay }) {
                   Edad
                 </option>
                 <option value='creacion' className='font-medium'>
-                  Mas recientes
+                  Más recientes
                 </option>
                 <option value='valoraciones' className='font-medium'>
                   Valoraciones
@@ -224,10 +224,10 @@ function Filters({ setOverlay, Overlay }) {
                   Orden
                 </option>
                 <option value='ASC' className='font-medium'>
-                  Asc
+                  Ascendente
                 </option>
                 <option value='DESC' className='font-medium'>
-                  Desc
+                  Descendente
                 </option>
               </select>
             </label>
@@ -241,17 +241,17 @@ function Filters({ setOverlay, Overlay }) {
                       value:
                         /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                       message:
-                        'La ciudad no puede contener carácteres especiales ni números.',
+                        'La ciudad no puede contener caracteres especiales ni números.',
                     },
                     maxLength: {
                       value: 30,
-                      message: 'La ciudad no puede tener más de 50 carácteres.',
+                      message: 'La ciudad no puede tener más de 50 caracteres.',
                     },
                   })}
                   type='text'
                   name='ciudad'
                   className={inputStyle}
-                  placeholder='Ciudad...'
+                  placeholder='Ciudad'
                 />
                 {errors.city && (
                   <p className='text-red-500'>{errors.city.message}</p>

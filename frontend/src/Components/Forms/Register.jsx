@@ -157,7 +157,7 @@ export default function Register({ Token, usuario, setOverlay }) {
               required: 'Debes escribir un email.',
               maxLength: {
                 value: 200,
-                message: 'El email no puede contener más de 200 carácteres.',
+                message: 'El email no puede contener más de 200 caracteres.',
               },
             }}
             render={({ field: { onChange, name, ref, value } }) => {
@@ -199,15 +199,15 @@ export default function Register({ Token, usuario, setOverlay }) {
                 value:
                   /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                 message:
-                  'El nombre no puede contener carácteres especiales ni números.',
+                  'El nombre no puede contener caracteres especiales ni números.',
               },
               minLength: {
                 value: 3,
-                message: 'El nombre debe contener como mínimo 3 carácteres.',
+                message: 'El nombre debe contener como mínimo 3 caracteres.',
               },
               maxLength: {
                 value: 30,
-                message: 'El nombre no puede tener más de 30 carácteres.',
+                message: 'El nombre no puede tener más de 30 caracteres.',
               },
             }}
             render={({ field: { onChange, name, ref, value } }) => {
@@ -240,15 +240,15 @@ export default function Register({ Token, usuario, setOverlay }) {
                 value:
                   /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                 message:
-                  'El apellido no puede contener carácteres especiales ni números.',
+                  'El apellido no puede contener caracteres especiales ni números.',
               },
               minLength: {
                 value: 3,
-                message: 'El apellido debe contener como mínimo 3 carácteres.',
+                message: 'El apellido debe contener como mínimo 3 caracteres.',
               },
               maxLength: {
                 value: 30,
-                message: 'El apellido no puede tener más de 30 carácteres.',
+                message: 'El apellido no puede tener más de 30 caracteres.',
               },
             })}
           />
@@ -267,16 +267,16 @@ export default function Register({ Token, usuario, setOverlay }) {
             name='city'
             placeholder='City*'
             {...register('city', {
-              required: 'Debes escribir la ciudad donde resides.',
+              required: 'Debes escribir la ciudad dónde resides.',
               pattern: {
                 value:
                   /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                 message:
-                  'La ciudad no puede contener carácteres especiales ni números.',
+                  'La ciudad no puede contener caracteres especiales ni números.',
               },
               maxLength: {
                 value: 30,
-                message: 'La ciudad no puede tener más de 50 carácteres.',
+                message: 'La ciudad no puede tener más de 50 caracteres.',
               },
             })}
           />
@@ -305,7 +305,7 @@ export default function Register({ Token, usuario, setOverlay }) {
               <div className='p-2 rounded-full border-2 border-gray-800'>
                 <FaBookOpen className='text-principal-1' />
               </div>
-              Cuentanos algo sobre ti:
+              Cuéntanos algo sobre ti:
             </h3>
           )}
           {Token && (
@@ -324,7 +324,7 @@ export default function Register({ Token, usuario, setOverlay }) {
               minLength: 0,
               maxLength: {
                 value: 255,
-                message: 'No puedes escribir más de 250 carácteres.',
+                message: 'No puedes escribir más de 250 caracteres.',
               },
             })}
           />

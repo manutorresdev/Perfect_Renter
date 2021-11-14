@@ -109,7 +109,7 @@ export default function Filters({ setOverlay, Overlay }) {
                     Precio
                   </option>
                   <option value='creacion' className='font-medium'>
-                    Mas Recientes
+                    Más recientes
                   </option>
                   <option value='valoraciones' className='font-medium'>
                     Valoraciones
@@ -126,10 +126,10 @@ export default function Filters({ setOverlay, Overlay }) {
                     Orden
                   </option>
                   <option value='ASC' className='font-medium'>
-                    Asc
+                    Ascendente
                   </option>
                   <option value='DESC' className='font-medium'>
-                    Desc
+                    Descendente
                   </option>
                 </select>
               </label>
@@ -149,12 +149,14 @@ export default function Filters({ setOverlay, Overlay }) {
                       new Date(newValue[0]).getTime() >
                       new Date(newValue[1]).getTime()
                     ) {
-                      console.error('Fecha de entrada mayor a fecha de salida');
+                      console.error(
+                        'Fecha de entrada mayor a fecha de salida.'
+                      );
                     } else if (
                       new Date(newValue[0]).getTime() ===
                       new Date(newValue[1]).getTime()
                     ) {
-                      console.error('Selecciona fechas diferentes');
+                      console.error('Selecciona fechas diferentes.');
                     } else {
                       console.warn('FECHAS CORRECTAS');
                       setPickerValue(newValue);
@@ -210,18 +212,18 @@ export default function Filters({ setOverlay, Overlay }) {
                         value:
                           /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                         message:
-                          'La ciudad no puede contener carácteres especiales ni números.',
+                          'La ciudad no puede contener caracteres especiales ni números.',
                       },
                       maxLength: {
                         value: 30,
                         message:
-                          'La ciudad no puede tener más de 50 carácteres.',
+                          'La ciudad no puede tener más de 50 caracteres.',
                       },
                     })}
                     type='text'
                     name='ciudad'
                     className={inputStyle}
-                    placeholder='Ciudad...'
+                    placeholder='Ciudad'
                   />
                   {errors.city && (
                     <p className='text-red-500'>{errors.city.message}</p>
@@ -248,7 +250,7 @@ export default function Filters({ setOverlay, Overlay }) {
                     type='text'
                     name='provincia'
                     className={inputStyle}
-                    placeholder='Provincia...'
+                    placeholder='Provincia'
                   />
                 </label>
               </div>
@@ -273,7 +275,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   />
                 </label>
                 <label className='flex gap-2 items-baseline justify-between font-medium'>
-                  Duplex
+                  Dúplex
                   <input
                     type='radio'
                     name='tipo'
@@ -329,7 +331,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   min='1'
                   max='10'
                   className={inputStyle}
-                  placeholder='Hab...'
+                  placeholder='Habitaciones'
                 />
               </label>
               <label className='parking w-1/2 justify-between font-medium sm:w-full flex flex-row items-center'>
@@ -338,7 +340,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   {...register('garaje')}
                   type='checkbox'
                   name='garaje'
-                  placeholder='Garaje...'
+                  placeholder='Garaje'
                 />
               </label>
               <label className='toilets'>
@@ -350,7 +352,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   type='number'
                   name='baños'
                   className={inputStyle}
-                  placeholder='Baños...'
+                  placeholder='Baños'
                 />
               </label>
               <label className='mts'>
@@ -362,7 +364,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   type='number'
                   name='m2'
                   className={inputStyle}
-                  placeholder='Metros...'
+                  placeholder='Metros'
                 />
               </label>
               <div className='flex justify-center items-center self-center sticky -bottom-1 w-full h-28 bg-white lg:bg-transparent'>
