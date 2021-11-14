@@ -67,7 +67,7 @@ export default function Register({ Token, usuario, setOverlay }) {
       setError('Debes ser mayor de edad.');
     } else {
       post(
-        'http://192.168.5.103:4000/users',
+        'http://localhost:4000/users',
         CreateFormData(body),
         (data) => {
           console.log('Success');
@@ -87,7 +87,7 @@ export default function Register({ Token, usuario, setOverlay }) {
   function onSubmitEdited(body, e) {
     e.preventDefault();
     put(
-      `http://192.168.5.103:4000/users/${usuario.idUser}`,
+      `http://localhost:4000/users/${usuario.idUser}`,
       CreateFormData(body),
       (data) => {
         console.log('Success');

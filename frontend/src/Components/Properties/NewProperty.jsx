@@ -111,12 +111,12 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   function onSubmitProperty(body, e) {
     setLoader(true);
     post(
-      'http://192.168.5.103:4000/properties',
+      'http://localhost:4000/properties',
       CreateFormData(body),
       (data) => {
         if (PhotosOnUpload) {
           put(
-            `http://192.168.5.103:4000/properties/${data.property}`,
+            `http://localhost:4000/properties/${data.property}`,
             CreateFormDataMultipleFiles({
               photos: PhotosOnUpload,
             }),
@@ -150,7 +150,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
     e.preventDefault();
 
     put(
-      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}`,
+      `http://localhost:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess');
@@ -166,7 +166,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   useEffect(() => {
     get(
-      'http://192.168.5.103:4000/properties/location',
+      'http://localhost:4000/properties/location',
       (data) => {
         setProvinces(data.provinces);
         setCities(data.cities);
@@ -180,7 +180,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   useEffect(() => {
     if (EditProperty) {
       get(
-        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos`,
+        `http://localhost:4000/properties/${EditProperty.idProperty}/photos`,
         (data) => {
           if (data.status === 'ok') {
             setPhotos(data.photos);
@@ -193,7 +193,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   function deletePhoto(name) {
     if (EditProperty) {
       del(
-        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos/${name}`,
+        `http://localhost:4000/properties/${EditProperty.idProperty}/photos/${name}`,
         null,
         (data) => {
           if (data.status === 'ok') {
@@ -265,7 +265,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const description = watch('description');
 
   return (
-    <div className='overlay z-30 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
+    <div className='overlay z-30 bg-white bg-opacity-75 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
       ´
       {Loader && (
         <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
@@ -285,7 +285,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
           setLoaderDiv={setLoader}
         />
       )}
-      <section className='pt-20 border-2 shadow-custom border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll  md:w-4/6'>
+      <section className='pt-20 filter drop-shadow-xl flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto  md:w-4/6'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -294,7 +294,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
         >
           <FaPlus className='transform scale-150 rotate-45' />
         </button>
-        <h1 className='title w-4/6 text-2xl sm:text-5xl text-center m-auto p-4 bg-principal-1  '>
+        <h1 className='title w-4/6 text-2xl sm:text-4xl text-center m-auto p-4 border-b-4 border-gray-600 '>
           Inmueble
         </h1>
         <div className='newProperty-card-container flex justify-around flex-col-reverse gap-10 '>
@@ -728,9 +728,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                             <FaPlus className='transform rotate-45' />
                           </button>
                           <img
-                            src={
-                              'http://192.168.5.103:4000/photo/' + photo.name
-                            }
+                            src={'http://localhost:4000/photo/' + photo.name}
                             alt='prueba'
                             className='w-20 h-20 object-cover'
                           />
@@ -832,7 +830,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
               <input
                 type='submit'
                 value='AÑADIR'
-                className='btn-submit cursor-pointer text-xl bg-none p-2 font-medium text-principal-gris border-gray-700 border-2 h-2/4 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
+                className='btn-submit select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
               />
             </div>
           </form>

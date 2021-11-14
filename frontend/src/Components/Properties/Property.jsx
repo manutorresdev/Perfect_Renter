@@ -25,7 +25,7 @@ export default function Property({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/photos`,
+      `http://localhost:4000/properties/${property.idProperty}/photos`,
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
           setSlideImgs(data.photos.slice(0, 5));
@@ -46,7 +46,7 @@ export default function Property({
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://192.168.5.103:4000/properties/${property.idProperty}`,
+      `http://localhost:4000/properties/${property.idProperty}`,
       body,
       (data) => {
         alert(data.message);
@@ -58,8 +58,16 @@ export default function Property({
   }
 
   return (
-    <article
-      className={`
+    <>
+      {Overlay.form === 'editProperty' && (
+        <NewProperty
+          setOverlay={setOverlay}
+          Token={token}
+          EditProperty={property}
+        />
+      )}
+      <article
+        className={`
       ${
         mountOn === 'home'
           ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
@@ -68,123 +76,117 @@ export default function Property({
             } w-full my-5  text-gray-400 hover:text-gray-900 duration-300`
       }
       `}
-      // className={`cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
-    >
-      {Overlay.form === 'editProperty' && (
-        <NewProperty
-          setOverlay={setOverlay}
-          Token={token}
-          EditProperty={property}
-        />
-      )}
-      <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
-        <Carousel
-          navButtonsAlwaysVisible
-          indicators={false}
-          autoPlay={false}
-          animation='slide'
-          NavButton={({ onClick, className, style, next, prev }) => {
-            if (next) {
-              return (
-                <FaAngleRight
-                  onClick={onClick}
-                  className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'
-                >
-                  {next && 'Next'}
-                </FaAngleRight>
-              );
-            } else {
-              return (
-                <FaAngleLeft
-                  onClick={onClick}
-                  className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md left-0 pl-2 duration-200'
-                >
-                  {prev && 'Previous'}
-                </FaAngleLeft>
-              );
-            }
-          }}
-          className='slider-cont min-w-xxs h-48 transition-all transform ease-in'
-        >
-          {SlideImgs.length > 0 ? (
-            SlideImgs.map((img, i) => {
-              return (
-                <img
-                  key={i}
-                  className='object-cover w-full h-48'
-                  src={'http://192.168.5.103:4000/photo/' + img.name}
-                  alt='default'
-                />
-              );
-            })
-          ) : (
-            <img
-              className='object-fit h-48 w-full'
-              src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
-              alt='default home'
-            />
-          )}
-        </Carousel>
-      </div>
-
-      <div className='sm:max-w-custom md:max-w-none'>
-        <Link to={`/alquileres/${property.idProperty}`}>
-          <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 flex justify-between gap-2'>
-            <h3>
-              {capitalizeFirstLetter(property.type)} en {property.city}
-            </h3>
-            <h3>{Number(property.price)} €/mes</h3>
-          </div>
-          <div className='pl-2'>
-            {property.province}
-            <div className='text-black font-medium'>
-              {`${property.mts}m² - ${property.rooms} habitaciones - ${
-                property.toilets
-              } ${property.toilets > 1 ? 'baños' : 'baño'}`}
-            </div>
-            {(mountOn === 'profile' || mountOn === 'propertiesList') && (
-              <div className='sm:w-72 pt-2 text-base'>
-                <p className='overflow-hidden'>
-                  {property.description.slice(0, 100)}...
-                </p>
-              </div>
+        // className={`cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
+      >
+        <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
+          <Carousel
+            navButtonsAlwaysVisible
+            indicators={false}
+            autoPlay={false}
+            animation='slide'
+            NavButton={({ onClick, className, style, next, prev }) => {
+              if (next) {
+                return (
+                  <FaAngleRight
+                    onClick={onClick}
+                    className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md right-0 pr-2 duration-200'
+                  >
+                    {next && 'Next'}
+                  </FaAngleRight>
+                );
+              } else {
+                return (
+                  <FaAngleLeft
+                    onClick={onClick}
+                    className='absolute z-10 text-white text-3xl cursor-pointer hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md left-0 pl-2 duration-200'
+                  >
+                    {prev && 'Previous'}
+                  </FaAngleLeft>
+                );
+              }
+            }}
+            className='slider-cont min-w-xxs h-48 transition-all transform ease-in'
+          >
+            {SlideImgs.length > 0 ? (
+              SlideImgs.map((img, i) => {
+                return (
+                  <img
+                    key={i}
+                    className='object-cover w-full h-48'
+                    src={'http://localhost:4000/photo/' + img.name}
+                    alt='default'
+                  />
+                );
+              })
+            ) : (
+              <img
+                className='object-fit h-48 w-full'
+                src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+                alt='default home'
+              />
             )}
-          </div>
-          <footer className='flex p-2 justify-end'>
-            {Array(parseInt(property.votes))
-              .fill(null)
-              .map((value, i) => {
-                return <FaStar key={i} className='text-principal-1' />;
-              })}
-          </footer>
-        </Link>
-        {token ? (
-          <div className='flex justify-between w-full absolute bottom-1 '>
-            <button
-              className='text-xl p-4 hover:text-blue-700'
-              onClick={() => {
-                setOverlay({ shown: true, form: 'editProperty' });
-              }}
-            >
-              <FaPencilAlt />
-            </button>
-            <button
-              className='text-xl p-4 hover:text-red-500'
-              onClick={() => {
-                setProfileOverlay({
-                  form: 'deleteProperty',
-                  shown: true,
-                  onSubmitDeleted: onSubmitDeleted,
-                });
-              }}
-            >
-              <FaTrash />
-            </button>
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
-    </article>
+          </Carousel>
+        </div>
+
+        <div className='sm:max-w-custom md:max-w-none'>
+          <Link to={`/alquileres/${property.idProperty}`}>
+            <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 flex justify-between gap-2'>
+              <h3>
+                {capitalizeFirstLetter(property.type)} en {property.city}
+              </h3>
+              <h3>{Number(property.price)} €/mes</h3>
+            </div>
+            <div className='p-2'>
+              {property.province}
+              <div className='text-black font-medium p-2'>
+                {`${property.mts}m² - ${property.rooms} habitaciones - ${
+                  property.toilets
+                } ${property.toilets > 1 ? 'baños' : 'baño'}`}
+              </div>
+              {(mountOn === 'profile' || mountOn === 'propertiesList') && (
+                <div className='sm:w-72 pt-2 text-base'>
+                  <p className='overflow-hidden'>
+                    {property.description.slice(0, 100)}...
+                  </p>
+                </div>
+              )}
+            </div>
+            <footer className='flex p-2 justify-end'>
+              {Array(parseInt(property.votes))
+                .fill(null)
+                .map((value, i) => {
+                  return <FaStar key={i} className='text-principal-1' />;
+                })}
+            </footer>
+          </Link>
+          {token ? (
+            <div className='flex justify-between w-full absolute bottom-1 '>
+              <button
+                className='text-xl p-4 hover:text-blue-700'
+                onClick={() => {
+                  setOverlay({ shown: true, form: 'editProperty' });
+                }}
+              >
+                <FaPencilAlt />
+              </button>
+              <button
+                className='text-xl p-4 hover:text-red-500'
+                onClick={() => {
+                  setProfileOverlay({
+                    form: 'deleteProperty',
+                    shown: true,
+                    onSubmitDeleted: onSubmitDeleted,
+                  });
+                }}
+              >
+                <FaTrash />
+              </button>
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
+      </article>
+    </>
   );
 }

@@ -610,7 +610,7 @@ app.use((req, res) => {
  * ####################
  */
 const server = app.listen(PORT, () => {
-  console.log(`Server listening at http://192.168.5.103:${PORT}`);
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
 
 module.exports = { server, app };
