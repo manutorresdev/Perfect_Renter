@@ -266,7 +266,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   return (
     <div className='overlay z-30 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
-      ´
       {Loader && (
         <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
           <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
@@ -285,7 +284,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
           setLoaderDiv={setLoader}
         />
       )}
-      <section className='pt-20 border-2 shadow-custom border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll  md:w-4/6'>
+      <section className='pt-20 border-2 shadow-custom border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-4/6'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {

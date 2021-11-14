@@ -18,9 +18,6 @@ const contactProperty = async (req, res, next) => {
     // Obtenemos el id de la vivienda a contactar.
     const { idProperty } = req.params;
 
-    // Obtenemos el id del usuario que contacta.
-    // const { idUser: idReqUser } = req.userAuth;
-
     // Obtenemos los datos del usuario que contacta.
     let { name, lastName, email, tel, comentarios } = req.body;
 
@@ -35,15 +32,6 @@ const contactProperty = async (req, res, next) => {
         `,
       [idProperty]
     );
-
-    // Si el usuario es el dueño de la vivienda, lanzamos error.
-    if (idReqUser && idReqUser === Number(property[0].idUser)) {
-      const error = new Error(
-        'No puedes contactar con una vivienda de tu propiedad.'
-      );
-      error.httpStatus = 403;
-      throw error;
-    }
 
     if (!comentarios || comentarios.length < 1) {
       const error = new Error(

@@ -4,7 +4,7 @@ import { get } from '../../Helpers/Api';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 import Login from '../Forms/Login';
 
-export default function ManageBokking({ match }) {
+export default function ManageBooking({ match }) {
   const [Token] = useContext(TokenContext);
   const [booking, setBooking] = useState({});
 

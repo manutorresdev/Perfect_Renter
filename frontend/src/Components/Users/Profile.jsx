@@ -99,7 +99,7 @@ export default function Profile({ token, setToken }) {
   );
 
   return (
-    <article className='pt-24 pb-32 flex flex-col w-full justify-center max-w-5xl m-auto'>
+    <article className='pt-24 pb-32 flex flex-col w-full justify-center max-w-5xl m-auto relative'>
       {Overlay.form === 'deleteProperty' && (
         <Delete
           setOverlay={setOverlay}

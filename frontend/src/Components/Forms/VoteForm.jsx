@@ -55,9 +55,11 @@ export default function VoteForm({ setOverlay, info, Token }) {
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   const comentarios = watch('commentary');
+  const buttonStyle =
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   return (
-    <div className='overlay z-20  p-4 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
+    <div className='overlay z-30 p-4 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
       {Message && <ConfirmMessage Message={Message} />}
       {SelectProperty && (
         <PropertiesToVote
@@ -67,7 +69,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
           setOverlay={setOverlay}
         />
       )}
-      <section className='contact shadow-custom p-4 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
+      <section className='contact p-4 filter drop-shadow-xl flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -152,11 +154,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
             <p className='text-red-500'>{errors.comentarios.message}</p>
           )}
           {Error && <p className='text-red-500'>{Error.message}</p>}
-          <input
-            className='button select-none w-1/3 self-center text-center border border-gray-400 rounded-full p-2 px-4 bg-principal-1 text-principal-gris font-medium hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer '
-            type='submit'
-            value='Enviar'
-          />
+          <input className={buttonStyle} type='submit' value='Enviar' />
         </form>
       </section>
     </div>
