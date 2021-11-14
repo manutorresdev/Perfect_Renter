@@ -135,14 +135,14 @@ export default function NavBar({ token, setToken }) {
             className={`${buttonStyle} col-start-4 col-end-6 row-start-1 sm:col-start-8 sm:col-end-9 justify-self-end px-6 sm:px-8 hover:px-10`}
             to='/login'
           >
-            Login
+            Acceso
           </Link>
 
           <Link
             className={`${buttonStyle} col-start-6 col-end-8 row-start-1 sm:col-start-9 sm:col-end-10 justify-self-center px-4 sm:px-6 hover:px-8`}
             to='/registro'
           >
-            Register
+            Registro
           </Link>
         </>
       )}
