@@ -68,7 +68,7 @@ export default function Filters({ setOverlay, Overlay }) {
 
   const inputsLabelStyle = 'text-lg duration-200';
   const inputStyle =
-    'bg-black bg-opacity-70 w-48 px-2 placeholder-yellow-300 mix-blend-multiply text-principal-1 font-light text-lg';
+    'bg-black bg-opacity-70 w-48 p-1 px-2 placeholder-yellow-300 mix-blend-multiply text-principal-1 font-light text-lg';
   return (
     <>
       <div
