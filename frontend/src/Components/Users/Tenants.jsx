@@ -7,9 +7,9 @@ import Tenant from './Tenant';
 import VoteForm from '../Forms/VoteForm';
 import { useForm } from 'react-hook-form';
 import { useHistory, useLocation } from 'react-router';
-import { FaPlus } from 'react-icons/fa';
+import { FaFilter, FaPlus } from 'react-icons/fa';
 
-export default function UsersList() {
+export default function UsersList(props) {
   const [Token] = useContext(TokenContext);
   const [Overlay, setOverlay] = useState({
     shown: false,
@@ -44,7 +44,6 @@ export default function UsersList() {
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
-            console.log(data.users);
             setLoaded(true);
           } else {
             setUsers([]);
@@ -67,7 +66,7 @@ export default function UsersList() {
   }, [Token, location.search]);
 
   return (
-    <main className='pb-36 pt-20 flex w-full'>
+    <main className='pb-40 pt-20 flex w-full lg:max-w-customXL'>
       {Overlay.form === 'contact' && (
         <ContactTenant
           setOverlay={setOverlay}
@@ -79,22 +78,23 @@ export default function UsersList() {
         <VoteForm setOverlay={setOverlay} info={Overlay.info} Token={Token} />
       )}
       <aside
-        className={`bg-gray-Primary w-min sm:bg-transparent flex-grow-0 sm:static fixed right-0 top-20 mt-5 sm:top-0 ${
-          Overlay.form ? 'z-0' : 'z-20'
-        }`}
+        className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static  ${
+          props.IsFooterVisible ? 'absolute bottom-28 ' : ' fixed bottom-0 '
+        } z-20 lg:z-0 right-0 left-0 mx-auto lg:m-0 lg:top-0 mt-5 lg:mt-20`}
       >
         <button
-          className='text-white text-xl w-10 min-w-min h-full p-2 sm:hidden'
+          className='lg:hidden flex pl-6'
           onClick={() => {
             setOverlay({ show: true });
           }}
         >
-          Filtros
+          Filtrar
+          <FaFilter className=' w-10 h-full p-2 lg:hidden' />
         </button>
         <Filters setOverlay={setOverlay} Overlay={Overlay} />
       </aside>
-      <section className='users-cont flex flex-col flex-grow'>
-        <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
+      <section className='users-cont flex flex-col flex-grow lg:max-w-screen-'>
+        <h1 className='text-4xl text-principal-gris shadow-lg pt-10 lg:pt-10 bg-principal-1 w-full p-10 font-semibold'>
           Inquilinos
         </h1>
         <div className='grid grid-cols-1 sm:grid-cols-2 grid-rows-auto gap-5 justify-items-center items-center pt-2'>
@@ -178,7 +178,7 @@ function Filters({ setOverlay, Overlay }) {
     >
       <section className='filtros overflow-scroll overflow-x-hidden sm:overflow-hidden p-2  flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
         <button
-          className='close-overlay absolute top-3 right-3 sm:hidden'
+          className='close-overlay absolute top-3 right-3 lg:hidden'
           onClick={() => {
             setOverlay({ show: false, form: '' });
           }}

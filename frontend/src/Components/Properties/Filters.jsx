@@ -76,18 +76,18 @@ export default function Filters({ setOverlay, Overlay }) {
           Overlay.show
             ? 'translate-y-0 opacity-100 '
             : '-translate-y-full opacity-0'
-        }  sm:translate-y-0 bg-yellow-300 sm:bg-white sm:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+        }  lg:translate-y-0 bg-yellow-300 lg:bg-white lg:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 bottom-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 lg:overflow-hidden lg:z-0 lg:mt-0 lg:static lg:py-10`}
       >
-        <section className='filtros overflow-scroll overflow-x-hidden sm:overflow-hidden p-2  flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
+        <section className='filtros overflow-scroll overflow-x-hidden lg:overflow-hidden p-2 flex flex-col gap-5 w-10/12 md:w-full bg-white lg:bg-none relative'>
           <button
-            className='close-overlay absolute top-3 right-3 sm:hidden'
+            className='close-overlay absolute top-3 right-3 lg:hidden'
             onClick={() => {
               setOverlay({ show: false, form: '' });
             }}
           >
             <FaPlus className='transform rotate-45 ' />
           </button>
-          <h1 className='title self-center select-none font-semibold text-principal-gris  text-2xl underline'>
+          <h1 className='title self-center select-none font-semibold text-principal-gris text-2xl underline'>
             Filtros
           </h1>
           <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
@@ -365,7 +365,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   placeholder='Metros...'
                 />
               </label>
-              <div className='flex justify-center items-center self-center sticky bottom-0 w-full h-28 bg-white sm:bg-transparent'>
+              <div className='flex justify-center items-center self-center sticky -bottom-1 w-full h-28 bg-white lg:bg-transparent'>
                 <input
                   type='submit'
                   value='Buscar'

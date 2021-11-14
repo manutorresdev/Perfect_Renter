@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -32,6 +32,7 @@ import useUser from './Helpers/Hooks/useUser';
 function App() {
   const [Token, setToken] = useContext(TokenContext);
   const [User] = useUser();
+  const [IsFooterVisible, setIsFooterVisible] = useState(false);
   return (
     <>
       <Router>
@@ -47,16 +48,32 @@ function App() {
           <Route path='/login'>{Token ? <Redirect to='/' /> : <Login />}</Route>
           <Route path='/inquilinos/:idUser' component={UserProfile}></Route>
           <Route path='/inquilinos'>
-            {Token ? <Tenants /> : <Redirect to='/' />}
+            {Token ? (
+              <Tenants IsFooterVisible={IsFooterVisible} />
+            ) : (
+              <Redirect to='/' />
+            )}
           </Route>
           <Route
             exact
             path='/alquileres/:idProperty'
             render={(routeProps) => (
-              <PropertyInfo {...routeProps} token={Token} User={User} />
+              <PropertyInfo
+                {...routeProps}
+                token={Token}
+                User={User}
+                IsFooterVisible={IsFooterVisible}
+              />
             )}
           />
-          <Route exact path='/alquileres' component={Properties} />
+          <Route
+            exact
+            path='/alquileres'
+            render={(props) => (
+              <Properties IsFooterVisible={IsFooterVisible} {...props} />
+            )}
+          />
+
           <Route
             exact
             path='/alquileres/:bookingCode/accept'
@@ -100,7 +117,12 @@ function App() {
             <Nosotros />
           </Route>
         </Switch>
-        <Footer token={Token} setToken={setToken} />
+        <Footer
+          token={Token}
+          setToken={setToken}
+          setIsFooterVisible={setIsFooterVisible}
+          IsFooterVisible={IsFooterVisible}
+        />
       </Router>
     </>
   );

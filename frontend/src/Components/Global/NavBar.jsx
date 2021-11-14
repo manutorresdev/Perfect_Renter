@@ -18,7 +18,7 @@ export default function NavBar({ token, setToken }) {
     'text-center bg-principal-1 min-w-min p-1 cursor-pointer sm:hover:text-white sm:hover:font-bold sm:duration-300';
 
   return (
-    <nav className='navbar bg-gray-Primary grid grid-cols-9 gap-5 items-center font-light h-20 fixed top-0 w-full z-50 '>
+    <nav className='navbar flex-grow-0 bg-gray-Primary grid grid-cols-9 gap-5 items-center font-light h-20 fixed top-0 w-full z-50 '>
       <Link
         to='/'
         className='logo w-10 p-1 sm:col-start-1 sm:col-end-2 col-start-2 justify-self-end xl:justify-self-center'
@@ -76,7 +76,7 @@ export default function NavBar({ token, setToken }) {
         })}
         {token && (
           <button
-            className={`block sm:hidden text-white p-1 hover:text-principal-1 sm:col-start-8 md:col-start-9 md:col-end-10 justify-self-start  py-10 w-full sm:w-auto sm:justify-self-end md:justify-self-center`}
+            className={`block sm:hidden text-white p-1 hover:text-principal-1 sm:col-start-8 md:col-start-9 md:col-end-10 justify-self-start py-10 w-full sm:w-auto sm:justify-self-end md:justify-self-center`}
             onClick={() => {
               setToken('');
               window.location.reload();

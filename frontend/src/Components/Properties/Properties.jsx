@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { FaFilter } from 'react-icons/fa';
 import { get } from '../../Helpers/Api';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Filters from './Filters';
 import Property from './Property';
 
-export default function Properties() {
+export default function Properties(props) {
   const [Overlay, setOverlay] = useState({ show: false });
   const [Properties] = useProperties();
   const [bestRatedProperties, setBestRatedProperties] = useState([]);
@@ -27,6 +28,7 @@ export default function Properties() {
   return (
     <>
       <main className='flex flex-col sm:flex-row sm:gap-2'>
+
         <aside
           className={` w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static fixed right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20`}
         >
