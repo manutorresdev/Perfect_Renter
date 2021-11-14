@@ -192,7 +192,7 @@ function DatePicker({
             <input
               className={inpStyle}
               name='startDate'
-              autoComplete='off'
+              autoComplete='new-password'
               ref={startProps.inputRef}
               {...startProps.inputProps}
             />
@@ -200,7 +200,7 @@ function DatePicker({
             <input
               className={inpStyle}
               name='endDate'
-              autoComplete='off'
+              autoComplete='new-password'
               ref={endProps.inputRef}
               {...endProps.inputProps}
             />

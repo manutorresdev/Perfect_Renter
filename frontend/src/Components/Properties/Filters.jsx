@@ -12,6 +12,7 @@ import esEsLocale from 'date-fns/locale/es';
 export default function Filters({ setOverlay, Overlay }) {
   const pMinVal = useRef();
   const history = useHistory();
+  const [TriggerDatePicker, setTriggerDatePicker] = useState(false);
   const [pickerValue, setPickerValue] = useState([null, null]);
   const {
     register,
@@ -65,7 +66,6 @@ export default function Filters({ setOverlay, Overlay }) {
       setOverlay({ show: false });
     }
   }
-
   const inputsLabelStyle = 'text-lg duration-200';
   const inputStyle =
     'bg-black bg-opacity-70 w-48 px-2 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
@@ -102,9 +102,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   {...register('orden')}
                   className={inputStyle}
                 >
-                  <option value='' disabled>
-                    Filtrar por
-                  </option>
+                  <option value=''>Filtrar por</option>
                   <option value='precio' className='font-medium'>
                     Precio
                   </option>
@@ -122,9 +120,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   {...register('direccion')}
                   className={inputStyle}
                 >
-                  <option value='' disabled>
-                    Orden
-                  </option>
+                  <option value=''>Orden</option>
                   <option value='ASC' className='font-medium'>
                     Asc
                   </option>
@@ -139,9 +135,12 @@ export default function Filters({ setOverlay, Overlay }) {
               >
                 <DateRangePicker
                   disablePast
-                  autoOk={true}
                   label='Advanced keyboard'
                   value={pickerValue}
+                  open={TriggerDatePicker}
+                  onClose={() => {
+                    setTriggerDatePicker(false);
+                  }}
                   renderLoading={() => <CalendarPickerSkeleton />}
                   inputFormat='dd/MM/yyyy'
                   onChange={(newValue) => {
@@ -158,7 +157,6 @@ export default function Filters({ setOverlay, Overlay }) {
                     } else {
                       console.warn('FECHAS CORRECTAS');
                       setPickerValue(newValue);
-
                       if (
                         newValue[0] &&
                         !isNaN(newValue[0].getTime()) &&
@@ -167,12 +165,18 @@ export default function Filters({ setOverlay, Overlay }) {
                       ) {
                         setValue('entrada', format(newValue[0], 'yyyy/MM/dd'));
                         setValue('salida', format(newValue[1], 'yyyy/MM/dd'));
+                        setTriggerDatePicker(false);
                       }
                     }
                   }}
                   renderInput={(startProps, endProps) => (
                     <div className='flex flex-col w-full justify-start '>
-                      <label className='flex flex-col w-full justify-start '>
+                      <label
+                        onClick={(e) => {
+                          setTriggerDatePicker(true);
+                        }}
+                        className='flex flex-col w-full justify-start '
+                      >
                         <span className={inputsLabelStyle}>
                           Fecha de entrada:
                         </span>
@@ -184,7 +188,12 @@ export default function Filters({ setOverlay, Overlay }) {
                           {...startProps.inputProps}
                         />
                       </label>
-                      <label className='flex flex-col w-full justify-start'>
+                      <label
+                        onClick={(e) => {
+                          setTriggerDatePicker(true);
+                        }}
+                        className='flex flex-col w-full justify-start'
+                      >
                         <span className={inputsLabelStyle}>
                           Fecha de salida:
                         </span>
@@ -257,39 +266,42 @@ export default function Filters({ setOverlay, Overlay }) {
                 <label className='flex gap-2 items-baseline justify-between font-medium'>
                   Piso
                   <input
-                    type='radio'
+                    type='checkbox'
                     name='tipo'
                     value='piso'
                     {...register('tipo')}
+                    defaultChecked={history.location.search.includes('piso')}
                   />
                 </label>
                 <label className='flex gap-2 items-baseline justify-between font-medium'>
                   Casa
                   <input
-                    type='radio'
+                    type='checkbox'
                     name='tipo'
                     value='casa'
+                    defaultChecked={history.location.search.includes('casa')}
                     {...register('tipo')}
                   />
                 </label>
                 <label className='flex gap-2 items-baseline justify-between font-medium'>
                   Duplex
                   <input
-                    type='radio'
+                    type='checkbox'
                     name='tipo'
                     value='duplex'
                     {...register('tipo')}
+                    defaultChecked={history.location.search.includes('duplex')}
                   />
                 </label>
-                <label className='flex gap-2 items-baseline justify-between font-medium'>
+                {/* <label className='flex gap-2 items-baseline justify-between font-medium'>
                   Cualquiera
                   <input
-                    type='radio'
+                    type='checkbox'
                     name='tipo'
                     value='%'
                     {...register('tipo')}
                   />
-                </label>
+                </label> */}
               </div>
               <div className='flex flex-col gap-2'>
                 <label className='minPrice'>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Route,
   BrowserRouter as Router,
@@ -28,14 +28,27 @@ import Filters from './Components/Properties/Filters';
 import PropertyInfo from './Components/Properties/PropertyInfo';
 import Nosotros from './Components/Global/Nosotros';
 import useUser from './Helpers/Hooks/useUser';
+import { useLocation } from 'react-router-dom';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 function App() {
   const [Token, setToken] = useContext(TokenContext);
   const [User] = useUser();
   const [IsFooterVisible, setIsFooterVisible] = useState(false);
+
   return (
     <>
       <Router>
+        <ScrollToTop />
         <NavBar token={Token} setToken={setToken} />
         <Switch>
           <Route path='/registro'>
