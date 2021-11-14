@@ -36,15 +36,6 @@ const contactProperty = async (req, res, next) => {
       [idProperty]
     );
 
-    // Si el usuario es el dueño de la vivienda, lanzamos error.
-    if (idReqUser && idReqUser === Number(property[0].idUser)) {
-      const error = new Error(
-        'No puedes contactar con una vivienda de tu propiedad.'
-      );
-      error.httpStatus = 403;
-      throw error;
-    }
-
     if (!comentarios || comentarios.length < 1) {
       const error = new Error(
         'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
