@@ -17,7 +17,7 @@ export default function Login() {
   // Enviar datos a backend
   function onSubmit(body) {
     post(
-      'http://localhost:4000/users/login',
+      'http://192.168.5.103:4000/users/login',
       CreateFormData(body),
       (data) => {
         setToken(data.token);
@@ -35,7 +35,10 @@ export default function Login() {
         <div className='title text-3xl p-4  bg-principal-1 flex justify-center w-3/6 select-none'>
           <h2>LOGIN</h2>
         </div>
-        <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
+        <form
+          className='flex flex-col gap-3 sm:w-96 w-3/4'
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <Controller
             name='email'
             control={control}
@@ -61,7 +64,11 @@ export default function Login() {
             <p className='text-red-500'>{errors.email.message}</p>
           )}
           <Password {...formFunctions} />
-          {Error ? <div>{Error}</div> : ''}
+          {Error ? (
+            <div className='text-red-500 font-medium text-center'>{Error}</div>
+          ) : (
+            ''
+          )}
           <input
             className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
             type='submit'

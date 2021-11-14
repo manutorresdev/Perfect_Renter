@@ -30,7 +30,7 @@ const listProperties = async (req, res, next) => {
       entrada: startDate,
       salida: endDate,
     } = req.query;
-
+    console.log();
     // Cambiamos valores para encajar con backend.
     if (order === 'precio') {
       order = 'price';
@@ -109,6 +109,7 @@ const listProperties = async (req, res, next) => {
       );
       /*********** Final usuario propietario *****************/
     } else {
+      console.log(type.split(',')[0]);
       // Si hay filtro por fechas, comprobamos que propiedades están disponibles para dichas fechas.
       if (startDate && endDate) {
         // Seleccionamos las propiedades que tienen esas fechas libres
@@ -127,7 +128,6 @@ const listProperties = async (req, res, next) => {
           [startDate, endDate, startDate, endDate]
         );
         // Obtenemos los datos de las propiedades
-
         const propertiesToFilter = [];
         for (const property of propertiesWithDatesFree) {
           propertiesToFilter.push(property.idProperty);
@@ -161,7 +161,7 @@ const listProperties = async (req, res, next) => {
           properties.createdAt
           FROM properties
           LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
-          WHERE properties.idProperty IN (?) AND city LIKE ? AND province LIKE ? AND type LIKE ? AND rooms >= ? AND (price BETWEEN ?
+          WHERE properties.idProperty IN (?) AND city LIKE ? AND province LIKE ? AND (type LIKE ? OR type LIKE ? OR type LIKE ?) AND rooms >= ? AND (price BETWEEN ?
             AND ?) AND garage >= ? AND toilets >= ? AND mts >= ?
             GROUP BY properties.idProperty
             ORDER BY  ${
@@ -172,7 +172,9 @@ const listProperties = async (req, res, next) => {
             propertiesToFilter,
             city,
             province,
-            type,
+            type.split(',')[0],
+            type.split(',')[1],
+            type.split(',')[2],
             rooms,
             pmin,
             pmax,
@@ -212,14 +214,26 @@ const listProperties = async (req, res, next) => {
           properties.createdAt
           FROM properties
           LEFT JOIN votes AS property_vote ON (properties.idProperty = property_vote.idProperty)
-          WHERE city LIKE ? AND province LIKE ? AND type LIKE ? AND rooms >= ? AND (price BETWEEN ?
+          WHERE city LIKE ? AND province LIKE ? AND (type LIKE ? OR type LIKE ? OR type LIKE ?) AND rooms >= ? AND (price BETWEEN ?
             AND ?) AND garage >= ? AND toilets >= ? AND mts >= ?
             GROUP BY properties.idProperty
             ORDER BY  ${
               order === 'votes' ? 'votes' : `properties.${orderBy}`
             } ${orderDirection}
             `,
-          [city, province, type, rooms, pmin, pmax, garage, toilets, mts]
+          [
+            city,
+            province,
+            type.split(',')[0],
+            type.split(',')[1],
+            type.split(',')[2],
+            rooms,
+            pmin,
+            pmax,
+            garage,
+            toilets,
+            mts,
+          ]
         );
       }
 

@@ -1,18 +1,29 @@
 import { React, useEffect, useState } from 'react';
 import * as FaIcons from 'react-icons/fa';
 import { MenuElements } from './MenuElements';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 export default function NavBar({ token, setToken }) {
   const [mostrarMenu, setMostrarMenu] = useState(false);
   const showMenu = () => setMostrarMenu(!mostrarMenu);
   const [width, setWidth] = useState(window.innerWidth);
+  const [selectedLocation, setSelectedLocation] = useState();
+  const history = useHistory();
 
   useEffect(() => {
     const handleWindowResize = () => setWidth(window.innerWidth);
     window.addEventListener('resize', handleWindowResize);
     return () => window.removeEventListener('resize', handleWindowResize);
   }, []);
+
+  useEffect(() => {
+    const path = history.location.pathname.split('/')[1];
+    if (path) {
+      setSelectedLocation(path);
+    } else {
+      setSelectedLocation('');
+    }
+  }, [history.location.pathname, selectedLocation]);
 
   const buttonStyle =
     'text-center bg-principal-1 min-w-min p-1 cursor-pointer sm:hover:text-white sm:hover:font-bold sm:duration-300';
@@ -64,8 +75,15 @@ export default function NavBar({ token, setToken }) {
           } else {
             return (
               <li
+                // onClick={(e) => {
+                //   setSelectedLocation(item.title);
+                // }}
                 key={item.id}
-                className='text-principal-1 cursor-pointer hover:text-white duration-300 ease-in-out py-10 w-full sm:w-auto text-center sm:p-0'
+                className={`text-principal-1 ${
+                  selectedLocation === item.title.toLocaleLowerCase()
+                    ? 'underline'
+                    : ''
+                } cursor-pointer hover:text-white duration-300 ease-in-out py-10 w-full sm:w-auto text-center sm:p-0`}
               >
                 <Link to={item.path} onClick={showMenu}>
                   {item.title}

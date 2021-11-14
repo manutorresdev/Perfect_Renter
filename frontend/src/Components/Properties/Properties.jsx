@@ -12,7 +12,7 @@ export default function Properties(props) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties?orden=valoraciones&direccion=DESC`,
+      `http://192.168.5.103:4000/properties?orden=valoraciones&direccion=DESC`,
       (data) => {
         if (data.message !== 'No hay conicidencias para su busqueda') {
           setBestRatedProperties(data.properties);
@@ -28,7 +28,6 @@ export default function Properties(props) {
   return (
     <>
       <main className='flex flex-col sm:flex-row sm:gap-2'>
-
         <aside
           className={` w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static fixed right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20`}
         >
@@ -45,7 +44,7 @@ export default function Properties(props) {
         <section
           className={`ALQUILERES ${
             Overlay.show && 'overflow-hidden'
-          } flex flex-col items-center mt-20 flex-grow max-w-7xl`}
+          } flex flex-col items-center mt-20 flex-grow  w-full`}
         >
           <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
             Viviendas en alquiler

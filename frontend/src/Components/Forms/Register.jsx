@@ -56,16 +56,18 @@ export default function Register({ Token, usuario, setOverlay }) {
 
   // States
   const [Error, setError] = useState('');
+  const [DatePicker, setDatePicker] = useState(false);
   const [Value, setDateValue] = useState([null, null]);
   // Enviar datos a backend
   function onSubmitRegister(body, e) {
     e.preventDefault();
+    setValue('birthDate', format(new Date(body.birthDate), 'yyyy/MM/dd'));
     const age = new Date().getYear() - new Date(body.birthDate).getYear();
     if (age < 17) {
       setError('Debes ser mayor de edad.');
     } else {
       post(
-        'http://localhost:4000/users',
+        'http://192.168.5.103:4000/users',
         CreateFormData(body),
         (data) => {
           console.log('Success');
@@ -85,7 +87,7 @@ export default function Register({ Token, usuario, setOverlay }) {
   function onSubmitEdited(body, e) {
     e.preventDefault();
     put(
-      `http://localhost:4000/users/${usuario.idUser}`,
+      `http://192.168.5.103:4000/users/${usuario.idUser}`,
       CreateFormData(body),
       (data) => {
         console.log('Success');
@@ -100,7 +102,7 @@ export default function Register({ Token, usuario, setOverlay }) {
     );
   }
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 focus:cursor-default relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer';
+    'px-3 py-3 placeholder-gray-400 text-gray-600 focus:cursor-default relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer';
 
   const registerComponentStyle = Token
     ? 'overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full min-h-full h-96 left-0 top-0 flex flex-col items-center pt-20 pb-10 overflow-auto sm:overflow-hidden'
@@ -111,8 +113,8 @@ export default function Register({ Token, usuario, setOverlay }) {
       <section
         className={
           Token
-            ? 'w-4/5 shadow-custom max-w-xl p-4 pt-14 border border-gray-700 flex  flex-col gap-5 mt-2 bg-gray-100 text-principal-gris overflow-y-auto relative'
-            : 'pt-24 pb-32 flex flex-col items-center gap-5 p-2'
+            ? 'w-4/5 max-w-xl items-center p-4 pt-14 border border-gray-700 flex  flex-col gap-5 mt-2 bg-gray-100 text-principal-gris overflow-y-auto relative'
+            : 'pt-24 pb-32 flex flex-col items-center gap-5 p-2 '
         }
       >
         {Token && (
@@ -129,7 +131,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           {Token ? <h2>EDITAR</h2> : <h2>REGISTRO</h2>}
         </div>
         <form
-          className='flex flex-col gap-3'
+          className='flex flex-col gap-3 md:w-96 w-3/4'
           onSubmit={
             Token
               ? handleSubmit(onSubmitEdited)
@@ -346,6 +348,10 @@ export default function Register({ Token, usuario, setOverlay }) {
             <DesktopDatePicker
               label='Custom input'
               value={Value}
+              open={DatePicker}
+              onClose={(e) => {
+                setDatePicker(false);
+              }}
               onChange={(newValue) => {
                 setDateValue(format(new Date(newValue), 'dd/MM/yyyy'));
                 setValue('birthDate', format(new Date(newValue), 'yyyy/MM/dd'));
@@ -355,11 +361,19 @@ export default function Register({ Token, usuario, setOverlay }) {
                   <input
                     className={inpStyle}
                     ref={inputRef}
+                    readOnly={true}
+                    onKeyDown={(e) => {
+                      e.preventDefault();
+                    }}
+                    onClick={(e) => {
+                      setDatePicker(true);
+                    }}
+                    autocomplete='new-password'
                     {...inputProps}
                     name='birthDate'
                     placeholder='dd/mm/yyyy'
                   />
-                  {InputProps?.endAdornment}
+                  {/* {InputProps?.endAdornment} */}
                 </Box>
               )}
             />

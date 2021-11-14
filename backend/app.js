@@ -158,12 +158,7 @@ app.post(
  * @code {403} Si es el dueño de la vivienda
  * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
  */
-app.post(
-  '/properties/:idProperty/contact',
-  authUser,
-  propertyExists,
-  contactProperty
-);
+app.post('/properties/:idProperty/contact', propertyExists, contactProperty);
 
 /**
  * Solicitud de alquiler a un inmueble
@@ -615,7 +610,7 @@ app.use((req, res) => {
  * ####################
  */
 const server = app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+  console.log(`Server listening at http://192.168.5.103:${PORT}`);
 });
 
 module.exports = { server, app };
