@@ -5,12 +5,15 @@ import { capitalizeFirstLetter } from '../../Helpers/Api';
 
 export default function Tenant({ user, setOverlay, relation }) {
   return (
-    <article className='user-card w-3/4 max-h-48 flex flex-col gap-2 text-xs shadow-lg p-4 bg-white bg-opacity-30'>
-      <div className='flex flex-rows min-w-full '>
-        <div className='user-info-cont flex items-center font-medium relative flex-grow-0 md:flex-grow w-9/12'>
-          <Link className='user-avatar ' to={`/inquilinos/${user.idUser}`}>
+    <article className='user-card lg:w-3/4 md:min-h-15rem xl:min-h-0 max-w-xs lg:max-w-lg lg:max-h-52 flex flex-col gap-2 text-xs shadow-lg p-4 bg-white bg-opacity-30'>
+      <div className='flex flex-row flex-grow min-w-full'>
+        <div className='user-info-cont flex items-center font-medium relative flex-grow-0 md:flex-grow'>
+          <Link
+            className='user-avatar w-20 h-20 sm:w-32 sm:h-32 flex-grow'
+            to={`/inquilinos/${user.idUser}`}
+          >
             <img
-              className='w-32 h-28 rounded-full object-scale-down'
+              className='w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover'
               src={
                 user.avatar
                   ? `http://localhost:4000/photo/${user.avatar}`
@@ -30,9 +33,12 @@ export default function Tenant({ user, setOverlay, relation }) {
             </div>
           </Link>
         </div>
-        <div className='user-info flex flex-col flex-grow min-w-min'>
-          <Link className='self-start w-full' to={`/inquilinos/${user.idUser}`}>
-            <div className='font-bold text-base  text-principal-gris py-1 pl-1 border-b-2 flex-grow w-max'>
+        <div className='user-info flex flex-col w-40 sm:w-32 md:w-full'>
+          <Link
+            className='self-start w-40 sm:w-32 md:w-full'
+            to={`/inquilinos/${user.idUser}`}
+          >
+            <div className='font-bold text-base  text-principal-gris py-1 pl-1 border-b-2 flex-grow'>
               {capitalizeFirstLetter(user.name)}{' '}
               {capitalizeFirstLetter(user.lastName)},{' '}
               {Math.abs(
@@ -43,8 +49,8 @@ export default function Tenant({ user, setOverlay, relation }) {
             <span className='pl-2 font-medium text-sm'>{user.city}</span>
           </Link>
           <p className='self-center p-1'>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum
-            amet natus eaque rem ad, minima iure.
+            {user.bio ??
+              'Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet natus eaque rem ad, minima iure.'}
           </p>
         </div>
       </div>

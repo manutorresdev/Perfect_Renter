@@ -68,7 +68,7 @@ export default function Filters({ setOverlay, Overlay }) {
 
   const inputsLabelStyle = 'text-lg duration-200';
   const inputStyle =
-    'bg-black bg-opacity-70 w-48 p-1 px-2 placeholder-yellow-300 mix-blend-multiply text-principal-1 font-light text-lg';
+    'bg-black bg-opacity-70 w-48 px-2 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
   return (
     <>
       <div
@@ -76,18 +76,18 @@ export default function Filters({ setOverlay, Overlay }) {
           Overlay.show
             ? 'translate-y-0 opacity-100 '
             : '-translate-y-full opacity-0'
-        }  sm:translate-y-0 bg-yellow-300 sm:bg-white sm:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+        }  lg:translate-y-0 bg-yellow-300 lg:bg-white lg:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 bottom-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 lg:overflow-hidden lg:z-0 lg:mt-0 lg:static lg:py-10`}
       >
-        <section className='filtros overflow-scroll overflow-x-hidden sm:overflow-hidden p-2  flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
+        <section className='filtros overflow-scroll overflow-x-hidden lg:overflow-hidden p-2 flex flex-col gap-5 w-10/12 md:w-full bg-white lg:bg-none relative'>
           <button
-            className='close-overlay absolute top-3 right-3 sm:hidden'
+            className='close-overlay absolute top-3 right-3 lg:hidden'
             onClick={() => {
               setOverlay({ show: false, form: '' });
             }}
           >
             <FaPlus className='transform rotate-45 ' />
           </button>
-          <h1 className='title self-center select-none font-semibold text-principal-gris  text-2xl underline'>
+          <h1 className='title self-center select-none font-semibold text-principal-gris text-2xl underline'>
             Filtros
           </h1>
           <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
@@ -109,7 +109,7 @@ export default function Filters({ setOverlay, Overlay }) {
                     Precio
                   </option>
                   <option value='creacion' className='font-medium'>
-                    Fecha de creacion
+                    Mas Recientes
                   </option>
                   <option value='valoraciones' className='font-medium'>
                     Valoraciones
@@ -171,8 +171,8 @@ export default function Filters({ setOverlay, Overlay }) {
                     }
                   }}
                   renderInput={(startProps, endProps) => (
-                    <div className='flex flex-col w-full justify-center pl-12 sm:pl-8'>
-                      <label>
+                    <div className='flex flex-col w-full justify-start '>
+                      <label className='flex flex-col w-full justify-start '>
                         <span className={inputsLabelStyle}>
                           Fecha de entrada:
                         </span>
@@ -184,7 +184,7 @@ export default function Filters({ setOverlay, Overlay }) {
                           {...startProps.inputProps}
                         />
                       </label>
-                      <label>
+                      <label className='flex flex-col w-full justify-start'>
                         <span className={inputsLabelStyle}>
                           Fecha de salida:
                         </span>
@@ -200,58 +200,61 @@ export default function Filters({ setOverlay, Overlay }) {
                   )}
                 />
               </LocalizationProvider>
-              <div className={inputsLabelStyle}>Ciudad:</div>
-              <label className='city'>
-                <input
-                  defaultValue={Filters.ciudad ?? ''}
-                  {...register('ciudad', {
-                    pattern: {
-                      value:
-                        /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
-                      message:
-                        'La ciudad no puede contener carácteres especiales ni números.',
-                    },
-                    maxLength: {
-                      value: 30,
-                      message: 'La ciudad no puede tener más de 50 carácteres.',
-                    },
-                  })}
-                  type='text'
-                  name='ciudad'
-                  className={inputStyle}
-                  placeholder='Ciudad...'
-                />
-                {errors.city && (
-                  <p className='text-red-500'>{errors.city.message}</p>
-                )}
-              </label>
-              <div className={inputsLabelStyle}>Provincia:</div>
-              <label className='province'>
-                <input
-                  {...register('provincia', {
-                    pattern: {
-                      value:
-                        /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
-                      message:
-                        'La provincia no puede contener carácteres especiales ni números.',
-                    },
-                    maxLength: {
-                      value: 30,
-                      message:
-                        'La provincia no puede tener más de 50 carácteres.',
-                    },
-                  })}
-                  type='text'
-                  name='provincia'
-                  className={inputStyle}
-                  placeholder='Provincia...'
-                />
-              </label>
-              <div className='grid grid-cols-2 grid-rows-2'>
-                <div className={`col-start-1 col-end-3 ${inputsLabelStyle}`}>
-                  Tipo de vivienda:
-                </div>
-                <label className='flex gap-2 items-baseline font-medium'>
+              <div className='flex flex-col gap-2 text-l'>
+                <div className={inputsLabelStyle}>Ciudad:</div>
+                <label className='city'>
+                  <input
+                    defaultValue={Filters.ciudad ?? ''}
+                    {...register('ciudad', {
+                      pattern: {
+                        value:
+                          /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                        message:
+                          'La ciudad no puede contener carácteres especiales ni números.',
+                      },
+                      maxLength: {
+                        value: 30,
+                        message:
+                          'La ciudad no puede tener más de 50 carácteres.',
+                      },
+                    })}
+                    type='text'
+                    name='ciudad'
+                    className={inputStyle}
+                    placeholder='Ciudad...'
+                  />
+                  {errors.city && (
+                    <p className='text-red-500'>{errors.city.message}</p>
+                  )}
+                </label>
+              </div>
+              <div className='flex flex-col gap-2'>
+                <div className={inputsLabelStyle}>Provincia:</div>
+                <label className='province'>
+                  <input
+                    {...register('provincia', {
+                      pattern: {
+                        value:
+                          /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
+                        message:
+                          'La provincia no puede contener carácteres especiales ni números.',
+                      },
+                      maxLength: {
+                        value: 30,
+                        message:
+                          'La provincia no puede tener más de 50 carácteres.',
+                      },
+                    })}
+                    type='text'
+                    name='provincia'
+                    className={inputStyle}
+                    placeholder='Provincia...'
+                  />
+                </label>
+              </div>
+              <div className='flex flex-col justify-center'>
+                <div className={`${inputsLabelStyle}`}>Tipo de vivienda:</div>
+                <label className='flex gap-2 items-baseline justify-between font-medium'>
                   Piso
                   <input
                     type='radio'
@@ -260,7 +263,7 @@ export default function Filters({ setOverlay, Overlay }) {
                     {...register('tipo')}
                   />
                 </label>
-                <label className='flex gap-2 items-baseline font-medium'>
+                <label className='flex gap-2 items-baseline justify-between font-medium'>
                   Casa
                   <input
                     type='radio'
@@ -269,7 +272,7 @@ export default function Filters({ setOverlay, Overlay }) {
                     {...register('tipo')}
                   />
                 </label>
-                <label className='flex gap-2 items-baseline font-medium'>
+                <label className='flex gap-2 items-baseline justify-between font-medium'>
                   Duplex
                   <input
                     type='radio'
@@ -278,7 +281,7 @@ export default function Filters({ setOverlay, Overlay }) {
                     {...register('tipo')}
                   />
                 </label>
-                <label className='flex gap-2 items-baseline font-medium'>
+                <label className='flex gap-2 items-baseline justify-between font-medium'>
                   Cualquiera
                   <input
                     type='radio'
@@ -329,15 +332,12 @@ export default function Filters({ setOverlay, Overlay }) {
                   placeholder='Hab...'
                 />
               </label>
-              <label className='parking flex'>
-                <div className={inputsLabelStyle + 'object-center'}>
-                  Garaje:
-                </div>
+              <label className='parking w-1/2 justify-between font-medium sm:w-full flex flex-row items-center'>
+                <div className={`${inputsLabelStyle}`}>Garaje:</div>
                 <input
                   {...register('garaje')}
                   type='checkbox'
                   name='garaje'
-                  className={inputStyle + ''}
                   placeholder='Garaje...'
                 />
               </label>
@@ -365,7 +365,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   placeholder='Metros...'
                 />
               </label>
-              <div className='flex justify-center items-center self-center sticky bottom-0 w-full h-28 bg-white sm:bg-transparent'>
+              <div className='flex justify-center items-center self-center sticky -bottom-1 w-full h-28 bg-white lg:bg-transparent'>
                 <input
                   type='submit'
                   value='Buscar'

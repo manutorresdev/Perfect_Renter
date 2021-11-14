@@ -1,12 +1,7 @@
 import { Link } from 'react-router-dom';
 import ContactProperty from '../Forms/ContactProperty';
 import { useEffect, useRef, useState } from 'react';
-import {
-  FaAngleLeft,
-  FaAngleRight,
-  FaChevronRight,
-  FaFilter,
-} from 'react-icons/fa';
+import { FaAngleLeft, FaAngleRight, FaFilter } from 'react-icons/fa';
 import useProperties from '../../Helpers/Hooks/useProperties';
 import Filters from './Filters';
 import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
@@ -53,6 +48,7 @@ export default function PropertyInfo(props) {
         props.match.params.idProperty
       )}/photos`,
       (data) => {
+        console.log(data);
         setSlideImgs(data.photos);
       },
       (error) => console.log(error),
@@ -99,8 +95,8 @@ export default function PropertyInfo(props) {
   const pageIteratorButtonsStyle = `border-2 p-3 rounded-full hover:bg-gray-500 hover:text-white duration-200  `;
 
   return (
-    <>
-      <article className='w-full pb-10 flex  bg-opacity-20'>
+    <main className='flex flex-col relative max-w-customXL'>
+      <article className='w-full pb-10 flex bg-opacity-20'>
         {Overlay.form && Overlay.form !== 'editProperty' && (
           <ContactProperty
             form={Overlay.form}
@@ -131,22 +127,26 @@ export default function PropertyInfo(props) {
           ''
         )}
         <aside
-          className={` flex pl-6 justify-center max-w-min items-center bg-principal-1 boreder-2 border-yellow-300 text-principal-gris text-xl w-10/12 sm:bg-transparent flex-grow-0 sm:static fixed z-20 right-1/3 bottom-0 sm:top-0 mt-5 sm:mt-20`}
+          className={`flex justify-center items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static z-20 right-0 ${
+            props.IsFooterVisible ? 'bottom-28 absolute' : 'bottom-0 fixed'
+          } left-0 mx-auto mt-5 sm:mt-20`}
         >
-          <span className='sm:hidden '>Filtrar</span>
-          <FaFilter
-            className=' w-10 h-full p-2 sm:hidden'
+          <span
+            className='lg:hidden flex pl-6'
             onClick={() => {
               setOverlay({ show: true });
             }}
-          />
+          >
+            Filtrar
+            <FaFilter className=' w-10 h-full p-2 lg:hidden' />
+          </span>
           <Filters setOverlay={setOverlay} Overlay={Overlay} />
         </aside>
         <section className='self-start flex-grow flex flex-col items-center justify-between max-w-7xl'>
-          <div className='flex flex-col w-11/12 bg-white items-center h-full filter drop-shadow-2xl'>
+          <div className='flex flex-col w-11/12 bg-white items-center h-full filter drop-shadow-xl'>
             <div className={`slider pt-20 w-full h-full`}>
               <Carousel
-                className={`slider-cont sm:max-w-7xl w-full h-full ${
+                className={`slider-cont sm:max-w-7xl w-full min-h-20rem ${
                   Photo ? 'max-h-96' : 'max-h-full bg-gray-Primary'
                 } flex transition-all transform ease-in duration-300 `}
                 navButtonsAlwaysVisible
@@ -185,6 +185,7 @@ export default function PropertyInfo(props) {
               >
                 {SlideImgs.length > 0 ? (
                   SlideImgs.map((img, i) => {
+                    console.log(img);
                     return (
                       <img
                         key={i}
@@ -222,7 +223,7 @@ export default function PropertyInfo(props) {
               {property.description}
             </p>
             <span className='pt-5 px-5 underline font-medium'>
-              Informacion detallada:
+              Información detallada:
             </span>
             <ul className='p-5 pt-2 pl-10 w-2/3 text-center'>
               <li className='bg-gray-200 h-7'>Ciudad: {property.province}</li>
@@ -251,31 +252,6 @@ export default function PropertyInfo(props) {
           )} */}
           </div>
           <div className='buttons-cont z-10 font-medium p-5 flex justify-around items-center'>
-            <div className='grid grid-cols-2 grid-rows-2 gap-1 fixed right-5 bottom-0 select-none z-10'>
-              <Link
-                to={`/alquileres/${Number(props.match.params.idProperty) - 1}`}
-                className={`${pageIteratorButtonsStyle} ${
-                  Number(props.match.params.idProperty) === 1
-                    ? 'text-white bg-gray-500 pointer-events-none cursor-default'
-                    : 'bg-principal-1 cursor-pointer'
-                }`}
-              >
-                <FaAngleLeft className='text-gray-700' aria-disabled />
-              </Link>
-              <Link
-                to={`/alquileres/${Number(props.match.params.idProperty) + 1}`}
-                className={`${pageIteratorButtonsStyle} ${
-                  Number(props.match.params.idProperty) === Properties.length
-                    ? 'text-white bg-gray-500 pointer-events-none cursor-default'
-                    : 'bg-principal-1 cursor-pointer'
-                }`}
-              >
-                <FaAngleRight className='text-gray-700' />
-              </Link>
-              <p className='col-start-1 col-end-3 justify-self-center'>
-                {Number(props.match.params.idProperty)}/{Properties.length}
-              </p>
-            </div>
             {Owner ? (
               <button
                 className={buttonStyle + ' z-0'}
@@ -346,7 +322,36 @@ export default function PropertyInfo(props) {
         </section>
       </article>
       <RelatedProperties properties={Properties} city={property.city} />
-    </>
+      <div
+        className={`grid grid-cols-2 grid-rows-2 gap-1 right-5  ${
+          props.IsFooterVisible ? 'absolute bottom-28' : 'fixed bottom-0'
+        } select-none z-10 self-end`}
+      >
+        <Link
+          to={`/alquileres/${Number(props.match.params.idProperty) - 1}`}
+          className={`${pageIteratorButtonsStyle} ${
+            Number(props.match.params.idProperty) === 1
+              ? 'text-white bg-gray-500 pointer-events-none cursor-default'
+              : 'bg-principal-1 cursor-pointer'
+          }`}
+        >
+          <FaAngleLeft className='text-gray-700' aria-disabled />
+        </Link>
+        <Link
+          to={`/alquileres/${Number(props.match.params.idProperty) + 1}`}
+          className={`${pageIteratorButtonsStyle} ${
+            Number(props.match.params.idProperty) === Properties.length
+              ? 'text-white bg-gray-500 pointer-events-none cursor-default'
+              : 'bg-principal-1 cursor-pointer'
+          }`}
+        >
+          <FaAngleRight className='text-gray-700' />
+        </Link>
+        <p className='col-start-1 col-end-3 justify-self-center'>
+          {Number(props.match.params.idProperty)}/{Properties.length}
+        </p>
+      </div>
+    </main>
   );
 }
 
@@ -396,8 +401,8 @@ function RelatedProperties({ properties, city }) {
     related = properties.filter((property) => property.city === city);
     if (related.length > 0) {
       return (
-        <div className='flex flex-col items-center p-8 overflow-hidden pb-28'>
-          <h1 className='text-2xl text-principal-gris pt-10 md:pt-10 bg-principal-1 w-full text-center p-10 font-semibold'>
+        <div className='flex flex-col items-center p-8 overflow-hidden pb-28 w-screen'>
+          <h1 className='text-2xl text-principal-gris py-2 bg-principal-1 w-screen text-center font-semibold'>
             Algunos pisos relacionados
           </h1>
           <div className='w-10/12 flex flex-row flex-wrap gap-4 place-content-center min-w-full overflow-x-auto'>
