@@ -47,7 +47,7 @@ export default function ContactProperty({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
+      `http://localhost:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data.bookings);
         console.log(data);
@@ -80,7 +80,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
+        `http://localhost:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           setMessage(data);
@@ -94,7 +94,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
+        `http://localhost:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -111,7 +111,7 @@ export default function ContactProperty({
 
   // Styles
   const inpStyle =
-    'px-3 py-3 w-11/12 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+    'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   const comentarios = watch('comentarios');
 
   return (
@@ -135,10 +135,10 @@ export default function ContactProperty({
         )}
         <div className='contact-card-container flex justify-around flex-col-reverse gap-2 lg:flex-row'>
           <form
-            className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'
+            className='flex flex-col gap-10 md:gap-3 items-center font-medium w-full pb-4'
             onSubmit={handleSubmit(onSubmit)}
           >
-            <label>
+            <label className=' w-11/12'>
               <div className='select-none'> Nombre Completo*</div>
               <Controller
                 name='name'
@@ -168,7 +168,7 @@ export default function ContactProperty({
                       onChange={onChange}
                       inputRef={ref}
                       name={name}
-                      className={inpStyle}
+                      className={`${inpStyle}`}
                     />
                   );
                 }}
@@ -201,7 +201,7 @@ export default function ContactProperty({
               />
             </label>
             {form === 'reservar' && (
-              <label className='flex flex-col gap-2'>
+              <label className='flex flex-col w-11/12 gap-2'>
                 <div className='select-none'>Selecciona las fechas:</div>
                 <DatePicker
                   Value={Value}
@@ -212,7 +212,7 @@ export default function ContactProperty({
                 />
               </label>
             )}
-            <label>
+            <label className='w-11/12'>
               <div className='select-none'>Teléfono</div>
               <input
                 className={inpStyle}
@@ -228,10 +228,10 @@ export default function ContactProperty({
               />
             </label>
             {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
-            <label className='relative w-full sm:w-min pr-2'>
+            <label className='relative w-11/12 sm:w-11/12'>
               <div className='select-none'>Comentarios</div>
               <textarea
-                className={`${inpStyle} resize-none w-full sm:w-80`}
+                className={`${inpStyle} resize-none w-full`}
                 name='comments'
                 id='comments'
                 cols='30'
@@ -295,7 +295,7 @@ export default function ContactProperty({
                       <img
                         key={i}
                         className='object-cover w-full h-96'
-                        src={'http://192.168.5.103:4000/photo/' + img.name}
+                        src={'http://localhost:4000/photo/' + img.name}
                         alt='default'
                       />
                     );
@@ -405,7 +405,7 @@ function DatePicker({
           }
         }}
         renderInput={(startProps, endProps) => (
-          <div className='flex flex-col  sm:flex-row'>
+          <div className='flex flex-col w-full sm:flex-row'>
             <input
               className={inpStyle}
               name='startDate'

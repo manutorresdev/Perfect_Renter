@@ -25,7 +25,7 @@ export default function Property({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/photos`,
+      `http://localhost:4000/properties/${property.idProperty}/photos`,
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
           setSlideImgs(data.photos.slice(0, 5));
@@ -46,7 +46,7 @@ export default function Property({
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://192.168.5.103:4000/properties/${property.idProperty}`,
+      `http://localhost:4000/properties/${property.idProperty}`,
       body,
       (data) => {
         alert(data.message);
@@ -63,9 +63,9 @@ export default function Property({
       ${
         mountOn === 'home'
           ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
-          : `cont-vivienda overflow-hidden relative max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
+          : `cont-vivienda overflow-hidden  relative max-w-xs filter drop-shadow-lg sm:max-w-xs bg-white sm:w-auto min-w-min ${
               mountOn === 'profile' ? 'pb-10 lg:h-5/6' : 'h-100  '
-            } w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`
+            } w-full my-5  text-gray-400 hover:text-gray-900 duration-300`
       }
       `}
       // className={`cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
@@ -112,7 +112,7 @@ export default function Property({
                 <img
                   key={i}
                   className='object-cover w-full h-48'
-                  src={'http://192.168.5.103:4000/photo/' + img.name}
+                  src={'http://localhost:4000/photo/' + img.name}
                   alt='default'
                 />
               );

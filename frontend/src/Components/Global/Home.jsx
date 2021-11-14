@@ -33,7 +33,7 @@ export function Home() {
           backgroundImage:
             "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('./Images/fondo-gris.jpeg')",
         }}
-        className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-3 sm:pt-5  sm:w-full pb-32'
+        className='bg-black bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-3 sm:pt-5  sm:w-full pb-32'
       >
         <RentersList />
         <PropertiesList />
@@ -167,7 +167,7 @@ export function RentersList() {
 
   useEffect(() => {
     get(
-      'http://192.168.5.103:4000/users',
+      'http://localhost:4000/users',
       (data) => {
         setUsers(data.users);
       },
@@ -198,7 +198,7 @@ export function Renter({ user }) {
     <div className={descBoxStyle}>
       <img
         className=' w-full'
-        src={'http://192.168.5.103:4000/photo/' + user.avatar}
+        src={'http://localhost:4000/photo/' + user.avatar}
         alt=''
       />
       <div className={descBoxTextStyle}>

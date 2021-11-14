@@ -49,7 +49,7 @@ export default function PropertyInfo(props) {
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${Number(
+      `http://localhost:4000/properties/${Number(
         props.match.params.idProperty
       )}/photos`,
       (data) => {
@@ -131,7 +131,7 @@ export default function PropertyInfo(props) {
           ''
         )}
         <aside
-          className={` flex pl-6 justify-center max-w-min items-center bg-principal-1 boreder-2 border-yellow-300 text-principal-gris text-xl w-10/12 sm:bg-transparent flex-grow-0 sm:static fixed z-20 right-1/3 bottom-0 sm:top-0 mt-5 sm:mt-20`}
+          className={` flex pl-6 justify-center max-w-min items-center  bg-principal-1 boreder-2 border-yellow-300 text-principal-gris text-xl w-10/12 sm:bg-transparent flex-grow-0 sm:static fixed z-20 right-1/3 bottom-0 sm:top-0 mt-5 sm:mt-20`}
         >
           <span className='sm:hidden '>Filtrar</span>
           <FaFilter
@@ -143,7 +143,7 @@ export default function PropertyInfo(props) {
           <Filters setOverlay={setOverlay} Overlay={Overlay} />
         </aside>
         <section className='self-start flex-grow flex flex-col items-center justify-between max-w-7xl'>
-          <div className='flex flex-col w-11/12 bg-white items-center h-full filter drop-shadow-2xl'>
+          <div className='flex flex-col w-11/12 bg-white items-center h-full filter drop-shadow-xl'>
             <div className={`slider pt-20 w-full h-full`}>
               <Carousel
                 className={`slider-cont sm:max-w-7xl w-full h-full ${
@@ -194,7 +194,7 @@ export default function PropertyInfo(props) {
                             ? ' h-96 w-full'
                             : ' sm:h-full w-full sm:max-h-lg max-w-2xl object-contain m-auto'
                         }`}
-                        src={'http://192.168.5.103:4000/photo/' + img.name}
+                        src={'http://localhost:4000/photo/' + img.name}
                         alt='default'
                       />
                     );
@@ -222,7 +222,7 @@ export default function PropertyInfo(props) {
               {property.description}
             </p>
             <span className='pt-5 px-5 underline font-medium'>
-              Informacion detallada:
+              Información detallada:
             </span>
             <ul className='p-5 pt-2 pl-10 w-2/3 text-center'>
               <li className='bg-gray-200 h-7'>Ciudad: {property.province}</li>
@@ -396,8 +396,8 @@ function RelatedProperties({ properties, city }) {
     related = properties.filter((property) => property.city === city);
     if (related.length > 0) {
       return (
-        <div className='flex flex-col items-center p-8 overflow-hidden pb-28'>
-          <h1 className='text-2xl text-principal-gris pt-10 md:pt-10 bg-principal-1 w-full text-center p-10 font-semibold'>
+        <div className='flex flex-col items-center p-8 overflow-hidden pb-28 w-screen'>
+          <h1 className='text-2xl text-principal-gris py-2 bg-principal-1 w-screen text-center font-semibold'>
             Algunos pisos relacionados
           </h1>
           <div className='w-10/12 flex flex-row flex-wrap gap-4 place-content-center min-w-full overflow-x-auto'>
