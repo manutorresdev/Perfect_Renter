@@ -82,10 +82,9 @@ export default function UsersList(props) {
           props.IsFooterVisible ? 'bottom-28 absolute' : 'bottom-0 fixed'
         } left-0 mx-auto mt-5 sm:mt-20 `}
 
-        //className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent h-10 flex-grow-0 lg:static  ${
-        //  props.IsFooterVisible ? 'absolute bottom-28 ' : ' fixed bottom-0 '
-        //} z-20 lg:z-0 right-0 left-0 mx-auto lg:m-0 lg:top-0 mt-5 lg:mt-20`}
-
+        // className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent h-10 flex-grow-0 lg:static  ${
+        //   props.IsFooterVisible ? 'absolute bottom-28 ' : ' fixed bottom-0 '
+        // } z-20 lg:z-0 right-0 left-0 mx-auto lg:m-0 lg:top-0 mt-5 lg:mt-20`}
       >
         <button
           className='lg:hidden flex pl-6'
