@@ -60,7 +60,7 @@ export default function Properties(props) {
                 />
               ))
             ) : (
-              <div>No hay conicidencias para su busqueda.</div>
+              <div>No hay conicidencias para su búsqueda.</div>
             )}
           </div>
         </section>

@@ -81,6 +81,11 @@ export default function UsersList(props) {
         className={`flex justify-center items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static z-20 right-0 ${
           props.IsFooterVisible ? 'bottom-28 absolute' : 'bottom-0 fixed'
         } left-0 mx-auto mt-5 sm:mt-20 `}
+
+        //className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent h-10 flex-grow-0 lg:static  ${
+        //  props.IsFooterVisible ? 'absolute bottom-28 ' : ' fixed bottom-0 '
+        //} z-20 lg:z-0 right-0 left-0 mx-auto lg:m-0 lg:top-0 mt-5 lg:mt-20`}
+
       >
         <button
           className='lg:hidden flex pl-6'
@@ -176,7 +181,7 @@ function Filters({ setOverlay, Overlay }) {
           : '-translate-y-full opacity-0'
       }  sm:translate-y-0 bg-yellow-300 justify-center sm:justify-start sm:bg-white sm:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
     >
-      <section className='filtros overflow-scroll overflow-x-hidden sm:overflow-hidden p-2  flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
+      <section className='filtros overflow-scroll overflow-x-hidden sm:overflow-hidden p-2 flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
         <button
           className='close-overlay absolute top-3 right-3 lg:hidden'
           onClick={() => {
@@ -188,7 +193,7 @@ function Filters({ setOverlay, Overlay }) {
         <h1 className='title self-center select-none  font-semibold sm:text-principal-gris text-2xl underline'>
           Filtros
         </h1>
-        <div className='ilters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row'>
+        <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row'>
           <form
             className='flex flex-col gap-y-3 p-2 justify-start items-center'
             onSubmit={handleSubmit(onSubmit)}
@@ -207,7 +212,7 @@ function Filters({ setOverlay, Overlay }) {
                   Edad
                 </option>
                 <option value='creacion' className='font-medium'>
-                  Mas recientes
+                  Más recientes
                 </option>
                 <option value='valoraciones' className='font-medium'>
                   Valoraciones
@@ -224,10 +229,10 @@ function Filters({ setOverlay, Overlay }) {
                   Orden
                 </option>
                 <option value='ASC' className='font-medium'>
-                  Asc
+                  Ascendente
                 </option>
                 <option value='DESC' className='font-medium'>
-                  Desc
+                  Descendente
                 </option>
               </select>
             </label>
@@ -241,17 +246,17 @@ function Filters({ setOverlay, Overlay }) {
                       value:
                         /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                       message:
-                        'La ciudad no puede contener carácteres especiales ni números.',
+                        'La ciudad no puede contener caracteres especiales ni números.',
                     },
                     maxLength: {
                       value: 30,
-                      message: 'La ciudad no puede tener más de 50 carácteres.',
+                      message: 'La ciudad no puede tener más de 50 caracteres.',
                     },
                   })}
                   type='text'
                   name='ciudad'
                   className={inputStyle}
-                  placeholder='Ciudad...'
+                  placeholder='Ciudad'
                 />
                 {errors.city && (
                   <p className='text-red-500'>{errors.city.message}</p>

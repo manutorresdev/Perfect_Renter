@@ -15,7 +15,7 @@ const userSchema = Joi.object().keys({
         errors[0].code === 'any.required' ||
         errors[0].code === 'string.empty'
       )
-        return new Error('Se requiere un email');
+        return new Error('Se requiere un email.');
 
       return new Error('El email no es válido.');
     }),
@@ -27,13 +27,15 @@ const userSchema = Joi.object().keys({
     .error((errors) => {
       switch (errors[0].code) {
         case 'any.required':
-          return new Error('Se requiere una contraseña');
+          return new Error('Se requiere una contraseña.');
 
         case 'string.empty':
-          return new Error('Se requiere una contraseña');
+          return new Error('Se requiere una contraseña.');
 
         default:
-          return new Error('La contraseña debe tener entre 8 y 100 caracteres');
+          return new Error(
+            'La contraseña debe tener entre 8 y 100 caracteres.'
+          );
       }
     }),
   tel: Joi.string()
@@ -51,7 +53,7 @@ const userSchema = Joi.object().keys({
         errors[0].code === 'any.required' ||
         errors[0].code === 'string.empty'
       )
-        return new Error('Se requiere un nombre para el usuario');
+        return new Error('Se requiere un nombre para el usuario.');
 
       return new Error('El nombre no es válido.');
     }),
@@ -64,7 +66,7 @@ const userSchema = Joi.object().keys({
         errors[0].code === 'any.required' ||
         errors[0].code === 'string.empty'
       )
-        return new Error('Se requiere un apellido para el usuario');
+        return new Error('Se requiere un apellido para el usuario.');
 
       return new Error('El apellido no es válido.');
     }),
@@ -98,13 +100,15 @@ const editUserSchema = Joi.object().keys({
     .error((errors) => {
       switch (errors[0].code) {
         case 'any.required':
-          return new Error('Se requiere una contraseña');
+          return new Error('Se requiere una contraseña.');
 
         case 'string.empty':
-          return new Error('Se requiere una contraseña');
+          return new Error('Se requiere una contraseña.');
 
         default:
-          return new Error('La contraseña debe tener entre 8 y 100 caracteres');
+          return new Error(
+            'La contraseña debe tener entre 8 y 100 caracteres.'
+          );
       }
     }),
   tel: Joi.string()
@@ -122,7 +126,7 @@ const editUserSchema = Joi.object().keys({
         errors[0].code === 'any.required' ||
         errors[0].code === 'string.empty'
       )
-        return new Error('Se requiere un nombre para el usuario');
+        return new Error('Se requiere un nombre para el usuario.');
 
       return new Error('El nombre no es válido.');
     }),
@@ -135,7 +139,7 @@ const editUserSchema = Joi.object().keys({
         errors[0].code === 'any.required' ||
         errors[0].code === 'string.empty'
       )
-        return new Error('Se requiere un apellido para el usuario');
+        return new Error('Se requiere un apellido para el usuario.');
 
       return new Error('El apellido no es válido.');
     }),

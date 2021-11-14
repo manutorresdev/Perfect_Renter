@@ -16,7 +16,7 @@ export default function Password({ register, errors }) {
             required: 'Debes escribir una contraseña.',
             minLength: {
               value: 8,
-              message: 'La contraseña debe contener mínimo 8 carácteres',
+              message: 'La contraseña debe contener mínimo 8 carácteres.',
             },
             maxLength: {
               value: 100,
@@ -25,7 +25,7 @@ export default function Password({ register, errors }) {
             pattern: {
               value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d].{8,}$/,
               message:
-                'La contraseña debe contener una letra minúscula, una letra mayúscula y un numero.',
+                'La contraseña debe contener una letra minúscula, una letra mayúscula y un número.',
             },
           })}
         />

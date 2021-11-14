@@ -33,7 +33,7 @@ export default function Login() {
     <>
       <section className='pt-24 flex flex-col items-center gap-5 m-0 p-0 bg-gray-200 bg-opacity-50 h-screen'>
         <div className='title text-3xl p-4  bg-principal-1 flex justify-center w-3/6 select-none'>
-          <h2>LOGIN</h2>
+          <h2>ACCESO</h2>
         </div>
         <form
           className='flex flex-col gap-3 sm:w-96 w-3/4'
@@ -82,7 +82,7 @@ export default function Login() {
           Recuperar contraseña
         </Link>
         <div className='flex gap-1'>
-          ¿Aún no tienes cuenta? Registrate
+          ¿Aún no tienes cuenta? RegÍstrate
           <Link
             className='hover:text-blue-900 font-medium hover:underline duration-200'
             to='/registro'
