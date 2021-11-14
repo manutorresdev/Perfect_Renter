@@ -44,7 +44,7 @@ export default function PropertyInfo(props) {
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${Number(
+      `http://localhost:4000/properties/${Number(
         props.match.params.idProperty
       )}/photos`,
       (data) => {
@@ -193,7 +193,7 @@ export default function PropertyInfo(props) {
                             ? ' h-96 w-full'
                             : ' sm:h-full w-full sm:max-h-lg max-w-2xl object-contain m-auto'
                         }`}
-                        src={'http://192.168.5.103:4000/photo/' + img.name}
+                        src={'http://localhost:4000/photo/' + img.name}
                         alt='default'
                       />
                     );
@@ -350,17 +350,17 @@ export default function PropertyInfo(props) {
 function Message({ message, setMessage }) {
   if (message.status === 'ok') {
     return (
-      <div className='fixed w-full bg-gray-400 bg-opacity-75 h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-30'>
-        <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-          <h2 className='w-full text-center border-b-2 border-gray-200 font-medium'>
+      <div className='fixed w-full bg-white justify-center bg-opacity-75 h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-30'>
+        <section className='contact filter drop-shadow-xl p-5 flex flex-col gap-5  bg-white relative items-center'>
+          <h2 className='w-full text-principal-gris text-center border-b-2 border-gray-600 font-medium'>
             ¡Ya esta listo!
           </h2>
-          <h2>{message.message}</h2>
+          <h2 className='text-principal-gris'>{message.message}</h2>
           <button
             onClick={() => {
               setMessage({ status: '', message: '' });
             }}
-            className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+            className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
           >
             Cerrar
           </button>
@@ -369,15 +369,15 @@ function Message({ message, setMessage }) {
     );
   } else if (message.status === 'error') {
     return (
-      <div className='fixed bg-gray-400 bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-20'>
-        <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-          <h2 className='w-full text-center border-b-2 border-gray-200 font-medium'>
+      <div className='fixed bg-white  justify-center bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-20'>
+        <section className='contact p-5 filter drop-shadow-xl flex flex-col gap-5  bg-white relative items-center'>
+          <h2 className='w-full text-center font-medium'>
             ¡Parece que algo va mal!
           </h2>
           <h2>{message.message}</h2>
           <Link
             to='/'
-            className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+            className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
           >
             Cerrar
           </Link>

@@ -26,7 +26,7 @@ export default function UsersList(props) {
   useEffect(() => {
     if (location.search) {
       get(
-        `http://192.168.5.103:4000/users${location.search}`,
+        `http://localhost:4000/users${location.search}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -40,7 +40,7 @@ export default function UsersList(props) {
       );
     } else {
       get(
-        'http://192.168.5.103:4000/users',
+        'http://localhost:4000/users',
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -53,9 +53,7 @@ export default function UsersList(props) {
         Token
       );
       get(
-        `http://192.168.5.103:4000/users/${
-          parseJwt(Token).idUser
-        }/bookings/renter`,
+        `http://localhost:4000/users/${parseJwt(Token).idUser}/bookings/renter`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -91,7 +89,7 @@ export default function UsersList(props) {
           }}
         >
           Filtrar
-          <FaFilter className=' w-10 h-full p-2 lg:hidden' />
+          <FaFilter className=' w-6 h-full lg:hidden' />
         </button>
         <Filters setOverlay={setOverlay} Overlay={Overlay} />
       </aside>

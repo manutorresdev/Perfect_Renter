@@ -48,7 +48,7 @@ export default function Profile({ token, setToken }) {
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
+      `http://localhost:4000/users/${parseJwt(token).idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -57,7 +57,7 @@ export default function Profile({ token, setToken }) {
     );
     if (User.idUser) {
       get(
-        `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
+        `http://localhost:4000/users/${User.idUser}/bookings`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -67,7 +67,7 @@ export default function Profile({ token, setToken }) {
         token
       );
       get(
-        `http://192.168.5.103:4000/users/${User.idUser}/votes`,
+        `http://localhost:4000/users/${User.idUser}/votes`,
         (data) => {
           if (data.status === 'ok') {
             setVotes(data.Valoraciones);
@@ -83,7 +83,7 @@ export default function Profile({ token, setToken }) {
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://192.168.5.103:4000/users/${User.idUser}`,
+      `http://localhost:4000/users/${User.idUser}`,
       body,
       (data) => {
         setToken('');
@@ -163,7 +163,7 @@ export default function Profile({ token, setToken }) {
             className='w-full h-full rounded-full'
             src={
               User.avatar
-                ? `http://192.168.5.103:4000/photo/${User.avatar}`
+                ? `http://localhost:4000/photo/${User.avatar}`
                 : require('../../Images/defProfile.png').default
             }
             alt='perfil de usuario'
@@ -294,7 +294,7 @@ export default function Profile({ token, setToken }) {
                     className='w-14 h-14 rounded-full m-2'
                     src={
                       vote.avatar
-                        ? 'http://192.168.5.103:4000/photo/' + vote.avatar
+                        ? 'http://localhost:4000/photo/' + vote.avatar
                         : require('../../Images/defProfile.png').default
                     }
                     alt='imagen de perfil'
@@ -372,7 +372,7 @@ function Delete({ setOverlay, Overlay, usuario }) {
 
   function onSubmit(body) {
     post(
-      'http://192.168.5.103:4000/users/login',
+      'http://localhost:4000/users/login',
       CreateFormData(body),
       (data) => {
         data.status === 'ok' && setCanDelete(true);
@@ -384,8 +384,8 @@ function Delete({ setOverlay, Overlay, usuario }) {
   }
 
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center sm:px-12 sm:py-24 pt-24 px-2 overscroll-scroll sm:overflow-hidden'>
-      <section className='delete-property shadow-custom py-2 px-2 border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
+    <div className='overlay z-20 bg-white bg-opacity-75  justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center sm:px-12 sm:py-24 pt-24 px-2 overscroll-scroll sm:overflow-hidden'>
+      <section className='delete p-4 filter drop-shadow-xl  flex flex-col items-center gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -424,7 +424,7 @@ function Delete({ setOverlay, Overlay, usuario }) {
               ''
             )}
             <input
-              className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+              className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
               type='submit'
               value='Validar'
             />
@@ -539,7 +539,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
                     }
                     src={
                       booking.photo
-                        ? 'http://192.168.5.103:4000/photo/' + booking.photo
+                        ? 'http://localhost:4000/photo/' + booking.photo
                         : require('../../Images/defPicture.jpg').default
                     }
                     alt='alquiler'
@@ -584,7 +584,7 @@ function CancelBooking({ setOverlay, info, Token }) {
 
   function Confirm(bookingCode) {
     get(
-      `http://192.168.5.103:4000/properties/${bookingCode}/cancel`,
+      `http://localhost:4000/properties/${bookingCode}/cancel`,
       (data) => {
         setMessage(data.message);
         setOverlay({ shown: false, info: {}, form: '' });
@@ -710,7 +710,7 @@ function EditBooking({ setOverlay, info, Token }) {
           email: info.email,
         };
         put(
-          `http://192.168.5.103:4000/properties/${info.idProperty}/${bookingCode}`,
+          `http://localhost:4000/properties/${info.idProperty}/${bookingCode}`,
           CreateFormData(body),
           (data) => {
             if (data.status === 'ok') {
@@ -738,9 +738,9 @@ function EditBooking({ setOverlay, info, Token }) {
   const inpStyle =
     'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   return (
-    <div className='overlay z-20 p-4 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
+    <div className='overlay z-20 p-4 bg-white justify-center bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
       {Message.status === 'ok' && <ConfirmMessage Message={Message.message} />}
-      <article className='shadow-custom cancel-booking w-full p-4 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4 '>
+      <article className='filter drop-shadow-xl cancel-booking w-full p-4  flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4 '>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -749,12 +749,12 @@ function EditBooking({ setOverlay, info, Token }) {
         >
           <FaPlus className='transform scale-150 rotate-45' />
         </button>
-        <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
+        <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-600 flex justify-center w-5/6 select-none'>
           Editar reserva
         </h1>
         <div className='perfil flex flex-col items-center gap-5'>
           <section
-            className={`animate-fadeIn bg-white border border-black w-full md:w-4/12 md:max-w-md sm:w-7/12`}
+            className={`animate-fadeIn bg-white border text-center filter drop-shadow-xl w-full md:w-4/12 md:max-w-md sm:w-7/12`}
           >
             <h2 className='bg-gray-Primary text-principal-1 text-lg w-full font-medium'>
               {capitalizeFirstLetter(info.type)} en {info.city}
@@ -843,10 +843,10 @@ function EditBooking({ setOverlay, info, Token }) {
               Debes escoger fechas diferentes.
             </p>
           )}
-          <div className='flex justify-evenly w-full '>
+          <div className='flex justify-evenly w-full gap-x-3'>
             <button
               onClick={() => Confirm(info.bookingCode, newDates)}
-              className='w-full p-2 hover:text-principal-1 font-medium text-center bg-gray-200'
+              className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
             >
               Confirmar
             </button>
@@ -854,7 +854,7 @@ function EditBooking({ setOverlay, info, Token }) {
               onClick={() => {
                 setOverlay({ shown: false, form: '', info: {} });
               }}
-              className='w-full p-2 hover:text-principal-1 font-medium'
+              className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
             >
               Salir
             </button>

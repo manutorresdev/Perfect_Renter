@@ -25,7 +25,7 @@ export default function Property({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/photos`,
+      `http://localhost:4000/properties/${property.idProperty}/photos`,
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
           setSlideImgs(data.photos.slice(0, 5));
@@ -46,7 +46,7 @@ export default function Property({
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://192.168.5.103:4000/properties/${property.idProperty}`,
+      `http://localhost:4000/properties/${property.idProperty}`,
       body,
       (data) => {
         alert(data.message);
@@ -136,9 +136,9 @@ export default function Property({
               </h3>
               <h3>{Number(property.price)} €/mes</h3>
             </div>
-            <div className='pl-2'>
+            <div className='p-2'>
               {property.province}
-              <div className='text-black font-medium'>
+              <div className='text-black font-medium p-2'>
                 {`${property.mts}m² - ${property.rooms} habitaciones - ${
                   property.toilets
                 } ${property.toilets > 1 ? 'baños' : 'baño'}`}

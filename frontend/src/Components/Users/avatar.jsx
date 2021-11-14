@@ -31,7 +31,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
         });
 
         put(
-          `http://192.168.5.103:4000/users/${usuario.idUser}`,
+          `http://localhost:4000/users/${usuario.idUser}`,
           CreateFormData({ avatar: file }),
           (data) => {
             console.log('Success');
@@ -60,7 +60,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
   }
 
   return (
-    <div className='overlay z-20 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-20 pb-10 px-2 overflow-auto sm:overflow-hidden'>
+    <div className='overlay z-20 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col justify-center items-center pt-20 pb-10 px-2 overflow-auto sm:overflow-hidden'>
       <section className='avatar mt-6 filter drop-shadow-xl h-min flex flex-col items-center gap-5 bg-white text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'

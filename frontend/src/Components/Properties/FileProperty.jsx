@@ -57,7 +57,7 @@ export default function FileProperty({
     });
     console.log(photos[0]);
     put(
-      `http://192.168.5.103:4000/properties/${editProperty}`,
+      `http://localhost:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
       (data) => {
         if (data.status === 'ok') {
@@ -85,13 +85,13 @@ export default function FileProperty({
   }, [FileName.length, photos.length, FileName]);
 
   return (
-    <div className='overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
+    <div className='overlay z-20 bg-white bg-opacity-75 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
       {Loader && (
         <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
           <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
         </div>
       )}
-      <section className=' pt-2 shadow-custom border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-auto md:w-3/4'>
+      <section className=' pt-2 filter drop-shadow-xl  flex flex-col items-center gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 right-3'
           onClick={() => {
@@ -112,7 +112,7 @@ export default function FileProperty({
           >
             <div className='flex flex-col gap-5 items-center'>
               <button
-                className='font-medium flex items-center gap-2 bg-blue-600 text-white p-1 rounded'
+                className='font-medium flex items-center gap-2 bg-blue-600 text-white p-2'
                 onClick={(e) => {
                   e.preventDefault();
                   hiddenInput.current.click();
@@ -144,9 +144,7 @@ export default function FileProperty({
                               <FaPlus className='transform rotate-45' />
                             </button>
                             <img
-                              src={
-                                'http://192.168.5.103:4000/photo/' + photo.name
-                              }
+                              src={'http://localhost:4000/photo/' + photo.name}
                               alt='prueba'
                               className='w-20 h-20 object-cover'
                             />
@@ -257,7 +255,7 @@ export default function FileProperty({
               } ${
                 (TotalPhotos >= 30 || FileName.length < 1) &&
                 'text-gray-400 select-none pointer-events-none cursor-default '
-              } font-medium relative flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
+              } select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer`}
             >
               Añadir
             </button>
