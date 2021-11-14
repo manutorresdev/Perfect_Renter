@@ -22,7 +22,6 @@ const getPhoto = async (req, res, next) => {
     //Obtenemos el id de la propiedad.
 
     const { pictureName } = req.params;
-    console.log('hola  ' + req.params);
 
     // Obtenemos el id del usuario que hace la request.
     /* const { idUser } = req.userAuth; */

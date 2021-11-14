@@ -77,14 +77,12 @@ const deleteUser = async (req, res, next) => {
 
       // Eliminamos la propiedad de la base de datos.
       for (const property of properties) {
-        console.log('\x1b[43m########\x1b[30m', property);
-
-        // await connection.query(
-        //   `
-        // DELETE FROM properties WHERE idProperty = ?
-        // `,
-        //   [property.idProperty]
-        // );
+        await connection.query(
+          `
+        DELETE FROM properties WHERE idProperty = ?
+        `,
+          [property.idProperty]
+        );
       }
     }
     // Anonimizamos al usuario
