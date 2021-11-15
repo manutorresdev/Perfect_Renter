@@ -251,6 +251,16 @@ async function main() {
     await connection.query(`
         SET GLOBAL event_scheduler = ON;
         `);
+
+    // Obtenemos los datos a introducir a la BBDD
+    const CustomDataDatabasePath = path.join(__dirname, 'DatosBBDD.sql');
+    const CustomDataDatabase = fs.readFile(CustomDataDatabasePath, 'utf-8');
+
+    await connection.query(
+      `
+    ${await CustomDataDatabase}
+    `
+    );
   } catch (error) {
     console.error(error.message);
     if (error.message === "Unknown database 'perfect_renter'") {
