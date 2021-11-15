@@ -47,7 +47,7 @@ const deleteProperty = async (req, res, next) => {
     );
     res.send({
       status: 'ok',
-      message: 'Propiedad eliminada',
+      message: 'Propiedad eliminada.',
     });
   } catch (error) {
     next(error);

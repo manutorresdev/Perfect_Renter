@@ -26,7 +26,7 @@ const deleteUser = async (req, res, next) => {
     // Importante lo primero es que no se pueda eliminar el administrador
     if (Number(idUser) === 1) {
       const error = new Error(
-        'El administrador principal no se puede eliminar'
+        'El administrador principal no se puede eliminar.'
       );
       error.httpStatus = 403;
       throw error;
@@ -40,7 +40,7 @@ const deleteUser = async (req, res, next) => {
       req.userAuth.idUser !== Number(idUser) &&
       req.userAuth.role !== 'admin'
     ) {
-      const error = new Error('No tienes permisos');
+      const error = new Error('No tienes permisos.');
       error.httpStatus = 403;
       throw error;
     }

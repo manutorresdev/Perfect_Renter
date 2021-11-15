@@ -46,7 +46,7 @@ export default function ContactProperty({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
+      `http://localhost:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data.bookings);
         console.log(data);
@@ -79,7 +79,7 @@ export default function ContactProperty({
     e.preventDefault();
     if (form === 'reservar') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
+        `http://localhost:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
           setMessage(data);
@@ -93,7 +93,7 @@ export default function ContactProperty({
       );
     } else if (form === 'contact') {
       post(
-        `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
+        `http://localhost:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
           setMessage({ status: data.status, message: data.message });
@@ -148,16 +148,16 @@ export default function ContactProperty({
                     value:
                       /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
-                      'El nombre no puede contener carácteres especiales ni números.',
+                      'El nombre no puede contener caracteres especiales ni números.',
                   },
                   minLength: {
                     value: 3,
                     message:
-                      'El nombre debe contener como mínimo 3 carácteres.',
+                      'El nombre debe contener como mínimo 3 caracteres.',
                   },
                   maxLength: {
                     value: 30,
-                    message: 'El nombre no puede tener más de 30 carácteres.',
+                    message: 'El nombre no puede tener más de 30 caracteres.',
                   },
                 }}
                 render={({ field: { onChange, name, ref, value } }) => {
@@ -183,7 +183,7 @@ export default function ContactProperty({
                   maxLength: {
                     value: 200,
                     message:
-                      'El email no puede contener más de 200 carácteres.',
+                      'El email no puede contener más de 200 caracteres.',
                   },
                 }}
                 render={({ field: { onChange, name, ref, value } }) => {
@@ -240,7 +240,7 @@ export default function ContactProperty({
                   required: 'Debes añadir algún comentario.',
                   maxLength: {
                     value: 250,
-                    message: 'No puedes escribir más de 250 carácteres.',
+                    message: 'No puedes escribir más de 250 caracteres.',
                   },
                 })}
               ></textarea>
@@ -294,7 +294,7 @@ export default function ContactProperty({
                       <img
                         key={i}
                         className='object-cover w-full h-96'
-                        src={'http://192.168.5.103:4000/photo/' + img.name}
+                        src={'http://localhost:4000/photo/' + img.name}
                         alt='default'
                       />
                     );

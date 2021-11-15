@@ -241,7 +241,7 @@ const listProperties = async (req, res, next) => {
       if (properties.length === 0) {
         res.send({
           status: 'ok',
-          message: 'No hay conicidencias para su busqueda',
+          message: 'No hay conicidencias para su búsqueda.',
         });
       } else {
         res.send({

@@ -27,7 +27,7 @@ const userExists = async (req, res, next) => {
 
     // Si el usuario no existe lanzamos un error.
     if (user.length < 1) {
-      const error = new Error('El usuario no existe');
+      const error = new Error('El usuario no existe.');
       error.httpStatus = 404;
       throw error;
     }

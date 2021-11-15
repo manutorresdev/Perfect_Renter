@@ -23,7 +23,7 @@ const cancelBooking = async (req, res, next) => {
     );
 
     if (booking.length === 0) {
-      const error = new Error('No hay reservas pendientes con ese codigo');
+      const error = new Error('No hay reservas pendientes con ese código.');
       error.httpStatus = 400;
       throw error;
     }
@@ -109,7 +109,7 @@ const cancelBooking = async (req, res, next) => {
         <tbody>
             <td>
               Hola ${userTenant[0].name},
-              Lamentamos informarte que ${userRenter[0].name} ha Anulado la reserva que tenías.
+              Lamentamos informarte que ${userRenter[0].name} ha anulado la reserva que tenías.
               En ${property.city}, ${property.address}.
             </td>
             <br/>
@@ -177,7 +177,7 @@ const cancelBooking = async (req, res, next) => {
       </table>
     `;
     } else {
-      const error = new Error('No hay reservas asociadas a su usuario');
+      const error = new Error('No hay reservas asociadas a su usuario.');
       error.httpStatus = 400;
       throw error;
     }
@@ -185,19 +185,19 @@ const cancelBooking = async (req, res, next) => {
     if (process.env.NODE_ENV !== 'test') {
       await sendMail({
         to: userRenter[0].email,
-        subject: 'Cancelación de reserva',
+        subject: 'Cancelación de reserva.',
         body: emailBodyRenter,
       });
       await sendMail({
         to: userTenant[0].email,
-        subject: 'Cancelación de reserva',
+        subject: 'Cancelación de reserva.',
         body: emailBodyTenant,
       });
     }
 
     res.send({
       status: 'ok',
-      message: 'La reserva ha sido cancelada Correctamente',
+      message: 'La reserva ha sido cancelada correctamente.',
     });
   } catch (error) {
     next(error);

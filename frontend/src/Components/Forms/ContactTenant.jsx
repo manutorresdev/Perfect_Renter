@@ -25,7 +25,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
   function onSubmit(body, e) {
     e.preventDefault();
     post(
-      `http://192.168.5.103:4000/users/${info.idUser}/contact`,
+      `http://localhost:4000/users/${info.idUser}/contact`,
       CreateFormData(body),
       (data) => {
         alert(data.message);
@@ -84,16 +84,16 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
                     value:
                       /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
-                      'El nombre no puede contener carácteres especiales ni números.',
+                      'El nombre no puede contener caracteres especiales ni números.',
                   },
                   minLength: {
                     value: 3,
                     message:
-                      'El nombre debe contener como mínimo 3 carácteres.',
+                      'El nombre debe contener como mínimo 3 caracteres.',
                   },
                   maxLength: {
                     value: 30,
-                    message: 'El nombre no puede tener más de 30 carácteres.',
+                    message: 'El nombre no puede tener más de 30 caracteres.',
                   },
                 }}
                 render={({ field: { onChange, name, ref } }) => {
@@ -121,7 +121,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
                   maxLength: {
                     value: 200,
                     message:
-                      'El email no puede contener más de 200 carácteres.',
+                      'El email no puede contener más de 200 caracteres.',
                   },
                 }}
                 render={({ field: { onChange, name, ref } }) => {
@@ -192,7 +192,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
                   required: 'Debes añadir algún comentario.',
                   maxLength: {
                     value: 250,
-                    message: 'No puedes escribir más de 250 carácteres.',
+                    message: 'No puedes escribir más de 250 caracteres.',
                   },
                 })}
               ></textarea>
@@ -216,7 +216,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
               className='w-2/4 rounded-full'
               src={
                 info.avatar
-                  ? `http://192.168.5.103:4000/photo/${info.avatar}`
+                  ? `http://localhost:4000/photo/${info.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt='imagen de perfil'
