@@ -56,6 +56,8 @@ export default function UserProfile({ match }) {
   const propiedadUsuario = properties.filter(
     (property) => property.idUser === user.idUser
   );
+  const buttonStyle =
+    'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   return (
     <>
@@ -66,11 +68,11 @@ export default function UserProfile({ match }) {
           Token={Token}
         />
       )}
-      <main className='pb-28 py-20 flex flex-col items-center justify-center max-w-5xl m-auto'>
+      <main className='pb-32 py-20 flex flex-col items-center justify-center max-w-5xl m-auto'>
         <div className='perfil flex flex-col items-center justify-center'>
-          <article className=' flex flex-col gap-5 items-center justic'>
+          <article className=' flex flex-col gap-5 items-center justify-center'>
             <img
-              className='w-2/4 rounded-full'
+              className=' w-60 h-60 object-cover rounded-circle'
               src={
                 user.avatar
                   ? `http://192.168.5.103:4000/photo/${user.avatar}`
@@ -78,6 +80,7 @@ export default function UserProfile({ match }) {
               }
               alt='imagen de perfil'
             />
+
             <section className=''>
               <div className='bg-gray-Primary p-2 bg-opacity-25 text-3xl text-principal-1 flex justify-between'>
                 <h1>
@@ -126,7 +129,7 @@ export default function UserProfile({ match }) {
                 return (
                   <span key={booking.idBooking} className='max-w-xs'>
                     <article
-                      className={`animate-fadeIn shadow-custom h-1/3 max-w-xs flex flex-col items-start justify-between
+                      className={`animate-fadeIn filter drop-shadow-xl h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
                 lg:flex-row lg:max-w-md lg:w-full`}
                     >
@@ -193,7 +196,7 @@ export default function UserProfile({ match }) {
               })
             ) : (
               <h2 className='p-2'>
-                Este inquilino no ha estado no ha viajado aún.
+                Este inquilino no tiene historial de viviendas.
               </h2>
             )}
           </div>
@@ -238,12 +241,12 @@ export default function UserProfile({ match }) {
                 </Property>
               ))
             ) : (
-              <div className='font-medium p-2'>No hay ningún inmueble</div>
+              <div className='font-medium p-2'>No hay ningún inmueble.</div>
             )}
           </div>
         </section>
 
-        <section className='w-full'>
+        <section className='w-full pb-20'>
           <h2 className='text-2xl border-b border-gray-200 text-principal-gris bg-principal-1 w-full p-1 font-semibold'>
             Opiniones
           </h2>
@@ -299,7 +302,7 @@ export default function UserProfile({ match }) {
         </section>
 
         <button
-          className='my-10 select-none text-center p-3 border border-gray-400 text-principal-1 bg-gray-Primary hover:bg-principal-1-hover hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+          className={buttonStyle + ''}
           onClick={() => {
             setOverlay({ shown: true, info: user, form: 'contact' });
           }}

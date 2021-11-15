@@ -223,9 +223,13 @@ function PropertiesToVote({
                     <div className='border-r-2 border-opacity-75 border-gray-700'></div>
                     <div className='w-4/12 relative flex flex-col justify-between'>
                       <img
-                        className='object-cover flex-grow'
-                        src={require('../../Images/defPicture.jpg').default}
-                        alt=''
+                        className='w-60 h-60 object-cover rounded-circle'
+                        src={
+                          info.avatar
+                            ? `http://192.168.5.103:4000/photo/${info.avatar}`
+                            : require('../../Images/defProfile.png').default
+                        }
+                        alt='imagen de perfil'
                       />
                     </div>
                   </article>

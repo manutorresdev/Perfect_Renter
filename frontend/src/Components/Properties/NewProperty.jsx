@@ -155,7 +155,9 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
       (data) => {
         console.log('Sucess');
         alert(data.message);
-        /*  window.location.reload(); */
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       },
       (error) => {
         setError(error.message);
@@ -583,6 +585,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
               <input
                 type='text'
                 name='zipCode'
+                maxLength={5}
                 className={inpStyle}
                 placeholder='Código Postal'
                 ref={(e) => {

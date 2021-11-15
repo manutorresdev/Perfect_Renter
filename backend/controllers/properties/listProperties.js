@@ -238,17 +238,11 @@ const listProperties = async (req, res, next) => {
       }
 
       //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
-      if (properties.length === 0) {
-        res.send({
-          status: 'ok',
-          message: 'No hay conicidencias para su busqueda',
-        });
-      } else {
-        res.send({
-          status: 'ok',
-          properties,
-        });
-      }
+
+      res.send({
+        status: 'ok',
+        properties,
+      });
     }
   } catch (error) {
     next(error);

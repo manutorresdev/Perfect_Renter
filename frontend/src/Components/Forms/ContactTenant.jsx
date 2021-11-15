@@ -52,6 +52,8 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
   const inpStyle =
     'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   const comentarios = watch('comentarios');
+  const buttonStyle =
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   return (
     <div className='overlay z-30 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 overscroll-scroll sm:overflow-hidden'>
@@ -84,16 +86,16 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
                     value:
                       /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
-                      'El nombre no puede contener carácteres especiales ni números.',
+                      'El nombre no puede contener caracteres especiales ni números.',
                   },
                   minLength: {
                     value: 3,
                     message:
-                      'El nombre debe contener como mínimo 3 carácteres.',
+                      'El nombre debe contener como mínimo 3 caracteres.',
                   },
                   maxLength: {
                     value: 30,
-                    message: 'El nombre no puede tener más de 30 carácteres.',
+                    message: 'El nombre no puede tener más de 30 caracteres.',
                   },
                 }}
                 render={({ field: { onChange, name, ref } }) => {
@@ -121,7 +123,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
                   maxLength: {
                     value: 200,
                     message:
-                      'El email no puede contener más de 200 carácteres.',
+                      'El email no puede contener más de 200 caracteres.',
                   },
                 }}
                 render={({ field: { onChange, name, ref } }) => {
@@ -192,7 +194,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
                   required: 'Debes añadir algún comentario.',
                   maxLength: {
                     value: 250,
-                    message: 'No puedes escribir más de 250 carácteres.',
+                    message: 'No puedes escribir más de 250 caracteres.',
                   },
                 })}
               ></textarea>
@@ -204,11 +206,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
               <p className='text-red-500'>{errors.comentarios.message}</p>
             )}
 
-            <input
-              className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
-              type='submit'
-              value='Contactar'
-            />
+            <input className={buttonStyle} type='submit' value='Contactar' />
           </form>
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>

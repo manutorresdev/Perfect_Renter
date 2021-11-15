@@ -148,16 +148,16 @@ export default function ContactProperty({
                     value:
                       /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
-                      'El nombre no puede contener carácteres especiales ni números.',
+                      'El nombre no puede contener caracteres especiales ni números.',
                   },
                   minLength: {
                     value: 3,
                     message:
-                      'El nombre debe contener como mínimo 3 carácteres.',
+                      'El nombre debe contener como mínimo 3 caracteres.',
                   },
                   maxLength: {
                     value: 30,
-                    message: 'El nombre no puede tener más de 30 carácteres.',
+                    message: 'El nombre no puede tener más de 30 caracteres.',
                   },
                 }}
                 render={({ field: { onChange, name, ref, value } }) => {
@@ -183,7 +183,7 @@ export default function ContactProperty({
                   maxLength: {
                     value: 200,
                     message:
-                      'El email no puede contener más de 200 carácteres.',
+                      'El email no puede contener más de 200 caracteres.',
                   },
                 }}
                 render={({ field: { onChange, name, ref, value } }) => {
@@ -240,7 +240,7 @@ export default function ContactProperty({
                   required: 'Debes añadir algún comentario.',
                   maxLength: {
                     value: 250,
-                    message: 'No puedes escribir más de 250 carácteres.',
+                    message: 'No puedes escribir más de 250 caracteres.',
                   },
                 })}
               ></textarea>

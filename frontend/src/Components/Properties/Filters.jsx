@@ -68,7 +68,7 @@ export default function Filters({ setOverlay, Overlay }) {
   }
   const inputsLabelStyle = 'text-lg duration-200';
   const inputStyle =
-    'bg-black bg-opacity-70 w-48 px-2 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
+    'bg-black bg-opacity-70 w-48 p-3 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
   return (
     <>
       <div
@@ -295,43 +295,58 @@ export default function Filters({ setOverlay, Overlay }) {
                     defaultChecked={history.location.search.includes('duplex')}
                   />
                 </label>
-                {/* <label className='flex gap-2 items-baseline justify-between font-medium'>
-                  Cualquiera
-                  <input
-                    type='checkbox'
-                    name='tipo'
-                    value='%'
-                    {...register('tipo')}
-                  />
-                </label> */}
               </div>
               <div className='flex flex-col gap-2'>
-                <label className='minPrice'>
+                <label className='minPrice relative'>
                   <div className={inputsLabelStyle}>Precio Mínimo:</div>
                   <input
                     ref={pMinVal}
                     min='1'
+                    maxLength={5}
                     max='10000'
-                    {...register('pMin')}
-                    type='number'
+                    {...register('pMin', {
+                      pattern: {
+                        value: /^([0-9]*){5,}$/,
+                        message: 'Debe contener solo números.',
+                      },
+                    })}
                     name='pMin'
                     className={inputStyle}
                     placeholder='Mínimo'
                   />
-                  €
+                  <span className='text-xl text-principal-1 absolute top-8 pt-1 right-4'>
+                    €
+                  </span>
+                  {errors.pMin && (
+                    <p className='text-red-500 font-medium'>
+                      {errors.pMin.message}
+                    </p>
+                  )}
                 </label>
-                <label className='maxPrice'>
+                <label className='maxPrice relative'>
                   <div className={inputsLabelStyle}>Precio Máximo:</div>
                   <input
-                    {...register('pMax')}
+                    {...register('pMax', {
+                      pattern: {
+                        value: /^([0-9]*){5,}$/,
+                        message: 'Debe contener solo números.',
+                      },
+                    })}
                     min='1'
+                    maxLength={5}
                     max='10000'
-                    type='number'
                     name='pMax'
                     className={inputStyle}
                     placeholder='Máximo'
                   />
-                  €
+                  <span className='text-xl text-principal-1 absolute top-8 pt-1 right-4'>
+                    €
+                  </span>
+                  {errors.pMax && (
+                    <p className='text-red-500 font-medium'>
+                      {errors.pMin.message}
+                    </p>
+                  )}
                 </label>
               </div>
               <label className='rooms'>
@@ -340,6 +355,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   {...register('hab')}
                   type='number'
                   name='hab'
+                  maxLength={2}
                   min='1'
                   max='10'
                   className={inputStyle}
@@ -361,6 +377,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   {...register('baños')}
                   min='1'
                   max='10'
+                  maxLength={2}
                   type='number'
                   name='baños'
                   className={inputStyle}
@@ -373,6 +390,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   {...register('m2')}
                   min='1'
                   max='1000'
+                  maxLength={4}
                   type='number'
                   name='m2'
                   className={inputStyle}
