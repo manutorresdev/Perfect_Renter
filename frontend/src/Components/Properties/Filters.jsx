@@ -383,7 +383,7 @@ export default function Filters({ setOverlay, Overlay }) {
                 <input
                   type='submit'
                   value='Buscar'
-                  className='btn-submit text-lg bg-none px-4  font-medium text-principal-gris border-yellow-300 border-2 h-1/3 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
+                  className='btn-submit text-lg bg-none px-4 cursor-pointer font-medium text-principal-gris border-yellow-300 border-2 h-1/3 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
                 />
               </div>
             </form>

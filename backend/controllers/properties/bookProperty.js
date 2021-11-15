@@ -305,20 +305,20 @@ const bookProperty = async (req, res, next) => {
     </table>
     `;
         // Enviamos el correo del usuario que contacta, al usuario a contactar.
-        //   if (process.env.NODE_ENV !== 'test') {
-        //     await sendMail({
-        //       to: property[0].email,
-        //       subject: 'Solicitud de reserva.',
-        //       body: emailBody,
-        //     });
+        if (process.env.NODE_ENV !== 'test') {
+          await sendMail({
+            to: property[0].email,
+            subject: 'Solicitud de reserva.',
+            body: emailBody,
+          });
 
-        //     // VALIDAR CORREO USUARIO QUE RESERVA
-        //     await sendMail({
-        //       to: email,
-        //       subject: 'Solicitud de reserva.',
-        //       body: emailBodyReq,
-        //     });
-        //   }
+          // VALIDAR CORREO USUARIO QUE RESERVA
+          await sendMail({
+            to: email,
+            subject: 'Solicitud de reserva.',
+            body: emailBodyReq,
+          });
+        }
 
         //   // Agregamos el código de reserva en la base de datos junto a la posible reserva.
         await connection.query(

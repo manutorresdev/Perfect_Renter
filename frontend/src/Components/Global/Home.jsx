@@ -12,17 +12,18 @@ const sectionStyle =
   'h-max-content p-5 text-principal-1 overflow-y-auto bg-gray-Primary';
 const sectionTitleStyle = 'pb-5 text-3xl font-medium';
 const sectionImgStyle = 'w-2/5 float-right pl-3';
-const boxContStyle = 'row-span-2 flex flex-col gap-5 b';
+const boxContStyle = 'row-span-2 flex flex-col gap-5';
 const boxContTitleStyle =
   'w-full text-center pt-4 pb-3 text-principal-1 underline text-xl';
 const boxItemContStyle =
-  'grid grid-cols-1 grid-rows-auto gap-2 justify-items-center sm:grid-cols-2';
+  'grid grid-cols-1 flex-grow grid-rows-auto gap-2 justify-items-center sm:grid-cols-2 relative';
 const boxReadMoreBtnStyle =
   'm-auto text-xl bg-gray-Primary text-principal-1 border-2 border-gray-800 max-w-max px-6 py-2 hover:bg-principal-1 hover:text-gray-700 duration-300';
-const descBoxStyle = 'content-center w-3/4 h-full bg-principal-1-hover';
+const descBoxStyle =
+  'content-center w-3/4 h-full bg-principal-1-hover text-black';
 const descBoxTextStyle = 'text-left p-4';
-const descBoxTitleStyle = 'text-base text-gray-700 pb-3 font-medium';
-const descBoxPStyle = 'text-gray-700 text-sm pl-2';
+const descBoxTitleStyle = '  pb-3 font-medium';
+const descBoxPStyle = '  pl-2';
 
 export function Home() {
   return (
@@ -162,10 +163,49 @@ export function PropertiesList() {
 }
 
 export function RentersList() {
+  const [OverlayTenants, setOverlayTenants] = useState(false);
   const [Token] = useContext(TokenContext);
   const [Users, setUsers] = useState([]);
 
   useEffect(() => {
+    if (Token) {
+      get(
+        'http://192.168.5.103:4000/users',
+        (data) => {
+          setUsers(data.users);
+        },
+        (error) => console.log(error),
+        Token
+      );
+    } else {
+      setUsers([
+        {
+          idUser: 1,
+          avatar: 'fotoperfil1.jpg',
+          name: 'Lucía Rodríguez',
+          city: 'Cáceres',
+        },
+        {
+          idUser: 2,
+          avatar: 'fotoperfil2.jpg',
+          name: 'Sofía Guijuela',
+          city: 'Albacete',
+        },
+        {
+          idUser: 3,
+          avatar: 'fotoperfil3.jpg',
+          name: 'Isaac Martin',
+          city: 'Granada',
+        },
+        {
+          idUser: 4,
+          avatar: 'fotoperfil4.jpg',
+          name: 'Juan Antonio',
+          city: 'La Langa',
+        },
+      ]);
+    }
+
     get(
       'http://localhost:4000/users',
       (data) => {
@@ -174,37 +214,82 @@ export function RentersList() {
       (error) => console.log(error),
       Token
     );
+
   }, [Token]);
+  const buttonStyle =
+    'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   return (
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>INQUILINOS</h2>
-      <div className={boxItemContStyle}>
+      <div
+        className={boxItemContStyle}
+        onClick={(e) => {
+          !Token && setOverlayTenants(true);
+        }}
+      >
+        {OverlayTenants && (
+          <div
+            className={`animate-fadeIn overlay z-20 absolute  flex flex-col gap-2 items-center justify-center m-auto top-0 bottom-0 left-0 right-0 text-xl font-medium text-white`}
+          >
+            <span className='filter drop-shadow-2xl'>
+              Regístrate para visualizar otros usuarios
+            </span>
+            <Link className={`${buttonStyle} `} to='/registro'>
+              Registro
+            </Link>
+          </div>
+        )}
         {Users.length
           ? Users.slice(0, 4).map((user) => (
-              <Renter key={user.idUser} user={user} />
+              <Renter Token={Token} key={user.idUser} user={user} />
             ))
           : ''}
       </div>
-      <Link to='/inquilinos' className={boxReadMoreBtnStyle}>
-        <button>Ver más</button>
-      </Link>
+      {Token ? (
+        <Link to='/inquilinos' className={boxReadMoreBtnStyle}>
+          <button>Ver más</button>
+        </Link>
+      ) : (
+        <button
+          className={boxReadMoreBtnStyle}
+          onClick={(e) => {
+            !Token && setOverlayTenants(true);
+          }}
+        >
+          Ver más
+        </button>
+      )}
     </div>
   );
 }
 
-export function Renter({ user }) {
+export function Renter({ user, Token }) {
   return (
-    <div className={descBoxStyle}>
+    <div className={descBoxStyle + ` ${!Token && 'filter blur'}`}>
       <img
-        className=' w-full'
-        src={'http://localhost:4000/photo/' + user.avatar}
+
+
+        className=' w-full h-48 object-cover '
+        src={'http://192.168.5.103:4000/photo/' + user.avatar}
+
+
         alt=''
       />
-      <div className={descBoxTextStyle}>
-        <h2 className={descBoxTitleStyle}>{user.name}</h2>
-        <p className={descBoxPStyle}>{user.city}</p>
-      </div>
+
+      {Token ? (
+        <Link to={'/inquilinos/' + user.idUser}>
+          <div className={descBoxTextStyle}>
+            <h2 className={descBoxTitleStyle}>{user.name}</h2>
+            <p className={descBoxPStyle}>{user.city}</p>
+          </div>
+        </Link>
+      ) : (
+        <div className={descBoxTextStyle}>
+          <h2 className={descBoxTitleStyle}>{user.name}</h2>
+          <p className={descBoxPStyle}>{user.city}</p>
+        </div>
+      )}
     </div>
   );
 }

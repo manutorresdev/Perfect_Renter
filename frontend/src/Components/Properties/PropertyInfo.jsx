@@ -48,7 +48,6 @@ export default function PropertyInfo(props) {
         props.match.params.idProperty
       )}/photos`,
       (data) => {
-        console.log(data);
         setSlideImgs(data.photos);
       },
       (error) => console.log(error),
@@ -131,7 +130,7 @@ export default function PropertyInfo(props) {
             props.IsFooterVisible ? 'bottom-28 absolute' : 'bottom-0 fixed'
           } left-0 mx-auto mt-5 sm:mt-20 `}
         >
-          <span
+          <button
             className='lg:hidden flex pl-6'
             onClick={() => {
               setOverlay({ show: true });
@@ -139,7 +138,7 @@ export default function PropertyInfo(props) {
           >
             Filtrar
             <FaFilter className=' w-10 h-full p-2 lg:hidden' />
-          </span>
+          </button>
           <Filters setOverlay={setOverlay} Overlay={Overlay} />
         </aside>
         <section className='self-start flex-grow flex flex-col items-center justify-between max-w-7xl'>
@@ -185,7 +184,6 @@ export default function PropertyInfo(props) {
               >
                 {SlideImgs.length > 0 ? (
                   SlideImgs.map((img, i) => {
-                    console.log(img);
                     return (
                       <img
                         key={i}
@@ -297,18 +295,12 @@ export default function PropertyInfo(props) {
                           Inicia sesión o regístrate para reservar esta
                           propiedad
                         </p>
-                        <div>
-                          <Link
-                            className={`${buttonStyle} col-start-4 col-end-6 row-start-1 sm:col-start-8 sm:col-end-9 justify-self-end px-6 sm:px-8 hover:px-10`}
-                            to='/login'
-                          >
+                        <div className='flex gap-5 w-full'>
+                          <Link className={`${buttonStyle}`} to='/login'>
                             Acceso
                           </Link>
 
-                          <Link
-                            className={`${buttonStyle} col-start-6 col-end-8 row-start-1 sm:col-start-9 sm:col-end-10 justify-self-center px-4 sm:px-6 hover:px-8`}
-                            to='/registro'
-                          >
+                          <Link className={`${buttonStyle}`} to='/registro'>
                             Registro
                           </Link>
                         </div>
@@ -358,17 +350,17 @@ export default function PropertyInfo(props) {
 function Message({ message, setMessage }) {
   if (message.status === 'ok') {
     return (
-      <div className='fixed w-full bg-gray-400 bg-opacity-75 h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-30'>
-        <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-          <h2 className='w-full text-center border-b-2 border-gray-200 font-medium'>
+      <div className='fixed w-full bg-white justify-center bg-opacity-75 h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-30'>
+        <section className='contact filter drop-shadow-xl p-5 flex flex-col gap-5  bg-white relative items-center'>
+          <h2 className='w-full text-principal-gris text-center border-b-2 border-gray-600 font-medium'>
             ¡Ya esta listo!
           </h2>
-          <h2>{message.message}</h2>
+          <h2 className='text-principal-gris'>{message.message}</h2>
           <button
             onClick={() => {
               setMessage({ status: '', message: '' });
             }}
-            className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+            className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
           >
             Cerrar
           </button>
@@ -377,15 +369,15 @@ function Message({ message, setMessage }) {
     );
   } else if (message.status === 'error') {
     return (
-      <div className='fixed bg-gray-400 bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-20'>
-        <section className='contact py-5 px-5 border border-black flex flex-col gap-5  bg-white relative items-center'>
-          <h2 className='w-full text-center border-b-2 border-gray-200 font-medium'>
+      <div className='fixed bg-white  justify-center bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-20'>
+        <section className='contact p-5 filter drop-shadow-xl flex flex-col gap-5  bg-white relative items-center'>
+          <h2 className='w-full text-center font-medium'>
             ¡Parece que algo va mal!
           </h2>
           <h2>{message.message}</h2>
           <Link
             to='/'
-            className='border-2 py-1 px-3 bg-yellow-400 hover:bg-gray-500 hover:text-white'
+            className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
           >
             Cerrar
           </Link>
@@ -401,7 +393,7 @@ function RelatedProperties({ properties, city }) {
     related = properties.filter((property) => property.city === city);
     if (related.length > 0) {
       return (
-        <div className='flex flex-col items-center p-8 overflow-hidden pb-28 w-screen'>
+        <div className='flex flex-col items-center p-8 overflow-hidden pb-44 w-screen'>
           <h1 className='text-2xl text-principal-gris py-2 bg-principal-1 w-screen text-center font-semibold'>
             Algunos pisos relacionados
           </h1>

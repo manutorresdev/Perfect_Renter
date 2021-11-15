@@ -32,13 +32,13 @@ export default function Properties(props) {
           className={` w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20`}
         >
           <button
-            className='lg:hidden flex flex-row w-20 h-20 fixed rounded-full bottom-3 bg-principal-1 right-px items-center '
+            className='lg:hidden flex flex-col w-20 h-20 fixed rounded-full justify-center text-base bottom-3 bg-principal-1 right-1 items-center '
             onClick={() => {
               setOverlay({ show: true });
             }}
           >
             Filtrar
-            <FaFilter className=' w-10 h-full p-2 lg:hidden' />
+            <FaFilter className=' w-8 h-min lg:hidden' />
           </button>
           <Filters setOverlay={setOverlay} Overlay={Overlay} />
         </aside>
@@ -73,7 +73,7 @@ export default function Properties(props) {
         <h1 className='text-2xl text-principal-gris py-2 bg-principal-1 w-screen text-center font-semibold'>
           Viviendas destacadas
         </h1>
-        <div className='cont-alquileres pt-2 justify-center flex flex-wrap w-full gap-5'>
+        <div className='cont-alquileres p-2 justify-center flex flex-wrap w-full gap-5'>
           {bestRatedProperties.length > 0 &&
             bestRatedProperties
               .slice(0, 3)

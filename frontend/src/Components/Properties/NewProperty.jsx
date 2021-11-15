@@ -265,8 +265,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   const description = watch('description');
 
   return (
-    <div className='overlay z-30 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
-      ´
+    <div className='overlay z-30 bg-white bg-opacity-75 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
       {Loader && (
         <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
           <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
@@ -285,7 +284,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
           setLoaderDiv={setLoader}
         />
       )}
-      <section className='pt-20 border-2 shadow-custom border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll  md:w-4/6'>
+      <section className='pt-20 filter drop-shadow-xl flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto  md:w-4/6'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -294,7 +293,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
         >
           <FaPlus className='transform scale-150 rotate-45' />
         </button>
-        <h1 className='title w-4/6 text-2xl sm:text-5xl text-center m-auto p-4 bg-principal-1  '>
+        <h1 className='title w-4/6 text-2xl sm:text-4xl text-center m-auto p-4 border-b-4 border-gray-600 '>
           Inmueble
         </h1>
         <div className='newProperty-card-container flex justify-around flex-col-reverse gap-10 '>
@@ -830,7 +829,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
               <input
                 type='submit'
                 value='AÑADIR'
-                className='btn-submit cursor-pointer text-xl bg-none p-2 font-medium text-principal-gris border-gray-700 border-2 h-2/4 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
+                className='btn-submit select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
               />
             </div>
           </form>

@@ -102,6 +102,7 @@ module.exports = {
         min: 'min-content',
         '60vh': '60vh',
         '30vh': '30vh',
+        '90%': '90%',
         custom: '100px',
       },
       backgroundColor: {
