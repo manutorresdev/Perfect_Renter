@@ -45,6 +45,8 @@ export default function ContactProperty({
   });
 
   useEffect(() => {
+    const controller = new AbortController();
+    // const signal = controller.signal;
     get(
       `http://localhost:4000/properties/${property.idProperty}/bookings`,
       (data) => {
@@ -53,8 +55,13 @@ export default function ContactProperty({
       (error) => {
         console.error(error);
       },
-      Token
+      Token,
+      controller
     );
+    return () => {
+      console.log(controller.signal);
+      controller.abort();
+    };
   }, [Token, property.idProperty]);
 
   // ARRAY FECHAS MANU

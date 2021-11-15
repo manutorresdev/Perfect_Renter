@@ -94,7 +94,7 @@ async function main() {
             address VARCHAR(100),
             zipCode VARCHAR(5),
             number INT,
-            type ENUM("duplex","casa","piso"),
+            type ENUM("dúplex","casa","piso"),
             stair VARCHAR(50),
             flat INT,
             gate VARCHAR(20),

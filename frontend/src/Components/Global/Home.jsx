@@ -167,6 +167,7 @@ export function RentersList() {
   const [Users, setUsers] = useState([]);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (Token) {
       get(
         'http://localhost:4000/users',
@@ -174,7 +175,8 @@ export function RentersList() {
           setUsers(data.users);
         },
         (error) => console.error(error),
-        Token
+        Token,
+        controller
       );
     } else {
       setUsers([
@@ -204,15 +206,9 @@ export function RentersList() {
         },
       ]);
     }
-
-    get(
-      'http://localhost:4000/users',
-      (data) => {
-        setUsers(data.users);
-      },
-      (error) => console.error(error),
-      Token
-    );
+    return () => {
+      controller.abort();
+    };
   }, [Token]);
   const buttonStyle =
     'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';

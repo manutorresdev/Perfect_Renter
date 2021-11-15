@@ -166,6 +166,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   }
 
   useEffect(() => {
+    const controller = new AbortController();
     get(
       'http://localhost:4000/properties/location',
       (data) => {
@@ -174,11 +175,17 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
       },
       (error) => {
         console.error(error);
-      }
+      },
+      null,
+      controller
     );
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (EditProperty) {
       get(
         `http://localhost:4000/properties/${EditProperty.idProperty}/photos`,
@@ -186,9 +193,17 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
           if (data.status === 'ok') {
             setPhotos(data.photos);
           }
-        }
+        },
+        (error) => {
+          console.error(error);
+        },
+        null,
+        controller
       );
     }
+    return () => {
+      controller.abort();
+    };
   }, [EditProperty]);
 
   function deletePhoto(name) {

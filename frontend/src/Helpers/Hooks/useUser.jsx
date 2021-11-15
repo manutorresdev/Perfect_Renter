@@ -7,6 +7,7 @@ export default function useUser() {
   const [User, setUser] = useState({});
 
   useEffect(() => {
+    const controller = new AbortController();
     if (token) {
       get(
         `http://localhost:4000/users/${parseJwt(token).idUser}`,
@@ -18,9 +19,13 @@ export default function useUser() {
           }
         },
         (error) => console.error(error),
-        token
+        token,
+        controller
       );
     }
+    return () => {
+      controller.abort();
+    };
   }, [token]);
 
   return [User, setUser];

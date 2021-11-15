@@ -24,6 +24,7 @@ export default function Property({
   });
 
   useEffect(() => {
+    const controller = new AbortController();
     get(
       `http://localhost:4000/properties/${property.idProperty}/photos`,
       (data) => {
@@ -36,8 +37,12 @@ export default function Property({
         }
       },
       (error) => console.log(error),
-      null
+      null,
+      controller
     );
+    return () => {
+      controller.abort();
+    };
   }, [property.idProperty, mountOn]);
 
   function capitalizeFirstLetter(string) {

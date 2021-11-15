@@ -20,15 +20,16 @@ export const post = (url, body, onSuccess, onError, token) => {
       }
       return data;
     })
-    .catch((e) => console.error(e));
+    .catch((e) => '');
 };
 
-export const get = (url, onSuccess, onError, token) => {
+export const get = (url, onSuccess, onError, token, controller) => {
   fetch(url, {
     method: 'GET',
     headers: {
       Authorization: token,
     },
+    signal: controller.signal,
   })
     .then((res) => {
       // console.log('Respuesta de api.js/fetch', res);
@@ -43,7 +44,7 @@ export const get = (url, onSuccess, onError, token) => {
       }
       return data;
     })
-    .catch((e) => console.error(e));
+    .catch((e) => '');
 };
 
 export const put = (url, body, onSuccess, onError, token) => {
@@ -69,7 +70,7 @@ export const put = (url, body, onSuccess, onError, token) => {
       }
       return data;
     })
-    .catch((e) => console.error(e));
+    .catch((e) => '');
 };
 
 export const del = (url, body, onSuccess, onError, token) => {
