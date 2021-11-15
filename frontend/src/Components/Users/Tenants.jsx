@@ -24,6 +24,9 @@ export default function UsersList(props) {
 
   // Necesario estar logueado
   useEffect(() => {
+    const controller = new AbortController();
+    const controllerSearch = new AbortController();
+    const controllerBookings = new AbortController();
     if (location.search) {
       get(
         `http://localhost:4000/users${location.search}`,
@@ -36,7 +39,8 @@ export default function UsersList(props) {
           }
         },
         (error) => console.error(error),
-        Token
+        Token,
+        controller
       );
     } else {
       get(
@@ -50,7 +54,8 @@ export default function UsersList(props) {
           }
         },
         (error) => console.error(error),
-        Token
+        Token,
+        controllerSearch
       );
       get(
         `http://localhost:4000/users/${parseJwt(Token).idUser}/bookings/renter`,
@@ -60,9 +65,15 @@ export default function UsersList(props) {
         (error) => {
           console.error(error);
         },
-        Token
+        Token,
+        controllerBookings
       );
     }
+    return () => {
+      controller.abort();
+      controllerSearch.abort();
+      controllerBookings.abort();
+    };
   }, [Token, location.search]);
 
   return (

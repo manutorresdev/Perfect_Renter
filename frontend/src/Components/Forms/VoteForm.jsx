@@ -31,6 +31,9 @@ export default function VoteForm({ setOverlay, info, Token }) {
     } else {
       setProperty(info.relation[0].idProperty);
     }
+    return () => {
+      setProperty('');
+    };
   }, [info]);
 
   function onSubmit(body, e) {

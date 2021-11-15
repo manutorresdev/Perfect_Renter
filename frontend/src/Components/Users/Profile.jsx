@@ -46,13 +46,17 @@ export default function Profile({ token, setToken }) {
   const [Votes, setVotes] = useState([]);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const controllerBookings = new AbortController();
+    const controllerVotes = new AbortController();
     get(
       `http://localhost:4000/users/${parseJwt(token).idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
       (error) => console.error(error),
-      token
+      token,
+      controller
     );
     if (User.idUser) {
       get(
@@ -63,7 +67,8 @@ export default function Profile({ token, setToken }) {
         (error) => {
           console.error(error);
         },
-        token
+        token,
+        controllerBookings
       );
       get(
         `http://localhost:4000/users/${User.idUser}/votes`,
@@ -75,9 +80,15 @@ export default function Profile({ token, setToken }) {
         (error) => {
           console.error(error);
         },
-        token
+        token,
+        controllerVotes
       );
     }
+    return () => {
+      controller.abort();
+      controllerBookings.abort();
+      controllerVotes.abort();
+    };
   }, [token, User.avatar, User.idUser]);
 
   function onSubmitDeleted(body, e) {

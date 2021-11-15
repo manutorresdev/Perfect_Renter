@@ -16,6 +16,9 @@ export default function UserProfile({ match }) {
   const [Votes, setVotes] = useState([]);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const controllerBookings = new AbortController();
+    const controllerVotes = new AbortController();
     get(
       `http://localhost:4000/users/${match.params.idUser}`,
       (data) => {
@@ -24,7 +27,8 @@ export default function UserProfile({ match }) {
       (error) => {
         console.error(error);
       },
-      Token
+      Token,
+      controller
     );
     get(
       `http://localhost:4000/users/${match.params.idUser}/bookings/renter`,
@@ -36,7 +40,8 @@ export default function UserProfile({ match }) {
       (error) => {
         console.error(error);
       },
-      Token
+      Token,
+      controllerBookings
     );
     get(
       `http://localhost:4000/users/${match.params.idUser}/votes`,
@@ -48,8 +53,14 @@ export default function UserProfile({ match }) {
       (error) => {
         console.error(error);
       },
-      Token
+      Token,
+      controllerVotes
     );
+    return () => {
+      controller.abort();
+      controllerBookings.abort();
+      controllerVotes.abort();
+    };
   }, [match.params.idUser, Token]);
 
   const propiedadUsuario = properties.filter(

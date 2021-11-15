@@ -6,6 +6,8 @@ export default function useProperties() {
   const [properties, setProperty] = useState([]);
   const location = useLocation();
   useEffect(() => {
+    const controller = new AbortController();
+    const controllerSearch = new AbortController();
     if (location.search) {
       get(
         `http://localhost:4000/properties${location.search}`,
@@ -16,7 +18,9 @@ export default function useProperties() {
             setProperty([]);
           }
         },
-        (error) => console.error(error)
+        (error) => console.error(error),
+        null,
+        controller
       );
     } else {
       get(
@@ -26,9 +30,15 @@ export default function useProperties() {
             setProperty(data.properties);
           }
         },
-        (error) => console.error(error)
+        (error) => console.error(error),
+        null,
+        controllerSearch
       );
     }
+    return () => {
+      controller.abort();
+      controllerSearch.abort();
+    };
   }, [location]);
 
   return [properties, setProperty];

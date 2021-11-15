@@ -11,6 +11,7 @@ export default function Properties(props) {
   const [bestRatedProperties, setBestRatedProperties] = useState([]);
 
   useEffect(() => {
+    const controller = new AbortController();
     get(
       `http://localhost:4000/properties?orden=valoraciones&direccion=DESC`,
       (data) => {
@@ -21,8 +22,12 @@ export default function Properties(props) {
         }
       },
       (error) => console.error(error),
-      null
+      null,
+      controller
     );
+    return () => {
+      controller.abort();
+    };
   }, []);
 
   return (

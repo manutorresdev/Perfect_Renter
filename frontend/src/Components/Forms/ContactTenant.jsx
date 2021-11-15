@@ -43,9 +43,12 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
       const newArray = Properties.filter((property) => {
         return property.idUser === parseJwt(Token).idUser;
       });
-
       setUserProperties(newArray);
     }
+
+    return () => {
+      setUserProperties([]);
+    };
   }, [Properties, Token]);
 
   // Styles

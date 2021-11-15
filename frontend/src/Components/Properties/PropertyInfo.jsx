@@ -43,6 +43,7 @@ export default function PropertyInfo(props) {
   }
 
   useEffect(() => {
+    const controller = new AbortController();
     get(
       `http://localhost:4000/properties/${Number(
         props.match.params.idProperty
@@ -51,8 +52,12 @@ export default function PropertyInfo(props) {
         setSlideImgs(data.photos);
       },
       (error) => console.log(error),
-      null
+      null,
+      controller
     );
+    return () => {
+      controller.abort();
+    };
   }, [props.match.params.idProperty]);
 
   useEffect(() => {

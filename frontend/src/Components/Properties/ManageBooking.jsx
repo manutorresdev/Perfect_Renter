@@ -9,6 +9,7 @@ export default function ManageBokking({ match }) {
   const [booking, setBooking] = useState({});
 
   function acceptBooking() {
+    const controller = new AbortController();
     get(
       `http://localhost:4000/properties/${match.params.bookingCode}/accept`,
       (data) => {
@@ -18,11 +19,13 @@ export default function ManageBokking({ match }) {
         console.error(error);
         setBooking(error);
       },
-      Token
+      Token,
+      controller
     );
   }
 
   function cancelBooking() {
+    const controller = new AbortController();
     get(
       `http://localhost:4000/properties/${match.params.bookingCode}/cancel`,
       (data) => {
@@ -31,7 +34,8 @@ export default function ManageBokking({ match }) {
       (error) => {
         setBooking(error);
       },
-      Token
+      Token,
+      controller
     );
   }
 
