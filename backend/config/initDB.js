@@ -94,7 +94,7 @@ async function main() {
             address VARCHAR(100),
             zipCode VARCHAR(5),
             number INT,
-            type ENUM("duplex","casa","piso"),
+            type ENUM("dúplex","casa","piso"),
             stair VARCHAR(50),
             flat INT,
             gate VARCHAR(20),
@@ -148,7 +148,7 @@ async function main() {
             modifiedAt DATETIME,
             startBookingDate DATE,
             endBookingDate DATE,
-            state ENUM("reservado", "alquilada", "finalizada", "peticion", "cancelada-renter", "cancelada-tenant") NOT NULL DEFAULT "peticion",
+            state ENUM("reservado", "alquilada", "finalizada", "petición", "cancelada-renter", "cancelada-tenant") NOT NULL DEFAULT "petición",
             bookingCode VARCHAR(20)
             )
     `);

@@ -37,7 +37,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
     e.preventDefault();
     if (body.voteValueRenter && body.commentary && Property) {
       post(
-        `http://192.168.5.103:4000/users/${info.idUser}/votes`,
+        `http://localhost:4000/users/${info.idUser}/votes`,
         CreateFormData({ ...body, idProperty: Property }),
         (data) => {
           setMessage(data.message);
@@ -87,7 +87,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
               className='w-60 h-60 object-cover rounded-circle'
               src={
                 info.avatar
-                  ? 'http://192.168.5.103:4000/photo/' + info.avatar
+                  ? 'http://localhost:4000/photo/' + info.avatar
                   : require('../../Images/defProfile.png').default
               }
               alt=''
@@ -226,7 +226,7 @@ function PropertiesToVote({
                         className='w-60 h-60 object-cover rounded-circle'
                         src={
                           info.avatar
-                            ? `http://192.168.5.103:4000/photo/${info.avatar}`
+                            ? `http://localhost:4000/photo/${info.avatar}`
                             : require('../../Images/defProfile.png').default
                         }
                         alt='imagen de perfil'

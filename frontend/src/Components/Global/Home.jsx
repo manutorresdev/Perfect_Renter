@@ -170,7 +170,7 @@ export function RentersList() {
   useEffect(() => {
     if (Token) {
       get(
-        'http://192.168.5.103:4000/users',
+        'http://localhost:4000/users',
         (data) => {
           setUsers(data.users);
         },
@@ -207,7 +207,7 @@ export function RentersList() {
     }
 
     get(
-      'http://192.168.5.103:4000/users',
+      'http://localhost:4000/users',
       (data) => {
         setUsers(data.users);
       },
@@ -270,8 +270,8 @@ export function Renter({ user, Token }) {
         className=' w-full h-48 object-cover '
         src={
           user.avatar
-            ? 'http://192.168.5.103:4000/photo/' + user.avatar
-            : 'http://192.168.5.103:4000/photo/fotoperfil7.jpg'
+            ? 'http://localhost:4000/photo/' + user.avatar
+            : 'http://localhost:4000/photo/fotoperfil7.jpg'
         }
         alt=''
       />
