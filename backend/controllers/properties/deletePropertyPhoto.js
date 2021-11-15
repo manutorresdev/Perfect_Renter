@@ -28,7 +28,7 @@ const deletePropertyPhoto = async (req, res, next) => {
 
     // Si la foto no existe, lanzamos un error
     if (photo.length < 1) {
-      const error = new Error('La foto no existe');
+      const error = new Error('La foto no existe.');
       error.httpStatus = 404;
       throw error;
     }
@@ -46,7 +46,7 @@ const deletePropertyPhoto = async (req, res, next) => {
 
     res.send({
       status: 'ok',
-      message: 'Foto eliminada',
+      message: 'Foto eliminada.',
     });
   } catch (error) {
     next(error);

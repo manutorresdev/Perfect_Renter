@@ -73,7 +73,7 @@ const newVote = async (req, res, next) => {
       if (votes[0].quantity > 0) {
         // Si no hay valor en el voto, lanzamos error
         if (!voteValue) {
-          const error = new Error('Faltan Campos');
+          const error = new Error('Faltan campos.');
           error.httpStatus = 400;
           throw error;
         }
@@ -108,7 +108,7 @@ const newVote = async (req, res, next) => {
       } else {
         // Si no hay valor en el voto, lanzamos error
         if (!voteValue) {
-          const error = new Error('Faltan Campos');
+          const error = new Error('Faltan campos.');
           error.httpStatus = 400;
           throw error;
         }
@@ -159,7 +159,7 @@ const newVote = async (req, res, next) => {
 
       // Comprobamos que el usuario que vota y el votado son diferentes
       if (Number(idUser) === idReqUser) {
-        const error = new Error('No te puedes votar a ti mismo.');
+        const error = new Error('No te puedes votar a tí mismo.');
         error.httpStatus = 403;
         throw error;
       }
@@ -184,7 +184,7 @@ const newVote = async (req, res, next) => {
       if (votes[0].quantity > 0) {
         // Si no hay voto, lanzamos error
         if (!voteValueRenter) {
-          const error = new Error('Faltan Campos');
+          const error = new Error('Faltan campos.');
           error.httpStatus = 400;
           throw error;
         }
@@ -221,7 +221,7 @@ const newVote = async (req, res, next) => {
 
         // Si no hay voto, lanzamos error
         if (!voteValueRenter) {
-          const error = new Error('Faltan Campos');
+          const error = new Error('Faltan campos.');
           error.httpStatus = 400;
           throw error;
         }

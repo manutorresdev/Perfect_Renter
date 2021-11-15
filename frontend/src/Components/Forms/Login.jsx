@@ -17,7 +17,7 @@ export default function Login() {
   // Enviar datos a backend
   function onSubmit(body) {
     post(
-      'http://192.168.5.103:4000/users/login',
+      'http://localhost:4000/users/login',
       CreateFormData(body),
       (data) => {
         setToken(data.token);
@@ -46,7 +46,7 @@ export default function Login() {
               required: 'Debes escribir un email.',
               maxLength: {
                 value: 200,
-                message: 'El email no puede contener más de 200 carácteres.',
+                message: 'El email no puede contener más de 200 caracteres.',
               },
             }}
             render={({ field: { onChange, name, ref } }) => {

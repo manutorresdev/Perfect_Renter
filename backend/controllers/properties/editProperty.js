@@ -93,7 +93,7 @@ const editProperty = async (req, res, next) => {
         try {
           photoName = await savePhoto(photo);
         } catch (_) {
-          const error = new Error('Formato incorrecto');
+          const error = new Error('Formato incorrecto.');
           error.httpStatus = 400;
           throw error;
         }

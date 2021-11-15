@@ -27,7 +27,7 @@ const propertyExist = async (req, res, next) => {
 
     // si la propiedad no existe enviamos error
     if (property.length < 1) {
-      const error = new Error('La vivienda no existe');
+      const error = new Error('La vivienda no existe.');
       error.httpStatus = 404;
       throw error;
     }

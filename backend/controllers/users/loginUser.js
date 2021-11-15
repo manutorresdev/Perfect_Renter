@@ -23,7 +23,7 @@ const loginUser = async (req, res, next) => {
 
     // Si falta algún dato lanzamos un error.
     if (!email || !password) {
-      const error = new Error('Faltan campos');
+      const error = new Error('Faltan campos.');
       error.httpStatus = 400;
       throw error;
     }
@@ -36,14 +36,14 @@ const loginUser = async (req, res, next) => {
 
     // Si el usuario no existe lanzamos un error.
     if (user.length < 1) {
-      const error = new Error('Email o contraseña incorrectos');
+      const error = new Error('Email o contraseña incorrectos.');
       error.httpStatus = 401;
       throw error;
     }
 
     // Si el usuario existe pero no está activo lanzamos un error.
     if (!user[0].renterActive) {
-      const error = new Error('Usuario pendiente de validar');
+      const error = new Error('Usuario pendiente de validar.');
       error.httpStatus = 401;
       throw error;
     }

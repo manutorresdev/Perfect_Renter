@@ -78,6 +78,7 @@ module.exports = {
         10: '10',
         20: '20',
       },
+
       gridTemplateColumns: {
         custom: 'repeat(2,minmax(0,350px))',
       },

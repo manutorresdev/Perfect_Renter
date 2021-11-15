@@ -21,7 +21,7 @@ const addPropertyPhoto = async (req, res, next) => {
 
     // Si no recibimos foto lanzamos error
     if (!req.files.photo) {
-      const error = new Error('No se ha encontrado el archivo');
+      const error = new Error('No se ha encontrado el archivo.');
       error.httpStatus = 400;
       throw error;
     }
@@ -45,7 +45,7 @@ const addPropertyPhoto = async (req, res, next) => {
       try {
         photoName = await savePhoto(photo);
       } catch (_) {
-        const error = new Error('Formato incorrecto');
+        const error = new Error('Formato incorrecto.');
         error.httpStatus = 400;
         throw error;
       }
@@ -59,7 +59,7 @@ const addPropertyPhoto = async (req, res, next) => {
     }
     res.send({
       status: 'ok',
-      message: 'Las fotos han sido subidas',
+      message: 'Las fotos han sido subidas.',
     });
   } catch (error) {
     next(error);

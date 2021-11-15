@@ -269,8 +269,10 @@ export function Renter({ user, Token }) {
     <div className={descBoxStyle + ` ${!Token && 'filter blur'}`}>
       <img
 
+
         className=' w-full h-48 object-cover '
         src={'http://192.168.5.103:4000/photo/' + user.avatar}
+
 
         alt=''
       />

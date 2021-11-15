@@ -66,6 +66,7 @@ export default function Property({
           EditProperty={property}
         />
       )}
+
       <article
         className={`
         ${
@@ -127,6 +128,7 @@ export default function Property({
             )}
           </Carousel>
         </div>
+
 
         <div className='sm:max-w-custom md:max-w-none'>
           <Link to={`/alquileres/${property.idProperty}`}>

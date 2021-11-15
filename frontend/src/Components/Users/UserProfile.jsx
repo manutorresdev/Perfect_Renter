@@ -70,7 +70,7 @@ export default function UserProfile({ match }) {
         <div className='perfil flex flex-col items-center justify-center'>
           <article className=' flex flex-col gap-5 items-center justic'>
             <img
-              className='w-2/4 rounded-full'
+              className='w-2/4 '
               src={
                 user.avatar
                   ? `http://localhost:4000/photo/${user.avatar}`
@@ -78,6 +78,7 @@ export default function UserProfile({ match }) {
               }
               alt='imagen de perfil'
             />
+
             <section className=''>
               <div className='bg-gray-Primary p-2 bg-opacity-25 text-3xl text-principal-1 flex justify-between'>
                 <h1>
@@ -192,7 +193,7 @@ export default function UserProfile({ match }) {
               })
             ) : (
               <h2 className='p-2'>
-                Este inquilino no ha estado no ha viajado aún.
+                Este inquilino no tiene historial de viviendas.
               </h2>
             )}
           </div>
@@ -237,7 +238,7 @@ export default function UserProfile({ match }) {
                 </Property>
               ))
             ) : (
-              <div className='font-medium p-2'>No hay ningún inmueble</div>
+              <div className='font-medium p-2'>No hay ningún inmueble.</div>
             )}
           </div>
         </section>
