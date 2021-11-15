@@ -18,7 +18,7 @@
 
 ## Tutorial de uso TESTS
 
--Para iniciar los tests tan solo debes utilizar el siguiente comando: 1. ``npm run tests`
+-Para iniciar los tests tan solo debes utilizar el siguiente comando: 1. `npm run tests`
 Y aparecerán todos los tests realizados en la app.
 Una vez hechos los test deberás meter las imágenes de la carpeta fotos en la carpeta static/uploads ya que los tests las elimina.
 
