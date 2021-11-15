@@ -27,3 +27,4 @@ node_modules
 docs
 static
 styleguide
+.i.html
