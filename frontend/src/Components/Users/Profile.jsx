@@ -15,7 +15,6 @@ import {
   FaPlus,
   FaPlusSquare,
   FaStar,
-  FaTrash,
   FaUser,
 } from 'react-icons/fa';
 import Register from '../Forms/Register';
@@ -48,7 +47,7 @@ export default function Profile({ token, setToken }) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/users/${parseJwt(token).idUser}`,
+      `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -57,7 +56,7 @@ export default function Profile({ token, setToken }) {
     );
     if (User.idUser) {
       get(
-        `http://localhost:4000/users/${User.idUser}/bookings`,
+        `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -67,7 +66,7 @@ export default function Profile({ token, setToken }) {
         token
       );
       get(
-        `http://localhost:4000/users/${User.idUser}/votes`,
+        `http://192.168.5.103:4000/users/${User.idUser}/votes`,
         (data) => {
           if (data.status === 'ok') {
             setVotes(data.Valoraciones);
@@ -83,7 +82,7 @@ export default function Profile({ token, setToken }) {
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://localhost:4000/users/${User.idUser}`,
+      `http://192.168.5.103:4000/users/${User.idUser}`,
       body,
       (data) => {
         setToken('');
@@ -122,6 +121,7 @@ export default function Profile({ token, setToken }) {
           userInfo={Overlay.info}
           usuario={User}
           Token={token}
+          onSubmitDeleted={onSubmitDeleted}
         />
       )}
       {Overlay.form === 'avatar' && (
@@ -163,7 +163,7 @@ export default function Profile({ token, setToken }) {
             className='w-full h-full rounded-full'
             src={
               User.avatar
-                ? `http://localhost:4000/photo/${User.avatar}`
+                ? `http://192.168.5.103:4000/photo/${User.avatar}`
                 : require('../../Images/defProfile.png').default
             }
             alt='perfil de usuario'
@@ -294,7 +294,7 @@ export default function Profile({ token, setToken }) {
                     className='w-14 h-14 rounded-full m-2'
                     src={
                       vote.avatar
-                        ? 'http://localhost:4000/photo/' + vote.avatar
+                        ? 'http://192.168.5.103:4000/photo/' + vote.avatar
                         : require('../../Images/defProfile.png').default
                     }
                     alt='imagen de perfil'
@@ -331,21 +331,6 @@ export default function Profile({ token, setToken }) {
           )}
         </div>
       </section>
-      <div className='flex justify-center sm:justify-end sm:pr-2'>
-        <button
-          className='py-4 px-2 my-5 rounded-full text-principal-1 bg-gray-Primary flex items-center justify-around'
-          onClick={() => {
-            setOverlay({
-              form: 'deleteAccount',
-              shown: true,
-              onSubmitDeleted: onSubmitDeleted,
-            });
-          }}
-        >
-          <FaTrash className='text-principal-1 hover:text-red-500 w-8' />{' '}
-          <span className=''>Eliminar cuenta</span>
-        </button>
-      </div>
     </article>
   );
 }
@@ -372,7 +357,7 @@ function Delete({ setOverlay, Overlay, usuario }) {
 
   function onSubmit(body) {
     post(
-      'http://localhost:4000/users/login',
+      'http://192.168.5.103:4000/users/login',
       CreateFormData(body),
       (data) => {
         data.status === 'ok' && setCanDelete(true);
@@ -388,7 +373,8 @@ function Delete({ setOverlay, Overlay, usuario }) {
       <section className='delete p-4 filter drop-shadow-xl  flex flex-col items-center gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             setOverlay({ shown: false, info: {} });
           }}
         >
@@ -539,7 +525,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
                     }
                     src={
                       booking.photo
-                        ? 'http://localhost:4000/photo/' + booking.photo
+                        ? 'http://192.168.5.103:4000/photo/' + booking.photo
                         : require('../../Images/defPicture.jpg').default
                     }
                     alt='alquiler'
@@ -584,7 +570,7 @@ function CancelBooking({ setOverlay, info, Token }) {
 
   function Confirm(bookingCode) {
     get(
-      `http://localhost:4000/properties/${bookingCode}/cancel`,
+      `http://192.168.5.103:4000/properties/${bookingCode}/cancel`,
       (data) => {
         setMessage(data.message);
         setOverlay({ shown: false, info: {}, form: '' });
@@ -710,7 +696,7 @@ function EditBooking({ setOverlay, info, Token }) {
           email: info.email,
         };
         put(
-          `http://localhost:4000/properties/${info.idProperty}/${bookingCode}`,
+          `http://192.168.5.103:4000/properties/${info.idProperty}/${bookingCode}`,
           CreateFormData(body),
           (data) => {
             if (data.status === 'ok') {

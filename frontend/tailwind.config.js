@@ -103,6 +103,7 @@ module.exports = {
         '60vh': '60vh',
         '30vh': '30vh',
         '90%': '90%',
+        '95%': '95%',
         custom: '100px',
       },
       backgroundColor: {
@@ -120,6 +121,10 @@ module.exports = {
       },
       outline: {
         contrast: ['1px solid #000000', '0px'],
+      },
+      top: {
+        '9,5': '2.35rem',
+        '9,8': '2.38rem',
       },
     },
   },

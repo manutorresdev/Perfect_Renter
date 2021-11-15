@@ -111,12 +111,12 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   function onSubmitProperty(body, e) {
     setLoader(true);
     post(
-      'http://localhost:4000/properties',
+      'http://192.168.5.103:4000/properties',
       CreateFormData(body),
       (data) => {
         if (PhotosOnUpload) {
           put(
-            `http://localhost:4000/properties/${data.property}`,
+            `http://192.168.5.103:4000/properties/${data.property}`,
             CreateFormDataMultipleFiles({
               photos: PhotosOnUpload,
             }),
@@ -150,12 +150,14 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
     e.preventDefault();
 
     put(
-      `http://localhost:4000/properties/${EditProperty.idProperty}`,
+      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess');
         alert(data.message);
-        /*  window.location.reload(); */
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       },
       (error) => {
         setError(error.message);
@@ -166,7 +168,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   useEffect(() => {
     get(
-      'http://localhost:4000/properties/location',
+      'http://192.168.5.103:4000/properties/location',
       (data) => {
         setProvinces(data.provinces);
         setCities(data.cities);
@@ -180,7 +182,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   useEffect(() => {
     if (EditProperty) {
       get(
-        `http://localhost:4000/properties/${EditProperty.idProperty}/photos`,
+        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos`,
         (data) => {
           if (data.status === 'ok') {
             setPhotos(data.photos);
@@ -193,7 +195,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   function deletePhoto(name) {
     if (EditProperty) {
       del(
-        `http://localhost:4000/properties/${EditProperty.idProperty}/photos/${name}`,
+        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos/${name}`,
         null,
         (data) => {
           if (data.status === 'ok') {
@@ -583,6 +585,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
               <input
                 type='text'
                 name='zipCode'
+                maxLength={5}
                 className={inpStyle}
                 placeholder='Código Postal'
                 ref={(e) => {
@@ -727,7 +730,9 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                             <FaPlus className='transform rotate-45' />
                           </button>
                           <img
-                            src={'http://localhost:4000/photo/' + photo.name}
+                            src={
+                              'http://192.168.5.103:4000/photo/' + photo.name
+                            }
                             alt='prueba'
                             className='w-20 h-20 object-cover'
                           />

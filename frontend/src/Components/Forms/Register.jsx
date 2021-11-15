@@ -12,6 +12,7 @@ import {
   FaPlus,
   FaRegAddressCard,
   FaRegCalendarAlt,
+  FaTrash,
   FaUserAlt,
 } from 'react-icons/fa';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -19,7 +20,12 @@ import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { Box } from '@mui/system';
 import { format } from 'date-fns';
 
-export default function Register({ Token, usuario, setOverlay }) {
+export default function Register({
+  Token,
+  usuario,
+  setOverlay,
+  onSubmitDeleted,
+}) {
   const {
     register,
     handleSubmit,
@@ -68,7 +74,7 @@ export default function Register({ Token, usuario, setOverlay }) {
       setError('Debes ser mayor de edad.');
     } else {
       post(
-        'http://localhost:4000/users',
+        'http://192.168.5.103:4000/users',
         CreateFormData(body),
         (data) => {
           console.log('Success');
@@ -88,7 +94,7 @@ export default function Register({ Token, usuario, setOverlay }) {
   function onSubmitEdited(body, e) {
     e.preventDefault();
     put(
-      `http://localhost:4000/users/${usuario.idUser}`,
+      `http://192.168.5.103:4000/users/${usuario.idUser}`,
       CreateFormData(body),
       (data) => {
         console.log('Success');
@@ -405,6 +411,23 @@ export default function Register({ Token, usuario, setOverlay }) {
             value={Token ? 'Guardar' : 'Registrar'}
           />
         </form>
+        {Token && (
+          <div className='flex justify-center sm:justify-end sm:pr-2'>
+            <button
+              className='py-4 px-2 my-5 text-principal-1 bg-gray-Primary flex items-center justify-around hover:bg-principal-1 hover:text-principal-gris duration-300 border border-yellow-300'
+              onClick={() => {
+                setOverlay({
+                  form: 'deleteAccount',
+                  shown: true,
+                  onSubmitDeleted: onSubmitDeleted,
+                });
+              }}
+            >
+              <FaTrash className='hover:text-red-500 w-8' />{' '}
+              <span className=''>Eliminar cuenta</span>
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );

@@ -25,7 +25,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
   function onSubmit(body, e) {
     e.preventDefault();
     post(
-      `http://localhost:4000/users/${info.idUser}/contact`,
+      `http://192.168.5.103:4000/users/${info.idUser}/contact`,
       CreateFormData(body),
       (data) => {
         alert(data.message);
@@ -50,12 +50,14 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
 
   // Styles
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+    'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   const comentarios = watch('comentarios');
+  const buttonStyle =
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   return (
-    <div className='overlay z-30 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
-      <section className='contact drop-shadow-2xl filter pt-2 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-scroll md:w-3/4'>
+    <div className='overlay z-30 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 overscroll-scroll sm:overflow-hidden'>
+      <section className='contact drop-shadow-2xl filter pt-2 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto sm:w-3/4 w-11/12'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -67,7 +69,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
         <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
           Contacto
         </h1>
-        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
+        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 lg:flex-row '>
           <form
             className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'
             onSubmit={handleSubmit(onSubmit)}
@@ -179,10 +181,10 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
               />
             </label>
             {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
-            <label className='relative w-min'>
+            <label className='relative'>
               <div className='select-none'>Comentarios</div>
               <textarea
-                className={`${inpStyle} resize-none w-80`}
+                className={`${inpStyle} resize-none`}
                 name='comentarios'
                 id='comentarios'
                 cols='30'
@@ -204,11 +206,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
               <p className='text-red-500'>{errors.comentarios.message}</p>
             )}
 
-            <input
-              className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
-              type='submit'
-              value='Contactar'
-            />
+            <input className={buttonStyle} type='submit' value='Contactar' />
           </form>
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
@@ -216,7 +214,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
               className='w-60 h-60 object-cover rounded-circle'
               src={
                 info.avatar
-                  ? `http://localhost:4000/photo/${info.avatar}`
+                  ? `http://192.168.5.103:4000/photo/${info.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt='imagen de perfil'

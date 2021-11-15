@@ -57,7 +57,7 @@ export default function FileProperty({
     });
     console.log(photos[0]);
     put(
-      `http://localhost:4000/properties/${editProperty}`,
+      `http://192.168.5.103:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),
       (data) => {
         if (data.status === 'ok') {
@@ -91,7 +91,7 @@ export default function FileProperty({
           <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
         </div>
       )}
-      <section className=' pt-2 filter drop-shadow-xl  flex flex-col items-center gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4'>
+      <section className=' pt-2 filter drop-shadow-xl  flex flex-col items-center gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4 max-w-3xl'>
         <button
           className='close-overlay absolute top-3 right-3'
           onClick={() => {
@@ -103,7 +103,7 @@ export default function FileProperty({
         <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
           Añade las fotos de tu inmueble
         </h1>
-        <div className='contact-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
+        <div className='file-uploader-container flex justify-around flex-col-reverse gap-10 sm:flex-row sm:w-11/12'>
           <form
             onSubmit={
               editProperty ? handleSubmit(editFile) : handleSubmit(uploadFile)
@@ -122,10 +122,10 @@ export default function FileProperty({
                 Selecciona los archivos
               </button>
 
-              <div className='photo-cont flex flex-col gap-2 justify-center'>
+              <div className='photo-cont flex flex-col gap-2 justify-center sm:justify-start w-full'>
                 {photos && (
                   <div className='uploaded-photos-cont flex flex-col gap-1'>
-                    <span className='border-b-2 border-gray-600 w-1/2 mb-2'>
+                    <span className='border-b-2 border-gray-600 w-1/2 sm:w- mb-2'>
                       Fotos subidas:
                     </span>
                     <div className='flex flex-wrap gap-2 justify-center'>
@@ -144,7 +144,9 @@ export default function FileProperty({
                               <FaPlus className='transform rotate-45' />
                             </button>
                             <img
-                              src={'http://localhost:4000/photo/' + photo.name}
+                              src={
+                                'http://192.168.5.103:4000/photo/' + photo.name
+                              }
                               alt='prueba'
                               className='w-20 h-20 object-cover'
                             />
@@ -156,7 +158,7 @@ export default function FileProperty({
                 )}
                 {FileName ? (
                   <div className='flex flex-col gap-1'>
-                    <span className='border-b-2 border-gray-600 w-1/2 mb-2'>
+                    <span className='border-b-2 border-gray-600 w-1/2 sm:w- mb-2'>
                       Fotos seleccionadas:
                     </span>
                     <div className='selected-photos-cont flex flex-wrap gap-2 justify-center'>

@@ -25,7 +25,7 @@ export default function Property({
 
   useEffect(() => {
     get(
-      `http://localhost:4000/properties/${property.idProperty}/photos`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}/photos`,
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
           setSlideImgs(data.photos.slice(0, 5));
@@ -46,7 +46,7 @@ export default function Property({
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://localhost:4000/properties/${property.idProperty}`,
+      `http://192.168.5.103:4000/properties/${property.idProperty}`,
       body,
       (data) => {
         alert(data.message);
@@ -73,7 +73,7 @@ export default function Property({
           mountOn === 'home'
             ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
             : `cont-vivienda overflow-hidden  relative max-w-xs filter drop-shadow-lg sm:max-w-xs bg-white sm:w-auto min-w-min ${
-                mountOn === 'profile' ? 'pb-10 lg:h-90%' : 'h-100  '
+                mountOn === 'profile' ? 'pb-10 lg:h-95%' : 'h-100  '
               } w-full my-5  text-gray-400 hover:text-gray-900 duration-300`
         }
         `}
@@ -114,7 +114,7 @@ export default function Property({
                   <img
                     key={i}
                     className='object-cover w-full h-48'
-                    src={'http://localhost:4000/photo/' + img.name}
+                    src={'http://192.168.5.103:4000/photo/' + img.name}
                     alt='default'
                   />
                 );
@@ -128,7 +128,6 @@ export default function Property({
             )}
           </Carousel>
         </div>
-
 
         <div className='sm:max-w-custom md:max-w-none'>
           <Link to={`/alquileres/${property.idProperty}`}>

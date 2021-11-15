@@ -17,7 +17,7 @@ export default function UserProfile({ match }) {
 
   useEffect(() => {
     get(
-      `http://localhost:4000/users/${match.params.idUser}`,
+      `http://192.168.5.103:4000/users/${match.params.idUser}`,
       (data) => {
         setUser(data.userInfo);
       },
@@ -27,7 +27,7 @@ export default function UserProfile({ match }) {
       Token
     );
     get(
-      `http://localhost:4000/users/${match.params.idUser}/bookings/renter`,
+      `http://192.168.5.103:4000/users/${match.params.idUser}/bookings/renter`,
       (data) => {
         if (data.status === 'ok') {
           setBookings(data.bookings);
@@ -39,7 +39,7 @@ export default function UserProfile({ match }) {
       Token
     );
     get(
-      `http://localhost:4000/users/${match.params.idUser}/votes`,
+      `http://192.168.5.103:4000/users/${match.params.idUser}/votes`,
       (data) => {
         if (data.status === 'ok') {
           setVotes(data.Valoraciones);
@@ -56,6 +56,8 @@ export default function UserProfile({ match }) {
   const propiedadUsuario = properties.filter(
     (property) => property.idUser === user.idUser
   );
+  const buttonStyle =
+    'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   return (
     <>
@@ -66,14 +68,14 @@ export default function UserProfile({ match }) {
           Token={Token}
         />
       )}
-      <main className='pb-28 py-20 flex flex-col items-center justify-center max-w-5xl m-auto'>
+      <main className='pb-32 py-20 flex flex-col items-center justify-center max-w-5xl m-auto'>
         <div className='perfil flex flex-col items-center justify-center'>
           <article className=' flex flex-col gap-5 items-center justify-center'>
             <img
               className=' w-60 h-60 object-cover rounded-circle'
               src={
                 user.avatar
-                  ? `http://localhost:4000/photo/${user.avatar}`
+                  ? `http://192.168.5.103:4000/photo/${user.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt='imagen de perfil'
@@ -127,7 +129,7 @@ export default function UserProfile({ match }) {
                 return (
                   <span key={booking.idBooking} className='max-w-xs'>
                     <article
-                      className={`animate-fadeIn shadow-custom h-1/3 max-w-xs flex flex-col items-start justify-between
+                      className={`animate-fadeIn filter drop-shadow-xl h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
                 lg:flex-row lg:max-w-md lg:w-full`}
                     >
@@ -162,7 +164,8 @@ export default function UserProfile({ match }) {
                           className='flex-grow object-cover w-full h-full'
                           src={
                             booking.photo
-                              ? 'http://localhost:4000/photo/' + booking.photo
+                              ? 'http://192.168.5.103:4000/photo/' +
+                                booking.photo
                               : require('../../Images/defPicture.jpg').default
                           }
                           alt='alquiler'
@@ -243,7 +246,7 @@ export default function UserProfile({ match }) {
           </div>
         </section>
 
-        <section className='w-full'>
+        <section className='w-full pb-20'>
           <h2 className='text-2xl border-b border-gray-200 text-principal-gris bg-principal-1 w-full p-1 font-semibold'>
             Opiniones
           </h2>
@@ -260,7 +263,7 @@ export default function UserProfile({ match }) {
                       className='w-14 h-14 rounded-full m-2'
                       src={
                         vote.avatar
-                          ? 'http://localhost:4000/photo/' + vote.avatar
+                          ? 'http://192.168.5.103:4000/photo/' + vote.avatar
                           : require('../../Images/defProfile.png').default
                       }
                       alt='imagen de perfil'
@@ -299,7 +302,7 @@ export default function UserProfile({ match }) {
         </section>
 
         <button
-          className='my-10 select-none text-center p-3 border border-gray-400 text-principal-1 bg-gray-Primary hover:bg-principal-1-hover hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+          className={buttonStyle + ''}
           onClick={() => {
             setOverlay({ shown: true, info: user, form: 'contact' });
           }}

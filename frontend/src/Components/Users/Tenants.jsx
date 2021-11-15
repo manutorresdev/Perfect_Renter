@@ -26,7 +26,7 @@ export default function UsersList(props) {
   useEffect(() => {
     if (location.search) {
       get(
-        `http://localhost:4000/users${location.search}`,
+        `http://192.168.5.103:4000/users${location.search}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -40,7 +40,7 @@ export default function UsersList(props) {
       );
     } else {
       get(
-        'http://localhost:4000/users',
+        'http://192.168.5.103:4000/users',
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users);
@@ -53,7 +53,9 @@ export default function UsersList(props) {
         Token
       );
       get(
-        `http://localhost:4000/users/${parseJwt(Token).idUser}/bookings/renter`,
+        `http://192.168.5.103:4000/users/${
+          parseJwt(Token).idUser
+        }/bookings/renter`,
         (data) => {
           setBookings(data.bookings);
         },
@@ -167,7 +169,7 @@ function Filters({ setOverlay, Overlay }) {
 
   const inputsLabelStyle = 'text-lg duration-200';
   const inputStyle =
-    'bg-black bg-opacity-70 w-48 px-2 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
+    'bg-black bg-opacity-70 w-48 p-3 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
   return (
     <div
       className={`transform ${

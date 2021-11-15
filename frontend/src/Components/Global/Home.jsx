@@ -170,7 +170,7 @@ export function RentersList() {
   useEffect(() => {
     if (Token) {
       get(
-        'http://localhost:4000/users',
+        'http://192.168.5.103:4000/users',
         (data) => {
           setUsers(data.users);
         },
@@ -207,7 +207,7 @@ export function RentersList() {
     }
 
     get(
-      'http://localhost:4000/users',
+      'http://192.168.5.103:4000/users',
       (data) => {
         setUsers(data.users);
       },
@@ -268,7 +268,11 @@ export function Renter({ user, Token }) {
     <div className={descBoxStyle + ` ${!Token && 'filter blur'}`}>
       <img
         className=' w-full h-48 object-cover '
-        src={'http://localhost:4000/photo/' + user.avatar}
+        src={
+          user.avatar
+            ? 'http://192.168.5.103:4000/photo/' + user.avatar
+            : 'http://192.168.5.103:4000/photo/fotoperfil7.jpg'
+        }
         alt=''
       />
 
