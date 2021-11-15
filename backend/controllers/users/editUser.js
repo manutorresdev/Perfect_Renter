@@ -40,7 +40,7 @@ const editUser = async (req, res, next) => {
 
     // Lanzamos un error en caso de que no seamos dueños de este usuario.
     if (Number(idUser) !== idReqUser) {
-      const error = new Error('No tienes permisos para editar este usuario');
+      const error = new Error('No tienes permisos para editar este usuario.');
       error.httpStatus = 403;
       throw error;
     }
@@ -55,7 +55,7 @@ const editUser = async (req, res, next) => {
       !birthDate &&
       !(req.files && req.files.avatar)
     ) {
-      const error = new Error('Faltan campos');
+      const error = new Error('Faltan campos.');
       error.httpStatus = 400;
       throw error;
     }
@@ -147,7 +147,7 @@ const editUser = async (req, res, next) => {
         // Si el email ya existe lanzamos un error.
         if (existingEmail.length > 0) {
           const error = new Error(
-            'Ya existe un usuario con ese email en la base de datos'
+            'Ya existe un usuario con ese email en la base de datos.'
           );
           error.httpStatus = 409;
           throw error;
@@ -187,12 +187,12 @@ const editUser = async (req, res, next) => {
           if (process.env.NODE_ENV !== 'test') {
             await sendMail({
               to: email,
-              subject: 'Activa tu usuario de Perfect Renter',
+              subject: 'Activa tu usuario de Perfect Renter.',
               body: emailBody,
             });
           }
         } catch (error) {
-          throw new Error('Error enviando el mensaje de verificación');
+          throw new Error('Error enviando el mensaje de verificación.');
         }
 
         // Actualizamos el usuario en la base de datos junto al código de registro.
@@ -300,7 +300,7 @@ const editUser = async (req, res, next) => {
     }
     res.send({
       status: 'ok',
-      message: 'Datos de usuario actualizados',
+      message: 'Datos de usuario actualizados.',
     });
   } catch (error) {
     next(error);

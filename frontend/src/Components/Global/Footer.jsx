@@ -77,7 +77,7 @@ export default function Footer({
         </ul>
       </div>
       <div className=' redes sociales flex flex-col gap-2 col-start-8 sm:col-start-9'>
-        <h3>Siguenos en:</h3>
+        <h3>Síguenos en:</h3>
         <div className='flex gap-2 text-white'>
           <a
             rel='noreferrer'

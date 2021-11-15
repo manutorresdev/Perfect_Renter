@@ -193,7 +193,7 @@ export default function UserProfile({ match }) {
               })
             ) : (
               <h2 className='p-2'>
-                Este inquilino no ha estado no ha viajado aún.
+                Este inquilino no tiene historial de viviendas.
               </h2>
             )}
           </div>
@@ -238,7 +238,7 @@ export default function UserProfile({ match }) {
                 </Property>
               ))
             ) : (
-              <div className='font-medium p-2'>No hay ningún inmueble</div>
+              <div className='font-medium p-2'>No hay ningún inmueble.</div>
             )}
           </div>
         </section>

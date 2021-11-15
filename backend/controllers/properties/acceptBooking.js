@@ -90,7 +90,7 @@ const acceptBooking = async (req, res, next) => {
     <tbody>
     <td>
     Hola ${booking[0].TenantName},
-    !la reserva de la vivienda de ${booking[0].city} ha sido realizada!
+    !La reserva de la vivienda de ${booking[0].city} ha sido realizada!
     </td>
     <td>
     <b>¿Preparado para viajar?</b>

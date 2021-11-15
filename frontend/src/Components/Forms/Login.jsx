@@ -46,7 +46,7 @@ export default function Login() {
               required: 'Debes escribir un email.',
               maxLength: {
                 value: 200,
-                message: 'El email no puede contener más de 200 carácteres.',
+                message: 'El email no puede contener más de 200 caracteres.',
               },
             }}
             render={({ field: { onChange, name, ref } }) => {
