@@ -111,12 +111,12 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   function onSubmitProperty(body, e) {
     setLoader(true);
     post(
-      'http://192.168.5.103:4000/properties',
+      'http://localhost:4000/properties',
       CreateFormData(body),
       (data) => {
         if (PhotosOnUpload) {
           put(
-            `http://192.168.5.103:4000/properties/${data.property}`,
+            `http://localhost:4000/properties/${data.property}`,
             CreateFormDataMultipleFiles({
               photos: PhotosOnUpload,
             }),
@@ -149,7 +149,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   function onSubmitEdited(body, e) {
     e.preventDefault();
     put(
-      `http://192.168.5.103:4000/properties/${EditProperty.idProperty}`,
+      `http://localhost:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess');
@@ -167,7 +167,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   useEffect(() => {
     get(
-      'http://192.168.5.103:4000/properties/location',
+      'http://localhost:4000/properties/location',
       (data) => {
         setProvinces(data.provinces);
         setCities(data.cities);
@@ -181,7 +181,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   useEffect(() => {
     if (EditProperty) {
       get(
-        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos`,
+        `http://localhost:4000/properties/${EditProperty.idProperty}/photos`,
         (data) => {
           if (data.status === 'ok') {
             setPhotos(data.photos);
@@ -194,7 +194,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   function deletePhoto(name) {
     if (EditProperty) {
       del(
-        `http://192.168.5.103:4000/properties/${EditProperty.idProperty}/photos/${name}`,
+        `http://localhost:4000/properties/${EditProperty.idProperty}/photos/${name}`,
         null,
         (data) => {
           if (data.status === 'ok') {
@@ -724,9 +724,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
                             <FaPlus className='transform rotate-45' />
                           </button>
                           <img
-                            src={
-                              'http://192.168.5.103:4000/photo/' + photo.name
-                            }
+                            src={'http://localhost:4000/photo/' + photo.name}
                             alt='prueba'
                             className='w-20 h-20 object-cover'
                           />

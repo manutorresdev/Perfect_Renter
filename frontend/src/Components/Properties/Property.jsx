@@ -25,7 +25,7 @@ export default function Property({
 
   useEffect(() => {
     get(
-      `http://192.168.5.103:4000/properties/${property.idProperty}/photos`,
+      `http://localhost:4000/properties/${property.idProperty}/photos`,
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
           setSlideImgs(data.photos.slice(0, 5));
@@ -46,7 +46,7 @@ export default function Property({
 
   function onSubmitDeleted(body, e) {
     del(
-      `http://192.168.5.103:4000/properties/${property.idProperty}`,
+      `http://localhost:4000/properties/${property.idProperty}`,
       body,
       (data) => {
         alert(data.message);
@@ -114,7 +114,7 @@ export default function Property({
                   <img
                     key={i}
                     className='object-cover w-full h-48'
-                    src={'http://192.168.5.103:4000/photo/' + img.name}
+                    src={'http://localhost:4000/photo/' + img.name}
                     alt='default'
                   />
                 );
