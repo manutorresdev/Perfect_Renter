@@ -83,11 +83,13 @@ export default function VoteForm({ setOverlay, info, Token }) {
         </h1>
         <div className='perfil flex flex-col items-center justify-center'>
           <img
-            className='w-2/4'
+            className='w-60 h-60 object-cover rounded-circle'
             src={
-              info.avatar ? '' : require('../../Images/defProfile.png').default
+              info.avatar
+                ? `http://localhost:4000/photo/${info.avatar}`
+                : require('../../Images/defProfile.png').default
             }
-            alt=''
+            alt='imagen de perfil'
           />
           <div className='nombre w-5/6 bg-gray-Primary text-principal-1 text-center'>
             {info.name} {info.lastName}
@@ -219,9 +221,13 @@ function PropertiesToVote({
                     <div className='border-r-2 border-opacity-75 border-gray-700'></div>
                     <div className='w-4/12 relative flex flex-col justify-between'>
                       <img
-                        className='object-cover flex-grow'
-                        src={require('../../Images/defPicture.jpg').default}
-                        alt=''
+                        className='w-60 h-60 object-cover rounded-circle'
+                        src={
+                          info.avatar
+                            ? `http://localhost:4000/photo/${info.avatar}`
+                            : require('../../Images/defProfile.png').default
+                        }
+                        alt='imagen de perfil'
                       />
                     </div>
                   </article>

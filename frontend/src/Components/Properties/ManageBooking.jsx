@@ -4,7 +4,7 @@ import { get } from '../../Helpers/Api';
 import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
 import Login from '../Forms/Login';
 
-export default function ManageBooking({ match }) {
+export default function ManageBokking({ match }) {
   const [Token] = useContext(TokenContext);
   const [booking, setBooking] = useState({});
 
@@ -143,9 +143,11 @@ export default function ManageBooking({ match }) {
     /**Si no esta validado mostramos el componente login y al entrar vuelve a la misma url de accept o cancel */
     return (
       <>
-        <div className='z-10 bg-white bg-opacity-0 pt- 12 justify-center fixed w-full h-60vh left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
-          <section className='contact bg-white h-min py-5 filter drop-shadow-xl mt-96 flex flex-col gap-5 justify-center relative items-center'>
-            <h2>Debes iniciar sessión para administrar tu reserva...</h2>
+        <div className='z-10 bg-white bg-opacity-0 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
+          <section className='contact text-principal-gris p-8 filter drop-shadow-xl flex flex-col gap-5  bg-white relative'>
+            <h2 className='pt-4  text-center'>
+              Debes iniciar sessión para administrar tu reserva...
+            </h2>
             <Login />
           </section>
         </div>

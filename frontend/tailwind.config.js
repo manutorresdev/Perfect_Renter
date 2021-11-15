@@ -110,6 +110,9 @@ module.exports = {
         'principal-1': 'rgba(237,203,84,1)',
         'principal-1-hover': 'rgba(237, 204, 84, 0.73)',
       },
+      borderRadius: {
+        circle: '50%',
+      },
       boxShadow: {
         perfil: 'rgba(0, 0, 0, 0.25) 0px 25px 50px -12px',
         custom:

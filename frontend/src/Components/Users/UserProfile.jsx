@@ -68,9 +68,9 @@ export default function UserProfile({ match }) {
       )}
       <main className='pb-28 py-20 flex flex-col items-center justify-center max-w-5xl m-auto'>
         <div className='perfil flex flex-col items-center justify-center'>
-          <article className=' flex flex-col gap-5 items-center justic'>
+          <article className=' flex flex-col gap-5 items-center justify-center'>
             <img
-              className='w-2/4 '
+              className=' w-60 h-60 object-cover rounded-circle'
               src={
                 user.avatar
                   ? `http://localhost:4000/photo/${user.avatar}`

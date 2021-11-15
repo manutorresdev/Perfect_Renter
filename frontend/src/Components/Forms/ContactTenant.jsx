@@ -213,7 +213,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
 
           <div className='perfil w-full self-center flex flex-col items-center justify-center'>
             <img
-              className='w-2/4 rounded-full'
+              className='w-60 h-60 object-cover rounded-circle'
               src={
                 info.avatar
                   ? `http://localhost:4000/photo/${info.avatar}`

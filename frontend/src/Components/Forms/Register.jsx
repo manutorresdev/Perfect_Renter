@@ -109,7 +109,7 @@ export default function Register({ Token, usuario, setOverlay }) {
 
   const registerComponentStyle = Token
     ? 'overlay z-20 bg-white bg-opacity-75 fixed w-full h-full min-h-full h-96 left-0 top-0 flex flex-col items-center pt-20 pb-10 overflow-auto sm:overflow-hidden'
-    : 'bg-gray-200 bg-opacity-50';
+    : 'bg-white bg-opacity-50';
   const bio = watch('bio');
   return (
     <div className={registerComponentStyle}>
@@ -117,7 +117,7 @@ export default function Register({ Token, usuario, setOverlay }) {
         className={
           Token
             ? 'w-4/5 max-w-xl items-center p-4 pt-14 flex flex-col gap-5 mt-2 filter drop-shadow-xl bg-white text-principal-gris overflow-y-auto relative'
-            : 'pt-24 pb-32 flex flex-col items-center gap-5 p-2 '
+            : 'pt-24 pb-32 flex flex-col items-center gap-5 p-2 text-principal-gris '
         }
       >
         {Token && (
@@ -143,7 +143,7 @@ export default function Register({ Token, usuario, setOverlay }) {
         >
           {!Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800'>
+              <div className='p-2 rounded-full border-2 border-gray-600'>
                 <FaUserAlt className='text-principal-1' />
               </div>
               Datos de ingreso:
@@ -151,7 +151,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
               Email:
             </h3>
           )}
@@ -183,7 +183,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           {!Token && <Password {...formFunctions} />}
           {!Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800'>
+              <div className='p-2 rounded-full border-2 border-gray-600'>
                 <FaRegAddressCard className='text-principal-1' />
               </div>
               Información personal:
@@ -191,7 +191,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
               Nombre:
             </h3>
           )}
@@ -230,7 +230,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           {errors.name && <p className='text-red-500'>{errors.name.message}</p>}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
               Apellidos:
             </h3>
           )}
@@ -262,7 +262,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
               Ciudad:
             </h3>
           )}
@@ -288,7 +288,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           {errors.city && <p className='text-red-500'>{errors.city.message}</p>}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
               Teléfono:
             </h3>
           )}
@@ -307,7 +307,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
           {!Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800'>
+              <div className='p-2 rounded-full border-2 border-gray-600'>
                 <FaBookOpen className='text-principal-1' />
               </div>
               Cuéntanos algo sobre ti:
@@ -315,7 +315,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
               Biografía:
             </h3>
           )}
@@ -347,7 +347,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           </div>
           {!Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800'>
+              <div className='p-2 rounded-full border-2 border-gray-600'>
                 <FaRegCalendarAlt className='text-principal-1' />
               </div>
               Fecha de nacimiento:
@@ -355,7 +355,7 @@ export default function Register({ Token, usuario, setOverlay }) {
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-800 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
               Fecha de nacimiento:
             </h3>
           )}
