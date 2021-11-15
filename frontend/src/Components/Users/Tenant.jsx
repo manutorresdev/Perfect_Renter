@@ -36,7 +36,7 @@ export default function Tenant({ user, setOverlay, relation }) {
             </div>
           </Link>
         </div>
-        <div className='user-info flex flex-col w-40 sm:w-32 md:w-full'>
+        <div className='user-info flex flex-col pb-5 w-40 sm:w-32 md:w-full'>
           <Link
             className='self-start w-40 sm:w-32 md:w-full'
             to={`/inquilinos/${user.idUser}`}

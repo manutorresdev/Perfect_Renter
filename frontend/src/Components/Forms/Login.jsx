@@ -33,7 +33,9 @@ export default function Login() {
     <>
       <section className='pt-24 flex flex-col items-center text-principal-gris gap-5 m-0 p-0 bg-white bg-opacity-50 h-full'>
         <div className='title text-3xl p-4 flex justify-center w-3/6 select-none'>
-          <h2 className='border-b-4 border-gray-600'>ACCESO</h2>
+          <h2 className='border-b-4 border-gray-600 w-3/4 text-center pb-2'>
+            ACCESO
+          </h2>
         </div>
         <form
           className='flex flex-col gap-3 sm:w-96 w-3/4'
@@ -55,7 +57,7 @@ export default function Login() {
                   onChange={onChange}
                   inputRef={ref}
                   name={name}
-                  className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
+                  className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
                 />
               );
             }}

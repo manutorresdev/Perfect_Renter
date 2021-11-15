@@ -104,6 +104,7 @@ module.exports = {
         '30vh': '30vh',
         '90%': '90%',
         '95%': '95%',
+        lg: '480px',
         custom: '100px',
       },
       backgroundColor: {

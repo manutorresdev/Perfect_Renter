@@ -55,7 +55,6 @@ export default function FileProperty({
     Object.keys(body.photo).map((pic, index) => {
       return photos.push(body.photo[index]);
     });
-    console.log(photos[0]);
     put(
       `http://192.168.5.103:4000/properties/${editProperty}`,
       CreateFormDataMultipleFiles({ photos: [...photos] }),

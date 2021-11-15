@@ -45,6 +45,7 @@ const editProperty = async (req, res, next) => {
       energyCertificate,
       availabilityDate,
       price,
+      description,
       state: state,
     } = req.body;
 
@@ -58,7 +59,6 @@ const editProperty = async (req, res, next) => {
     );
 
     let validateData;
-
     // Obtenemos la fecha de modificación.
     const modifiedAt = formatDate(new Date());
 
@@ -482,6 +482,22 @@ const editProperty = async (req, res, next) => {
       await connection.query(
         `UPDATE properties SET price = ?, modifiedAt = ? WHERE idProperty = ?`,
         [price, modifiedAt, idProperty]
+      );
+    }
+    /**
+     * #################
+     * ## DESCRIPTION ##
+     * #################
+     *
+     * Actualizamos la descripction de la vivienda.
+     *
+     */
+    if (property[0].description !== description) {
+      // Actualizamos la información en la base de datos.
+      console.log(req.body.description);
+      await connection.query(
+        `UPDATE properties SET description = ?, modifiedAt = ? WHERE idProperty = ?`,
+        [description, modifiedAt, idProperty]
       );
     }
     /**

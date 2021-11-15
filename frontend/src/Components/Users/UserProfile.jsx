@@ -22,7 +22,7 @@ export default function UserProfile({ match }) {
         setUser(data.userInfo);
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       },
       Token
     );
@@ -34,7 +34,7 @@ export default function UserProfile({ match }) {
         }
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       },
       Token
     );
@@ -43,11 +43,10 @@ export default function UserProfile({ match }) {
       (data) => {
         if (data.status === 'ok') {
           setVotes(data.Valoraciones);
-          console.log(data, 'VOTOS');
         }
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       },
       Token
     );
@@ -253,7 +252,6 @@ export default function UserProfile({ match }) {
           <div className='votes-cont pt-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
             {Votes.length ? (
               Votes.map((vote) => {
-                console.log(vote);
                 return (
                   <article
                     className='flex w-10/12 shadow-xl max-w-xs'

@@ -35,7 +35,7 @@ export default function UsersList(props) {
             setUsers([]);
           }
         },
-        (error) => console.log(error),
+        (error) => console.error(error),
         Token
       );
     } else {
@@ -49,7 +49,7 @@ export default function UsersList(props) {
             setUsers([]);
           }
         },
-        (error) => console.log(error),
+        (error) => console.error(error),
         Token
       );
       get(
@@ -60,7 +60,7 @@ export default function UsersList(props) {
           setBookings(data.bookings);
         },
         (error) => {
-          console.log(error);
+          console.error(error);
         },
         Token
       );

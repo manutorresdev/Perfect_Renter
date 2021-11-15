@@ -35,7 +35,9 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "docs": "jsdoc -c jsdoc.conf.json"
+    "docs": "jsdoc -c jsdoc.conf.json",
+    "style-server": "npx styleguidist server",
+    "style-build": "npx styleguidist build"
   },
   "eslintConfig": {
     "extends": [

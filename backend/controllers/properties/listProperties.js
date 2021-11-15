@@ -109,7 +109,6 @@ const listProperties = async (req, res, next) => {
       );
       /*********** Final usuario propietario *****************/
     } else {
-      console.log(type.split(',')[0]);
       // Si hay filtro por fechas, comprobamos que propiedades están disponibles para dichas fechas.
       if (startDate && endDate) {
         // Seleccionamos las propiedades que tienen esas fechas libres

@@ -16,7 +16,7 @@ export default function useProperties() {
             setProperty([]);
           }
         },
-        (error) => console.log(error)
+        (error) => console.error(error)
       );
     } else {
       get(
@@ -26,7 +26,7 @@ export default function useProperties() {
             setProperty(data.properties);
           }
         },
-        (error) => console.log(error)
+        (error) => console.error(error)
       );
     }
   }, [location]);

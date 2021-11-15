@@ -54,14 +54,14 @@ function openPhoto() {
 
 // Styles
 const sliderButtonStyle =
-  'absolute z-10 text-white text-4xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full shadow-md duration-200';
+  'absolute z-10 text-white text-4xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full duration-200';
 const buttonStyle =
-  'border-2 py-1 px-3 bg-principal-1 hover:bg-gray-500 hover:text-white duration-200';
+  'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
 const pageIteratorButtonsStyle = `border-2 p-3 rounded-full hover:bg-gray-500 hover:text-white duration-200  `;
 
-<>
-  <article className='w-full pb-10 flex bg-gray-200 bg-opacity-20'>
+<main className='flex flex-col relative max-w-customXL'>
+  <article className='w-full pb-10 flex bg-opacity-20'>
     <section className='self-start flex-grow flex flex-col justify-between max-w-7xl'>
       <div className={`shadow-xl flex flex-col w-full h-full`}>
         <div className={`slider pt-20 w-full h-full`}>
@@ -140,21 +140,23 @@ const pageIteratorButtonsStyle = `border-2 p-3 rounded-full hover:bg-gray-500 ho
         </p>
         <p className='px-5 text-xl'>{property.description}</p>
         <span className='pt-5 px-5 underline font-medium'>
-          Informacion detallada:
+          Información detallada:
         </span>
-        <ul className='p-5 pt-2 pl-10'>
-          <li>Ciudad: {property.province}</li>
+        <ul className='p-5 pt-2 pl-10 w-2/3 text-center'>
+          <li className='bg-gray-200 h-7'>Ciudad: {property.province}</li>
           <li>{property.terrace === 0 ? 'Sin' : 'Con'} terraza</li>
-          <li>{property.garage === 0 ? 'Sin' : 'Con'} garaje</li>
+          <li className='bg-gray-200'>
+            {property.garage === 0 ? 'Sin' : 'Con'} garaje
+          </li>
           <li>{property.elevator === 0 ? 'Sin' : 'Con'} ascensor</li>
-          <li>
+          <li className='bg-gray-200'>
             Estado: {property.state && capitalizeFirstLetter(property.state)}
           </li>
           <li>
             Fecha disponibilidad:{' '}
             {new Date(property.availabilityDate).toLocaleDateString('es-ES')}
           </li>
-          <li>
+          <li className='bg-gray-200'>
             Certificado de energía:{' '}
             {property.energyCertificate === 0 ? 'Sin especificar' : 'Si'}
           </li>
@@ -179,5 +181,5 @@ const pageIteratorButtonsStyle = `border-2 p-3 rounded-full hover:bg-gray-500 ho
       </div>
     </section>
   </article>
-</>;
+</main>;
 ```

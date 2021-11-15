@@ -17,7 +17,7 @@ export default function useUser() {
             setUser({});
           }
         },
-        (error) => console.log(error),
+        (error) => console.error(error),
         token
       );
     }

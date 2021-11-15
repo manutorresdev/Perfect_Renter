@@ -49,10 +49,9 @@ export default function ContactProperty({
       `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
       (data) => {
         setBookings(data.bookings);
-        console.log(data);
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       },
       Token
     );
@@ -86,7 +85,7 @@ export default function ContactProperty({
           setOverlay({ form: '', shown: false, propertyInfo: {} });
         },
         (error) => {
-          console.log(error);
+          console.error(error);
           setMessage(error);
         },
         Token
@@ -100,7 +99,7 @@ export default function ContactProperty({
           // setOverlay({ form: '', show: false, propertyInfo: {} });
         },
         (error) => {
-          console.log(error);
+          console.error(error);
           setMessage(error);
         },
         Token
@@ -114,8 +113,8 @@ export default function ContactProperty({
   const comentarios = watch('comentarios');
 
   return (
-    <div className='overlay z-30 bg-white bg-opacity-70 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-32 pb-2 px-2 overflow-auto sm:overflow-hidden'>
-      <section className='contact p-8 shadow-perfil pt-2 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto w-full md:w-3/4'>
+    <div className='overlay z-30 bg-white bg-opacity-70 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-32  px-2 overflow-auto sm:overflow-hidden'>
+      <section className='contact p-8 shadow-perfil pt-2 flex flex-col gap-5 bg-white relative text-principal-gris w-full md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -258,7 +257,7 @@ export default function ContactProperty({
             />
           </form>
 
-          <div className='perfil w-full self-center flex flex-col items-center justify-center'>
+          <div className='property-cont w-full self-center flex flex-col items-center justify-center'>
             <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
               <Carousel
                 navButtonsAlwaysVisible

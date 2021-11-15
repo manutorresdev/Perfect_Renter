@@ -750,20 +750,22 @@ function EditBooking({ setOverlay, info, Token }) {
     ALQUILERES
   </div>
   <div className='flex flex-col'>
-    <section className='alquileres'>
-      <div className='flex flex-col sm:flex-row '>
+    <section className='alquileres flex-grow'>
+      <div className='flex flex-col sm:flex-row'>
         <div className='contenedor-alquileres flex flex-wrap justify-center gap-5 sm:max-w-none sm:justify-start sm:pl-2 px-2 pb-10'>
           {propiedadUsuario.length > 0 ? (
             propiedadUsuario.map((property) => (
               <article
-                key={Math.random()}
-                className={`${
-                  mountOn === 'home'
-                    ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
-                    : `cont-vivienda overflow-hidden max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
-                        mountOn === 'profile' ? ' md:max-h-96 ' : ''
-                      } hover:max-h-full w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`
-                }`}
+                className={`
+        ${
+          mountOn === 'home'
+            ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
+            : `cont-vivienda overflow-hidden  relative max-w-xs filter drop-shadow-lg sm:max-w-xs bg-white sm:w-auto min-w-min ${
+                mountOn === 'profile' ? 'pb-10 lg:h-lg' : 'h-100  '
+              } w-full my-5  text-gray-400 hover:text-gray-900 duration-300`
+        }
+        `}
+                // className={`cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
               >
                 <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
                   <Carousel
@@ -798,7 +800,7 @@ function EditBooking({ setOverlay, info, Token }) {
                       SlideImgs.map((img, i) => {
                         return (
                           <img
-                            key={Math.random()}
+                            key={i}
                             className='object-cover w-full h-48'
                             src={img}
                             alt='default'
@@ -814,26 +816,28 @@ function EditBooking({ setOverlay, info, Token }) {
                     )}
                   </Carousel>
                 </div>
-                <div className='relative sm:max-w-custom md:max-w-none'>
+
+                <div className='sm:max-w-custom md:max-w-none'>
                   <button to={`/alquileres/${property.idProperty}`}>
                     <div className='bg-gray-Primary p-2 bg-opacity-25 text-lg text-principal-1 flex justify-between gap-2'>
                       <h3>
                         {capitalizeFirstLetter(property.type)} en{' '}
                         {property.city}
                       </h3>
-                      <h3>{Number(property.price)} €/mes</h3>
+                      <h3>{Number(property.price)} €/noche</h3>
                     </div>
-                    <div className='pl-2'>
+                    <div className='p-2'>
                       {property.province}
-                      <div className='text-black font-medium'>
+                      <div className='text-black font-medium p-2'>
                         {`${property.mts}m² - ${
                           property.rooms
                         } habitaciones - ${property.toilets} ${
                           property.toilets > 1 ? 'baños' : 'baño'
                         }`}
                       </div>
-                      {!(mountOn === 'bestPropertiesList') && (
-                        <div className='sm:w-72 pt-2'>
+                      {(mountOn === 'profile' ||
+                        mountOn === 'propertiesList') && (
+                        <div className='sm:w-72 pt-2 text-base'>
                           <p className='overflow-hidden'>
                             {property.description.slice(0, 100)}...
                           </p>
@@ -845,16 +849,13 @@ function EditBooking({ setOverlay, info, Token }) {
                         .fill(null)
                         .map((value, i) => {
                           return (
-                            <FaStar
-                              key={Math.random()}
-                              className='text-principal-1'
-                            />
+                            <FaStar key={i} className='text-principal-1' />
                           );
                         })}
                     </footer>
                   </button>
                   {Token ? (
-                    <div className='flex flex-row justify-between'>
+                    <div className='flex justify-between w-full absolute bottom-1 '>
                       <button className='text-xl p-4 hover:text-blue-700'>
                         <FaPencilAlt />
                       </button>
@@ -873,16 +874,7 @@ function EditBooking({ setOverlay, info, Token }) {
           )}
         </div>
         <div className='text-gray-400 flex flex-col items-center gap-2 m-auto pb-5 lg:flex-grow'>
-          <button
-            onClick={() => {
-              setOverlay({
-                shown: true,
-                userInfo: User,
-                form: 'property',
-              });
-            }}
-            className='flex flex-col items-center gap-2'
-          >
+          <button className='flex flex-col items-center gap-2'>
             <span>Añade un inmueble</span>
             <FaPlusSquare className='text-4xl' />
           </button>
@@ -970,16 +962,7 @@ function EditBooking({ setOverlay, info, Token }) {
     </div>
   </section>
   <div className='flex justify-center sm:justify-end sm:pr-2'>
-    <button
-      className='py-4 px-2 my-5 rounded-full text-principal-1 bg-gray-Primary flex items-center justify-around'
-      onClick={() => {
-        setOverlay({
-          form: 'deleteAccount',
-          shown: true,
-          onSubmitDeleted: onSubmitDeleted,
-        });
-      }}
-    >
+    <button className='py-4 px-2 my-5 rounded-full text-principal-1 bg-gray-Primary flex items-center justify-around'>
       <FaTrash className='text-principal-1 hover:text-red-500 w-8' />{' '}
       <span className=''>Eliminar cuenta</span>
     </button>

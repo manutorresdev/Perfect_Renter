@@ -99,11 +99,13 @@ function onSubmit(body, e) {
 
 // Styles
 const inpStyle =
-  'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+  'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
 const comentarios = watch('comentarios');
+const buttonStyle =
+  'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
-<div className='overlay z-20 bg-gray-400 bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
-  <section className='contact shadow-custom pt-2 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll '>
+<div className='overlay z-30 bg-white bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center pt-24 pb-2 overscroll-scroll sm:overflow-hidden'>
+  <section className='contact drop-shadow-2xl filter pt-2 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto sm:w-3/4 w-11/12'>
     <button className='close-overlay absolute top-3 p-5 right-2'>
       <FaPlus className='transform scale-150 rotate-45' />
     </button>
@@ -218,10 +220,10 @@ const comentarios = watch('comentarios');
           />
         </label>
         {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
-        <label className='relative w-min'>
+        <label className='relative '>
           <div className='select-none'>Comentarios</div>
           <textarea
-            className={`${inpStyle} resize-none w-80`}
+            className={`${inpStyle} resize-none`}
             name='comentarios'
             id='comentarios'
             cols='30'
@@ -243,11 +245,7 @@ const comentarios = watch('comentarios');
           <p className='text-red-500'>{errors.comentarios.message}</p>
         )}
 
-        <input
-          className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
-          type='submit'
-          value='Contactar'
-        />
+        <input className={buttonStyle} type='submit' value='Contactar' />
       </form>
 
       <div className='perfil w-full self-center flex flex-col items-center justify-center'>

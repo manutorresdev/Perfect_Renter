@@ -22,15 +22,15 @@ function onSubmit(body, e) {
 
 // Styles
 const inpStyle =
-  'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border-2 border-gray-400 outline-none focus:outline-none focus:ring';
+  'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
 
-<section className='pt-20 sm:pb-40 bg-gray-200 bg-opacity-20'>
-  <h1 className='sm:text-5xl text-3xl p-4 w-full bg-principal-1 text-principal-gris sm:p-10'>
+<section className='pt-20 sm:pb-40 flex flex-col items-center bg-white'>
+  <h1 className='sm:text-5xl text-3xl p-4 w-full text-center bg-principal-1 text-principal-gris sm:p-4'>
     Perfect Renter
   </h1>
-  <div className='flex justify-center flex-col md:flex-row-reverse gap-5 px-10 pb-32 sm:pb-2'>
-    <div className='p-5 w-full'>
-      <h1 className='w-3/4 self-center font-medium text-3xl border-b-4 border-gray-700'>
+  <div className='flex w-10/12 text-principal-gris pb-36 flex-col md:flex-row-reverse gap-5 sm:pb-2'>
+    <div className=' w-full gap-y-3 pt-4'>
+      <h1 className='w-full self-center font-medium text-3xl border-b-4 border-gray-600'>
         Contacto
       </h1>
       <p className='pt-4 text-xl max-w-xl'>
@@ -132,7 +132,7 @@ const inpStyle =
         <p className='text-red-500'>{errors.comentarios.message}</p>
       )}
       <input
-        className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+        className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black p-2 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
         type='submit'
         value='Contactar'
       />
