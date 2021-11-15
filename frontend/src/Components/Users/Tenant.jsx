@@ -19,7 +19,7 @@ export default function Tenant({ user, setOverlay, relation }) {
               className='w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover'
               src={
                 user.avatar
-                  ? `http://192.168.5.103:4000/photo/${user.avatar}`
+                  ? `http://localhost:4000/photo/${user.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt={'perfil ' + user.name + user.lastName}
