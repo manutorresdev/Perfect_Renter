@@ -68,14 +68,14 @@ export default function Property({
       )}
       <article
         className={`
-      ${
-        mountOn === 'home'
-          ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
-          : `cont-vivienda overflow-hidden  relative max-w-xs filter drop-shadow-lg sm:max-w-xs bg-white sm:w-auto min-w-min ${
-              mountOn === 'profile' ? 'pb-10 lg:h-5/6' : 'h-100  '
-            } w-full my-5  text-gray-400 hover:text-gray-900 duration-300`
-      }
-      `}
+        ${
+          mountOn === 'home'
+            ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
+            : `cont-vivienda overflow-hidden  relative max-w-xs filter drop-shadow-lg sm:max-w-xs bg-white sm:w-auto min-w-min ${
+                mountOn === 'profile' ? 'pb-10 lg:h-90%' : 'h-100  '
+              } w-full my-5  text-gray-400 hover:text-gray-900 duration-300`
+        }
+        `}
         // className={`cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
       >
         <div className='slider w-full sm:max-w-custom md:max-w-none relative'>

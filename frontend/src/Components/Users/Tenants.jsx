@@ -78,13 +78,9 @@ export default function UsersList(props) {
         <VoteForm setOverlay={setOverlay} info={Overlay.info} Token={Token} />
       )}
       <aside
-        className={`flex justify-center items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static z-20 right-0 ${
-          props.IsFooterVisible ? 'bottom-28 absolute' : 'bottom-0 fixed'
-        } left-0 mx-auto mt-5 sm:mt-20 `}
-
-        // className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent h-10 flex-grow-0 lg:static  ${
-        //   props.IsFooterVisible ? 'absolute bottom-28 ' : ' fixed bottom-0 '
-        // } z-20 lg:z-0 right-0 left-0 mx-auto lg:m-0 lg:top-0 mt-5 lg:mt-20`}
+        className={`flex justify-center max-w-min items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static  ${
+          props.IsFooterVisible ? 'absolute bottom-28 ' : ' fixed bottom-0 '
+        } z-20 lg:z-0 right-0 left-0 mx-auto lg:m-0 lg:top-0 mt-5 lg:mt-20`}
       >
         <button
           className='lg:hidden flex pl-6'
@@ -178,7 +174,7 @@ function Filters({ setOverlay, Overlay }) {
         Overlay.show
           ? 'translate-y-0 opacity-100 '
           : '-translate-y-full opacity-0'
-      }  sm:translate-y-0 bg-yellow-300 justify-center sm:justify-start sm:bg-white sm:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 top-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+      }  lg:translate-y-0 bg-yellow-300 lg:bg-white lg:opacity-100 bg-opacity-70 overlay z-20 w-full h-full fixed left-0 bottom-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 lg:overflow-hidden lg:z-0 lg:mt-0 lg:static lg:py-10`}
     >
       <section className='filtros overflow-scroll overflow-x-hidden sm:overflow-hidden p-2 flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
         <button
@@ -266,7 +262,7 @@ function Filters({ setOverlay, Overlay }) {
               <input
                 type='submit'
                 value='Buscar'
-                className='btn-submit text-lg bg-none px-4  font-medium text-principal-gris border-yellow-300 border-2 h-1/3 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
+                className='btn-submit text-lg bg-none px-4 cursor-pointer font-medium text-principal-gris border-yellow-300 border-2 h-1/3 hover:bg-gray-Primary bg-principal-1 hover:border-white hover:text-principal-1 duration-300'
               />
             </div>
           </form>

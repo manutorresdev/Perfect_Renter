@@ -99,7 +99,7 @@ export default function Profile({ token, setToken }) {
   );
 
   return (
-    <article className='pt-24 pb-32 flex flex-col w-full justify-center max-w-5xl m-auto'>
+    <article className='pt-24 pb-32 flex flex-col w-full justify-center max-w-5xl m-auto relative'>
       {Overlay.form === 'deleteProperty' && (
         <Delete
           setOverlay={setOverlay}
@@ -475,7 +475,7 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
           return (
             <span key={booking.idBooking} className='max-w-xs'>
               <article
-                className={`animate-fadeIn shadow-custom h-1/3 max-w-xs flex flex-col items-start justify-between
+                className={`animate-fadeIn filter drop-shadow-xl h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
                 lg:flex-row lg:max-w-md lg:w-full`}
               >
@@ -598,9 +598,9 @@ function CancelBooking({ setOverlay, info, Token }) {
   }
 
   return (
-    <div className='overlay z-20 p-4 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
+    <div className='z-10 bg-white bg-opacity-75 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
       {Message && <ConfirmMessage Message={Message} />}
-      <section className='cancel-booking shadow-custom w-full p-4 border-2 border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
+      <section className='cancel-booking filter drop-shadow-xl w-full p-4 flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4'>
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
@@ -609,7 +609,7 @@ function CancelBooking({ setOverlay, info, Token }) {
         >
           <FaPlus className='transform scale-150 rotate-45' />
         </button>
-        <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
+        <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-600 flex justify-center w-5/6 select-none'>
           Cancelar reserva
         </h1>
         <div className='perfil flex flex-col items-center gap-5'>
@@ -632,7 +632,7 @@ function CancelBooking({ setOverlay, info, Token }) {
               src={require('../../Images/defPicture.jpg').default}
               alt=''
             /> */}
-            <div className='flex bg-gray-Primary w-min rounded-tr pr-2 gap-1'>
+            <div className='flex bg-gray-Primary w-min  pr-2 gap-1'>
               {info.votes > 0 ? (
                 Array(parseInt(info.votes))
                   .fill(null)
@@ -649,10 +649,10 @@ function CancelBooking({ setOverlay, info, Token }) {
           <h3 className='text-base font-medium'>
             ¿Desea cancelar la reserva de {info.city}?
           </h3>
-          <div className='flex justify-evenly w-full '>
+          <div className='flex justify-evenly w-11/12 gap-x-5 '>
             <button
               onClick={() => Confirm(info.bookingCode)}
-              className='w-full p-2 hover:text-principal-1 font-medium text-center bg-gray-200'
+              className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
             >
               Confirmar
             </button>
@@ -660,7 +660,7 @@ function CancelBooking({ setOverlay, info, Token }) {
               onClick={() => {
                 setOverlay({ shown: false, form: '', info: {} });
               }}
-              className='w-full p-2 hover:text-principal-1 font-medium'
+              className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
             >
               Salir
             </button>

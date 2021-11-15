@@ -17,7 +17,7 @@ export default function Login() {
   // Enviar datos a backend
   function onSubmit(body) {
     post(
-      'http://192.168.5.103:4000/users/login',
+      'http://localhost:4000/users/login',
       CreateFormData(body),
       (data) => {
         setToken(data.token);
@@ -31,9 +31,9 @@ export default function Login() {
 
   return (
     <>
-      <section className='pt-24 flex flex-col items-center gap-5 m-0 p-0 bg-gray-200 bg-opacity-50 h-screen'>
-        <div className='title text-3xl p-4  bg-principal-1 flex justify-center w-3/6 select-none'>
-          <h2>ACCESO</h2>
+      <section className='pt-24 flex flex-col items-center text-principal-gris gap-5 m-0 p-0 bg-white bg-opacity-50 h-full'>
+        <div className='title text-3xl p-4 flex justify-center w-3/6 select-none'>
+          <h2 className='border-b-4 border-gray-600'>ACCESO</h2>
         </div>
         <form
           className='flex flex-col gap-3 sm:w-96 w-3/4'
@@ -70,7 +70,7 @@ export default function Login() {
             ''
           )}
           <input
-            className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+            className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
             type='submit'
             value='Entrar'
           />

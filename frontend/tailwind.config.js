@@ -101,12 +101,16 @@ module.exports = {
         min: 'min-content',
         '60vh': '60vh',
         '30vh': '30vh',
+        '90%': '90%',
         custom: '100px',
       },
       backgroundColor: {
         'gray-Primary': 'rgba(49, 47, 47, 0.84)',
         'principal-1': 'rgba(237,203,84,1)',
         'principal-1-hover': 'rgba(237, 204, 84, 0.73)',
+      },
+      borderRadius: {
+        circle: '50%',
       },
       boxShadow: {
         perfil: 'rgba(0, 0, 0, 0.25) 0px 25px 50px -12px',
