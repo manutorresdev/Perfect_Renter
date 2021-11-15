@@ -271,7 +271,7 @@ if (NODE_ENV !== 'test') {
 }
 
 module.exports = { main };
-=======
+
 const getDB = require('./getDB');
 const faker = require('faker/locale/es');
 const { format } = require('date-fns');
