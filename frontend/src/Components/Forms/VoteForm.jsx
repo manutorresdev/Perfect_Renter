@@ -43,7 +43,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
           setMessage(data.message);
         },
         (error) => {
-          console.log(error);
+          console.error(error);
           setError(error);
         },
         Token

@@ -67,15 +67,15 @@ function onSubmit(body, e) {
   }
 }
 
-const inputsLabelStyle = ' text-xl duration-200';
+const inputsLabelStyle = 'text-lg duration-200';
 const inputStyle =
-  'bg-gray-Primary px-2 placeholder-yellow-300 border border-gray-600 border-opacity-40 text-principal-1 font-medium';
+  'bg-black bg-opacity-70 w-48 p-3 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
 
 <div className='relative'>
   <div
-    className={`transform w-full h-full flex flex-col items-center pt-24 overflow-scroll duration-300 sm:overflow-hidden sm:z-0 sm:mt-0 sm:static sm:py-10`}
+    className={`transform lg:translate-y-0 bg-yellow-300 lg:bg-white lg:opacity-100 bg-opacity-70 overlay z-20 w-full h-full left-0 bottom-0 flex flex-col items-center pt-24 pb-14 overflow-scroll duration-300 lg:overflow-hidden lg:z-0 lg:mt-0 lg:static lg:py-10`}
   >
-    <section className='filtros shadow-custom sm:shadow-none overflow-scroll overflow-x-hidden sm:overflow-hidden pt-2 border border-black sm:border-transparent flex flex-col gap-5 w-10/12 sm:w-full bg-white sm:bg-none relative'>
+    <section className='filtros overflow-scroll overflow-x-hidden lg:overflow-hidden p-2 flex flex-col gap-5 w-10/12 md:w-full bg-white lg:bg-none relative'>
       <button
         className='close-overlay absolute top-3 right-3 sm:hidden'
         onClick={() => {
@@ -84,12 +84,12 @@ const inputStyle =
       >
         <FaPlus className='transform rotate-45 ' />
       </button>
-      <h1 className='title self-center select-none font-semibold text-principal-gris  text-2xl underline'>
+      <h1 className='title self-center select-none font-semibold text-principal-gris text-2xl underline'>
         Filtros
       </h1>
       <div className='filters-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
         <form
-          className='flex flex-col gap-4 p-2'
+          className='flex flex-col gap-y-3 p-2 items-center'
           onSubmit={handleSubmit(onSubmit)}
         >
           <label>
@@ -119,14 +119,12 @@ const inputStyle =
               {...register('direccion')}
               className={inputStyle}
             >
-              <option value='' disabled>
-                Orden
-              </option>
+              <option value=''>Orden</option>
               <option value='ASC' className='font-medium'>
-                Asc
+                Ascendente
               </option>
               <option value='DESC' className='font-medium'>
-                Desc
+                Descendente
               </option>
             </select>
           </label>
@@ -168,8 +166,8 @@ const inputStyle =
                 }
               }}
               renderInput={(startProps, endProps) => (
-                <div className='flex flex-col'>
-                  <label>
+                <div className='flex flex-col w-full justify-start '>
+                  <label className='flex flex-col w-full justify-start '>
                     <span className={inputsLabelStyle}>Fecha de entrada:</span>
                     <input
                       className={inputStyle}
@@ -179,7 +177,7 @@ const inputStyle =
                       {...startProps.inputProps}
                     />
                   </label>
-                  <label>
+                  <label className='flex flex-col w-full justify-start '>
                     <span className={inputsLabelStyle}>Fecha de salida:</span>
                     <input
                       className={inputStyle}
@@ -238,67 +236,87 @@ const inputStyle =
               placeholder='Provincia...'
             />
           </label>
-          <div className='grid grid-cols-2 grid-rows-2'>
-            <div className={`col-start-1 col-end-3 ${inputsLabelStyle}`}>
-              Tipo de vivienda:
-            </div>
-            <label className='flex gap-2 items-baseline font-medium'>
+          <div className='flex flex-col justify-center'>
+            <div className={`${inputsLabelStyle}`}>Tipo de vivienda:</div>
+            <label className='flex gap-2 items-baseline justify-between font-medium'>
               Piso
               <input
-                type='radio'
+                type='checkbox'
                 name='tipo'
                 value='piso'
                 {...register('tipo')}
               />
             </label>
-            <label className='flex gap-2 items-baseline font-medium'>
+            <label className='flex gap-2 items-baseline justify-between font-medium'>
               Casa
               <input
-                type='radio'
+                type='checkbox'
                 name='tipo'
                 value='casa'
                 {...register('tipo')}
               />
             </label>
-            <label className='flex gap-2 items-baseline font-medium'>
-              Duplex
+            <label className='flex gap-2 items-baseline justify-between font-medium'>
+              Dúplex
               <input
-                type='radio'
+                type='checkbox'
                 name='tipo'
                 value='duplex'
                 {...register('tipo')}
               />
             </label>
-            <label className='flex gap-2 items-baseline font-medium'>
-              Cualquiera
-              <input type='radio' name='tipo' value='%' {...register('tipo')} />
-            </label>
           </div>
           <div className='flex flex-col gap-2'>
-            <label className='minPrice'>
+            <label className='minPrice relative'>
               <div className={inputsLabelStyle}>Precio Mínimo:</div>
               <input
                 ref={pMinVal}
                 min='1'
+                maxLength={5}
                 max='10000'
-                {...register('pMin')}
-                type='number'
+                {...register('pMin', {
+                  pattern: {
+                    value: /^([0-9]*){5,}$/,
+                    message: 'Debe contener solo números.',
+                  },
+                })}
                 name='pMin'
                 className={inputStyle}
                 placeholder='Mínimo'
-              />€
+              />
+              <span className='text-xl text-principal-1 absolute top-8 pt-1 right-4'>
+                €
+              </span>
+              {errors.pMin && (
+                <p className='text-red-500 font-medium'>
+                  {errors.pMin.message}
+                </p>
+              )}
             </label>
-            <label className='maxPrice'>
+            <label className='maxPrice relative'>
               <div className={inputsLabelStyle}>Precio Máximo:</div>
               <input
-                {...register('pMax')}
+                {...register('pMax', {
+                  pattern: {
+                    value: /^([0-9]*){5,}$/,
+                    message: 'Debe contener solo números.',
+                  },
+                })}
                 min='1'
+                maxLength={5}
                 max='10000'
-                type='number'
                 name='pMax'
                 className={inputStyle}
                 placeholder='Máximo'
-              />€
+              />
+              <span className='text-xl text-principal-1 absolute top-8 pt-1 right-4'>
+                €
+              </span>
+              {errors.pMax && (
+                <p className='text-red-500 font-medium'>
+                  {errors.pMin.message}
+                </p>
+              )}
             </label>
           </div>
           <label className='rooms'>
@@ -308,12 +326,13 @@ const inputStyle =
               type='number'
               name='hab'
               min='1'
+              maxLength={2}
               max='10'
               className={inputStyle}
               placeholder='Hab...'
             />
           </label>
-          <label className='parking flex gap-2 items-center'>
+          <label className='parking font-medium flex flex-row items-center w-1/2'>
             <div className={inputsLabelStyle}>Garaje:</div>
             <input
               {...register('garaje')}
@@ -331,6 +350,7 @@ const inputStyle =
               max='10'
               type='number'
               name='baños'
+              maxLength={2}
               className={inputStyle}
               placeholder='Baños...'
             />
@@ -342,6 +362,7 @@ const inputStyle =
               min='1'
               max='1000'
               type='number'
+              maxLength={4}
               name='m2'
               className={inputStyle}
               placeholder='Metros...'

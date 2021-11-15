@@ -140,7 +140,6 @@ export function Banner() {
 
 export function PropertiesList() {
   const [Properties] = useProperties();
-
   return (
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>ALQUILERES</h2>
@@ -174,7 +173,7 @@ export function RentersList() {
         (data) => {
           setUsers(data.users);
         },
-        (error) => console.log(error),
+        (error) => console.error(error),
         Token
       );
     } else {
@@ -211,7 +210,7 @@ export function RentersList() {
       (data) => {
         setUsers(data.users);
       },
-      (error) => console.log(error),
+      (error) => console.error(error),
       Token
     );
   }, [Token]);

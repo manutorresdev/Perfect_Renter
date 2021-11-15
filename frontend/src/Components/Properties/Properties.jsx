@@ -20,7 +20,7 @@ export default function Properties(props) {
           setBestRatedProperties([]);
         }
       },
-      (error) => console.log(error),
+      (error) => console.error(error),
       null
     );
   }, []);

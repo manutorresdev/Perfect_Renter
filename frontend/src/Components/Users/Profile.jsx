@@ -51,7 +51,7 @@ export default function Profile({ token, setToken }) {
       (data) => {
         setUser(data.userInfo);
       },
-      (error) => console.log(error),
+      (error) => console.error(error),
       token
     );
     if (User.idUser) {
@@ -61,7 +61,7 @@ export default function Profile({ token, setToken }) {
           setBookings(data.bookings);
         },
         (error) => {
-          console.log(error);
+          console.error(error);
         },
         token
       );
@@ -73,7 +73,7 @@ export default function Profile({ token, setToken }) {
           }
         },
         (error) => {
-          console.log(error);
+          console.error(error);
         },
         token
       );
@@ -212,9 +212,9 @@ export default function Profile({ token, setToken }) {
         ALQUILERES
       </div>
       <div className='flex flex-col'>
-        <section className='alquileres'>
-          <div className='flex flex-col sm:flex-row lg:h-60vh'>
-            <div className='contenedor-alquileres flex flex-wrap justify-center gap-5 sm:max-w-none sm:justify-start sm:pl-2 px-2 pb-10'>
+        <section className='alquileres flex-grow'>
+          <div className='flex flex-col sm:flex-row'>
+            <div className='contenedor-alquileres flex flex-wrap justify-center gap-5 sm:max-w-none sm:justify-start sm:pl-2 px-2 pb-10 '>
               {propiedadUsuario.length > 0 ? (
                 propiedadUsuario.map((property) => (
                   <Property

@@ -1,4 +1,6 @@
 ```jsx
+import { useState } from 'react';
+
 import { useForm } from 'react-hook-form';
 import {
   FaSearch,
@@ -20,18 +22,18 @@ const sectionStyle =
   'h-max-content p-5 text-principal-1 overflow-y-auto bg-gray-Primary';
 const sectionTitleStyle = 'pb-5 text-3xl font-medium';
 const sectionImgStyle = 'w-2/5 float-right pl-3';
-const boxContStyle = 'row-span-2 flex flex-col gap-5 b';
+const boxContStyle = 'row-span-2 flex flex-col gap-5';
 const boxContTitleStyle =
-  'w-full text-center pt-4 pb-3 text-principal-1 underline text-xl align-self-start';
+  'w-full text-center pt-4 pb-3 text-principal-1 underline text-xl';
 const boxItemContStyle =
-  'grid grid-cols-1 grid-rows-auto gap-2 justify-items-center sm:grid-cols-2 justify-self-center';
+  'grid grid-cols-1 flex-grow grid-rows-auto gap-2 justify-items-center sm:grid-cols-2 relative';
 const boxReadMoreBtnStyle =
   'm-auto text-xl bg-gray-Primary text-principal-1 border-2 border-gray-800 max-w-max px-6 py-2 hover:bg-principal-1 hover:text-gray-700 duration-300';
-const descBoxStyle = 'content-center w-3/4 h-full bg-principal-1-hover';
+const descBoxStyle =
+  'content-center w-3/4 h-full bg-principal-1-hover text-black';
 const descBoxTextStyle = 'text-left p-4';
-const descBoxTitleStyle = 'text-base text-gray-700 pb-3 font-medium';
-const descBoxPStyle = 'text-gray-700 text-sm pl-2';
-
+const descBoxTitleStyle = '  pb-3 font-medium';
+const descBoxPStyle = '  pl-2';
 const mountOn = 'home';
 const Properties = [
   {
@@ -143,44 +145,32 @@ const Properties = [
     createdAt: '2021-11-10T19:26:11.000Z',
   },
 ];
-
-const Token = true;
+const [OverlayTenants, setOverlayTenants] = useState(false);
+const [Token, setToken] = useState(false);
 const Users = [
   {
-    idUser: 14,
-    name: 'Julian',
-    lastName: 'Rendon',
-    city: 'Canarias',
+    idUser: 1,
     avatar: 'renter.jpg',
-    votes: '5.0000',
-    birthDate: '1990-01-01T00:00:00.000Z',
+    name: 'Lucía Rodríguez',
+    city: 'Cáceres',
   },
   {
-    idUser: 13,
-    name: 'Perfect',
-    lastName: 'Renter',
-    city: 'Madrid',
+    idUser: 2,
     avatar: 'renter.jpg',
-    votes: '3.0000',
-    birthDate: '1990-01-01T00:00:00.000Z',
+    name: 'Sofía Guijuela',
+    city: 'Albacete',
   },
   {
-    idUser: 10,
-    name: 'Marta Nieves Sr.',
-    lastName: 'Nava',
-    city: 'Taylorsville',
+    idUser: 3,
     avatar: 'renter.jpg',
-    votes: '0.0000',
-    birthDate: '2078-11-14T00:00:00.000Z',
+    name: 'Isaac Martin',
+    city: 'Granada',
   },
   {
-    idUser: 18,
-    name: 'Laura',
-    lastName: 'Pausini',
-    city: 'Telde',
+    idUser: 4,
     avatar: 'renter.jpg',
-    votes: '0.0000',
-    birthDate: '1990-06-01T00:00:00.000Z',
+    name: 'Juan Antonio',
+    city: 'La Langa',
   },
 ];
 const User = {
@@ -203,6 +193,8 @@ const SlideImgs = [
   'portada-nosotros.jpg',
   'flat.jpg',
 ];
+const buttonStyle =
+  'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
 <>
   <div
@@ -257,23 +249,74 @@ const SlideImgs = [
       backgroundImage:
         "linear-gradient(rgba(16, 16, 16, 0.9),rgba(16, 16, 16, 0.3)),url('fondo-gris.jpeg')",
     }}
-    className='bg-center bg-no-repeat items-center bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-3 sm:pt-5  sm:w-full pb-32'
+    className='bg-center bg-no-repeat bg-cover flex flex-col gap-7 sm:grid sm:grid-cols-2 sm:grid-rows-3 sm:pt-5  sm:w-full pb-32'
   >
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>INQUILINOS</h2>
-      <div className={boxItemContStyle}>
+      <div
+        className={boxItemContStyle}
+        onClick={(e) => {
+          !Token && setOverlayTenants(true);
+        }}
+      >
+        {OverlayTenants && (
+          <div
+            className={`animate-fadeIn overlay z-20 absolute  flex flex-col gap-2 items-center justify-center m-auto top-0 bottom-0 left-0 right-0 text-xl font-medium text-white`}
+          >
+            <span className='filter drop-shadow-2xl'>
+              Regístrate para visualizar otros usuarios
+            </span>
+            <button
+              className={`${buttonStyle} `}
+              onClick={(e) => {
+                setOverlayTenants(false);
+                setToken(true);
+              }}
+            >
+              Registro
+            </button>
+          </div>
+        )}
         {Users.length
           ? Users.slice(0, 4).map((user) => (
-              <div className={descBoxStyle} key={Math.random()}>
-                <img className=' w-full' src={user.avatar} alt='' />
-                <div className={descBoxTextStyle}>
-                  <h2 className={descBoxTitleStyle}>{user.name}</h2>
-                  <p className={descBoxPStyle}>{user.city}</p>
-                </div>
+              <div className={descBoxStyle + ` ${!Token && 'filter blur'}`}>
+                <img
+                  className=' w-full h-48 object-cover '
+                  src={user.avatar}
+                  alt=''
+                />
+
+                {Token ? (
+                  <button to={'/inquilinos/' + user.idUser}>
+                    <div className={descBoxTextStyle}>
+                      <h2 className={descBoxTitleStyle}>{user.name}</h2>
+                      <p className={descBoxPStyle}>{user.city}</p>
+                    </div>
+                  </button>
+                ) : (
+                  <div className={descBoxTextStyle}>
+                    <h2 className={descBoxTitleStyle}>{user.name}</h2>
+                    <p className={descBoxPStyle}>{user.city}</p>
+                  </div>
+                )}
               </div>
             ))
           : ''}
       </div>
+      {Token ? (
+        <button to='/inquilinos' className={boxReadMoreBtnStyle}>
+          <button>Ver más</button>
+        </button>
+      ) : (
+        <button
+          className={boxReadMoreBtnStyle}
+          onClick={(e) => {
+            !Token && setOverlayTenants(true);
+          }}
+        >
+          Ver más
+        </button>
+      )}
     </div>
     <div className={boxContStyle}>
       <h2 className={boxContTitleStyle}>ALQUILERES</h2>

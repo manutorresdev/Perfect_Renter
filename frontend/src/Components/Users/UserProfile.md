@@ -10,6 +10,8 @@ import {
   FaPencilAlt,
   FaTrash,
 } from 'react-icons/fa';
+const buttonStyle =
+  'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
 const token = false;
 const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
@@ -189,11 +191,11 @@ const propiedadUsuario = [
   },
 ];
 
-<main className='pb-28 py-20 flex flex-col items-center justify-center max-w-5xl m-auto'>
+<main className='pb-32 py-20 flex flex-col items-center justify-center max-w-5xl m-auto'>
   <div className='perfil flex flex-col items-center justify-center'>
-    <article className=' flex flex-col gap-5 items-center justic'>
+    <article className=' flex flex-col gap-5 items-center justify-center'>
       <img
-        className='w-2/4 rounded-full'
+        className=' w-60 h-60 object-cover rounded-circle'
         src={'renter.jpg'}
         alt='imagen de perfil'
       />
@@ -240,7 +242,7 @@ const propiedadUsuario = [
           return (
             <span key={Math.random()} className='max-w-xs'>
               <article
-                className={`animate-fadeIn shadow-custom h-1/3 max-w-xs flex flex-col items-start justify-between
+                className={`animate-fadeIn filter drop-shadow-xl h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
                 lg:flex-row lg:max-w-md lg:w-full`}
               >
@@ -311,10 +313,10 @@ const propiedadUsuario = [
             key={Math.random()}
             className={`${
               mountOn === 'home'
-                ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
+                ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full filter drop-shadow-xl hover:text-gray-900 duration-300'
                 : `cont-vivienda overflow-hidden max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
                     mountOn === 'profile' ? ' md:max-h-96 ' : ''
-                  } hover:max-h-full w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`
+                  } hover:max-h-full w-full my-5 filter drop-shadow-xl text-gray-400 hover:text-gray-900 duration-300`
             }`}
           >
             <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
@@ -428,7 +430,7 @@ const propiedadUsuario = [
     <h2 className='text-2xl border-b border-gray-200 text-principal-gris bg-principal-1 w-full p-1 font-semibold'>
       Opiniones
     </h2>
-    <div className='votes-cont pt-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
+    <div className='votes-cont pt-5 pb-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
       {Votes.length ? (
         Votes.map((vote) => {
           return (
@@ -473,9 +475,8 @@ const propiedadUsuario = [
       )}
     </div>
   </section>
-
   <button
-    className='my-10 select-none text-center p-3 border border-gray-400 text-principal-1 bg-gray-Primary hover:bg-principal-1-hover hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+    className={buttonStyle}
     onClick={() => {
       setOverlay({ shown: true, info: user, form: 'contact' });
     }}

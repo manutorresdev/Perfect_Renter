@@ -15,10 +15,14 @@ const {
 const formFunctions = { register, errors };
 
 const error = 'Las contraseñas deben coincidir.';
+const buttonStyle =
+  'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
 <>
   <section className='flex flex-col items-center justify-center gap-6 pt-10'>
-    <h1>Recuperación de contraseña:</h1>
+    <h1 className='border-b-4 border-gray-600 text-3xl'>
+      Recuperación de contraseña:
+    </h1>
     <form
       className='flex flex-col gap-5'
       onSubmit={handleSubmit((data) => {
@@ -34,7 +38,7 @@ const error = 'Las contraseñas deben coincidir.';
     >
       <Password {...formFunctions} />
       <input
-        className='w-full p-2 pr-6'
+        className='px-3 py-3  placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
         type={'password'}
         name='password'
         placeholder='Confirma la contraseña*'
@@ -46,11 +50,7 @@ const error = 'Las contraseñas deben coincidir.';
         <p className='text-red-500'>{errors.passwordRepeat.message}</p>
       )}
       {ErrorRep ? <p className='text-red-500'>{error}</p> : ''}
-      <input
-        className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
-        type='submit'
-        value='Cambiar contraseña'
-      />
+      <input className={buttonStyle} type='submit' value='Cambiar contraseña' />
     </form>
   </section>
 </>;

@@ -26,7 +26,7 @@ describe('User POST Endpoints', () => {
     const res = await api.post('/users').send(body);
     expect(res.statusCode).toEqual(200);
     expect(res.body.message).toBe(
-      'Usuario registrado, comprueba tu email para activarlo'
+      'Usuario registrado, comprueba tu email para activarlo.'
     );
   });
 
@@ -42,7 +42,7 @@ describe('User POST Endpoints', () => {
     };
     const res = await api.post('/users').send(body);
     expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toBe('Se requiere un email');
+    expect(res.body.message).toBe('Se requiere un email.');
   });
 
   test('Registro un usuario sin contraseña.', async () => {
@@ -57,7 +57,7 @@ describe('User POST Endpoints', () => {
     };
     const res = await api.post('/users').send(body);
     expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toBe('Se requiere una contraseña');
+    expect(res.body.message).toBe('Se requiere una contraseña.');
   });
 
   test('Registro un usuario con un correo existente.', async () => {
@@ -73,7 +73,7 @@ describe('User POST Endpoints', () => {
     const res = await api.post('/users').send(body);
     expect(res.statusCode).toEqual(409);
     expect(res.body.message).toBe(
-      'Ya existe un usuario registrado con ese email'
+      'Ya existe un usuario registrado con ese email.'
     );
   });
 
@@ -89,7 +89,7 @@ describe('User POST Endpoints', () => {
     };
     const res = await api.post('/users').send(body);
     expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toBe('Se requiere un nombre para el usuario');
+    expect(res.body.message).toBe('Se requiere un nombre para el usuario.');
   });
 
   test('Registro un usuario sin algun campo obligatorio.', async () => {
@@ -111,7 +111,7 @@ describe('User POST Endpoints', () => {
     const body = {};
     const res = await api.post('/users').send(body);
     expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toBe('Se requiere un email');
+    expect(res.body.message).toBe('Se requiere un email.');
   });
 
   test('Registro un usuario y se valida.', async () => {
@@ -151,7 +151,7 @@ describe('User POST Endpoints', () => {
     };
     const res = await api.post('/users/login').send(body);
     expect(res.statusCode).toEqual(401);
-    expect(res.body.message).toBe('Usuario pendiente de validar');
+    expect(res.body.message).toBe('Usuario pendiente de validar.');
   });
 
   test('Login de un usuario sin algun campo obligatorio.', async () => {
@@ -161,7 +161,7 @@ describe('User POST Endpoints', () => {
     };
     const res = await api.post('/users/login').send(body);
     expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toBe('Faltan campos');
+    expect(res.body.message).toBe('Faltan campos.');
   });
 
   test('Contactar a un usuario.', async () => {
@@ -338,7 +338,7 @@ describe('User GET endpoints', () => {
       .get('/users/100')
       .set({ Authorization: token });
     expect(resGetUser.statusCode).toEqual(404);
-    expect(resGetUser.body.message).toBe('El usuario no existe');
+    expect(resGetUser.body.message).toBe('El usuario no existe.');
   });
 
   test('Obtener un usuario sin autorización.', async () => {
@@ -543,7 +543,7 @@ describe('User PUT Endpoints', () => {
       .set({ authorization: token })
       .send(passBody);
     expect(res.statusCode).toEqual(400);
-    expect(res.body.message).toBe('Se requiere una contraseña');
+    expect(res.body.message).toBe('Se requiere una contraseña.');
   });
 
   test('Cambio de contraseña de usuario con la contraseña antigua errónea.', async () => {
@@ -569,7 +569,7 @@ describe('User PUT Endpoints', () => {
       .send({ name: 'Juan José' });
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body.message).toBe('Datos de usuario actualizados');
+    expect(res.body.message).toBe('Datos de usuario actualizados.');
   });
 
   test('Cambio de algún dato del usuario.', async () => {
@@ -581,7 +581,7 @@ describe('User PUT Endpoints', () => {
       .send({ birthDate: '1995-07-14' });
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body.message).toBe('Datos de usuario actualizados');
+    expect(res.body.message).toBe('Datos de usuario actualizados.');
   });
 });
 
@@ -638,7 +638,7 @@ describe('User DELETE Endpoints', () => {
     const resDel = await api.delete('/users/3').set({ authorization: token });
 
     expect(resDel.statusCode).toEqual(403);
-    expect(resDel.body.message).toBe('No tienes permisos');
+    expect(resDel.body.message).toBe('No tienes permisos.');
   });
 
   test('Borrar usuario administrador.', async () => {
@@ -648,7 +648,7 @@ describe('User DELETE Endpoints', () => {
 
     expect(resDel.statusCode).toEqual(403);
     expect(resDel.body.message).toBe(
-      'El administrador principal no se puede eliminar'
+      'El administrador principal no se puede eliminar.'
     );
   });
 });
@@ -804,7 +804,7 @@ describe('Properties POST Endpoints', () => {
       .set({ authorization: token })
       .attach('photo', 'tests/images/piso1.jpeg');
     expect(resUplPhoto.statusCode).toEqual(200);
-    expect(resUplPhoto.body.message).toBe('Las fotos han sido subidas');
+    expect(resUplPhoto.body.message).toBe('Las fotos han sido subidas.');
   });
 
   test('Subir fotos a un alquiler.', async () => {
@@ -821,7 +821,7 @@ describe('Properties POST Endpoints', () => {
         .set({ authorization: token })
         .attach('photo', file);
       expect(resUplPhoto.statusCode).toEqual(200);
-      expect(resUplPhoto.body.message).toBe('Las fotos han sido subidas');
+      expect(resUplPhoto.body.message).toBe('Las fotos han sido subidas.');
     }
   });
 
@@ -1044,7 +1044,7 @@ describe('Properties GET Endpoints', () => {
       .set({ authorization: token });
     expect(resCancel.statusCode).toEqual(200);
     expect(resCancel.body.message).toBe(
-      'La reserva ha sido cancelada Correctamente'
+      'La reserva ha sido cancelada correctamente.'
     );
   });
   test('Hacer una reserva y cancela la reserva el inquilino', async () => {
@@ -1064,7 +1064,7 @@ describe('Properties GET Endpoints', () => {
       .set({ authorization: token2 });
     expect(resAccept.statusCode).toEqual(200);
     expect(resAccept.body.message).toBe(
-      'La reserva ha sido cancelada Correctamente'
+      'La reserva ha sido cancelada correctamente.'
     );
   });
   test('Hacer una reserva y dueño e inquilino la cancelan.', async () => {
@@ -1184,7 +1184,7 @@ describe('Properties DELETE Endpoints', () => {
       .set({ authorization: token });
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body.message).toBe('Propiedad eliminada');
+    expect(res.body.message).toBe('Propiedad eliminada.');
   });
 
   test('Borrar una propiedad sin ser dueño de la misma.', async () => {

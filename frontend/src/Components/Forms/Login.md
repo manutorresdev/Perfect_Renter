@@ -20,9 +20,9 @@ function onSubmit(body) {
 }
 
 <>
-  <section className='pt-24 flex flex-col items-center gap-5 m-0 p-0 bg-gray-200 bg-opacity-50 '>
-    <div className='title text-3xl p-4  bg-principal-1 flex justify-center w-3/6 select-none'>
-      <h2>LOGIN</h2>
+  <section className='pt-24 flex flex-col items-center text-principal-gris gap-5 m-0 p-0 bg-white bg-opacity-50 h-full'>
+    <div className='title text-3xl p-4 flex justify-center w-3/6 select-none'>
+      <h2 className='border-b-4 w-2/3 text-center border-gray-600'>ACCESO</h2>
     </div>
     <form className='flex flex-col gap-3' onSubmit={handleSubmit(onSubmit)}>
       <Controller
@@ -41,7 +41,7 @@ function onSubmit(body) {
               onChange={onChange}
               inputRef={ref}
               name={name}
-              className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
+              className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
             />
           );
         }}
@@ -50,7 +50,7 @@ function onSubmit(body) {
       <Password {...formFunctions} />
       {Error ? <div>{Error}</div> : ''}
       <input
-        className='button select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer '
+        className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
         type='submit'
         value='Entrar'
       />

@@ -41,8 +41,8 @@ function imageHandler(e) {
   }
 }
 
-<div className='overlay z-20 bg-gray-400 bg-opacity-75  w-full h-full left-0 top-0 flex flex-col items-center pt-20 pb-10 px-2 overflow-auto sm:overflow-hidden'>
-  <section className='avatar shadow-custom pt-2 mt-2 border-2 min-h-full h-min border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-auto md:w-3/4'>
+<div className='overlay z-20 bg-white bg-opacity-75 w-full h-full left-0 top-0 flex flex-col justify-center items-center pt-20 pb-10 px-2 overflow-auto sm:overflow-hidden'>
+  <section className='avatar mt-6 filter drop-shadow-xl h-min flex flex-col items-center gap-5 bg-white text-principal-gris overflow-y-auto md:w-3/4'>
     <button className='close-overlay absolute top-3 p-5 right-2'>
       <FaPlus className='transform scale-150 rotate-45' />
     </button>
@@ -120,7 +120,7 @@ function imageHandler(e) {
         )}
         <button
           type='submit'
-          className='button font-medium select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200 cursor-pointer'
+          className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
         >
           Subir
         </button>

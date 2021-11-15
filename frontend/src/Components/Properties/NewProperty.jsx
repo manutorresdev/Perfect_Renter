@@ -148,7 +148,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
   function onSubmitEdited(body, e) {
     e.preventDefault();
-
     put(
       `http://localhost:4000/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
@@ -240,11 +239,6 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
   // City React Hook Form
   const { onChange, ref, onBlur, ...restCity } = register('city', {
     required: 'Debes escribir una ciudad',
-    pattern: {
-      value:
-        /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
-      message: 'La ciudad no puede contener carácteres especiales ni números.',
-    },
     maxLength: {
       value: 30,
       message: 'La ciudad no puede tener más de 50 carácteres.',
@@ -779,7 +773,7 @@ export default function NewProperty({ setOverlay, Token, EditProperty }) {
 
             <p className={inputsLabelStyle}>
               <FaMoneyCheckAlt />
-              ¿Qué precio tiene?
+              ¿Qué precio por noche tiene?
             </p>
             <div className='flex flex-col-2 w-52 gap-2'>
               <input

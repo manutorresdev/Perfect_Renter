@@ -18,12 +18,11 @@ export default function ContactUs() {
       'http://localhost:4000/contact',
       CreateFormData(body),
       (data) => {
-        console.log(data);
         alert(data.message);
         window.location.reload();
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       }
     );
   }

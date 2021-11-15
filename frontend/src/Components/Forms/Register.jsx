@@ -136,7 +136,7 @@ export default function Register({
             <FaPlus className='transform rotate-45 text-xl' />
           </button>
         )}
-        <div className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
+        <div className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-3/6 select-none'>
           {Token ? <h2>EDITAR</h2> : <h2>REGISTRO</h2>}
         </div>
         <form

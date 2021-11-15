@@ -2,7 +2,11 @@
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { CreateFormData, post, put } from '../../Helpers/Api';
-
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { Box } from '@mui/system';
+import { format } from 'date-fns';
 // Import inputs controlados
 import Email from './Inputs/Email';
 import Password from './Inputs/Password';
@@ -37,6 +41,7 @@ const {
   formState: { errors },
   control,
   reset,
+  watch,
 } = useForm(
   Token
     ? {
@@ -67,6 +72,8 @@ const formFunctions = { register, errors };
 // States
 const [Error, setError] = useState('');
 
+const [DatePicker, setDatePicker] = useState(false);
+const [Value, setDateValue] = useState([null, null]);
 // Enviar datos a backend
 function onSubmitRegister(body, e) {
   e.preventDefault();
@@ -80,25 +87,21 @@ function onSubmitEdited(body, e) {
   alert('Usuario editaado con éxito.');
 }
 const inpStyle =
-  'px-3 py-3 placeholder-gray-400 text-gray-600 focus:cursor-default relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer';
+  'px-3 py-3 placeholder-gray-400 text-gray-600 focus:cursor-default relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer';
+const buttonStyle =
+  'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
 const registerComponentStyle = Token
-  ? 'overlay z-20 bg-gray-400 bg-opacity-75 fixed w-full h-full min-h-full h-96 left-0 top-0 flex flex-col items-center pt-20 pb-10 overflow-auto sm:overflow-hidden'
-  : 'bg-gray-200 bg-opacity-50';
+  ? 'overlay z-20 bg-white bg-opacity-75 fixed w-full h-full min-h-full h-96 left-0 top-0 flex flex-col items-center pt-20 pb-10 overflow-auto sm:overflow-hidden'
+  : 'bg-white bg-opacity-50';
+const bio = watch('bio');
 
 <div className={registerComponentStyle}>
-  <button
-    onClick={(e) => {
-      setToken(!Token);
-    }}
-  >
-    Toggle Token
-  </button>
   <section
     className={
       Token
         ? 'w-4/5 shadow-custom max-w-xl p-4 pt-14 border border-gray-700 flex  flex-col gap-5 mt-2 bg-gray-100 text-principal-gris overflow-y-auto relative'
-        : 'pt-24 pb-32 flex flex-col items-center gap-5 p-2'
+        : 'pt-24 pb-32 flex flex-col items-center gap-5 p-2 text-principal-gris '
     }
   >
     {Token && (
@@ -111,18 +114,18 @@ const registerComponentStyle = Token
         <FaPlus className='transform rotate-45 text-xl' />
       </button>
     )}
-    <div className='title text-3xl p-4 bg-principal-1 flex justify-center sm:w-3/6 select-none'>
+    <div className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
       {Token ? <h2>EDITAR</h2> : <h2>REGISTRO</h2>}
     </div>
     <form
-      className='flex flex-col gap-3'
+      className='flex flex-col gap-3 md:w-96 w-3/4'
       onSubmit={
         Token ? handleSubmit(onSubmitEdited) : handleSubmit(onSubmitRegister)
       }
     >
       {!Token && (
         <h3 className='flex gap-2 font-medium items-center'>
-          <div className='p-2 rounded-full border-2 border-gray-800'>
+          <div className='p-2 rounded-full border-2 border-gray-600'>
             <FaUserAlt className='text-principal-1' />
           </div>
           Datos de ingreso:
@@ -296,20 +299,30 @@ const registerComponentStyle = Token
           Biografía:
         </h3>
       )}
-      <input
-        className={inpStyle + ' h-20'}
-        type='text'
-        name='bio'
-        placeholder='Bio'
-        {...register('bio', {
-          required: { value: false, message: 'Bio' },
-          minLength: 0,
-          maxLength: {
-            value: 255,
-            message: 'No puedes escribir más de 250 carácteres.',
-          },
-        })}
-      />
+      <div className='relative'>
+        <textarea
+          className={inpStyle + ' h-40 resize-none'}
+          type='text'
+          name='bio'
+          maxLength={250}
+          placeholder='Bio'
+          {...register('bio', {
+            required: { value: false, message: 'Bio' },
+            minLength: 0,
+            maxLength: {
+              value: 255,
+              message: 'No puedes escribir más de 250 caracteres.',
+            },
+          })}
+        />
+        <p
+          className={`${
+            bio.length > 250 && 'text-red-500'
+          } absolute right-5 bottom-5`}
+        >
+          {bio ? bio.length : 0}/250
+        </p>
+      </div>
       {!Token && (
         <h3 className='flex gap-2 font-medium items-center'>
           <div className='p-2 rounded-full border-2 border-gray-800'>
@@ -324,19 +337,41 @@ const registerComponentStyle = Token
           Fecha de nacimiento:
         </h3>
       )}
-      <input
-        className={inpStyle}
-        type='date'
-        name='birthDate'
-        placeholder='Fecha de nacimiento*'
-        {...register('birthDate', {
-          required: 'Debes añadir la fecha de nacimiento.',
-          pattern: {
-            value: /^[0-9].*$/,
-            message: 'Debes añadir una fecha de nacimiento correcta.',
-          },
-        })}
-      />
+
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DesktopDatePicker
+          label='Custom input'
+          value={Value}
+          open={DatePicker}
+          onClose={(e) => {
+            setDatePicker(false);
+          }}
+          onChange={(newValue) => {
+            setDateValue(format(new Date(newValue), 'dd/MM/yyyy'));
+            setValue('birthDate', format(new Date(newValue), 'yyyy/MM/dd'));
+          }}
+          renderInput={({ inputRef, inputProps, InputProps }) => (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <input
+                className={inpStyle}
+                ref={inputRef}
+                readOnly={true}
+                onKeyDown={(e) => {
+                  e.preventDefault();
+                }}
+                onClick={(e) => {
+                  setDatePicker(true);
+                }}
+                autoComplete='new-password'
+                {...inputProps}
+                name='birthDate'
+                placeholder='dd/mm/yyyy'
+              />
+            </Box>
+          )}
+        />
+      </LocalizationProvider>
+
       {errors.birthDate && (
         <p className='text-red-500'>{errors.birthDate.message}</p>
       )}

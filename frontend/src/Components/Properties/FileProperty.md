@@ -34,24 +34,24 @@ useEffect(() => {
 }, [FileName.length, photos]);
 
 // Return
-<div className='overlay z-20 bg-gray-400 bg-opacity-20 w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
+<div className='overlay z-20 bg-white bg-opacity-75 justify-center w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
   {Loader && (
     <div className='overlay z-50 fixed bg-gray-200 bg-opacity-50 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
       <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
     </div>
   )}
-  <section className=' pt-2 shadow-custom border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-auto md:w-3/4'>
+  <section className=' pt-2 filter drop-shadow-xl  flex flex-col items-center gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4 max-w-3xl'>
     <button className='close-overlay absolute top-3 right-3'>
       <FaPlus className='transform rotate-45' />
     </button>
     <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
       Añade las fotos de tu inmueble
     </h1>
-    <div className='contact-card-container flex justify-around flex-col-reverse gap-10 sm:flex-row '>
+    <div className='file-uploader-container flex justify-around flex-col-reverse gap-10 sm:flex-row sm:w-11/12'>
       <form className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'>
         <div className='flex flex-col gap-5 items-center'>
           <button
-            className='font-medium flex items-center gap-2 bg-blue-600 text-white p-1 rounded'
+            className='font-medium flex items-center gap-2 bg-blue-600 text-white p-2'
             onClick={(e) => {
               e.preventDefault();
               setFileName([
@@ -64,11 +64,10 @@ useEffect(() => {
             <FaRegArrowAltCircleUp className='animate-bounce' />
             Selecciona los archivos
           </button>
-
-          <div className='photo-cont flex flex-col gap-2 justify-center'>
+          <div className='photo-cont flex flex-col gap-2 justify-center sm:justify-start w-full'>
             {photos && (
               <div className='uploaded-photos-cont flex flex-col gap-1'>
-                <span className='border-b-2 border-gray-600 w-1/2 mb-2'>
+                <span className='border-b-2 border-gray-600 w-1/2 sm:w- mb-2'>
                   Fotos subidas:
                 </span>
                 <div className='flex flex-wrap gap-2 justify-center'>
@@ -186,9 +185,9 @@ useEffect(() => {
               ? 'bg-principal-1 text-principal-gris cursor-pointer'
               : 'text-gray-400 select-none pointer-events-none cursor-default'
           } ${
-            TotalPhotos >= 30 &&
+            (TotalPhotos >= 30 || FileName.length < 1) &&
             'text-gray-400 select-none pointer-events-none cursor-default '
-          } font-medium relative flex justify-center gap-2 select-none w-1/2 self-center text-center border border-gray-400 text-black p-2 hover:bg-gray-200 hover:text-gray-600 transform ease-in duration-200`}
+          } select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer`}
         >
           Añadir
           {Loader && (

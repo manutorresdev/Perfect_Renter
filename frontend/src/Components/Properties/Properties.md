@@ -103,11 +103,11 @@ const Propertiess = [
   },
 ];
 
-<main className='flex flex-col sm:flex-row relative pb-28 sm:gap-2'>
+<main className='flex flex-col sm:flex-row sm:gap-2'>
   <section
     className={`ALQUILERES ${
       Overlay.show && 'overflow-hidden'
-    } flex flex-col items-center mt-20 flex-grow max-w-7xl`}
+    } flex flex-col items-center mt-20 flex-grow  w-full`}
   >
     <h1 className='text-4xl text-principal-gris shadow-lg pt-10 md:pt-10 bg-principal-1 w-full p-10 font-semibold'>
       Viviendas en alquiler
@@ -116,15 +116,15 @@ const Propertiess = [
       {Propertiess.length > 0 ? (
         Propertiess.map((property) => (
           <article
-          key={Math.random()}
+            key={Math.random()}
             className={`
-      ${
-        mountOn === 'home'
-          ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
-          : `cont-vivienda overflow-hidden max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
-              mountOn === 'profile' ? ' md:max-h-96 ' : ''
-            } hover:max-h-full w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`
-      }
+        ${
+          mountOn === 'home'
+            ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
+            : `cont-vivienda overflow-hidden  relative max-w-xs filter drop-shadow-lg sm:max-w-xs bg-white sm:w-auto min-w-min ${
+                mountOn === 'profile' ? 'pb-10 lg:h-95%' : 'h-100  '
+              } w-full my-5  text-gray-400 hover:text-gray-900 duration-300`
+        }
       `}
             // className={`cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300`}
           >
@@ -254,14 +254,15 @@ const Propertiess = [
         {Propertiess.length > 0 &&
           Propertiess.slice(0, 3).map((property) => (
             <article
-            key={Math.random()}
-              className={`${
-                mountOn === 'home'
-                  ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover  hover:max-h-full shadow-custom hover:text-gray-900 duration-300'
-                  : `cont-vivienda overflow-hidden max-w-xs border-2 sm:max-w-xs bg-white sm:w-auto min-w-min ${
-                      mountOn === 'profile' ? ' md:max-h-96 ' : ''
-                    } hover:max-h-full w-full my-5 shadow-custom text-gray-400 hover:text-gray-900 duration-300`
-              }`}
+              key={Math.random()}
+              className={`
+        ${
+          mountOn === 'home'
+            ? 'cont-vivienda overflow-hidden content-center w-3/4 h-full bg-principal-1-hover shadow-custom hover:text-gray-900 duration-300'
+            : `cont-vivienda overflow-hidden  relative max-w-xs filter drop-shadow-lg sm:max-w-xs bg-white sm:w-auto min-w-min ${
+                mountOn === 'profile' ? 'pb-10 lg:h-95%' : 'h-100  '
+              } w-full my-5  text-gray-400 hover:text-gray-900 duration-300`
+        }`}
             >
               <div className='slider w-full sm:max-w-custom md:max-w-none relative'>
                 <Carousel

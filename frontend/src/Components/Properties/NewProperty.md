@@ -151,7 +151,7 @@ const inpStyle =
   'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full';
 const description = watch('description');
 
-<div className='overlay z-30 bg-gray-200 bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 relative overflow-scroll sm:overflow-hidden'>
+<div className='overlay z-30 bg-white bg-opacity-75 justify-center w-full h-full left-0 top-0 flex flex-col items-center px-12 pt-24 pb-2 overflow-scroll sm:overflow-hidden'>
   {PhotoUploader && (
     <div className='overlay absolute z-20 bg-gray-400 bg-opacity-20 w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
       {Loader && (
@@ -309,7 +309,7 @@ const description = watch('description');
       <CircularProgress className='absolute top-0 left-0 right-0 bottom-0 m-auto' />{' '}
     </div>
   )}
-  <section className='pt-20 border-2 shadow-custom border-gray-700 flex flex-col gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll  md:w-4/6'>
+  <section className='pt-20 filter drop-shadow-xl flex flex-col gap-5 bg-white relative text-principal-gris overflow-y-auto  md:w-4/6'>
     <button
       className='close-overlay absolute top-3 p-5 right-2'
       onClick={() => {
@@ -319,7 +319,7 @@ const description = watch('description');
     >
       <FaPlus className='transform scale-150 rotate-45' />
     </button>
-    <h1 className='title w-4/6 text-2xl sm:text-5xl text-center m-auto p-4 bg-principal-1  '>
+    <h1 className='title w-4/6 text-2xl sm:text-4xl text-center m-auto p-4 border-b-4 border-gray-600 '>
       Inmueble
     </h1>
     <div className='newProperty-card-container flex justify-around flex-col-reverse gap-10 '>
@@ -676,7 +676,7 @@ const description = watch('description');
 
         <p className={inputsLabelStyle}>
           <FaMoneyCheckAlt />
-          ¿Qué precio tiene?
+          ¿Qué precio por noche tiene?
         </p>
         <div className='flex flex-col-2 w-52 gap-2'>
           <input

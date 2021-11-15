@@ -15,7 +15,7 @@ export default function ManageBokking({ match }) {
         setBooking(data);
       },
       (error) => {
-        console.log(error);
+        console.error(error);
         setBooking(error);
       },
       Token
@@ -26,11 +26,9 @@ export default function ManageBokking({ match }) {
     get(
       `http://localhost:4000/properties/${match.params.bookingCode}/cancel`,
       (data) => {
-        // alert(data.message);
         setBooking(data);
       },
       (error) => {
-        // console.log(error);
         setBooking(error);
       },
       Token
@@ -111,10 +109,10 @@ export default function ManageBokking({ match }) {
         <div className='z-10 bg-white bg-opacity-0 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
           <section className='contact bg-white h-auto w-7/12 py-5 px-5 filter drop-shadow-xl flex flex-col gap-5  relative items-center'>
             <h2 className='text-4xl text-principal-gris border-b-4 border-gray-600 p-2 '>
-              Piensatelo Bien!!!
+              ¡Piensatelo Bien!
             </h2>
             <h3 className='text-xl text-principal-gris '>
-              Puede ser el Inquilino Perfecto!!!
+              ¡Puede ser el Inquilino Perfecto!
               {/* <img
                 className='w-2/5 pt-2 sm:pt-8'
                 src='https://www.cerrajeriaplacer.com/que-debo-hacer-si-me-roban-las-llaves-de-casa_img21063t1.jpg'

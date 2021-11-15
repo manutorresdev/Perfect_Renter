@@ -32,7 +32,7 @@ export default function ContactTenant({ info, setOverlay, Token, properties }) {
         window.location.reload();
       },
       (error) => {
-        console.log(error);
+        console.error(error);
       },
       Token
     );

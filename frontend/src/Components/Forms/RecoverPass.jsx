@@ -29,15 +29,20 @@ export default function RecoverPass() {
   }
 
   return (
-    <section className='flex flex-col items-center justify-center pt-24'>
-      <h1>Recuperación de contraseña</h1>
+    <section className='flex flex-col gap-5 items-center justify-center pt-24'>
+      <h1 className='border-b-4 border-gray-600 text-3xl'>
+        Recuperación de contraseña
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-5'>
         <label>
           <div>Escribe aquí tu email:</div>
-          <Email {...formFunctions} />
+          <Email
+            {...formFunctions}
+            className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
+          />
         </label>
         <input
-          className='button select-none  text-center border border-gray-400 text-black rounded-full p-2 hover:bg-gray-200 hover:text-gray-600  transform ease-in duration-200 cursor-pointer '
+          className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
           type='submit'
           value='Recuperar'
         />

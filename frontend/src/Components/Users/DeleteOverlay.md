@@ -32,9 +32,9 @@ function onSubmit(body) {
   }
 }
 
-<div className='overlay z-20 bg-gray-400 bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center sm:px-12 sm:py-24 pt-24 px-2 overscroll-scroll sm:overflow-hidden'>
+<div className='overlay z-20 bg-white bg-opacity-75 justify-center w-full h-full left-0 top-0 flex flex-col items-center sm:px-12 sm:py-24 pt-24 px-2 overscroll-scroll sm:overflow-hidden'>
   <h1>Password: fooBar123</h1>
-  <section className='delete-property shadow-custom py-2 px-2 border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
+  <section className='delete p-4 filter drop-shadow-xl  flex flex-col items-center gap-5 bg-white relative text-principal-gris overflow-y-auto md:w-3/4'>
     <button className='close-overlay absolute top-3 p-5 right-2'>
       <FaPlus className='transform scale-150 rotate-45' />
     </button>
