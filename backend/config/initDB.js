@@ -261,6 +261,7 @@ async function main() {
     ${await CustomDataDatabase}
     `
     );
+    console.log('Datos de prueba creados');
   } catch (error) {
     console.error(error.message);
     if (error.message === "Unknown database 'perfect_renter'") {
