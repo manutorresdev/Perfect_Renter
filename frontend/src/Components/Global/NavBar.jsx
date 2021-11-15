@@ -26,7 +26,7 @@ export default function NavBar({ token, setToken }) {
   }, [history.location.pathname, selectedLocation]);
 
   const buttonStyle =
-    'text-center bg-principal-1 min-w-min p-1 cursor-pointer sm:hover:text-white sm:hover:font-bold sm:duration-300';
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   return (
     <nav className='navbar flex-grow-0 bg-gray-Primary grid grid-cols-9 gap-5 items-center font-light h-20 fixed top-0 w-full z-50 '>
@@ -83,7 +83,7 @@ export default function NavBar({ token, setToken }) {
                   selectedLocation === item.title.toLocaleLowerCase()
                     ? 'underline'
                     : ''
-                } cursor-pointer hover:text-white duration-300 ease-in-out py-10 w-full sm:w-auto text-center sm:p-0`}
+                } cursor-pointer hover:text-white duration-300 ease-in-out py-6 w-full sm:w-auto text-center sm:p-0`}
               >
                 <Link to={item.path} onClick={showMenu}>
                   {item.title}
@@ -111,16 +111,18 @@ export default function NavBar({ token, setToken }) {
         <FaIcons.FaBars onClick={showMenu} />
       </div>
       {token ? (
-        <>
+        <div
+          className={` col-start-4 col-end-7 justify-between flex gap-2 row-start-1 sm:col-start-8 sm:col-end-10 sm:justify-self-center md:justify-self-auto`}
+        >
           <Link
             to='/perfil'
-            className={`${buttonStyle} relative pr-5 col-start-5 justify-self-center sm:col-start-8 lg:col-start-8 lg:justify-self-end sm:justify-self-start sm:px-2 sm:hover:px-3 lg:px-6 lg:hover:px-8 flex items-center gap-3 justify-between`}
+            className={`${buttonStyle} relative pr-5 flex items-center gap-3 justify-between`}
           >
-            <FaIcons.FaUser className='text-gray-700 ' />
+            <FaIcons.FaUser className='' />
             <span className='flex-grow font-medium'>Perfil</span>
           </Link>
           <button
-            className={`hidden sm:block text-white p-1 hover:text-principal-1 sm:col-start-9 lg:col-start-9 lg:col-end-10 justify-self-start sm:justify-self-end lg:justify-self-center`}
+            className={`hidden sm:block text-white  hover:text-principal-1 w-full justify-self-start sm:justify-self-end lg:justify-self-center`}
             onClick={() => {
               setToken('');
               window.location.reload();
@@ -128,23 +130,18 @@ export default function NavBar({ token, setToken }) {
           >
             Salir
           </button>
-        </>
+        </div>
       ) : (
-        <>
-          <Link
-            className={`${buttonStyle} col-start-4 col-end-6 row-start-1 sm:col-start-8 sm:col-end-9 justify-self-end px-6 sm:px-8 hover:px-10`}
-            to='/login'
-          >
+        <div
+          className={` col-start-3 col-end-8 justify-between flex gap-2 row-start-1 sm:col-start-8 sm:col-end-10 sm:justify-self-center md:justify-self-auto`}
+        >
+          <Link className={`${buttonStyle} `} to='/login'>
             Acceso
           </Link>
-
-          <Link
-            className={`${buttonStyle} col-start-6 col-end-8 row-start-1 sm:col-start-9 sm:col-end-10 justify-self-center px-4 sm:px-6 hover:px-8`}
-            to='/registro'
-          >
+          <Link className={`${buttonStyle} `} to='/registro'>
             Registro
           </Link>
-        </>
+        </div>
       )}
     </nav>
   );

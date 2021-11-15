@@ -4,6 +4,9 @@ import { Link } from 'react-router-dom';
 import { capitalizeFirstLetter } from '../../Helpers/Api';
 
 export default function Tenant({ user, setOverlay, relation }) {
+  const buttonStyle =
+    'select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
+
   return (
     <article className='user-card lg:w-3/4 md:min-h-15rem xl:min-h-0 max-w-xs lg:max-w-lg lg:max-h-52 flex flex-col gap-2 text-xs shadow-lg p-4 bg-white bg-opacity-30'>
       <div className='flex flex-row flex-grow min-w-full'>
@@ -16,7 +19,7 @@ export default function Tenant({ user, setOverlay, relation }) {
               className='w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover'
               src={
                 user.avatar
-                  ? `http://localhost:4000/photo/${user.avatar}`
+                  ? `http://192.168.5.103:4000/photo/${user.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt={'perfil ' + user.name + user.lastName}
@@ -53,9 +56,9 @@ export default function Tenant({ user, setOverlay, relation }) {
         </div>
       </div>
       {relation ? (
-        <div className='buttons-cont flex items-center justify-around w-full h-full'>
+        <div className='buttons-cont flex gap-2 items-center justify-around w-full h-full'>
           <button
-            className='bg-principal-1 px-5 hover:px-7 duration-300  py-2 font-medium '
+            className={buttonStyle}
             onClick={() => {
               setOverlay({ shown: true, info: user, form: 'contact' });
             }}
@@ -64,7 +67,7 @@ export default function Tenant({ user, setOverlay, relation }) {
           </button>
           {relation.length > 0 && (
             <button
-              className='bg-principal-1 px-7 hover:px-8 duration-300 py-2 fm font-medium '
+              className={buttonStyle}
               onClick={() => {
                 setOverlay({
                   shown: true,

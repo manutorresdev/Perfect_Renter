@@ -37,7 +37,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
     e.preventDefault();
     if (body.voteValueRenter && body.commentary && Property) {
       post(
-        `http://localhost:4000/users/${info.idUser}/votes`,
+        `http://192.168.5.103:4000/users/${info.idUser}/votes`,
         CreateFormData({ ...body, idProperty: Property }),
         (data) => {
           setMessage(data.message);
@@ -53,13 +53,13 @@ export default function VoteForm({ setOverlay, info, Token }) {
     }
   }
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
   const comentarios = watch('commentary');
   const buttonStyle =
     'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
 
   return (
-    <div className='overlay z-30 p-4 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden'>
+    <div className='overlay z-30 p-4 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 overflow-auto sm:overflow-hidden'>
       {Message && <ConfirmMessage Message={Message} />}
       {SelectProperty && (
         <PropertiesToVote
@@ -81,81 +81,85 @@ export default function VoteForm({ setOverlay, info, Token }) {
         <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
           Valorar
         </h1>
-        <div className='perfil flex flex-col items-center justify-center'>
-          <img
-            className='w-2/4'
-            src={
-              info.avatar ? '' : require('../../Images/defProfile.png').default
-            }
-            alt=''
-          />
-          <div className='nombre w-5/6 bg-gray-Primary text-principal-1 text-center'>
-            {info.name} {info.lastName}
+        <div className='contact-card-container flex justify-around flex-col gap-10 lg:flex-row-reverse '>
+          <div className='perfil w-full self-center flex flex-col items-center justify-center'>
+            <img
+              className='w-60 h-60 object-cover rounded-circle'
+              src={
+                info.avatar
+                  ? 'http://192.168.5.103:4000/photo/' + info.avatar
+                  : require('../../Images/defProfile.png').default
+              }
+              alt=''
+            />
+            <div className='nombre w-5/6 bg-gray-Primary text-principal-1 text-center'>
+              {info.name} {info.lastName}
+            </div>
           </div>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className='flex flex-col gap-10 md:gap-3 pl-2 font-medium w-full pb-4'
+          >
+            <label className='flex flex-col gap-3'>
+              <div>
+                Escoge la puntuación que creas oportuna. ¡Tu opinión es muy
+                importante!
+              </div>
+              <div className='flex'>
+                {[1, 2, 3, 4, 5].map((value, i) => {
+                  const ratingValue = i + 1;
+                  return (
+                    <label key={i}>
+                      <input
+                        type='radio'
+                        name='rating'
+                        className='hidden'
+                        value={ratingValue}
+                        {...register('voteValueRenter')}
+                        onClick={() => {
+                          setRating(ratingValue);
+                        }}
+                      />
+                      <FaStar
+                        onMouseEnter={() => {
+                          setHover(ratingValue);
+                        }}
+                        onMouseLeave={() => {
+                          setHover(null);
+                        }}
+                        key={value}
+                        className={`${
+                          ratingValue <= (Hover || Rating)
+                            ? 'text-principal-1'
+                            : 'text-gray-400 opacity-30'
+                        }  hover:text-principal-1 hover:opacity-100 duration-200 text-2xl cursor-pointer`}
+                      />
+                    </label>
+                  );
+                })}
+              </div>
+            </label>
+            <label className='relative w-full'>
+              <div>Escribe algún comentario:</div>
+              <textarea
+                {...register('commentary')}
+                name='commentary'
+                cols='20'
+                rows='10'
+                className={`${inpStyle} resize-none w-full h-40`}
+                maxLength='250'
+              ></textarea>
+              <p className='absolute right-5 bottom-5'>
+                {comentarios ? comentarios.length : 0}/250
+              </p>
+            </label>
+            {errors.comentarios && (
+              <p className='text-red-500'>{errors.comentarios.message}</p>
+            )}
+            {Error && <p className='text-red-500'>{Error.message}</p>}
+            <input className={buttonStyle} type='submit' value='Enviar' />
+          </form>
         </div>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className='flex flex-col gap-3 w-full font-medium pb-5 pl-2'
-        >
-          <label className='flex flex-col gap-3'>
-            <div>
-              Escoge la puntuación que creas oportuna. ¡Tu opinión es muy
-              importante!
-            </div>
-            <div className='flex'>
-              {[1, 2, 3, 4, 5].map((value, i) => {
-                const ratingValue = i + 1;
-                return (
-                  <label key={i}>
-                    <input
-                      type='radio'
-                      name='rating'
-                      className='hidden'
-                      value={ratingValue}
-                      {...register('voteValueRenter')}
-                      onClick={() => {
-                        setRating(ratingValue);
-                      }}
-                    />
-                    <FaStar
-                      onMouseEnter={() => {
-                        setHover(ratingValue);
-                      }}
-                      onMouseLeave={() => {
-                        setHover(null);
-                      }}
-                      key={value}
-                      className={`${
-                        ratingValue <= (Hover || Rating)
-                          ? 'text-principal-1'
-                          : 'text-gray-400 opacity-30'
-                      }  hover:text-principal-1 hover:opacity-100 duration-200 text-2xl cursor-pointer`}
-                    />
-                  </label>
-                );
-              })}
-            </div>
-          </label>
-          <label className='relative w-min'>
-            <div>Escribe algún comentario:</div>
-            <textarea
-              {...register('commentary')}
-              name='commentary'
-              cols='20'
-              rows='10'
-              className={`${inpStyle} resize-none w-80`}
-              maxLength='250'
-            ></textarea>
-            <p className='absolute right-5 bottom-5'>
-              {comentarios ? comentarios.length : 0}/250
-            </p>
-          </label>
-          {errors.comentarios && (
-            <p className='text-red-500'>{errors.comentarios.message}</p>
-          )}
-          {Error && <p className='text-red-500'>{Error.message}</p>}
-          <input className={buttonStyle} type='submit' value='Enviar' />
-        </form>
       </section>
     </div>
   );

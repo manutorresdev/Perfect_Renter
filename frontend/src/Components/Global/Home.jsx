@@ -207,14 +207,13 @@ export function RentersList() {
     }
 
     get(
-      'http://localhost:4000/users',
+      'http://192.168.5.103:4000/users',
       (data) => {
         setUsers(data.users);
       },
       (error) => console.log(error),
       Token
     );
-
   }, [Token]);
   const buttonStyle =
     'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
@@ -268,10 +267,8 @@ export function Renter({ user, Token }) {
   return (
     <div className={descBoxStyle + ` ${!Token && 'filter blur'}`}>
       <img
-
         className=' w-full h-48 object-cover '
         src={'http://192.168.5.103:4000/photo/' + user.avatar}
-
         alt=''
       />
 
