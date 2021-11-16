@@ -29,7 +29,7 @@ export const get = (url, onSuccess, onError, token, controller) => {
     headers: {
       Authorization: token,
     },
-    signal: controller.signal,
+    // signal: controller.signal,
   })
     .then((res) => {
       // console.log('Respuesta de api.js/fetch', res);
@@ -126,10 +126,8 @@ export function CreateFormData(body) {
 
 export function CreateFormDataMultipleFiles(files) {
   const formData = new FormData();
-  if (files.photos.length > 0) {
-    files.photos.forEach((file) => {
-      formData.append('photo', file);
-    });
+  if (files.length > 0) {
+    files.map((file) => formData.append('photo', file));
   }
 
   return formData;
