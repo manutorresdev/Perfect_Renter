@@ -10,6 +10,7 @@ import Email from './Inputs/Email';
 import FirstName from './Inputs/FirstName';
 import { FaPlus } from 'react-icons/fa';
 import useProperties from '../../Helpers/Hooks/useProperties';
+import Message from '../Properties/PropertyInfo';
 
 export default function ContactTenant({ info, setOverlay, Token, properties }) {
   const {

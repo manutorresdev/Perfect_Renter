@@ -57,7 +57,7 @@ export default function FileProperty({
     });
     put(
       `http://localhost:4000/properties/${editProperty}`,
-      CreateFormDataMultipleFiles({ photos: [...photos] }),
+      CreateFormDataMultipleFiles(photos),
       (data) => {
         if (data.status === 'ok') {
           console.log('Sucess');
