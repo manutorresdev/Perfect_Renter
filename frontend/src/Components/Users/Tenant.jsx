@@ -1,11 +1,11 @@
-import React from 'react';
-import { FaStar } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { capitalizeFirstLetter } from '../../Helpers/Api';
+import React from 'react'
+import { FaStar } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import { capitalizeFirstLetter } from '../../Helpers/Api'
 
-export default function Tenant({ user, setOverlay, relation }) {
+export default function Tenant ({ user, setOverlay, relation }) {
   const buttonStyle =
-    'select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
+    'select-none w-1/2 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
 
   return (
     <article className='user-card lg:w-3/4 md:min-h-15rem xl:min-h-0 max-w-xs lg:max-w-lg lg:max-h-52 flex flex-col gap-2 text-xs shadow-lg p-4 bg-white bg-opacity-30'>
@@ -31,7 +31,7 @@ export default function Tenant({ user, setOverlay, relation }) {
               {Array(parseInt(user.votes))
                 .fill(null)
                 .map((value, i) => {
-                  return <FaStar key={i} className='text-principal-1'></FaStar>;
+                  return <FaStar key={i} className='text-principal-1' />
                 })}
             </div>
           </Link>
@@ -55,34 +55,36 @@ export default function Tenant({ user, setOverlay, relation }) {
           </p>
         </div>
       </div>
-      {relation ? (
-        <div className='buttons-cont flex gap-2 items-center justify-around w-full h-full'>
-          <button
-            className={buttonStyle}
-            onClick={() => {
-              setOverlay({ shown: true, info: user, form: 'contact' });
-            }}
-          >
-            Contactar
-          </button>
-          {relation.length > 0 && (
+      {relation
+        ? (
+          <div className='buttons-cont flex gap-2 items-center justify-around w-full h-full'>
             <button
               className={buttonStyle}
               onClick={() => {
-                setOverlay({
-                  shown: true,
-                  info: { ...user, relation: relation },
-                  form: 'vote',
-                });
+                setOverlay({ shown: true, info: user, form: 'contact' })
               }}
             >
-              Valorar
+              Contactar
             </button>
+            {relation.length > 0 && (
+              <button
+                className={buttonStyle}
+                onClick={() => {
+                  setOverlay({
+                    shown: true,
+                    info: { ...user, relation: relation },
+                    form: 'vote'
+                  })
+                }}
+              >
+                Valorar
+              </button>
+            )}
+          </div>
+          )
+        : (
+            ''
           )}
-        </div>
-      ) : (
-        ''
-      )}
     </article>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useState } from 'react'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 
-export default function Password({ register, errors }) {
-  const [ShowPass, setShowPass] = useState(false);
+export default function Password ({ register, errors }) {
+  const [ShowPass, setShowPass] = useState(false)
 
   return (
     <>
@@ -16,38 +16,40 @@ export default function Password({ register, errors }) {
             required: 'Debes escribir una contraseña.',
             minLength: {
               value: 8,
-              message: 'La contraseña debe contener mínimo 8 carácteres.',
+              message: 'La contraseña debe contener mínimo 8 carácteres.'
             },
             maxLength: {
               value: 100,
-              message: 'La contraseña no puede tener más de 100 carácteres.',
+              message: 'La contraseña no puede tener más de 100 carácteres.'
             },
             pattern: {
               value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d].{8,}$/,
               message:
-                'La contraseña debe contener una letra minúscula, una letra mayúscula y un número.',
-            },
+                'La contraseña debe contener una letra minúscula, una letra mayúscula y un número.'
+            }
           })}
         />
-        {ShowPass ? (
-          <FaEye
-            className='absolute right-1 cursor-pointer'
-            onClick={() => {
-              setShowPass(!ShowPass);
-            }}
-          />
-        ) : (
-          <FaEyeSlash
-            className='absolute right-1 cursor-pointer'
-            onClick={() => {
-              setShowPass(!ShowPass);
-            }}
-          />
-        )}
+        {ShowPass
+          ? (
+            <FaEye
+              className='absolute right-1 cursor-pointer'
+              onClick={() => {
+                setShowPass(!ShowPass)
+              }}
+            />
+            )
+          : (
+            <FaEyeSlash
+              className='absolute right-1 cursor-pointer'
+              onClick={() => {
+                setShowPass(!ShowPass)
+              }}
+            />
+            )}
       </div>
       {errors.password && (
         <p className='text-red-500'>{errors.password.message}</p>
       )}
     </>
-  );
+  )
 }

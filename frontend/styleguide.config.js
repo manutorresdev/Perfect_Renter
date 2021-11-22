@@ -5,18 +5,18 @@
 // const cracoConfig = require('./craco.config.js');
 // const webpackConfig = createWebpackDevConfig(cracoConfig);
 
-const path = require('path');
+const path = require('path')
 
 const {
   createWebpackDevConfig,
-  createWebpackProdConfig,
-} = require('@craco/craco');
+  createWebpackProdConfig
+} = require('@craco/craco')
 
-const cracoConfig = require('./craco.config.js');
+const cracoConfig = require('./craco.config.js')
 const webpackConfig =
   process.env.NODE_ENV === 'production'
     ? createWebpackProdConfig(cracoConfig)
-    : createWebpackDevConfig(cracoConfig);
+    : createWebpackDevConfig(cracoConfig)
 
 module.exports = {
   webpackConfig,
@@ -30,7 +30,7 @@ module.exports = {
       components: 'src/Components/Global/*.jsx',
       ignore: [
         'src/Components/Global/Home.jsx',
-        'src/Components/Global/MenuElements.jsx',
+        'src/Components/Global/MenuElements.jsx'
       ],
       usageMode: 'collapse',
       exampleMode: 'collapse',
@@ -39,12 +39,12 @@ module.exports = {
         {
           ignore: [
             'src/Components/Global/Home.jsx',
-            'src/Components/Global/MenuElements.jsx',
+            'src/Components/Global/MenuElements.jsx'
           ],
           name: 'Home Components',
-          content: 'src/Components/Global/HomeReadme.md',
-        },
-      ],
+          content: 'src/Components/Global/HomeReadme.md'
+        }
+      ]
     },
     {
       exampleMode: 'collapse',
@@ -56,16 +56,16 @@ module.exports = {
         {
           name: 'Book Property',
           component: 'src/Components/Forms/ContactProperty.jsx',
-          content: 'src/Components/Forms/BookProperty.md',
-        },
-      ],
+          content: 'src/Components/Forms/BookProperty.md'
+        }
+      ]
     },
     {
       exampleMode: 'collapse',
       name: 'Properties Components',
       components: 'src/Components/Properties/*.jsx',
       ignore: 'src/Components/Properties/PropertyInfo.jsx',
-      usageMode: 'collapse',
+      usageMode: 'collapse'
     },
     {
       exampleMode: 'collapse',
@@ -76,9 +76,9 @@ module.exports = {
         {
           name: 'Delete Account',
           component: 'serc/Components/Users/Profile.jsx',
-          content: 'src/Components/Users/DeleteOverlay.md',
-        },
-      ],
-    },
-  ],
-};
+          content: 'src/Components/Users/DeleteOverlay.md'
+        }
+      ]
+    }
+  ]
+}

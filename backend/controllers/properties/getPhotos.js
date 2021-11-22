@@ -1,4 +1,4 @@
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Entries
  */
@@ -11,14 +11,14 @@ const getDB = require('../../config/getDB');
  * @returns {Promise} Devuelve un objeto con los datos
  */
 const getPhotos = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
-    //Obtenemos el id de la propiedad.
-    const { idProperty } = req.params;
+    // Obtenemos el id de la propiedad.
+    const { idProperty } = req.params
 
-    //Obtenemos los datos de las fotos de dicha propiedad.
+    // Obtenemos los datos de las fotos de dicha propiedad.
     const [photos] = await connection.query(
       `
       SELECT
@@ -27,17 +27,17 @@ const getPhotos = async (req, res, next) => {
       WHERE idProperty = ?
       `,
       [idProperty]
-    );
+    )
 
     res.send({
       status: 'ok',
-      photos,
-    });
+      photos
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = getPhotos;
+module.exports = getPhotos

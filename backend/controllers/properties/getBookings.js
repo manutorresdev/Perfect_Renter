@@ -1,4 +1,4 @@
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Entries
  */
@@ -11,9 +11,9 @@ const getDB = require('../../config/getDB');
  * @returns {Promise} Devuelve un objeto con los datos
  */
 const getBookings = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     /**
      * ########################
@@ -22,10 +22,10 @@ const getBookings = async (req, res, next) => {
      */
 
     if (req.route.path.includes('properties')) {
-      //Obtenemos el id de la propiedad.
-      const { idProperty } = req.params;
+      // Obtenemos el id de la propiedad.
+      const { idProperty } = req.params
 
-      //Obtenemos los datos de las reservas de dicha propiedad.
+      // Obtenemos los datos de las reservas de dicha propiedad.
       const [bookings] = await connection.query(
         `
       SELECT
@@ -35,11 +35,11 @@ const getBookings = async (req, res, next) => {
       ORDER BY startBookingDate
       `,
         [idProperty]
-      );
+      )
       res.send({
         status: 'ok',
-        bookings,
-      });
+        bookings
+      })
     }
 
     /**
@@ -50,9 +50,9 @@ const getBookings = async (req, res, next) => {
 
     if (req.route.path.includes('renter')) {
       // Obtenemos el id del usuario que hace la request.
-      const { idUser: idReqUser } = req.userAuth;
+      const { idUser: idReqUser } = req.userAuth
 
-      //Obtenemos los datos de las reservas de dicho usuario COMO CASERO.
+      // Obtenemos los datos de las reservas de dicho usuario COMO CASERO.
       const [bookings] = await connection.query(
         `
         SELECT
@@ -78,17 +78,17 @@ const getBookings = async (req, res, next) => {
         GROUP BY bookings.idBooking;
         `,
         [idReqUser]
-      );
+      )
       res.send({
         status: 'ok',
-        bookings,
-      });
+        bookings
+      })
     }
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = getBookings;
+module.exports = getBookings

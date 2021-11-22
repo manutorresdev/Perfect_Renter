@@ -1,6 +1,6 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
-const { savePhoto, formatDate } = require('../../libs/helpers');
+const getDB = require('../../config/getDB')
+const { savePhoto, formatDate } = require('../../libs/helpers')
 /**
  * @module Entries
  */
@@ -11,19 +11,19 @@ const { savePhoto, formatDate } = require('../../libs/helpers');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const addPropertyPhoto = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos id del inmueble
-    const { idProperty } = req.params;
+    const { idProperty } = req.params
 
     // Si no recibimos foto lanzamos error
     if (!req.files.photo) {
-      const error = new Error('No se ha encontrado el archivo.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('No se ha encontrado el archivo.')
+      error.httpStatus = 400
+      throw error
     }
 
     for (const photo of Object.values(req.files)) {
@@ -33,21 +33,21 @@ const addPropertyPhoto = async (req, res, next) => {
       SELECT idPhoto FROM photos WHERE idProperty = ?
       `,
         [idProperty]
-      );
+      )
 
       // Comprobamos que no haya más de 30 fotos.
       if (photos.length > 29) {
-        const error = new Error('Solo puedes subir un máximo de 30 fotos.');
-        error.httpStatus = 403;
-        throw error;
+        const error = new Error('Solo puedes subir un máximo de 30 fotos.')
+        error.httpStatus = 403
+        throw error
       }
-      let photoName;
+      let photoName
       try {
-        photoName = await savePhoto(photo);
+        photoName = await savePhoto(photo)
       } catch (_) {
-        const error = new Error('Formato incorrecto.');
-        error.httpStatus = 400;
-        throw error;
+        const error = new Error('Formato incorrecto.')
+        error.httpStatus = 400
+        throw error
       }
       await connection.query(
         `
@@ -55,17 +55,17 @@ const addPropertyPhoto = async (req, res, next) => {
       VALUES (?,?,?)
       `,
         [photoName, idProperty, formatDate(new Date())]
-      );
+      )
     }
     res.send({
       status: 'ok',
-      message: 'Las fotos han sido subidas.',
-    });
+      message: 'Las fotos han sido subidas.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = addPropertyPhoto;
+module.exports = addPropertyPhoto

@@ -1,61 +1,61 @@
-import React, { useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
-import { CreateFormData, put } from '../../Helpers/Api';
-import EditAvatar from 'react-avatar-editor';
-import { Message } from '../Properties/PropertyInfo';
+import React, { useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa'
+import { CreateFormData, put } from '../../Helpers/Api'
+import EditAvatar from 'react-avatar-editor'
+import { Message } from '../Properties/PropertyInfo'
 
-export default function Avatar({ setOverlay, avatar, usuario, Token }) {
-  const [Error, setError] = useState('');
-  const [FileName, setFileName] = useState('');
-  const [ImgPreview, setImgPreview] = useState(null);
-  const [Scale, setScale] = useState(1);
-  const hiddenInput = useRef(null);
-  const editedImg = useRef(null);
-  const [message, setMessage] = useState({ message: '', status: '' });
+export default function Avatar ({ setOverlay, avatar, usuario, Token }) {
+  const [Error, setError] = useState('')
+  const [FileName, setFileName] = useState('')
+  const [ImgPreview, setImgPreview] = useState(null)
+  const [Scale, setScale] = useState(1)
+  const hiddenInput = useRef(null)
+  const editedImg = useRef(null)
+  const [message, setMessage] = useState({ message: '', status: '' })
   const {
     handleSubmit,
     register,
-    formState: { errors },
-  } = useForm();
+    formState: { errors }
+  } = useForm()
 
   const { ref, onChange, ...rest } = register('avatar', {
-    required: 'Debes escoger una foto',
-  });
+    required: 'Debes escoger una foto'
+  })
 
-  function uploadFile(body, e) {
-    e.preventDefault();
+  function uploadFile (body, e) {
+    e.preventDefault()
     if (body.avatar[0]) {
       editedImg.current.getImageScaledToCanvas().toBlob((blob) => {
         const file = new File([blob], hiddenInput.current.files[0].name, {
-          type: 'image/jpeg',
-        });
+          type: 'image/jpeg'
+        })
 
         put(
           `http://192.168.5.103:4000/users/${usuario.idUser}`,
           CreateFormData({ avatar: file }),
           (data) => {
-            console.log('Success');
-            setMessage({ message: data.message, status: 'ok' });
+            console.log('Success')
+            setMessage({ message: data.message, status: 'ok' })
           },
           (error) => {
-            setError(error.message);
+            setError(error.message)
           },
           Token
-        );
-      }, 'image/jpeg');
+        )
+      }, 'image/jpeg')
     }
   }
 
-  function imageHandler(e) {
+  function imageHandler (e) {
     if (e.target.files.length > 0) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = (d) => {
         if (reader.readyState === 2) {
-          setImgPreview(reader.result);
+          setImgPreview(reader.result)
         }
-      };
-      reader.readAsDataURL(e.target.files[0]);
+      }
+      reader.readAsDataURL(e.target.files[0])
     }
   }
 
@@ -66,7 +66,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
-            setOverlay({ shown: false, info: {} });
+            setOverlay({ shown: false, info: {} })
           }}
         >
           <FaPlus className='transform scale-150 rotate-45' />
@@ -87,8 +87,8 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
               <button
                 className='font-medium flex items-center gap-2 w-full bg-blue-600 text-white p-2 justify-center'
                 onClick={(e) => {
-                  e.preventDefault();
-                  hiddenInput.current.click();
+                  e.preventDefault()
+                  hiddenInput.current.click()
                 }}
               >
                 <FaRegArrowAltCircleUp className='animate-bounce' />
@@ -98,13 +98,13 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
                 className='hidden'
                 {...rest}
                 onChange={(e) => {
-                  onChange(e);
-                  imageHandler(e);
-                  setFileName(hiddenInput.current.files[0].name);
+                  onChange(e)
+                  imageHandler(e)
+                  setFileName(hiddenInput.current.files[0].name)
                 }}
                 ref={(e) => {
-                  ref(e);
-                  hiddenInput.current = e;
+                  ref(e)
+                  hiddenInput.current = e
                 }}
                 type='file'
                 name='avatar'
@@ -138,7 +138,7 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
                   max='3'
                   step='0.01'
                   onChange={(e) => {
-                    setScale(e.target.value);
+                    setScale(e.target.value)
                   }}
                 />
               </>
@@ -153,5 +153,5 @@ export default function Avatar({ setOverlay, avatar, usuario, Token }) {
         </div>
       </section>
     </div>
-  );
+  )
 }

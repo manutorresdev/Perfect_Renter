@@ -1,5 +1,5 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  *
  * @module Helpers
@@ -11,33 +11,33 @@ const getDB = require('../../config/getDB');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
  */
 const userExists = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el id del usuario.
-    const { idUser } = req.params;
+    const { idUser } = req.params
 
     // Obtenemos el usuario.
     const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE idUser = ? AND deleted = false`,
+      'SELECT idUser FROM users WHERE idUser = ? AND deleted = false',
       [idUser]
-    );
+    )
 
     // Si el usuario no existe lanzamos un error.
     if (user.length < 1) {
-      const error = new Error('El usuario no existe.');
-      error.httpStatus = 404;
-      throw error;
+      const error = new Error('El usuario no existe.')
+      error.httpStatus = 404
+      throw error
     }
 
-    next();
+    next()
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = userExists;
+module.exports = userExists

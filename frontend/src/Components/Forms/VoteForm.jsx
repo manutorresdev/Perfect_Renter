@@ -1,65 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FaPlus, FaStar } from 'react-icons/fa';
-import { capitalizeFirstLetter, CreateFormData, post } from '../../Helpers/Api';
-import { Message } from '../Properties/PropertyInfo';
-export default function VoteForm({ setOverlay, info, Token }) {
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { FaPlus, FaStar } from 'react-icons/fa'
+import { capitalizeFirstLetter, CreateFormData, post } from '../../Helpers/Api'
+import { Message } from '../Properties/PropertyInfo'
+export default function VoteForm ({ setOverlay, info, Token }) {
   // Estados
   // Estado con el id de la propiedad a votar
-  const [Property, setProperty] = useState({});
+  const [Property, setProperty] = useState({})
   // Estado con el mensaje de confirmación al votar
-  const [message, setMessage] = useState({ message: '', status: '' });
+  const [message, setMessage] = useState({ message: '', status: '' })
   // Estado con la selección de la propiedad en caso de que haya más de una
-  const [SelectProperty, setSelectProperty] = useState(false);
+  const [SelectProperty, setSelectProperty] = useState(false)
   // Valoración al hacer click
-  const [Rating, setRating] = useState(null);
+  const [Rating, setRating] = useState(null)
   // Valoración al hacer hover (para diseño)
-  const [Hover, setHover] = useState(null);
+  const [Hover, setHover] = useState(null)
   // Mensaje de error en caso de que haya
-  const [Error, setError] = useState('');
+  const [Error, setError] = useState('')
 
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
-  } = useForm();
+    formState: { errors }
+  } = useForm()
 
   useEffect(() => {
     if (info.relation.length > 1) {
-      setSelectProperty(true);
+      setSelectProperty(true)
     } else {
-      setProperty(info.relation[0].idProperty);
+      setProperty(info.relation[0].idProperty)
     }
     return () => {
-      setProperty('');
-    };
-  }, [info]);
+      setProperty('')
+    }
+  }, [info])
 
-  function onSubmit(body, e) {
-    e.preventDefault();
+  function onSubmit (body, e) {
+    e.preventDefault()
     if (body.voteValueRenter && body.commentary && Property) {
       post(
         `http://192.168.5.103:4000/users/${info.idUser}/votes`,
         CreateFormData({ ...body, idProperty: Property }),
         (data) => {
-          setMessage({ message: data.message, status: 'ok' });
+          setMessage({ message: data.message, status: 'ok' })
         },
         (error) => {
-          console.error(error);
-          setError(error);
+          console.error(error)
+          setError(error)
         },
         Token
-      );
+      )
     } else {
-      setError({ message: 'Debes rellenar los campos.' });
+      setError({ message: 'Debes rellenar los campos.' })
     }
   }
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
-  const comentarios = watch('commentary');
+    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring'
+  const comentarios = watch('commentary')
   const buttonStyle =
-    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
 
   return (
     <div className='overlay z-30 p-4 bg-white bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-24 overflow-auto sm:overflow-hidden'>
@@ -76,7 +76,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
-            setOverlay({ shown: false, info: {}, form: '' });
+            setOverlay({ shown: false, info: {}, form: '' })
           }}
         >
           <FaPlus className='transform scale-150 rotate-45' />
@@ -110,7 +110,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
               </div>
               <div className='flex'>
                 {[1, 2, 3, 4, 5].map((value, i) => {
-                  const ratingValue = i + 1;
+                  const ratingValue = i + 1
                   return (
                     <label key={i}>
                       <input
@@ -120,15 +120,15 @@ export default function VoteForm({ setOverlay, info, Token }) {
                         value={ratingValue}
                         {...register('voteValueRenter')}
                         onClick={() => {
-                          setRating(ratingValue);
+                          setRating(ratingValue)
                         }}
                       />
                       <FaStar
                         onMouseEnter={() => {
-                          setHover(ratingValue);
+                          setHover(ratingValue)
                         }}
                         onMouseLeave={() => {
-                          setHover(null);
+                          setHover(null)
                         }}
                         key={value}
                         className={`${
@@ -138,7 +138,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
                         }  hover:text-principal-1 hover:opacity-100 duration-200 text-2xl cursor-pointer`}
                       />
                     </label>
-                  );
+                  )
                 })}
               </div>
             </label>
@@ -151,7 +151,7 @@ export default function VoteForm({ setOverlay, info, Token }) {
                 rows='10'
                 className={`${inpStyle} resize-none w-full h-40`}
                 maxLength='250'
-              ></textarea>
+              />
               <p className='absolute right-5 bottom-5'>
                 {comentarios ? comentarios.length : 0}/250
               </p>
@@ -165,14 +165,14 @@ export default function VoteForm({ setOverlay, info, Token }) {
         </div>
       </section>
     </div>
-  );
+  )
 }
 
-function PropertiesToVote({
+function PropertiesToVote ({
   info,
   setProperty,
   setSelectProperty,
-  setOverlay,
+  setOverlay
 }) {
   return (
     <div className='z-50 p-2 bg-gray-400 bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
@@ -187,13 +187,13 @@ function PropertiesToVote({
               return (
                 <button
                   onClick={() => {
-                    setProperty(booking.idProperty);
-                    setSelectProperty(false);
+                    setProperty(booking.idProperty)
+                    setSelectProperty(false)
                   }}
                   key={booking.bookingCode}
                 >
                   <article
-                    className={`border border-black h-1/3 flex md:w-4/12 md:max-w-md sm:w-7/12 justify-between shadow-2xl`}
+                    className='border border-black h-1/3 flex md:w-4/12 md:max-w-md sm:w-7/12 justify-between shadow-2xl'
                   >
                     <div className='flex flex-col flex-grow w-5/12'>
                       <h2 className='bg-gray-Primary text-principal-1 text-lg w-full'>
@@ -223,7 +223,7 @@ function PropertiesToVote({
                         </p>
                       )}
                     </div>
-                    <div className='border-r-2 border-opacity-75 border-gray-700'></div>
+                    <div className='border-r-2 border-opacity-75 border-gray-700' />
                     <div className='w-4/12 relative flex flex-col justify-between'>
                       <img
                         className='w-60 h-60 object-cover rounded-circle'
@@ -237,14 +237,14 @@ function PropertiesToVote({
                     </div>
                   </article>
                 </button>
-              );
+              )
             })}
           </div>
         </div>
         <button
           onClick={() => {
-            setSelectProperty(false);
-            setOverlay({ shown: false, info: {}, form: '' });
+            setSelectProperty(false)
+            setOverlay({ shown: false, info: {}, form: '' })
           }}
           className='p-2 bg-principal-1 text-principal-gris font-medium'
         >
@@ -252,17 +252,17 @@ function PropertiesToVote({
         </button>
       </div>
     </div>
-  );
+  )
 }
 
-export function ConfirmMessage({ Message }) {
+export function ConfirmMessage ({ Message }) {
   return (
     <div className='flex-col z-20 absolute left-0 top-0 right-0 bottom-0 bg-gray-700 bg-opacity-30 h-screen w-screen shadow-2xl p-20 flex items-center justify-between'>
       <section className='confirm-message m-auto font-medium p-4 border-2 border-gray-700 flex flex-col items-center gap-5 bg-gray-100 relative text-principal-gris overflow-y-scroll md:w-3/4'>
         <h1>{Message ?? ''}</h1>
         <button
           onClick={() => {
-            window.location.reload();
+            window.location.reload()
           }}
           className='btn-more text-xl bg-none p-2 border-yellow-400 border-2 max-w-max hover:bg-principal-1 hover:border-white hover:text-gray-600 duration-300'
         >
@@ -270,5 +270,5 @@ export function ConfirmMessage({ Message }) {
         </button>
       </section>
     </div>
-  );
+  )
 }

@@ -1,34 +1,34 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { put } from '../../Helpers/Api';
-import Email from './Inputs/Email';
-import { Message } from '../Properties/PropertyInfo';
-export default function RecoverPass() {
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { put } from '../../Helpers/Api'
+import Email from './Inputs/Email'
+import { Message } from '../Properties/PropertyInfo'
+export default function RecoverPass () {
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
+    formState: { errors }
+  } = useForm()
 
-  const formFunctions = { register, errors };
-  const [message, setMessage] = useState({ message: '', status: '' });
-  function onSubmit(body, e) {
-    e.preventDefault();
+  const formFunctions = { register, errors }
+  const [message, setMessage] = useState({ message: '', status: '' })
+  function onSubmit (body, e) {
+    e.preventDefault()
 
     put(
       'http://192.168.5.103:4000/users/password/recover',
       body,
       (data) => {
-        console.log(data);
+        console.log(data)
         setMessage({
           message: '¡Revisa tu correo electrónico para cambiar la contraseña!',
-          status: 'ok',
-        });
+          status: 'ok'
+        })
       },
       (error) => {
-        setMessage({ message: error.message, status: 'error' });
+        setMessage({ message: error.message, status: 'error' })
       }
-    );
+    )
   }
 
   return (
@@ -52,5 +52,5 @@ export default function RecoverPass() {
         />
       </form>
     </section>
-  );
+  )
 }

@@ -1,24 +1,24 @@
-import React, { useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FaPlus } from 'react-icons/fa';
-import { useHistory } from 'react-router';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateRangePicker from '@mui/lab/DateRangePicker';
-import { format } from 'date-fns';
-import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import esEsLocale from 'date-fns/locale/es';
+import React, { useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { FaPlus } from 'react-icons/fa'
+import { useHistory } from 'react-router'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DateRangePicker from '@mui/lab/DateRangePicker'
+import { format } from 'date-fns'
+import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import esEsLocale from 'date-fns/locale/es'
 
-export default function Filters({ setOverlay, Overlay }) {
-  const pMinVal = useRef();
-  const history = useHistory();
-  const [TriggerDatePicker, setTriggerDatePicker] = useState(false);
-  const [pickerValue, setPickerValue] = useState([null, null]);
+export default function Filters ({ setOverlay, Overlay }) {
+  const pMinVal = useRef()
+  const history = useHistory()
+  const [TriggerDatePicker, setTriggerDatePicker] = useState(false)
+  const [pickerValue, setPickerValue] = useState([null, null])
   const {
     register,
     handleSubmit,
     setValue,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     defaultValues: {
       orden: '',
@@ -33,42 +33,42 @@ export default function Filters({ setOverlay, Overlay }) {
       baños: '',
       m2: '',
       entrada: '',
-      salida: '',
-    },
-  });
+      salida: ''
+    }
+  })
 
-  function onSubmit(body, e) {
-    e.preventDefault();
+  function onSubmit (body, e) {
+    e.preventDefault()
 
     const queryString = Object.keys(body)
       .filter((val) => {
-        if (val === 'garaje' && body['garaje'] === true) {
-          return body[val];
+        if (val === 'garaje' && body.garaje === true) {
+          return body[val]
         } else {
-          return body[val].length >= 1;
+          return body[val].length >= 1
         }
       })
       .map((key) => {
         if (key === 'garaje') {
-          return `${key}=1`;
+          return `${key}=1`
         } else {
-          return `${key}=${body[key]}`;
+          return `${key}=${body[key]}`
         }
       })
-      .join('&');
+      .join('&')
 
     if (history.location.pathname.length > 12) {
-      history.replace('/alquileres?' + queryString);
+      history.replace('/alquileres?' + queryString)
     }
-    history.push('?' + queryString);
+    history.push('?' + queryString)
 
     if (window.innerWidth <= 650) {
-      setOverlay({ show: false });
+      setOverlay({ show: false })
     }
   }
-  const inputsLabelStyle = 'text-lg duration-200';
+  const inputsLabelStyle = 'text-lg duration-200'
   const inputStyle =
-    'bg-black bg-opacity-70 w-48 p-3 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
+    'bg-black bg-opacity-70 w-48 p-3 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg'
   return (
     <>
       <div
@@ -82,7 +82,7 @@ export default function Filters({ setOverlay, Overlay }) {
           <button
             className='close-overlay absolute top-3 right-3 lg:hidden'
             onClick={() => {
-              setOverlay({ show: false, form: '' });
+              setOverlay({ show: false, form: '' })
             }}
           >
             <FaPlus className='transform rotate-45 ' />
@@ -139,7 +139,7 @@ export default function Filters({ setOverlay, Overlay }) {
                   value={pickerValue}
                   open={TriggerDatePicker}
                   onClose={() => {
-                    setTriggerDatePicker(false);
+                    setTriggerDatePicker(false)
                   }}
                   renderLoading={() => <CalendarPickerSkeleton />}
                   inputFormat='dd/MM/yyyy'
@@ -150,24 +150,24 @@ export default function Filters({ setOverlay, Overlay }) {
                     ) {
                       console.error(
                         'Fecha de entrada mayor a fecha de salida.'
-                      );
+                      )
                     } else if (
                       new Date(newValue[0]).getTime() ===
                       new Date(newValue[1]).getTime()
                     ) {
-                      console.error('Selecciona fechas diferentes.');
+                      console.error('Selecciona fechas diferentes.')
                     } else {
-                      console.warn('FECHAS CORRECTAS');
-                      setPickerValue(newValue);
+                      console.warn('FECHAS CORRECTAS')
+                      setPickerValue(newValue)
                       if (
                         newValue[0] &&
                         !isNaN(newValue[0].getTime()) &&
                         newValue[1] &&
                         !isNaN(newValue[1].getTime())
                       ) {
-                        setValue('entrada', format(newValue[0], 'yyyy/MM/dd'));
-                        setValue('salida', format(newValue[1], 'yyyy/MM/dd'));
-                        setTriggerDatePicker(false);
+                        setValue('entrada', format(newValue[0], 'yyyy/MM/dd'))
+                        setValue('salida', format(newValue[1], 'yyyy/MM/dd'))
+                        setTriggerDatePicker(false)
                       }
                     }
                   }}
@@ -175,7 +175,7 @@ export default function Filters({ setOverlay, Overlay }) {
                     <div className='flex flex-col w-full justify-start '>
                       <label
                         onClick={(e) => {
-                          setTriggerDatePicker(true);
+                          setTriggerDatePicker(true)
                         }}
                         className='flex flex-col w-full justify-start '
                       >
@@ -192,7 +192,7 @@ export default function Filters({ setOverlay, Overlay }) {
                       </label>
                       <label
                         onClick={(e) => {
-                          setTriggerDatePicker(true);
+                          setTriggerDatePicker(true)
                         }}
                         className='flex flex-col w-full justify-start'
                       >
@@ -221,13 +221,13 @@ export default function Filters({ setOverlay, Overlay }) {
                         value:
                           /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                         message:
-                          'La ciudad no puede contener caracteres especiales ni números.',
+                          'La ciudad no puede contener caracteres especiales ni números.'
                       },
                       maxLength: {
                         value: 30,
                         message:
-                          'La ciudad no puede tener más de 50 caracteres.',
-                      },
+                          'La ciudad no puede tener más de 50 caracteres.'
+                      }
                     })}
                     type='text'
                     name='ciudad'
@@ -248,13 +248,13 @@ export default function Filters({ setOverlay, Overlay }) {
                         value:
                           /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                         message:
-                          'La provincia no puede contener carácteres especiales ni números.',
+                          'La provincia no puede contener carácteres especiales ni números.'
                       },
                       maxLength: {
                         value: 30,
                         message:
-                          'La provincia no puede tener más de 50 carácteres.',
-                      },
+                          'La provincia no puede tener más de 50 carácteres.'
+                      }
                     })}
                     type='text'
                     name='provincia'
@@ -307,8 +307,8 @@ export default function Filters({ setOverlay, Overlay }) {
                     {...register('pMin', {
                       pattern: {
                         value: /^([0-9]*){5,}$/,
-                        message: 'Debe contener solo números.',
-                      },
+                        message: 'Debe contener solo números.'
+                      }
                     })}
                     name='pMin'
                     className={inputStyle}
@@ -329,8 +329,8 @@ export default function Filters({ setOverlay, Overlay }) {
                     {...register('pMax', {
                       pattern: {
                         value: /^([0-9]*){5,}$/,
-                        message: 'Debe contener solo números.',
-                      },
+                        message: 'Debe contener solo números.'
+                      }
                     })}
                     min='1'
                     maxLength={5}
@@ -409,5 +409,5 @@ export default function Filters({ setOverlay, Overlay }) {
         </section>
       </div>
     </>
-  );
+  )
 }

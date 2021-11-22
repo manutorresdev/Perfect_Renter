@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { get } from '../../Helpers/Api';
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { get } from '../../Helpers/Api'
 
-export default function VerifyUser({ match }) {
-  const [Message, setMessage] = useState('');
+export default function VerifyUser ({ match }) {
+  const [Message, setMessage] = useState('')
 
   useEffect(() => {
     // const controller = new AbortController();
     get(
       `http://192.168.5.103:4000/users/validate/${match.params.registrationCode}`,
       (data) => {
-        setMessage(data.message);
+        setMessage(data.message)
       },
       (error) => {
-        setMessage(error.message);
+        setMessage(error.message)
       },
       null,
       null
-    );
+    )
     return () => {
       // controller.abort();
-    };
-  }, [match.params.registrationCode]);
+    }
+  }, [match.params.registrationCode])
 
   return (
     <>
@@ -35,5 +35,5 @@ export default function VerifyUser({ match }) {
         </Link>
       </section>
     </>
-  );
+  )
 }

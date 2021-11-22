@@ -1,24 +1,24 @@
-console.clear();
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const fileUpload = require('express-fileupload');
-const morgan = require('morgan');
-const { uploadsDir } = require('../backend/libs/helpers');
+console.clear()
+require('dotenv').config()
+const express = require('express')
+const cors = require('cors')
+const fileUpload = require('express-fileupload')
+const morgan = require('morgan')
+const { uploadsDir } = require('../backend/libs/helpers')
 
-const app = express();
-const { PORT } = process.env;
+const app = express()
+const { PORT } = process.env
 
 // CORS
-app.use(cors());
+app.use(cors())
 // LOGGER
-app.use(morgan('dev'));
+app.use(morgan('dev'))
 // BODY DESERIALIZER
-app.use(express.json());
+app.use(express.json())
 // FORM-DATA DESERIALIZER
-app.use(fileUpload());
+app.use(fileUpload())
 // PHOTOS MIDDLEWARE
-app.use('/photo', express.static(uploadsDir));
+app.use('/photo', express.static(uploadsDir))
 
 /**
  * @module Routes
@@ -35,8 +35,8 @@ const {
   authUser,
   userExists,
   canEdit,
-  propertyExists,
-} = require('./libs/middlewares/index');
+  propertyExists
+} = require('./libs/middlewares/index')
 
 /**
  * ############################
@@ -60,8 +60,8 @@ const {
   getBookings,
   getLocations,
   editBooking,
-  getPhotos,
-} = require('./controllers/properties/index');
+  getPhotos
+} = require('./controllers/properties/index')
 
 /**
  * ##########################
@@ -77,7 +77,7 @@ const {
  * @code {200} Si la respuesta es correcta
  * @response {Object} Response Lista de nombres de fotos
  */
-app.get('/properties/:idProperty/photos', propertyExists, getPhotos);
+app.get('/properties/:idProperty/photos', propertyExists, getPhotos)
 /**
  * Añadir un nuevo alquiler
  *
@@ -91,7 +91,7 @@ app.get('/properties/:idProperty/photos', propertyExists, getPhotos);
  * @code {403} Si supera el máximo de archivos permitidos
  * @response {Object} Response Guarda los datos en la base de datos
  */
-app.post('/properties', authUser, newProperty);
+app.post('/properties', authUser, newProperty)
 
 /**
  * Lista las provincias/ciudades
@@ -101,7 +101,7 @@ app.post('/properties', authUser, newProperty);
  * @code {200} Si la respuesta es correcta
  * @response {Object} Response Lista de ciudades
  */
-app.get('/properties/location', getLocations);
+app.get('/properties/location', getLocations)
 
 /**
  * Obtener información de una propiedad en concreto
@@ -113,7 +113,7 @@ app.get('/properties/location', getLocations);
  * @code {404} Si la propiedad no existe
  * @response {Object} devuelve la propiedad en concreto o error de existir
  */
-app.get('/properties/:idProperty', propertyExists, getProperty);
+app.get('/properties/:idProperty', propertyExists, getProperty)
 /**
  * Obtener información de todas las propiedades disponibles
  *
@@ -122,7 +122,7 @@ app.get('/properties/:idProperty', propertyExists, getProperty);
  * @code {200} Si la respuesta es correcta
  * @response {Object} Response listando las propiedades disponibles
  */
-app.get('/properties', listProperties);
+app.get('/properties', listProperties)
 
 /**
  * Agregar foto a los inmuebles
@@ -144,7 +144,7 @@ app.post(
   propertyExists,
   canEdit,
   addPropertyPhoto
-);
+)
 
 /**
  * Solicitud de alquiler a un inmueble
@@ -158,7 +158,7 @@ app.post(
  * @code {403} Si es el dueño de la vivienda
  * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
  */
-app.post('/properties/:idProperty/contact', propertyExists, contactProperty);
+app.post('/properties/:idProperty/contact', propertyExists, contactProperty)
 
 /**
  * Solicitud de alquiler a un inmueble
@@ -178,7 +178,7 @@ app.post(
   authUser,
   propertyExists,
   bookProperty
-);
+)
 
 /**
  * Cancelar una reserva
@@ -189,7 +189,7 @@ app.post(
  * @params {number} idReqUser Id de quien realiza la cancelación
  * @response {Object} Response - Se notifica por pantalla y email que la reserva se cancela
  */
-app.get('/properties/:bookingCode/cancel', authUser, cancelBooking);
+app.get('/properties/:bookingCode/cancel', authUser, cancelBooking)
 
 /**
  * Aceptar reserva.
@@ -201,7 +201,7 @@ app.get('/properties/:bookingCode/cancel', authUser, cancelBooking);
  * @code {404} Si no hay reserva pendiente de aceptar o si no existe la viviendo o el inquilino
  * @response {Object} Response El servidor envía un correo electrónico al inquilino y al dueño de la vivienda conforme la reserva se ha realizado con éxito
  */
-app.get('/properties/:bookingCode/accept', authUser, acceptBooking);
+app.get('/properties/:bookingCode/accept', authUser, acceptBooking)
 
 /**
  * Editar información de un inmueble
@@ -223,7 +223,7 @@ app.put(
   propertyExists,
   canEdit,
   editProperty
-);
+)
 /**
  * Eliminar un inmueble
  *
@@ -241,7 +241,7 @@ app.delete(
   authUser,
   canEdit,
   deleteProperty
-);
+)
 /**
  * Eliminar una foto de un inmueble
  *
@@ -260,7 +260,7 @@ app.delete(
   authUser,
   canEdit,
   deletePropertyPhoto
-);
+)
 /**
  * Votar un inmueble
  *
@@ -273,7 +273,7 @@ app.delete(
  * @code {403} Si se intenta votar a uno mismo
  * @response {Object} Response Cambia el valor del voto y el comentario en la base de datos
  */
-app.post('/properties/:idProperty/votes', authUser, propertyExists, newVote);
+app.post('/properties/:idProperty/votes', authUser, propertyExists, newVote)
 /**
  * Listar las valoraciones de un alquiler
  *
@@ -285,7 +285,7 @@ app.post('/properties/:idProperty/votes', authUser, propertyExists, newVote);
  * @code {401} Si la autorización del usuario es errónea
  * @response {Object} Response Lista de las valoraciones
  */
-app.get('/properties/:idProperty/votes', propertyExists, listPropertyVotes);
+app.get('/properties/:idProperty/votes', propertyExists, listPropertyVotes)
 /**
  * Listar las reservas de un alquiler
  *
@@ -295,7 +295,7 @@ app.get('/properties/:idProperty/votes', propertyExists, listPropertyVotes);
  * @code {200} Si la respuesta es correcta
  * @response {Object} Response Lista de reservas
  */
-app.get('/properties/:idProperty/bookings', propertyExists, getBookings);
+app.get('/properties/:idProperty/bookings', propertyExists, getBookings)
 /**
  * Editar fecha de reserva
  *
@@ -311,7 +311,7 @@ app.put(
   propertyExists,
   authUser,
   editBooking
-);
+)
 
 /**
  * ######################
@@ -332,10 +332,10 @@ const {
   editUser,
   contactUser,
   listBookedProperties,
-  listUserVotes,
-} = require('./controllers/users/index');
-const contactUs = require('./controllers/contactUs');
-const getPhoto = require('./controllers/getPhoto');
+  listUserVotes
+} = require('./controllers/users/index')
+const contactUs = require('./controllers/contactUs')
+const getPhoto = require('./controllers/getPhoto')
 
 /**
  * ####################
@@ -355,7 +355,7 @@ const getPhoto = require('./controllers/getPhoto');
  * @code {404} Si el usuario no existe
  * @response {Object} Response Datos de usuario
  */
-app.get('/users/:idUser', authUser, userExists, getUser);
+app.get('/users/:idUser', authUser, userExists, getUser)
 
 /**
  * Listar todos los usuarios
@@ -370,7 +370,7 @@ app.get('/users/:idUser', authUser, userExists, getUser);
  * @code {404} Si el usuario no existe
  * @response {Array} Response Array de datos de todos los usuarios
  */
-app.get('/users', authUser, listUsers);
+app.get('/users', authUser, listUsers)
 
 /**
  * Obtener enlace de recuperación de contraseña.
@@ -382,7 +382,7 @@ app.get('/users', authUser, listUsers);
  * @code {404} Si el usuario no existe
  * @response {Object} Response Confirmación recuperación contraseña
  */
-app.put('/users/password/recover', recoverUserPass);
+app.put('/users/password/recover', recoverUserPass)
 
 /**
  * Recuperar contraseña de usuario.
@@ -396,7 +396,7 @@ app.put('/users/password/recover', recoverUserPass);
  * @code {404} Si el enlace es erróneo
  * @response {Object} Response Cambia la contraseña del usuario
  */
-app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
+app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover)
 
 /**
  * Agregar usuario.
@@ -412,7 +412,7 @@ app.put('/users/password/recover/:idUser/:recoverCode', passUserRecover);
  * @code {409} Si el correo electrónico ya existe en la base de datos
  * @response {Object} Response Confirmación registro
  */
-app.post('/users', newUser);
+app.post('/users', newUser)
 
 /**
  * Loguear usuario.
@@ -426,7 +426,7 @@ app.post('/users', newUser);
  * @code {401} Si el email o la contraseña son incorrectos
  * @response {Object} Response Devuelve un token
  */
-app.post('/users/login', loginUser);
+app.post('/users/login', loginUser)
 
 /**
  * Validar usuario.
@@ -439,7 +439,7 @@ app.post('/users/login', loginUser);
  * @code {404} Si no hay usuarios pendientes a validar
  * @response {Object} Response Envía un correo electrónico para la validación del usuario.
  */
-app.get('/users/validate/:registrationCode', validateUser);
+app.get('/users/validate/:registrationCode', validateUser)
 
 /**
  * Editar contraseña del usuario.
@@ -452,7 +452,7 @@ app.get('/users/validate/:registrationCode', validateUser);
  * @code {401} Si la contraseña introducida es incorrecta
  * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar
  */
-app.put('/users/:idUser/password', authUser, userExists, editUserPass);
+app.put('/users/:idUser/password', authUser, userExists, editUserPass)
 /**
  * Editar usuario.
  *
@@ -464,7 +464,7 @@ app.put('/users/:idUser/password', authUser, userExists, editUserPass);
  * @code {401} Si la contraseña introducida es incorrecta
  * @response {Object} Response Edita la contraseña del usuario y envía un email para verificar
  */
-app.put('/users/:idUser/', authUser, userExists, editUser);
+app.put('/users/:idUser/', authUser, userExists, editUser)
 
 /**
  * Eliminar usuario.
@@ -476,7 +476,7 @@ app.put('/users/:idUser/', authUser, userExists, editUser);
  * @code {403} Si el usuario que hace la petición no es el registrado en esa cuenta
  * @response {Object} Response Confirmación de usuario eliminado.
  */
-app.delete('/users/:idUser', authUser, userExists, deleteUser);
+app.delete('/users/:idUser', authUser, userExists, deleteUser)
 /**
  * Contacto a un usuario.
  *
@@ -491,7 +491,7 @@ app.delete('/users/:idUser', authUser, userExists, deleteUser);
  * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
  *
  */
-app.post('/users/:idUser/contact', authUser, userExists, contactUser);
+app.post('/users/:idUser/contact', authUser, userExists, contactUser)
 /**
  * Votar un usuario
  *
@@ -505,7 +505,7 @@ app.post('/users/:idUser/contact', authUser, userExists, contactUser);
  * @response {Object} Response Cambia el valor del voto y el comentario en la base de datos
  *
  */
-app.post('/users/:idUser/votes', authUser, userExists, newVote);
+app.post('/users/:idUser/votes', authUser, userExists, newVote)
 /**
  * Listar alquileres en reserva, en petición o alquilados.
  *
@@ -519,7 +519,7 @@ app.post('/users/:idUser/votes', authUser, userExists, newVote);
  * @response {Object} Response Lista de los alquileres reservados/alquilados
  *
  */
-app.get('/users/:idUser/bookings', authUser, listBookedProperties);
+app.get('/users/:idUser/bookings', authUser, listBookedProperties)
 /**
  * Listar las valoraciones de un usuario
  *
@@ -533,7 +533,7 @@ app.get('/users/:idUser/bookings', authUser, listBookedProperties);
  * @response {Object} Response Lista de los alquileres reservados/alquilados
  *
  */
-app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
+app.get('/users/:idUser/votes', authUser, userExists, listUserVotes)
 
 /**
  * Obtener información de todas las propiedades de un usuario en concreto
@@ -543,7 +543,7 @@ app.get('/users/:idUser/votes', authUser, userExists, listUserVotes);
  * @code {200} Si la respuesta es correcta
  * @response {Object} Response listando las propiedades de ese renter
  */
-app.get('/users/:idUser/properties', userExists, listProperties);
+app.get('/users/:idUser/properties', userExists, listProperties)
 /**
  * Listar las reservas finalizadas de un usuario
  *
@@ -553,7 +553,7 @@ app.get('/users/:idUser/properties', userExists, listProperties);
  * @code {200} Si la respuesta es correcta
  * @response {Object} Response Lista de reservas
  */
-app.get('/users/:idUser/bookings/renter', authUser, getBookings);
+app.get('/users/:idUser/bookings/renter', authUser, getBookings)
 
 /**
  * Contacto a nuestra empresa.
@@ -565,7 +565,7 @@ app.get('/users/:idUser/bookings/renter', authUser, getBookings);
  * @response {Object} Response El servidor envía un correo electrónico con los datos de la solicitud.
  *
  */
-app.post('/contact', contactUs);
+app.post('/contact', contactUs)
 
 /**
  * Middleware que muestra una foto guardada en el servidor.
@@ -576,7 +576,7 @@ app.post('/contact', contactUs);
  * @response {Object} Respones El servidor envía un objeto con un mensaje de confirmación y la foto cargada.
  */
 
-app.get('/photo/:pictureName', getPhoto);
+app.get('/photo/:pictureName', getPhoto)
 
 /**
  * ####################
@@ -585,12 +585,12 @@ app.get('/photo/:pictureName', getPhoto);
  */
 
 app.use((error, req, res, next) => {
-  console.error(error);
+  console.error(error)
   res.status(error.httpStatus || 500).send({
     status: 'error',
-    message: error.message,
-  });
-});
+    message: error.message
+  })
+})
 
 /**
  * ##########################
@@ -600,9 +600,9 @@ app.use((error, req, res, next) => {
 app.use((req, res) => {
   res.status(404).send({
     status: 'error',
-    message: 'Not found',
-  });
-});
+    message: 'Not found'
+  })
+})
 
 /**
  * ####################
@@ -610,7 +610,7 @@ app.use((req, res) => {
  * ####################
  */
 const server = app.listen(PORT, () => {
-  console.log(`Server listening at http://192.168.5.103:${PORT}`);
-});
+  console.log(`Server listening at http://192.168.5.103:${PORT}`)
+})
 
-module.exports = { server, app };
+module.exports = { server, app }

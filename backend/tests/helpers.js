@@ -1,27 +1,27 @@
-const supertest = require('supertest');
-const { app, server } = require('../app');
-const api = supertest(app);
+const supertest = require('supertest')
+const { app } = require('../app')
+const api = supertest(app)
 
-async function getToken() {
+async function getToken () {
   const body = {
     email: 'testEmail@gmail.com',
-    password: 'manuTorres1',
-  };
-  const res = await api.post('/users/login').send(body);
-  return res.body.token;
+    password: 'manuTorres1'
+  }
+  const res = await api.post('/users/login').send(body)
+  return res.body.token
 }
 
-async function getToken2() {
+async function getToken2 () {
   const body = {
     email: 'testEmail4@gmail.com',
-    password: 'manuTorres1',
-  };
-  const res = await api.post('/users/login').send(body);
+    password: 'manuTorres1'
+  }
+  const res = await api.post('/users/login').send(body)
 
-  return res.body.token;
+  return res.body.token
 }
 
-async function getToken3() {
+async function getToken3 () {
   const body = {
     name: 'Manu',
     lastName: 'Torres Torres',
@@ -29,26 +29,26 @@ async function getToken3() {
     password: 'manuTorres1',
     bio: 'Empezando los tests con jest.',
     city: 'Barcelona',
-    birthDate: '1996-07-14',
-  };
-  const resReg = await api.post('/users').send(body);
-  const resVal = await api.get(
+    birthDate: '1996-07-14'
+  }
+  const resReg = await api.post('/users').send(body)
+  await api.get(
     `/users/validate/${resReg.body.registrationCode}`
-  );
+  )
 
   const res = await api
     .post('/users/login')
-    .send({ email: body.email, password: body.password });
+    .send({ email: body.email, password: body.password })
 
-  return { id: res.body.idUser, token: res.body.token };
+  return { id: res.body.idUser, token: res.body.token }
 }
 
-async function createProperty(
+async function createProperty (
   flat,
   province = 'Barcelona',
   city = 'Montornes del valles'
 ) {
-  const token = await getToken();
+  const token = await getToken()
   // Creación propiedad user1
   const bodyProp = {
     city: city,
@@ -66,16 +66,16 @@ async function createProperty(
     terrace: '0',
     toilets: '1',
     energyCertificate: '0',
-    //availabilityDate:2021-10-20
+    // availabilityDate:2021-10-20
     description: 'Piso en' + city + flat,
     price: '650',
-    state: 'reservado',
-  };
+    state: 'reservado'
+  }
   const resProp = await api
     .post('/properties')
     .set({ authorization: token })
-    .send(bodyProp);
-  return resProp.body.property;
+    .send(bodyProp)
+  return resProp.body.property
 }
 
-module.exports = { getToken, getToken2, createProperty, getToken3 };
+module.exports = { getToken, getToken2, createProperty, getToken3 }

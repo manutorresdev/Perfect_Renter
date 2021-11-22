@@ -1,45 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import { FaFilter } from 'react-icons/fa';
-import { get } from '../../Helpers/Api';
-import useProperties from '../../Helpers/Hooks/useProperties';
-import Filters from './Filters';
-import Property from './Property';
+import React, { useEffect, useState } from 'react'
+import { FaFilter } from 'react-icons/fa'
+import { get } from '../../Helpers/Api'
+import useProperties from '../../Helpers/Hooks/useProperties'
+import Filters from './Filters'
+import Property from './Property'
 
-export default function Properties(props) {
-  const [Overlay, setOverlay] = useState({ show: false });
-  const [Properties] = useProperties();
-  const [bestRatedProperties, setBestRatedProperties] = useState([]);
+export default function Properties (props) {
+  const [Overlay, setOverlay] = useState({ show: false })
+  const [Properties] = useProperties()
+  const [bestRatedProperties, setBestRatedProperties] = useState([])
 
   useEffect(() => {
     // const controller = new AbortController();
     get(
-      `http://192.168.5.103:4000/properties?orden=valoraciones&direccion=DESC`,
+      'http://192.168.5.103:4000/properties?orden=valoraciones&direccion=DESC',
       (data) => {
         if (data.message !== 'No hay conicidencias para su búsqueda') {
-          setBestRatedProperties(data.properties);
+          setBestRatedProperties(data.properties)
         } else {
-          setBestRatedProperties([]);
+          setBestRatedProperties([])
         }
       },
       (error) => console.error(error),
       null,
       null
-    );
+    )
     return () => {
       // controller.abort();
-    };
-  }, []);
+    }
+  }, [])
 
   return (
     <>
       <main className='flex flex-col sm:flex-row sm:gap-2'>
         <aside
-          className={` w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20`}
+          className=' w-min sm:bg-white bg-gray-Primary flex-grow-0 sm:static right-0 top-20 z-20 sm:top-0 mt-2 sm:mt-0 sm:pt-20'
         >
           <button
             className='lg:hidden flex flex-col w-20 h-20 fixed rounded-full justify-center text-base bottom-3 bg-principal-1 right-1 items-center '
             onClick={() => {
-              setOverlay({ show: true });
+              setOverlay({ show: true })
             }}
           >
             Filtrar
@@ -56,17 +56,19 @@ export default function Properties(props) {
             Viviendas en alquiler
           </h1>
           <div className='cont-alquileres pt-2 justify-center flex flex-wrap w-full gap-5'>
-            {Properties.length > 0 ? (
-              Properties.map((property) => (
-                <Property
-                  key={property.idProperty}
-                  property={property}
-                  mountOn={'propertiesList'}
-                />
-              ))
-            ) : (
-              <div>No hay conicidencias para su búsqueda.</div>
-            )}
+            {Properties.length > 0
+              ? (
+                  Properties.map((property) => (
+                    <Property
+                      key={property.idProperty}
+                      property={property}
+                      mountOn='propertiesList'
+                    />
+                  ))
+                )
+              : (
+                <div>No hay conicidencias para su búsqueda.</div>
+                )}
           </div>
         </section>
       </main>
@@ -86,11 +88,11 @@ export default function Properties(props) {
                 <Property
                   key={property.idProperty}
                   property={property}
-                  mountOn={'bestPropertiesList'}
+                  mountOn='bestPropertiesList'
                 />
               ))}
         </div>
       </aside>
     </>
-  );
+  )
 }

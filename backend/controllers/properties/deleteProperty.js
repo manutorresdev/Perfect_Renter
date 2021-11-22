@@ -1,6 +1,6 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
-const { deletePhoto } = require('../../libs/helpers');
+const getDB = require('../../config/getDB')
+const { deletePhoto } = require('../../libs/helpers')
 /**
  * @module Entries
  */
@@ -11,23 +11,23 @@ const { deletePhoto } = require('../../libs/helpers');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const deleteProperty = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos id del alquiler que queremos borrar
-    const { idProperty } = req.params;
+    const { idProperty } = req.params
 
     // Obtenemos el nombre de las fotos
     const [photos] = await connection.query(
-      `SELECT name FROM photos WHERE idProperty = ?`,
+      'SELECT name FROM photos WHERE idProperty = ?',
       [idProperty]
-    );
+    )
 
     // Eliminamos las fotos del servidor y la base de datos.
     for (const photo of photos) {
-      deletePhoto(photo.name);
+      deletePhoto(photo.name)
     }
 
     // Eliminamos las reservas asociadas a esa propiedad.
@@ -36,7 +36,7 @@ const deleteProperty = async (req, res, next) => {
     DELETE FROM bookings WHERE idProperty = ?
     `,
       [idProperty]
-    );
+    )
 
     // Eliminamos la propiedad de la base de datos.
     await connection.query(
@@ -44,16 +44,16 @@ const deleteProperty = async (req, res, next) => {
     DELETE FROM properties WHERE idProperty = ?
     `,
       [idProperty]
-    );
+    )
     res.send({
       status: 'ok',
-      message: 'Propiedad eliminada.',
-    });
+      message: 'Propiedad eliminada.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = deleteProperty;
+module.exports = deleteProperty

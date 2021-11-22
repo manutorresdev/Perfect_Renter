@@ -1,5 +1,5 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Entries
  */
@@ -11,12 +11,12 @@ const getDB = require('../../config/getDB');
  * @returns {Promise} Devuelve un objeto con los datos
  */
 const listPropertyVotes = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el id del usuario.
-    const { idProperty } = req.params;
+    const { idProperty } = req.params
 
     // Obtenemos los votos del usuario a visualizar
     let [votes] = await connection.query(
@@ -26,22 +26,22 @@ const listPropertyVotes = async (req, res, next) => {
       WHERE idProperty = ?
       `,
       [idProperty]
-    );
+    )
 
     // Si no hay votos, damos un valor vacío.
     if (votes.length < 1) {
-      votes = 'Aún no tiene valoraciones.';
+      votes = 'Aún no tiene valoraciones.'
     }
 
     res.send({
       status: 'ok',
-      Valoraciones: votes,
-    });
+      Valoraciones: votes
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = listPropertyVotes;
+module.exports = listPropertyVotes

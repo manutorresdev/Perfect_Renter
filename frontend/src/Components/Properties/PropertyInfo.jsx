@@ -1,45 +1,44 @@
-import { Link } from 'react-router-dom';
-import ContactProperty from '../Forms/ContactProperty';
-import { useEffect, useRef, useState } from 'react';
-import { FaAngleLeft, FaAngleRight, FaFilter } from 'react-icons/fa';
-import useProperties from '../../Helpers/Hooks/useProperties';
-import Filters from './Filters';
-import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
-import Property from './Property';
-import { capitalizeFirstLetter } from '../../Helpers/Api';
-import { get } from '../../Helpers/Api';
-import NewProperty from './NewProperty';
-import Carousel from 'react-material-ui-carousel';
+import { Link } from 'react-router-dom'
+import ContactProperty from '../Forms/ContactProperty'
+import { useEffect, useRef, useState } from 'react'
+import { FaAngleLeft, FaAngleRight, FaFilter } from 'react-icons/fa'
+import useProperties from '../../Helpers/Hooks/useProperties'
+import Filters from './Filters'
+import useLocalStorage from '../../Helpers/Hooks/useLocalStorage'
+import Property from './Property'
+import { capitalizeFirstLetter, get } from '../../Helpers/Api'
+import NewProperty from './NewProperty'
+import Carousel from 'react-material-ui-carousel'
 
-export default function PropertyInfo(props) {
+export default function PropertyInfo (props) {
   const [pisosVisitados, setPisosVisitados] = useLocalStorage(
     'pisosVisitados',
     []
-  );
+  )
 
-  //Overlay de respuestas
-  const [message, setMessage] = useState({ status: '', message: '' });
+  // Overlay de respuestas
+  const [message, setMessage] = useState({ status: '', message: '' })
   // Overlay de formularios
   const [Overlay, setOverlay] = useState({
     form: '',
     show: false,
-    propertyInfo: {},
-  });
+    propertyInfo: {}
+  })
 
   // Verificar si User es dueño de la propiedad
-  const [Owner, setOwner] = useState(false);
+  const [Owner, setOwner] = useState(false)
   // Ampliar fotos
-  const [Photo, setPhoto] = useState(true);
+  const [Photo, setPhoto] = useState(true)
   // Información de la propiedad
-  const [property, setProperty] = useState({});
+  const [property, setProperty] = useState({})
   // Array de propiedades
-  const [Properties] = useProperties();
+  const [Properties] = useProperties()
   // Slider
-  const [SlideImgs, setSlideImgs] = useState([]);
-  const slider = useRef();
+  const [SlideImgs, setSlideImgs] = useState([])
+  const slider = useRef()
 
-  function openPhoto() {
-    setPhoto(!Photo);
+  function openPhoto () {
+    setPhoto(!Photo)
   }
 
   useEffect(() => {
@@ -49,33 +48,33 @@ export default function PropertyInfo(props) {
         props.match.params.idProperty
       )}/photos`,
       (data) => {
-        setSlideImgs(data.photos);
+        setSlideImgs(data.photos)
       },
       (error) => console.log(error),
       null,
       null
-    );
+    )
     return () => {
       // controller.abort();
-    };
-  }, [props.match.params.idProperty]);
+    }
+  }, [props.match.params.idProperty])
 
   useEffect(() => {
     const prop = Properties.find(
       (property) =>
         property.idProperty === Number(props.match.params.idProperty)
-    );
+    )
 
     if (prop) {
-      setProperty(prop);
+      setProperty(prop)
       // if (!pisosVisitados.includes(prop.idProperty)) {
       //   setPisosVisitados({...pisosVisitados, {p: prop.idProperty, }});
       // }
       if (props.token) {
         if (prop.idUser === props.User.idUser) {
-          setOwner(true);
+          setOwner(true)
         } else {
-          setOwner(false);
+          setOwner(false)
         }
       }
     }
@@ -87,16 +86,16 @@ export default function PropertyInfo(props) {
     props.User,
     pisosVisitados,
     setPisosVisitados,
-    props.token,
-  ]);
+    props.token
+  ])
 
   // Styles
   const sliderButtonStyle =
-    'absolute z-10 text-white text-4xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full duration-200';
+    'absolute z-10 text-white text-4xl sm:text-7xl hover:text-principal-1 hover:bg-gray-800 hover:bg-opacity-5 h-full duration-200'
   const buttonStyle =
-    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
 
-  const pageIteratorButtonsStyle = `border-2 p-3 rounded-full hover:bg-gray-500 hover:text-white duration-200  `;
+  const pageIteratorButtonsStyle = 'border-2 p-3 rounded-full hover:bg-gray-500 hover:text-white duration-200  '
 
   return (
     <main className='flex flex-col relative max-w-customXL'>
@@ -114,7 +113,7 @@ export default function PropertyInfo(props) {
               Photo: Photo,
               sliderButtonStyle: sliderButtonStyle,
               slider: slider,
-              SlideImgs: SlideImgs,
+              SlideImgs: SlideImgs
             }}
           />
         )}
@@ -125,11 +124,13 @@ export default function PropertyInfo(props) {
             EditProperty={property}
           />
         )}
-        {message.status ? (
-          <Message message={message} setMessage={setMessage} />
-        ) : (
-          ''
-        )}
+        {message.status
+          ? (
+            <Message message={message} setMessage={setMessage} />
+            )
+          : (
+              ''
+            )}
         <aside
           className={`flex justify-center items-center bg-principal-1 border-yellow-300 text-principal-gris text-xl w-32 lg:w-auto lg:bg-transparent flex-grow-0 lg:static z-20 right-0 ${
             props.IsFooterVisible ? 'bottom-28 absolute' : 'bottom-0 fixed'
@@ -138,7 +139,7 @@ export default function PropertyInfo(props) {
           <button
             className='lg:hidden flex pl-6'
             onClick={() => {
-              setOverlay({ show: true });
+              setOverlay({ show: true })
             }}
           >
             Filtrar
@@ -148,7 +149,7 @@ export default function PropertyInfo(props) {
         </aside>
         <section className='self-start flex-grow flex flex-col items-center justify-between max-w-7xl'>
           <div className='flex flex-col w-11/12 bg-white items-center h-full filter drop-shadow-xl'>
-            <div className={`slider pt-20 w-full h-full`}>
+            <div className='slider pt-20 w-full h-full'>
               <Carousel
                 className={`slider-cont sm:max-w-7xl w-full min-h-20rem ${
                   Photo ? 'max-h-96' : 'max-h-full bg-gray-Primary'
@@ -170,7 +171,7 @@ export default function PropertyInfo(props) {
                       >
                         {next && 'Next'}
                       </FaAngleRight>
-                    );
+                    )
                   } else {
                     return (
                       <FaAngleLeft
@@ -183,34 +184,36 @@ export default function PropertyInfo(props) {
                       >
                         {prev && 'Previous'}
                       </FaAngleLeft>
-                    );
+                    )
                   }
                 }}
               >
-                {SlideImgs.length > 0 ? (
-                  SlideImgs.map((img, i) => {
-                    return (
-                      <img
-                        key={i}
-                        onClick={openPhoto}
-                        className={`object-cover duration-300 cursor-pointer ${
+                {SlideImgs.length > 0
+                  ? (
+                      SlideImgs.map((img, i) => {
+                        return (
+                          <img
+                            key={i}
+                            onClick={openPhoto}
+                            className={`object-cover duration-300 cursor-pointer ${
                           Photo
                             ? ' h-96 w-full'
                             : ' sm:h-full w-full sm:max-h-lg max-w-2xl object-contain m-auto'
                         }`}
-                        src={'http://192.168.5.103:4000/photo/' + img.name}
-                        alt='default'
-                      />
-                    );
-                  })
-                ) : (
-                  <img
-                    className=' object-cover w-full h-full duration-300 cursor-pointer'
-                    onClick={openPhoto}
-                    src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
-                    alt='default home'
-                  />
-                )}
+                            src={'http://192.168.5.103:4000/photo/' + img.name}
+                            alt='default'
+                          />
+                        )
+                      })
+                    )
+                  : (
+                    <img
+                      className=' object-cover w-full h-full duration-300 cursor-pointer'
+                      onClick={openPhoto}
+                      src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+                      alt='default home'
+                    />
+                    )}
               </Carousel>
             </div>
             <div className='informacion w-full bg-gray-Primary p-2 bg-opacity-25 text-xl text-principal-1 flex justify-between'>
@@ -255,66 +258,70 @@ export default function PropertyInfo(props) {
           )} */}
           </div>
           <div className='buttons-cont z-10 font-medium p-5 flex justify-around items-center'>
-            {Owner ? (
-              <button
-                className={buttonStyle + ' z-0'}
-                onClick={() => {
-                  setOverlay({
-                    form: 'editProperty',
-                    propertyInfo: property,
-                  });
-                }}
-              >
-                Editar
-              </button>
-            ) : (
-              <>
-                <div className='flex flex-col gap-y-3'>
-                  <button
-                    className={buttonStyle + ' z-0'}
-                    onClick={() => {
-                      setOverlay({
-                        form: 'contact',
-                        propertyInfo: property,
-                      });
-                    }}
-                  >
-                    Contactar
-                  </button>
-                  {props.token ? (
+            {Owner
+              ? (
+                <button
+                  className={buttonStyle + ' z-0'}
+                  onClick={() => {
+                    setOverlay({
+                      form: 'editProperty',
+                      propertyInfo: property
+                    })
+                  }}
+                >
+                  Editar
+                </button>
+                )
+              : (
+                <>
+                  <div className='flex flex-col gap-y-3'>
                     <button
-                      className={buttonStyle}
+                      className={buttonStyle + ' z-0'}
                       onClick={() => {
                         setOverlay({
-                          form: 'reservar',
-                          propertyInfo: property,
-                        });
+                          form: 'contact',
+                          propertyInfo: property
+                        })
                       }}
                     >
-                      Reservar
+                      Contactar
                     </button>
-                  ) : (
-                    <>
-                      <div className='flex flex-col items-center gap-y-3'>
-                        <p className='text-red-600'>
-                          Inicia sesión o regístrate para reservar esta
-                          propiedad
-                        </p>
-                        <div className='flex gap-5 w-full'>
-                          <Link className={`${buttonStyle}`} to='/login'>
-                            Acceso
-                          </Link>
+                    {props.token
+                      ? (
+                        <button
+                          className={buttonStyle}
+                          onClick={() => {
+                            setOverlay({
+                              form: 'reservar',
+                              propertyInfo: property
+                            })
+                          }}
+                        >
+                          Reservar
+                        </button>
+                        )
+                      : (
+                        <>
+                          <div className='flex flex-col items-center gap-y-3'>
+                            <p className='text-red-600'>
+                              Inicia sesión o regístrate para reservar esta
+                              propiedad
+                            </p>
+                            <div className='flex gap-5 w-full'>
+                              <Link className={`${buttonStyle}`} to='/login'>
+                                Acceso
+                              </Link>
 
-                          <Link className={`${buttonStyle}`} to='/registro'>
-                            Registro
-                          </Link>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </>
-            )}
+                              <Link className={`${buttonStyle}`} to='/registro'>
+                                Registro
+                              </Link>
+                            </div>
+                          </div>
+                        </>
+                        )}
+                  </div>
+                </>
+                )}
           </div>
         </section>
       </article>
@@ -349,10 +356,10 @@ export default function PropertyInfo(props) {
         </p>
       </div>
     </main>
-  );
+  )
 }
 
-export function Message({ message, setMessage }) {
+export function Message ({ message, setMessage }) {
   if (message.status === 'ok') {
     return (
       <div className='fixed w-full bg-white justify-center bg-opacity-75 h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-30'>
@@ -363,8 +370,8 @@ export function Message({ message, setMessage }) {
           <h2 className='text-principal-gris'>{message.message}</h2>
           <button
             onClick={() => {
-              setMessage({ status: '', message: '' });
-              window.location.reload();
+              setMessage({ status: '', message: '' })
+              window.location.reload()
             }}
             className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
           >
@@ -372,7 +379,7 @@ export function Message({ message, setMessage }) {
           </button>
         </section>
       </div>
-    );
+    )
   } else if (message.status === 'error') {
     return (
       <div className='fixed bg-white  justify-center bg-opacity-75 w-full h-full left-0 top-0 flex flex-col items-center py-24 overflow-scroll sm:overflow-hidden z-20'>
@@ -389,14 +396,14 @@ export function Message({ message, setMessage }) {
           </Link>
         </section>
       </div>
-    );
+    )
   }
 }
 
-function RelatedProperties({ properties, city }) {
-  var related = [];
+function RelatedProperties ({ properties, city }) {
+  let related = []
   if (properties.length > 0) {
-    related = properties.filter((property) => property.city === city);
+    related = properties.filter((property) => property.city === city)
     if (related.length > 0) {
       return (
         <div className='flex flex-col items-center p-8 overflow-hidden pb-44 w-screen'>
@@ -409,11 +416,11 @@ function RelatedProperties({ properties, city }) {
             ))}
           </div>
         </div>
-      );
+      )
     } else {
-      return '';
+      return ''
     }
   } else {
-    return '';
+    return ''
   }
 }

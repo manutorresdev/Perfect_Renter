@@ -1,5 +1,5 @@
 // @ts-nocheck
-const { sendMail } = require('../libs/helpers');
+const { sendMail } = require('../libs/helpers')
 /**
  * @module Global
  */
@@ -12,13 +12,13 @@ const { sendMail } = require('../libs/helpers');
 const contactUs = async (req, res, next) => {
   try {
     // Obtenemos los datos del usuario que contacta.
-    const { name, email, asunto, comentarios } = req.body;
+    const { name, email, asunto, comentarios } = req.body
 
     // Si no están los datos obligatorios, lanzamos error.
     if (!name || !email || !comentarios) {
-      const error = new Error('Faltan campos obligatorios.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('Faltan campos obligatorios.')
+      error.httpStatus = 400
+      throw error
     }
 
     // Definimos el body del email
@@ -37,26 +37,24 @@ const contactUs = async (req, res, next) => {
         </td>
       </tbody>
     </table>
-    `;
+    `
 
     // Enviamos el correo del usuario que contacta, al usuario a contactar.
     if (process.env.NODE_ENV !== 'test') {
       await sendMail({
         to: 'perfectrenterproject@gmail.com',
         subject: asunto,
-        body: emailBody,
-      });
+        body: emailBody
+      })
     }
 
     res.send({
       status: 'ok',
-      message: 'Correo electrónico enviado con éxito.',
-    });
+      message: 'Correo electrónico enviado con éxito.'
+    })
   } catch (error) {
-    next(error);
-  } finally {
-    if (connection) connection.release();
+    next(error)
   }
-};
+}
 
-module.exports = contactUs;
+module.exports = contactUs

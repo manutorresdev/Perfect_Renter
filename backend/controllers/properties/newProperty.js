@@ -1,8 +1,8 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
-const { formatDate, validate, savePhoto } = require('../../libs/helpers');
+const getDB = require('../../config/getDB')
+const { formatDate, validate, savePhoto } = require('../../libs/helpers')
 
-const { propertySchema } = require('../../models/propertySchema');
+const { propertySchema } = require('../../models/propertySchema')
 /**
  * @module Entries
  */
@@ -13,34 +13,34 @@ const { propertySchema } = require('../../models/propertySchema');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
  */
 const newProperty = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
-    //convertimos en número los datos booleanos
+    // convertimos en número los datos booleanos
     if (req.body.garage === 'true') {
-      req.body.garage = 1;
+      req.body.garage = 1
     } else {
-      req.body.garage = 0;
+      req.body.garage = 0
     }
     if (req.body.terrace === 'true') {
-      req.body.terrace = 1;
+      req.body.terrace = 1
     } else {
-      req.body.terrace = 0;
+      req.body.terrace = 0
     }
     if (req.body.elevator === 'true') {
-      req.body.elevator = 1;
+      req.body.elevator = 1
     } else {
-      req.body.elevator = 0;
+      req.body.elevator = 0
     }
     if (req.body.energyCertificate === 'true') {
-      req.body.energyCertificate = 1;
+      req.body.energyCertificate = 1
     } else {
-      req.body.energyCertificate = 0;
+      req.body.energyCertificate = 0
     }
     // Validamos los datos recibidos.
-    await validate(propertySchema, req.body);
+    await validate(propertySchema, req.body)
 
     // Obtenemos los campos necesarios.
     let {
@@ -62,8 +62,8 @@ const newProperty = async (req, res, next) => {
       energyCertificate,
       price,
       description,
-      state,
-    } = req.body;
+      state
+    } = req.body
 
     // Comprobamos que no faltan campos a rellenar.
     if (
@@ -78,9 +78,9 @@ const newProperty = async (req, res, next) => {
       !price ||
       !state
     ) {
-      const error = new Error('Debes rellenar todos los campos requeridos.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('Debes rellenar todos los campos requeridos.')
+      error.httpStatus = 400
+      throw error
     }
 
     // Comprobamos que la ciudad pertenece a la provincia correcta
@@ -89,51 +89,51 @@ const newProperty = async (req, res, next) => {
     SELECT cp,provincia,poblacion FROM municipios WHERE poblacion = ? AND provincia = ?
     `,
       [city, province]
-    );
+    )
 
     if (verify.length < 1) {
       const error = new Error(
         'Hay un error en la ciudad o la provincia, revisa los datos de nuevo.'
-      );
-      error.httpStatus = 403;
-      throw error;
+      )
+      error.httpStatus = 403
+      throw error
     }
 
     // Cambiamos el CP
     if (verify[0].cp.length < 5) {
-      zipCode = `0${verify[0].cp}`;
+      zipCode = `0${verify[0].cp}`
     }
 
     // Comprobamos si el piso ya existe en la base de datos.
     if (!gate) {
       const [property] = await connection.query(
-        `SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate is null`,
+        'SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate is null',
         [city, province, address, number, type, zipCode, stair, flat]
-      );
+      )
       // Si el inmueble ya existe lanzamos un error.
       if (property.length > 0) {
-        const error = new Error('Ya existe un piso con los datos ingresados');
-        error.httpStatus = 409;
-        throw error;
+        const error = new Error('Ya existe un piso con los datos ingresados')
+        error.httpStatus = 409
+        throw error
       }
     } else {
       const [property] = await connection.query(
-        `SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate = ?`,
+        'SELECT idProperty FROM properties WHERE city = ? AND province = ? AND address = ? AND number = ? AND type = ? AND zipCode = ? AND stair = ? AND flat = ? AND gate = ?',
         [city, province, address, number, type, zipCode, stair, flat, gate]
-      );
+      )
       // Si el inmueble ya existe lanzamos un error.
       if (property.length > 0) {
-        const error = new Error('Ya existe un piso con los datos ingresados');
-        error.httpStatus = 409;
-        throw error;
+        const error = new Error('Ya existe un piso con los datos ingresados')
+        error.httpStatus = 409
+        throw error
       }
     }
 
     // Obtenemos el usuario que sube el inmueble
-    const userId = req.userAuth.idUser;
+    const userId = req.userAuth.idUser
 
     // Generamos la fecha de creación
-    const createdAt = formatDate(new Date());
+    const createdAt = formatDate(new Date())
 
     // Guardamos la propiedad en la base de datos.
     await connection.query(
@@ -184,9 +184,9 @@ const newProperty = async (req, res, next) => {
         price,
         description,
         state,
-        createdAt,
+        createdAt
       ]
-    );
+    )
 
     // Comprobamos si hay fotos y las subimos
     if (req.files && req.files.photo) {
@@ -195,17 +195,17 @@ const newProperty = async (req, res, next) => {
       SELECT idProperty FROM properties WHERE idUser = ? AND createdAt = ?
       `,
         [userId, createdAt]
-      );
+      )
 
       // Recorremos las fotos recibidas para subirlas, solo cogemos 30.
       for (const photo of Object.values(req.files).slice(0, 29)) {
-        let photoName;
+        let photoName
         try {
-          photoName = await savePhoto(photo);
+          photoName = await savePhoto(photo)
         } catch (_) {
-          const error = new Error('Formato incorrecto');
-          error.httpStatus = 400;
-          throw error;
+          const error = new Error('Formato incorrecto')
+          error.httpStatus = 400
+          throw error
         }
         await connection.query(
           `
@@ -213,7 +213,7 @@ const newProperty = async (req, res, next) => {
           VALUES (?,?,?)
           `,
           [photoName, property[0].idProperty, createdAt]
-        );
+        )
       }
     }
 
@@ -223,18 +223,18 @@ const newProperty = async (req, res, next) => {
     SELECT idProperty FROM properties WHERE idUser = ? AND createdAt = ? AND flat = ?
     `,
       [userId, createdAt, flat]
-    );
+    )
 
     res.send({
       status: 'ok',
       message: 'El piso se ha creado correctamente',
-      property: property.idProperty,
-    });
+      property: property.idProperty
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = newProperty;
+module.exports = newProperty

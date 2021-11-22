@@ -1,12 +1,11 @@
-const getDB = require('./getDB');
-const faker = require('faker/locale/es');
-const { format } = require('date-fns');
-const fs = require('fs').promises;
-const mysql = require('mysql2');
-const path = require('path');
+const getDB = require('./getDB')
+const faker = require('faker/locale/es')
+const { format } = require('date-fns')
+const fs = require('fs').promises
+const path = require('path')
 
-const { NODE_ENV, MYSQL_DATABASE, MYSQL_DATABASE_TEST } = process.env;
-let connection;
+const { NODE_ENV, MYSQL_DATABASE, MYSQL_DATABASE_TEST } = process.env
+let connection
 
 /**
  * @module Database
@@ -16,19 +15,19 @@ let connection;
  * @name InitDataBase
  * @returns {Promise} Crea la base de datos con los datos proporcionados por la dependencia Faker.
  */
-async function main() {
+async function main () {
   try {
-    connection = await getDB();
+    connection = await getDB()
 
-    //Eliminación de tablas existentes
-    await connection.query('DROP TABLE IF EXISTS photos');
-    await connection.query('DROP TABLE IF EXISTS votes');
-    await connection.query('DROP TABLE IF EXISTS bookings');
-    await connection.query('DROP TABLE IF EXISTS properties');
-    await connection.query('DROP TABLE IF EXISTS users');
-    await connection.query('DROP TABLE IF EXISTS municipios');
-    await connection.query('DROP TABLE IF EXISTS provincias');
-    console.log('Tablas Eliminadas');
+    // Eliminación de tablas existentes
+    await connection.query('DROP TABLE IF EXISTS photos')
+    await connection.query('DROP TABLE IF EXISTS votes')
+    await connection.query('DROP TABLE IF EXISTS bookings')
+    await connection.query('DROP TABLE IF EXISTS properties')
+    await connection.query('DROP TABLE IF EXISTS users')
+    await connection.query('DROP TABLE IF EXISTS municipios')
+    await connection.query('DROP TABLE IF EXISTS provincias')
+    console.log('Tablas Eliminadas')
 
     /* Crearemos las tablas necesarias */
 
@@ -41,7 +40,7 @@ async function main() {
       PRIMARY KEY (provinciaid)
       );
       `
-    );
+    )
 
     /* Creamos la tabla municipios */
     await connection.query(
@@ -57,7 +56,7 @@ async function main() {
         pais varchar(100) DEFAULT NULL
         );
         `
-    );
+    )
 
     /* Creamos la tabla users */
     await connection.query(`
@@ -80,7 +79,7 @@ async function main() {
             createdAt DATETIME NOT NULL,
             modifiedAt DATETIME
         )
-        `);
+        `)
 
     // Creamos la tabla property  "Pisos en alquiler"
     await connection.query(`
@@ -111,7 +110,7 @@ async function main() {
             modifiedAt DATETIME,
             createdAt DATETIME NOT NULL
         )
-    `);
+    `)
 
     // Creamos la tabla votes.
     //   ---idVoted hace referencia a quien esta siendo calificado.
@@ -132,7 +131,7 @@ async function main() {
             createdAt DATETIME NOT NULL,
             modifiedAt DATETIME
         )
-    `);
+    `)
 
     // Creamos la tabla de reservas.
     await connection.query(`
@@ -151,7 +150,7 @@ async function main() {
             state ENUM("reservado", "alquilada", "finalizada", "peticion", "cancelada-renter", "cancelada-tenant") NOT NULL DEFAULT "peticion",
             bookingCode VARCHAR(20)
             )
-    `);
+    `)
 
     // Creamos la tabla fotos
     await connection.query(`
@@ -162,21 +161,21 @@ async function main() {
             name VARCHAR(100),
             createdAt DATETIME NOT NULL
         )
-    `);
+    `)
 
     // Obtenemos los datos de provincias y municipios
-    const municipiosPath = path.join(__dirname, 'municipios.sql');
-    const municipios = fs.readFile(municipiosPath, 'utf-8');
-    const provinciasPath = path.join(__dirname, 'provincias.sql');
-    const provincias = fs.readFile(provinciasPath, 'utf-8');
+    const municipiosPath = path.join(__dirname, 'municipios.sql')
+    const municipios = fs.readFile(municipiosPath, 'utf-8')
+    const provinciasPath = path.join(__dirname, 'provincias.sql')
+    const provincias = fs.readFile(provinciasPath, 'utf-8')
     // Insertamos datos
     await connection.query(`
     ${await municipios}
-    `);
+    `)
     await connection.query(`
     ${await provincias}
-    `);
-    console.log('Tablas creadas');
+    `)
+    console.log('Tablas creadas')
 
     // Insertamos el usuario administrador.
     await connection.query(`
@@ -194,9 +193,9 @@ async function main() {
         "davidlosas.jpg",
         "Solo acepto ofertas de viviendas procedentes de Guijuelo. Municipio y localidad española de la provincia de Salamanca, en la comunidad autónoma de Castilla y León."
     )
-`);
+`)
     // Nº de usuarios que queremos introducir.
-    const USERS = 10;
+    const USERS = 10
     const pictures = [
       'fotoperfil1.jpg',
       'fotoperfil2.jpg',
@@ -207,79 +206,79 @@ async function main() {
       'fotoperfil7.jpg',
       'fotoperfil8.jpg',
       'fotoperfil9.jpg',
-      'fotoperfil10.jpg',
-    ];
+      'fotoperfil10.jpg'
+    ]
     // Insertamos los usuarios.
     for (let i = 0; i < USERS; i++) {
       // Datos de faker.
-      const name = faker.name.findName();
-      const lastName = faker.name.lastName();
-      const phone = faker.phone.phoneNumber();
-      const email = faker.internet.email();
-      const password = faker.internet.password();
-      const city = faker.address.cityName();
+      const name = faker.name.findName()
+      const lastName = faker.name.lastName()
+      const phone = faker.phone.phoneNumber()
+      const email = faker.internet.email()
+      const password = faker.internet.password()
+      const city = faker.address.cityName()
       const birthDate = format(
         faker.date.between('1970-01-01', '2001-12-31'),
         'yyyy/MM/dd'
-      );
+      )
       const bio =
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet natus eaque rem ad, minima iure.';
-      const picture = pictures[i];
+        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Laborum amet natus eaque rem ad, minima iure.'
+      const picture = pictures[i]
       // Fecha de creación.
-      const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss');
+      const createdAt = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
       await connection.query(`
         INSERT INTO users ( name, lastName, tel, email, password, createdAt, city, birthDate, avatar, bio)
         VALUES ( "${name}", "${lastName}", "${phone}", "${email}", "${password}", "${createdAt}", "${city}", "${birthDate}", "${picture}", "${bio}" )
-    `);
+    `)
     }
-    console.log('Usuarios creados');
+    console.log('Usuarios creados')
 
     // Borramos los eventos de la base de datos en caso de que haya.
     const [events] = await connection.query(`
         SELECT * FROM INFORMATION_SCHEMA.EVENTS WHERE EVENT_SCHEMA ="${
           NODE_ENV === 'test' ? MYSQL_DATABASE_TEST : MYSQL_DATABASE
         }";
-        `);
+        `)
     events.forEach(async (event) => {
       await connection.query(
         `
       DROP EVENT ${event.EVENT_NAME};
       `
-      );
-    });
+      )
+    })
     // Habilitamos la creación de eventos en el servidor.
     await connection.query(`
         SET GLOBAL event_scheduler = ON;
-        `);
+        `)
 
     // Obtenemos los datos a introducir a la BBDD
-    const CustomDataDatabasePath = path.join(__dirname, 'DatosBBDD.sql');
-    const CustomDataDatabase = fs.readFile(CustomDataDatabasePath, 'utf-8');
+    const CustomDataDatabasePath = path.join(__dirname, 'DatosBBDD.sql')
+    const CustomDataDatabase = fs.readFile(CustomDataDatabasePath, 'utf-8')
     if (NODE_ENV !== 'test') {
       await connection.query(
         `
       ${await CustomDataDatabase}
       `
-      );
+      )
     }
-    console.log('Datos de prueba creados');
+    console.log('Datos de prueba creados')
   } catch (error) {
-    console.error(error.message);
+    console.error(error.message)
     if (error.message === "Unknown database 'perfect_renter'") {
       return console.log(
         'La base de datos perfect_renter no existe, debes crearla previamente.'
-      );
+      )
     }
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
     if (NODE_ENV !== 'test') {
-      process.exit(0);
+      process.exit(0)
     }
   }
 }
 
 if (NODE_ENV !== 'test') {
-  main();
+  main()
 }
 
-module.exports = { main };
+module.exports = { main }

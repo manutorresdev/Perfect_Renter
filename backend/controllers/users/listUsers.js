@@ -1,4 +1,4 @@
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Users
  */
@@ -10,37 +10,37 @@ const getDB = require('../../config/getDB');
  * @returns {Promise} Devuelve una lista objetos con los datos
  */
 const listUsers = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos los queryParams en caso de que haya.
-    let { ciudad: filtCity, orden: order, direccion: direction } = req.query;
+    let { ciudad: filtCity, orden: order, direccion: direction } = req.query
 
     // Cambiamos valores para encajar con backend.
     if (order === 'creacion') {
-      order = 'users.createdAt';
+      order = 'users.createdAt'
     } else if (order === 'valoraciones') {
-      order = 'votes';
+      order = 'votes'
     } else if (order === 'edad') {
-      order = 'users.birthDate';
+      order = 'users.birthDate'
     }
     // Establecemos opciones de validación de orden.
-    const validOrderOptions = ['users.createdAt', 'votes', 'users.birthDate'];
+    const validOrderOptions = ['users.createdAt', 'votes', 'users.birthDate']
 
     // Establecemos opciones de valicadión de dirección
-    const validDirectionOptions = ['DESC', 'ASC'];
+    const validDirectionOptions = ['DESC', 'ASC']
 
     // Establecemos un orden por defecto
-    const orderBy = validOrderOptions.includes(order) ? order : 'votes';
+    const orderBy = validOrderOptions.includes(order) ? order : 'votes'
 
     // Establecemos una dirección por defecto
     let orderDirection = validDirectionOptions.includes(direction)
       ? direction
-      : 'DESC';
-    const city = filtCity ?? '%';
+      : 'DESC'
+    const city = filtCity ?? '%'
 
-    let users;
+    let users
     // Obtenemos los datos de todos los usuarios
 
     if (order === 'users.birthDate') {
@@ -54,7 +54,7 @@ const listUsers = async (req, res, next) => {
           ORDER BY ${orderBy} ${orderDirection}
           `,
         [city, orderBy, orderDirection]
-      );
+      )
     } else {
       [users] = await connection.query(
         `SELECT users.bio,users.idUser,users.name, users.lastName, users.city, users.avatar, AVG(IFNULL(user_vote.voteValueRenter, 0)) AS votes, users.birthDate
@@ -65,18 +65,18 @@ const listUsers = async (req, res, next) => {
         ORDER BY ${orderBy} ${orderDirection}
         `,
         [city, orderBy, orderDirection]
-      );
+      )
     }
 
     res.send({
       status: 'ok',
-      users,
-    });
+      users
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = listUsers;
+module.exports = listUsers

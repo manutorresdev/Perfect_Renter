@@ -1,21 +1,21 @@
 // import React, { useContext, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { FaAngleLeft, FaAngleRight, FaPlus } from 'react-icons/fa';
-import { CreateFormData, post, get } from '../../Helpers/Api';
-import Email from './Inputs/Email';
-import FirstName from './Inputs/FirstName';
-import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import { Box } from '@mui/system';
-import DateRangePicker from '@mui/lab/DateRangePicker';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { addDays, format } from 'date-fns';
-import esEsLocale from 'date-fns/locale/es';
-import { useContext, useEffect, useState } from 'react';
-import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton';
-import Carousel from 'react-material-ui-carousel';
+import { Controller, useForm } from 'react-hook-form'
+import { FaAngleLeft, FaAngleRight, FaPlus } from 'react-icons/fa'
+import { CreateFormData, post, get } from '../../Helpers/Api'
+import Email from './Inputs/Email'
+import FirstName from './Inputs/FirstName'
+import { TokenContext } from '../../Helpers/Hooks/TokenProvider'
+import { Box } from '@mui/system'
+import DateRangePicker from '@mui/lab/DateRangePicker'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import { addDays, format } from 'date-fns'
+import esEsLocale from 'date-fns/locale/es'
+import { useContext, useEffect, useState } from 'react'
+import CalendarPickerSkeleton from '@mui/lab/CalendarPickerSkeleton'
+import Carousel from 'react-material-ui-carousel'
 
-export default function ContactProperty({
+export default function ContactProperty ({
   form,
   property,
   setOverlay,
@@ -23,11 +23,11 @@ export default function ContactProperty({
   pictures,
   setMessage,
   message,
-  Slider,
+  Slider
 }) {
-  const [Value, setPickerValue] = useState([null, null]);
-  const [Bookings, setBookings] = useState();
-  const [Token] = useContext(TokenContext);
+  const [Value, setPickerValue] = useState([null, null])
+  const [Bookings, setBookings] = useState()
+  const [Token] = useContext(TokenContext)
 
   const {
     handleSubmit,
@@ -35,88 +35,89 @@ export default function ContactProperty({
     register,
     setValue,
     formState: { errors },
-    control,
+    control
   } = useForm({
     defaultValues: {
       email: user.email,
       name: user.name,
-      tel: user.tel,
-    },
-  });
+      tel: user.tel
+    }
+  })
 
   useEffect(() => {
     // const controller = new AbortController();
     // const signal = controller.signal;
+
     get(
       `http://192.168.5.103:4000/properties/${property.idProperty}/bookings`,
       (data) => {
-        setBookings(data.bookings);
+        setBookings(data.bookings)
       },
       (error) => {
-        console.error(error);
+        console.error(error)
       },
       Token,
       null
-    );
+    )
     return () => {
       // controller.abort();
-    };
-  }, [Token, property.idProperty]);
+    }
+  }, [Token, property.idProperty])
 
   // ARRAY FECHAS MANU
-  const arrayFechas = [];
+  const arrayFechas = []
   if (Bookings) {
     for (const book of Bookings) {
-      let day = book.startBookingDate;
+      let day = book.startBookingDate
       while (
         new Date(day).toLocaleDateString() <=
         new Date(book.endBookingDate).toLocaleDateString()
       ) {
-        arrayFechas.push(new Date(day).toLocaleDateString());
+        arrayFechas.push(new Date(day).toLocaleDateString())
 
-        day = addDays(new Date(day), 1);
+        day = addDays(new Date(day), 1)
       }
     }
   }
   // ARRAY FECHAS MANU
 
-  function onSubmit(body, e) {
-    e.preventDefault();
+  function onSubmit (body, e) {
+    e.preventDefault()
     if (form === 'reservar') {
       post(
         `http://192.168.5.103:4000/properties/${property.idProperty}/book`,
         CreateFormData(body),
         (data) => {
-          setMessage(data);
-          setOverlay({ form: '', shown: false, propertyInfo: {} });
+          setMessage(data)
+          setOverlay({ form: '', shown: false, propertyInfo: {} })
         },
         (error) => {
-          console.error(error);
-          setMessage(error);
+          console.error(error)
+          setMessage(error)
         },
         Token
-      );
+      )
     } else if (form === 'contact') {
       post(
         `http://192.168.5.103:4000/properties/${property.idProperty}/contact`,
         CreateFormData(body),
         (data) => {
-          setMessage({ status: data.status, message: data.message });
+          setMessage({ status: data.status, message: data.message })
           // setOverlay({ form: '', show: false, propertyInfo: {} });
         },
         (error) => {
-          console.error(error);
-          setMessage(error);
+          console.error(error)
+          setMessage(error)
         },
         Token
-      );
+      )
     }
   }
 
   // Styles
   const inpStyle =
-    'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
-  const comentarios = watch('comentarios');
+    'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring'
+  const comentarios = watch('comentarios')
 
   return (
     <div className='overlay z-30 bg-white bg-opacity-70 fixed w-full h-full left-0 top-0 flex flex-col items-center pt-32  px-2 overflow-auto sm:overflow-hidden'>
@@ -124,7 +125,7 @@ export default function ContactProperty({
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
-            setOverlay({ form: '', shown: false, propertyInfo: {} });
+            setOverlay({ form: '', shown: false, propertyInfo: {} })
           }}
         >
           <FaPlus className='transform scale-150 rotate-45' />
@@ -153,17 +154,17 @@ export default function ContactProperty({
                     value:
                       /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                     message:
-                      'El nombre no puede contener caracteres especiales ni números.',
+                      'El nombre no puede contener caracteres especiales ni números.'
                   },
                   minLength: {
                     value: 3,
                     message:
-                      'El nombre debe contener como mínimo 3 caracteres.',
+                      'El nombre debe contener como mínimo 3 caracteres.'
                   },
                   maxLength: {
                     value: 30,
-                    message: 'El nombre no puede tener más de 30 caracteres.',
-                  },
+                    message: 'El nombre no puede tener más de 30 caracteres.'
+                  }
                 }}
                 render={({ field: { onChange, name, ref, value } }) => {
                   return (
@@ -174,7 +175,7 @@ export default function ContactProperty({
                       name={name}
                       className={`${inpStyle}`}
                     />
-                  );
+                  )
                 }}
               />
             </label>
@@ -188,8 +189,8 @@ export default function ContactProperty({
                   maxLength: {
                     value: 200,
                     message:
-                      'El email no puede contener más de 200 caracteres.',
-                  },
+                      'El email no puede contener más de 200 caracteres.'
+                  }
                 }}
                 render={({ field: { onChange, name, ref, value } }) => {
                   return (
@@ -200,7 +201,7 @@ export default function ContactProperty({
                       name={name}
                       className={inpStyle + ' w-full'}
                     />
-                  );
+                  )
                 }}
               />
             </label>
@@ -226,8 +227,8 @@ export default function ContactProperty({
                 {...register('tel', {
                   pattern: {
                     value: /^\s?\+?\s?([0-9][\s]*){9,}$/,
-                    message: 'Debes introducir un número de teléfono válido.',
-                  },
+                    message: 'Debes introducir un número de teléfono válido.'
+                  }
                 })}
               />
             </label>
@@ -245,10 +246,10 @@ export default function ContactProperty({
                   required: 'Debes añadir algún comentario.',
                   maxLength: {
                     value: 250,
-                    message: 'No puedes escribir más de 250 caracteres.',
-                  },
+                    message: 'No puedes escribir más de 250 caracteres.'
+                  }
                 })}
-              ></textarea>
+              />
               <p className='absolute right-5 bottom-5'>
                 {comentarios ? comentarios.length : 0}/250
               </p>
@@ -279,7 +280,7 @@ export default function ContactProperty({
                       >
                         {next && 'Next'}
                       </FaAngleRight>
-                    );
+                    )
                   } else {
                     return (
                       <FaAngleLeft
@@ -288,29 +289,31 @@ export default function ContactProperty({
                       >
                         {prev && 'Previous'}
                       </FaAngleLeft>
-                    );
+                    )
                   }
                 }}
                 className='slider-cont min-w-xxs h-48 sm:h-96 transition-all transform ease-in'
               >
-                {Slider.SlideImgs.length > 0 ? (
-                  Slider.SlideImgs.map((img, i) => {
-                    return (
-                      <img
-                        key={i}
-                        className='object-cover w-full h-96'
-                        src={'http://192.168.5.103:4000/photo/' + img.name}
-                        alt='default'
-                      />
-                    );
-                  })
-                ) : (
-                  <img
-                    className='object-fit h-48 w-full'
-                    src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
-                    alt='default home'
-                  />
-                )}
+                {Slider.SlideImgs.length > 0
+                  ? (
+                      Slider.SlideImgs.map((img, i) => {
+                        return (
+                          <img
+                            key={i}
+                            className='object-cover w-full h-96'
+                            src={'http://192.168.5.103:4000/photo/' + img.name}
+                            alt='default'
+                          />
+                        )
+                      })
+                    )
+                  : (
+                    <img
+                      className='object-fit h-48 w-full'
+                      src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+                      alt='default home'
+                    />
+                    )}
               </Carousel>
             </div>
 
@@ -323,17 +326,17 @@ export default function ContactProperty({
         </div>
       </section>
     </div>
-  );
+  )
 }
 
-function DatePicker({
+function DatePicker ({
   Value,
   setPickerValue,
   setValue,
   inpStyle,
-  arrayFechas,
+  arrayFechas
 }) {
-  const [TriggerDatePicker, setTriggerDatePicker] = useState(false);
+  const [TriggerDatePicker, setTriggerDatePicker] = useState(false)
 
   return (
     <LocalizationProvider locale={esEsLocale} dateAdapter={AdapterDateFns}>
@@ -344,14 +347,13 @@ function DatePicker({
         value={Value}
         open={TriggerDatePicker}
         onClose={() => {
-          setTriggerDatePicker(false);
+          setTriggerDatePicker(false)
         }}
         shouldDisableDate={(date) =>
-          // (date) => date.getTime() === new Date('2021-11-12').getTime()
+        // (date) => date.getTime() === new Date('2021-11-12').getTime()
 
           arrayFechas.includes(format(date, 'dd/MM/yyyy')) ||
-          arrayFechas.includes(format(date, 'd/MM/yyyy'))
-        }
+          arrayFechas.includes(format(date, 'd/MM/yyyy'))}
         renderLoading={() => <CalendarPickerSkeleton />}
         // renderDay={renderWeekPickerDay}
         inputFormat='dd/MM/yyyy'
@@ -359,14 +361,14 @@ function DatePicker({
           if (
             new Date(newValue[0]).getTime() > new Date(newValue[1]).getTime()
           ) {
-            console.error('Fecha de entrada mayor a fecha de salida');
+            console.error('Fecha de entrada mayor a fecha de salida')
           } else if (
             new Date(newValue[0]).getTime() === new Date(newValue[1]).getTime()
           ) {
-            console.error('Selecciona fechas diferentes');
+            console.error('Selecciona fechas diferentes')
           } else {
-            console.warn('FECHAS CORRECTAS');
-            setPickerValue(newValue);
+            console.warn('FECHAS CORRECTAS')
+            setPickerValue(newValue)
 
             if (
               newValue[0] &&
@@ -374,10 +376,10 @@ function DatePicker({
               newValue[1] &&
               !isNaN(newValue[1].getTime())
             ) {
-              setValue('startDate', format(newValue[0], 'yyyy/MM/dd'));
-              setValue('endDate', format(newValue[1], 'yyyy/MM/dd'));
+              setValue('startDate', format(newValue[0], 'yyyy/MM/dd'))
+              setValue('endDate', format(newValue[1], 'yyyy/MM/dd'))
 
-              setTriggerDatePicker(false);
+              setTriggerDatePicker(false)
             }
           }
         }}
@@ -385,7 +387,7 @@ function DatePicker({
           <div
             className='flex flex-col w-full sm:flex-row'
             onClick={(e) => {
-              setTriggerDatePicker(true);
+              setTriggerDatePicker(true)
             }}
           >
             <input
@@ -407,5 +409,5 @@ function DatePicker({
         )}
       />
     </LocalizationProvider>
-  );
+  )
 }

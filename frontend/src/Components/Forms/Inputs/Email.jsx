@@ -1,13 +1,13 @@
-import React from 'react';
+import React from 'react'
 
-export default function Email({
+export default function Email ({
   onChange,
   name,
   ref,
   className,
   placeHolder,
   defaultValue,
-  value,
+  value
 }) {
   return (
     <>
@@ -21,5 +21,5 @@ export default function Email({
         onChange={onChange}
       />
     </>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Users
  */
@@ -10,50 +10,50 @@ const getDB = require('../../config/getDB');
  * @returns {Promise} Devuelve un objeto con los datos
  */
 const getUser = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
-    //Obtenemos el id del usuario.
-    const { idUser } = req.params;
+    connection = await getDB()
+    // Obtenemos el id del usuario.
+    const { idUser } = req.params
 
-    //Obtenemos el id del usuario que hace la request
-    const idReqUser = req.userAuth.idUser;
+    // Obtenemos el id del usuario que hace la request
+    const idReqUser = req.userAuth.idUser
 
-    //Obtenemos los datos del usuario
+    // Obtenemos los datos del usuario
     const [user] = await connection.query(
       `
             SELECT idUser, name, lastName, tel, birthDate, email, city, avatar, role, bio, createdAt FROM users WHERE idUser = ?`,
       [idUser]
-    );
+    )
 
-    //Objeto con la info basica del usuario
+    // Objeto con la info basica del usuario
     const userInfo = {
       idUser: user[0].idUser,
       name: user[0].name,
       lastName: user[0].lastName,
       avatar: user[0].avatar,
       ciudad: user[0].city,
-      bio: user[0].bio,
-    };
+      bio: user[0].bio
+    }
 
-    //Usuario propietario
+    // Usuario propietario
     if (user[0].idUser === idReqUser || req.userAuth.role === 'admin') {
-      userInfo.email = user[0].email;
-      userInfo.role = user[0].role;
-      userInfo.tel = user[0].tel;
-      userInfo.birthDate = user[0].birthDate;
-      userInfo.createdAt = user[0].createdAt;
+      userInfo.email = user[0].email
+      userInfo.role = user[0].role
+      userInfo.tel = user[0].tel
+      userInfo.birthDate = user[0].birthDate
+      userInfo.createdAt = user[0].createdAt
     }
 
     res.send({
       status: 'ok',
-      userInfo,
-    });
+      userInfo
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = getUser;
+module.exports = getUser
