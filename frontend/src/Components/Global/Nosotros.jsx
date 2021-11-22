@@ -1,11 +1,11 @@
-export default function Nosotros() {
+export default function Nosotros () {
   return (
     <>
       <div
         className='header  bg-center bg-cover sm:h-60vh  sm:max-w-full grid grid-cols-10 grid-rows-4'
         style={{
           backgroundImage:
-            "linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('./Images/portada-nosotros.jpg')",
+            "linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('./Images/portada-nosotros.jpg')"
         }}
       >
         <div className='col-start-5 row-start-3 col-span-full text-principal-1'>
@@ -13,7 +13,7 @@ export default function Nosotros() {
           <h3>El lugar para encontrar tu hogar</h3>
         </div>
       </div>
-      <div className='separador bg-principal-1 h-9'></div>
+      <div className='separador bg-principal-1 h-9' />
       <div className='contenedor flex flex-wrap md:flex-nowrap text-principal-gris p-10 gap-5'>
         <div className='sm:w-full p-3  shadow-md bg-principal-1'>
           <h1 className='text-xl font-bold'>¿Qué es Perfect Renter?</h1>
@@ -36,7 +36,7 @@ export default function Nosotros() {
           </p>
         </div>
       </div>
-      <div className='separador  bg-gray-Primary h-0.5 shadow '></div>
+      <div className='separador  bg-gray-Primary h-0.5 shadow ' />
       <div className='contenedor-equipo pb-52 flex flex-col items-center gap-y-9'>
         <h1 className='py-4 font-bold text-3xl text-principal-1'>
           Nuestro equipo
@@ -81,5 +81,5 @@ export default function Nosotros() {
         </div>
       </div>
     </>
-  );
+  )
 }

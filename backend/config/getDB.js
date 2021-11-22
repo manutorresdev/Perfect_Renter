@@ -1,6 +1,6 @@
-require('dotenv').config();
+require('dotenv').config()
 
-const mysql = require('mysql2/promise');
+const mysql = require('mysql2/promise')
 
 const {
   MYSQL_HOST,
@@ -8,9 +8,9 @@ const {
   MYSQL_PASSWORD,
   MYSQL_DATABASE,
   MYSQL_DATABASE_TEST,
-  NODE_ENV,
-} = process.env;
-let pool;
+  NODE_ENV
+} = process.env
+let pool
 /**
  * @module Database
  */
@@ -28,11 +28,11 @@ const getDB = async () => {
       user: MYSQL_USER,
       password: MYSQL_PASSWORD,
       database: NODE_ENV === 'test' ? MYSQL_DATABASE_TEST : MYSQL_DATABASE,
-      timezone: 'Z',
-    });
+      timezone: 'Z'
+    })
   }
 
-  return await pool.getConnection();
-};
+  return await pool.getConnection()
+}
 
-module.exports = getDB;
+module.exports = getDB

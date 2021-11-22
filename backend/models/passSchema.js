@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('joi')
 /**
  * @module Schemas
  */
@@ -15,19 +15,19 @@ const passSchema = Joi.object().keys({
     .error((errors) => {
       switch (errors[0].code) {
         case 'any.required':
-          return new Error('Se requiere una contraseña.');
+          return new Error('Se requiere una contraseña.')
 
         case 'string.empty':
-          return new Error('Se requiere una contraseña.');
+          return new Error('Se requiere una contraseña.')
 
         default:
           return new Error(
             'La contraseña debe tener entre 8 y 100 caracteres.'
-          );
+          )
       }
-    }),
-});
+    })
+})
 
 module.exports = {
-  passSchema,
-};
+  passSchema
+}

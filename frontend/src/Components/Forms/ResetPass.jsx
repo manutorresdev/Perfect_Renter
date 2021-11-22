@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { put } from '../../Helpers/Api';
-import Password from './Inputs/Password';
-import { Message } from '../Properties/PropertyInfo';
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { put } from '../../Helpers/Api'
+import Password from './Inputs/Password'
+import { Message } from '../Properties/PropertyInfo'
 
-export default function ResetPass({ match }) {
-  const [ErrorRep, setError] = useState(false);
+export default function ResetPass ({ match }) {
+  const [ErrorRep, setError] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm();
+    formState: { errors }
+  } = useForm()
 
-  const formFunctions = { register, errors };
-  const [message, setMessage] = useState({ message: '', status: '' });
-  const error = 'Las contraseñas deben coincidir.';
+  const formFunctions = { register, errors }
+  const [message, setMessage] = useState({ message: '', status: '' })
+  const error = 'Las contraseñas deben coincidir.'
   const buttonStyle =
-    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
 
   return (
     <>
@@ -30,7 +30,7 @@ export default function ResetPass({ match }) {
           className='flex flex-col gap-5'
           onSubmit={handleSubmit((data) => {
             if (data.password !== data.passwordRepeat) {
-              setError(true);
+              setError(true)
             } else {
               put(
                 `http://192.168.5.103:4000/users/password/recover/${match.params.idUser}/${match.params.recoverCode}`,
@@ -39,24 +39,24 @@ export default function ResetPass({ match }) {
                   setMessage({
                     message:
                       'Contraseña cambiada con éxito, se te redirigirá a la pantalla principal.',
-                    status: 'ok',
-                  });
+                    status: 'ok'
+                  })
                 },
                 (error) => {
-                  setMessage({ message: error.message, status: 'error' });
+                  setMessage({ message: error.message, status: 'error' })
                 }
-              );
+              )
             }
           })}
         >
           <Password {...formFunctions} />
           <input
             className='w-full p-2 pr-6'
-            type={'password'}
+            type='password'
             name='password'
             placeholder='Confirma la contraseña*'
             {...register('passwordRepeat', {
-              required: `${error}`,
+              required: `${error}`
             })}
           />
           {errors.passwordRepeat && (
@@ -71,5 +71,5 @@ export default function ResetPass({ match }) {
         </form>
       </section>
     </>
-  );
+  )
 }

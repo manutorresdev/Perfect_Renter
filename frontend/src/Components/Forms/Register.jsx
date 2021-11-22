@@ -1,30 +1,30 @@
-import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { CreateFormData, post, put } from '../../Helpers/Api';
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { CreateFormData, post, put } from '../../Helpers/Api'
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker'
 
 // Import inputs controlados
-import Email from './Inputs/Email';
-import Password from './Inputs/Password';
-import FirstName from './Inputs/FirstName';
+import Email from './Inputs/Email'
+import Password from './Inputs/Password'
+import FirstName from './Inputs/FirstName'
 import {
   FaBookOpen,
   FaPlus,
   FaRegAddressCard,
   FaRegCalendarAlt,
   FaTrash,
-  FaUserAlt,
-} from 'react-icons/fa';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { Box } from '@mui/system';
-import { format } from 'date-fns';
-import { Message } from '../Properties/PropertyInfo';
-export default function Register({
+  FaUserAlt
+} from 'react-icons/fa'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import { Box } from '@mui/system'
+import { format } from 'date-fns'
+import { Message } from '../Properties/PropertyInfo'
+export default function Register ({
   Token,
   usuario,
   setOverlay,
-  onSubmitDeleted,
+  onSubmitDeleted
 }) {
   const {
     register,
@@ -33,7 +33,7 @@ export default function Register({
     control,
     reset,
     setValue,
-    watch,
+    watch
   } = useForm(
     Token
       ? {
@@ -44,8 +44,8 @@ export default function Register({
             city: usuario.ciudad,
             tel: usuario.tel,
             bio: usuario.bio,
-            birthDate: new Date(usuario.birthDate).toISOString().substr(0, 10),
-          },
+            birthDate: new Date(usuario.birthDate).toISOString().substr(0, 10)
+          }
         }
       : {
           defaultValues: {
@@ -55,66 +55,66 @@ export default function Register({
             city: '',
             tel: '',
             bio: '',
-            birthDate: '',
-          },
+            birthDate: ''
+          }
         }
-  );
-  const formFunctions = { register, errors };
-  const [message, setMessage] = useState({ message: '', status: '' });
+  )
+  const formFunctions = { register, errors }
+  const [message, setMessage] = useState({ message: '', status: '' })
   // States
-  const [Error, setError] = useState('');
-  const [DatePicker, setDatePicker] = useState(false);
-  const [Value, setDateValue] = useState([null, null]);
+  const [Error, setError] = useState('')
+  const [DatePicker, setDatePicker] = useState(false)
+  const [Value, setDateValue] = useState([null, null])
   // Enviar datos a backend
-  function onSubmitRegister(body, e) {
-    e.preventDefault();
-    setValue('birthDate', format(new Date(body.birthDate), 'yyyy/MM/dd'));
-    const age = new Date().getYear() - new Date(body.birthDate).getYear();
+  function onSubmitRegister (body, e) {
+    e.preventDefault()
+    setValue('birthDate', format(new Date(body.birthDate), 'yyyy/MM/dd'))
+    const age = new Date().getYear() - new Date(body.birthDate).getYear()
     if (age < 17) {
-      setError('Debes ser mayor de edad.');
+      setError('Debes ser mayor de edad.')
     } else {
       post(
         'http://192.168.5.103:4000/users',
         CreateFormData(body),
         (data) => {
-          console.log('Success');
-          setMessage({ message: data.message, status: 'ok' });
-          reset();
-          setOverlay({ shown: false, userInfo: {} });
+          console.log('Success')
+          setMessage({ message: data.message, status: 'ok' })
+          reset()
+          setOverlay({ shown: false, userInfo: {} })
         },
         (data) => {
-          setError(data.message);
+          setError(data.message)
         },
         Token
-      );
+      )
     }
   }
 
-  function onSubmitEdited(body, e) {
-    e.preventDefault();
+  function onSubmitEdited (body, e) {
+    e.preventDefault()
     put(
       `http://192.168.5.103:4000/users/${usuario.idUser}`,
       CreateFormData(body),
       (data) => {
-        console.log('Success');
-        setMessage({ message: data.message, status: 'ok' });
-        reset();
+        console.log('Success')
+        setMessage({ message: data.message, status: 'ok' })
+        reset()
       },
       (error) => {
-        setError(error.message);
+        setError(error.message)
       },
       Token
-    );
+    )
   }
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 focus:cursor-default relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer';
+    'px-3 py-3 placeholder-gray-400 text-gray-600 focus:cursor-default relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
   const buttonStyle =
-    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
 
   const registerComponentStyle = Token
     ? 'overlay z-20 bg-white bg-opacity-75 fixed w-full h-full min-h-full h-96 left-0 top-0 flex flex-col items-center pt-20 pb-10 overflow-auto sm:overflow-hidden'
-    : 'bg-white bg-opacity-50';
-  const bio = watch('bio');
+    : 'bg-white bg-opacity-50'
+  const bio = watch('bio')
   return (
     <div className={registerComponentStyle}>
       {message.message && <Message message={message} setMessage={Message} />}
@@ -129,7 +129,7 @@ export default function Register({
           <button
             className='close-overlay absolute top-3 right-3 p-2'
             onClick={() => {
-              setOverlay({ shown: false, userInfo: {} });
+              setOverlay({ shown: false, userInfo: {} })
             }}
           >
             <FaPlus className='transform rotate-45 text-xl' />
@@ -156,7 +156,7 @@ export default function Register({
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover' />
               Email:
             </h3>
           )}
@@ -167,8 +167,8 @@ export default function Register({
               required: 'Debes escribir un email.',
               maxLength: {
                 value: 200,
-                message: 'El email no puede contener más de 200 caracteres.',
-              },
+                message: 'El email no puede contener más de 200 caracteres.'
+              }
             }}
             render={({ field: { onChange, name, ref, value } }) => {
               return (
@@ -179,7 +179,7 @@ export default function Register({
                   name={name}
                   className={inpStyle}
                 />
-              );
+              )
             }}
           />
           {errors.email && (
@@ -196,7 +196,7 @@ export default function Register({
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover' />
               Nombre:
             </h3>
           )}
@@ -209,16 +209,16 @@ export default function Register({
                 value:
                   /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                 message:
-                  'El nombre no puede contener caracteres especiales ni números.',
+                  'El nombre no puede contener caracteres especiales ni números.'
               },
               minLength: {
                 value: 3,
-                message: 'El nombre debe contener como mínimo 3 caracteres.',
+                message: 'El nombre debe contener como mínimo 3 caracteres.'
               },
               maxLength: {
                 value: 30,
-                message: 'El nombre no puede tener más de 30 caracteres.',
-              },
+                message: 'El nombre no puede tener más de 30 caracteres.'
+              }
             }}
             render={({ field: { onChange, name, ref, value } }) => {
               return (
@@ -229,13 +229,13 @@ export default function Register({
                   name={name}
                   className={inpStyle}
                 />
-              );
+              )
             }}
           />
           {errors.name && <p className='text-red-500'>{errors.name.message}</p>}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover' />
               Apellidos:
             </h3>
           )}
@@ -250,16 +250,16 @@ export default function Register({
                 value:
                   /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                 message:
-                  'El apellido no puede contener caracteres especiales ni números.',
+                  'El apellido no puede contener caracteres especiales ni números.'
               },
               minLength: {
                 value: 3,
-                message: 'El apellido debe contener como mínimo 3 caracteres.',
+                message: 'El apellido debe contener como mínimo 3 caracteres.'
               },
               maxLength: {
                 value: 30,
-                message: 'El apellido no puede tener más de 30 caracteres.',
-              },
+                message: 'El apellido no puede tener más de 30 caracteres.'
+              }
             })}
           />
           {errors.lastName && (
@@ -267,7 +267,7 @@ export default function Register({
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover' />
               Ciudad:
             </h3>
           )}
@@ -282,18 +282,18 @@ export default function Register({
                 value:
                   /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                 message:
-                  'La ciudad no puede contener caracteres especiales ni números.',
+                  'La ciudad no puede contener caracteres especiales ni números.'
               },
               maxLength: {
                 value: 30,
-                message: 'La ciudad no puede tener más de 50 caracteres.',
-              },
+                message: 'La ciudad no puede tener más de 50 caracteres.'
+              }
             })}
           />
           {errors.city && <p className='text-red-500'>{errors.city.message}</p>}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover' />
               Teléfono:
             </h3>
           )}
@@ -305,8 +305,8 @@ export default function Register({
             {...register('tel', {
               pattern: {
                 value: /^\s?\+?\s?([0-9][0-9\s]*){9,}$/,
-                message: 'Debes introducir un número de teléfono válido.',
-              },
+                message: 'Debes introducir un número de teléfono válido.'
+              }
             })}
           />
           {errors.tel && <p className='text-red-500'>{errors.tel.message}</p>}
@@ -320,7 +320,7 @@ export default function Register({
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover' />
               Biografía:
             </h3>
           )}
@@ -336,19 +336,17 @@ export default function Register({
                 minLength: 0,
                 maxLength: {
                   value: 255,
-                  message: 'No puedes escribir más de 250 caracteres.',
-                },
+                  message: 'No puedes escribir más de 250 caracteres.'
+                }
               })}
             />
-            {
-              <p
-                className={`${
+            <p
+              className={`${
                   bio.length > 250 && 'text-red-500'
                 } absolute right-5 bottom-5`}
-              >
-                {bio ? bio.length : 0}/250
-              </p>
-            }
+            >
+              {bio ? bio.length : 0}/250
+            </p>
           </div>
           {!Token && (
             <h3 className='flex gap-2 font-medium items-center'>
@@ -360,7 +358,7 @@ export default function Register({
           )}
           {Token && (
             <h3 className='flex gap-2 font-medium items-center'>
-              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover'></div>
+              <div className='p-2 rounded-full border-2 border-gray-600 bg-principal-1-hover' />
               Fecha de nacimiento:
             </h3>
           )}
@@ -370,23 +368,23 @@ export default function Register({
               value={Value}
               open={DatePicker}
               onClose={(e) => {
-                setDatePicker(false);
+                setDatePicker(false)
               }}
               onChange={(newValue) => {
-                setDateValue(format(new Date(newValue), 'dd/MM/yyyy'));
-                setValue('birthDate', format(new Date(newValue), 'yyyy/MM/dd'));
+                setDateValue(format(new Date(newValue), 'dd/MM/yyyy'))
+                setValue('birthDate', format(new Date(newValue), 'yyyy/MM/dd'))
               }}
               renderInput={({ inputRef, inputProps, InputProps }) => (
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <input
                     className={inpStyle}
                     ref={inputRef}
-                    readOnly={true}
+                    readOnly
                     onKeyDown={(e) => {
-                      e.preventDefault();
+                      e.preventDefault()
                     }}
                     onClick={(e) => {
-                      setDatePicker(true);
+                      setDatePicker(true)
                     }}
                     autoComplete='new-password'
                     {...inputProps}
@@ -418,8 +416,8 @@ export default function Register({
                 setOverlay({
                   form: 'deleteAccount',
                   shown: true,
-                  onSubmitDeleted: onSubmitDeleted,
-                });
+                  onSubmitDeleted: onSubmitDeleted
+                })
               }}
             >
               <FaTrash className='hover:text-red-500 w-8' />{' '}
@@ -429,5 +427,5 @@ export default function Register({
         )}
       </section>
     </div>
-  );
+  )
 }

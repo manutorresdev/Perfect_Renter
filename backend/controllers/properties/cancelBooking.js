@@ -1,31 +1,30 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
-const { sendMail, formatDate } = require('../..//libs/helpers');
-const { format } = require('date-fns');
+const getDB = require('../../config/getDB')
+const { sendMail, formatDate } = require('../..//libs/helpers')
 
 const cancelBooking = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
-    //Recuperamos los parametros de la reserva a cancelar
-    const { bookingCode } = req.params;
+    // Recuperamos los parametros de la reserva a cancelar
+    const { bookingCode } = req.params
 
     // Obtenemos el id del usuario que hace la request.
-    const idUser = req.userAuth.idUser;
+    const idUser = req.userAuth.idUser
 
-    //Verificamos que exista la solicitud de reserva en la BD
+    // Verificamos que exista la solicitud de reserva en la BD
     const [booking] = await connection.query(
       `
       SELECT * FROM bookings WHERE bookingCode = ? AND idTenant = ? OR bookingCode = ? AND idRenter = ?
        `,
       [bookingCode, idUser, bookingCode, idUser]
-    );
+    )
 
     if (booking.length === 0) {
-      const error = new Error('No hay reservas pendientes con ese código.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('No hay reservas pendientes con ese código.')
+      error.httpStatus = 400
+      throw error
     }
 
     // Obtenemos los datos de la vivienda de la reserva.
@@ -34,9 +33,9 @@ const cancelBooking = async (req, res, next) => {
     SELECT address,city FROM properties WHERE idProperty = ?
     `,
       [booking[0].idProperty]
-    );
+    )
     // Definimos la fecha de modificación
-    const modifiedAt = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss');
+    const modifiedAt = formatDate(new Date(), 'yyyy-MM-dd HH:mm:ss')
     // const date = format(booking[0].modifiedAt, 'dd/MM/yyyy');
     // const time = format(booking[0].modifiedAt, 'HH:mm:ss');
 
@@ -44,9 +43,9 @@ const cancelBooking = async (req, res, next) => {
     if (booking[0].state.includes('cancelada')) {
       const error = new Error(
         `La reserva ya ha fue cancelada el ${modifiedAt}.`
-      );
-      error.httpStatus = 400;
-      throw error;
+      )
+      error.httpStatus = 400
+      throw error
     }
 
     // Seleccionamos los datos de los usuarios.
@@ -56,27 +55,27 @@ const cancelBooking = async (req, res, next) => {
         SELECT name, email FROM users WHERE idUser = ?
         `,
       [booking[0].idRenter]
-    );
+    )
     // CASERO
     const [userTenant] = await connection.query(
       `
           SELECT name, email FROM users WHERE idUser = ?
           `,
       [booking[0].idTenant]
-    );
+    )
 
     // Mensaje que enviaremos al usuario.
-    let emailBodyRenter;
-    let emailBodyTenant;
+    let emailBodyRenter
+    let emailBodyTenant
 
-    //Verificamos si la cancelacion la hace el tenant o el renter y lo registramos
+    // Verificamos si la cancelacion la hace el tenant o el renter y lo registramos
     if (idUser === booking[0].idRenter) {
       await connection.query(
         `
               UPDATE bookings SET state = "cancelada-renter", modifiedAt = ? WHERE bookingCode = ?
               `,
         [modifiedAt, bookingCode]
-      );
+      )
 
       emailBodyRenter = `
               <table>
@@ -100,7 +99,7 @@ const cancelBooking = async (req, res, next) => {
         </td>
         </tfoot>
       </table>
-    `;
+    `
       emailBodyTenant = `
       <table>
         <thead>
@@ -123,14 +122,14 @@ const cancelBooking = async (req, res, next) => {
         </td>
         </tfoot>
       </table>
-    `;
+    `
     } else if (idUser === booking[0].idTenant) {
       await connection.query(
         `
             UPDATE bookings SET state = "cancelada-tenant", modifiedAt = ? WHERE bookingCode = ?
             `,
         [modifiedAt, bookingCode]
-      );
+      )
       emailBodyRenter = `
       <table>
         <thead>
@@ -152,7 +151,7 @@ const cancelBooking = async (req, res, next) => {
         </td>
         </tfoot>
       </table>
-    `;
+    `
       emailBodyTenant = `
       <table>
         <thead>
@@ -175,35 +174,35 @@ const cancelBooking = async (req, res, next) => {
         </td>
         </tfoot>
       </table>
-    `;
+    `
     } else {
-      const error = new Error('No hay reservas asociadas a su usuario.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('No hay reservas asociadas a su usuario.')
+      error.httpStatus = 400
+      throw error
     }
 
     if (process.env.NODE_ENV !== 'test') {
       await sendMail({
         to: userRenter[0].email,
         subject: 'Cancelación de reserva.',
-        body: emailBodyRenter,
-      });
+        body: emailBodyRenter
+      })
       await sendMail({
         to: userTenant[0].email,
         subject: 'Cancelación de reserva.',
-        body: emailBodyTenant,
-      });
+        body: emailBodyTenant
+      })
     }
 
     res.send({
       status: 'ok',
-      message: 'La reserva ha sido cancelada correctamente.',
-    });
+      message: 'La reserva ha sido cancelada correctamente.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = cancelBooking;
+module.exports = cancelBooking

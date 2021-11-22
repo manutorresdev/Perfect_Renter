@@ -1,10 +1,10 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 const {
   sendMail,
   generateRandomString,
-  formatDate,
-} = require('../../libs/helpers');
+  formatDate
+} = require('../../libs/helpers')
 /**
  * @module Users
  */
@@ -15,18 +15,18 @@ const {
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const recoverUserPass = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el email del usuario.
-    const { email } = req.body;
+    const { email } = req.body
 
     // Si el campo de email está vacío, lanzamos un error.
     if (!email) {
-      const error = new Error('Escribe un correo electrónico válido.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('Escribe un correo electrónico válido.')
+      error.httpStatus = 400
+      throw error
     }
 
     // Obtenemos el usuario
@@ -35,19 +35,19 @@ const recoverUserPass = async (req, res, next) => {
       SELECT idUser FROM users WHERE email = ?
       `,
       [email]
-    );
+    )
 
     // Comprobamos que exista el usuario con el email proporcionado. Si no existe, lanzamos error.
     if (user.length < 1) {
       const error = new Error(
         'No existe ningún usuario con ese email, por favor, comprueba que el email sea correcto.'
-      );
-      error.httpStatus = 404;
-      throw error;
+      )
+      error.httpStatus = 404
+      throw error
     }
 
     // Generamos el recoverCode,
-    const recoverCode = generateRandomString(20);
+    const recoverCode = generateRandomString(20)
 
     // Creamos el cuerpo del email.
     const emailBody = `
@@ -73,15 +73,15 @@ const recoverUserPass = async (req, res, next) => {
                </td>
             </tfoot>
         </table>
-    `;
+    `
 
     // Envío de email.
     if (process.env.NODE_ENV !== 'test') {
       await sendMail({
         to: email,
         subject: 'Cambio de contraseña Perfect Renter',
-        body: emailBody,
-      });
+        body: emailBody
+      })
     }
 
     // Agregamos el código de recuperación al usuario en la base de datos.
@@ -90,18 +90,18 @@ const recoverUserPass = async (req, res, next) => {
     UPDATE users SET recoverCode = ?, modifiedAt = ? WHERE email = ?
     `,
       [recoverCode, formatDate(new Date()), email]
-    );
+    )
 
     res.send({
       status: 'ok',
       message: 'Email enviado con éxito.',
-      info: { recoverCode, idUser: user[0].idUser },
-    });
+      info: { recoverCode, idUser: user[0].idUser }
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = recoverUserPass;
+module.exports = recoverUserPass

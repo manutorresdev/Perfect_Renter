@@ -1,7 +1,7 @@
-// @ts-nocheck
-const getDB = require('../../config/getDB');
-const { savePhoto, formatDate, validate } = require('../../libs/helpers');
-const { editPropertySchema } = require('../../models/propertySchema');
+const { format } = require('date-fns')
+const getDB = require('../../config/getDB')
+const { savePhoto, formatDate, validate } = require('../../libs/helpers')
+const { editPropertySchema } = require('../../models/propertySchema')
 
 /**
  * @module Entries
@@ -14,16 +14,13 @@ const { editPropertySchema } = require('../../models/propertySchema');
  */
 
 const editProperty = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el id de la propiedad que queremos modificar.
-    const { idProperty } = req.params;
-
-    // Obtenemos el id del usuario que hace la request.
-    const idReqUser = req.userAuth.idUser;
+    const { idProperty } = req.params
 
     // Obtenemos los datos editables
     let {
@@ -46,8 +43,8 @@ const editProperty = async (req, res, next) => {
       availabilityDate,
       price,
       description,
-      state: state,
-    } = req.body;
+      state
+    } = req.body
 
     // Obtenemos los datos de la vivienda a editar.
     const [property] = await connection.query(
@@ -56,11 +53,11 @@ const editProperty = async (req, res, next) => {
       WHERE idProperty = ?
       `,
       [idProperty]
-    );
+    )
 
-    let validateData;
+    let validateData
     // Obtenemos la fecha de modificación.
-    const modifiedAt = formatDate(new Date());
+    const modifiedAt = formatDate(new Date())
 
     /**
      * ###########
@@ -80,22 +77,22 @@ const editProperty = async (req, res, next) => {
       SELECT idPhoto FROM photos WHERE idProperty = ?
       `,
           [idProperty]
-        );
+        )
 
         // Comprobamos que no haya más de 30 fotos.
 
         if (photos.length > 29) {
-          const error = new Error('Solo puedes subir un máximo de 30 fotos.');
-          error.httpStatus = 403;
-          throw error;
+          const error = new Error('Solo puedes subir un máximo de 30 fotos.')
+          error.httpStatus = 403
+          throw error
         }
-        let photoName;
+        let photoName
         try {
-          photoName = await savePhoto(photo);
+          photoName = await savePhoto(photo)
         } catch (_) {
-          const error = new Error('Formato incorrecto.');
-          error.httpStatus = 400;
-          throw error;
+          const error = new Error('Formato incorrecto.')
+          error.httpStatus = 400
+          throw error
         }
         await connection.query(
           `
@@ -103,7 +100,7 @@ const editProperty = async (req, res, next) => {
       VALUES (?,?,?)
       `,
           [photoName, idProperty, formatDate(new Date())]
-        );
+        )
       }
     }
     /**
@@ -116,14 +113,14 @@ const editProperty = async (req, res, next) => {
      */
     if (city && property[0].city !== city) {
       // Validamos la información recibida.
-      validateData = { city };
-      await validate(editPropertySchema, validateData);
+      validateData = { city }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET city = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET city = ?, modifiedAt = ? WHERE idProperty = ?',
         [city, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ##############
@@ -135,14 +132,14 @@ const editProperty = async (req, res, next) => {
      */
     if (province && property[0].province !== province) {
       // Validamos la información recibida.
-      validateData = { province };
-      await validate(editPropertySchema, validateData);
+      validateData = { province }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET province = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET province = ?, modifiedAt = ? WHERE idProperty = ?',
         [province, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ############
@@ -154,14 +151,14 @@ const editProperty = async (req, res, next) => {
      */
     if (address && property[0].address !== address) {
       // Validamos la información recibida.
-      validateData = { address };
-      await validate(editPropertySchema, validateData);
+      validateData = { address }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET address = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET address = ?, modifiedAt = ? WHERE idProperty = ?',
         [address, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * #############
@@ -173,14 +170,14 @@ const editProperty = async (req, res, next) => {
      */
     if (zipCode && property[0].zipCode !== zipCode) {
       // Validamos la información recibida.
-      validateData = { zipCode };
-      await validate(editPropertySchema, validateData);
+      validateData = { zipCode }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET zipCode = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET zipCode = ?, modifiedAt = ? WHERE idProperty = ?',
         [zipCode, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ############
@@ -192,14 +189,14 @@ const editProperty = async (req, res, next) => {
      */
     if (number && property[0].number !== number) {
       // Validamos la información recibida.
-      validateData = { number };
-      await validate(editPropertySchema, validateData);
+      validateData = { number }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET number = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET number = ?, modifiedAt = ? WHERE idProperty = ?',
         [number, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ##########
@@ -212,16 +209,16 @@ const editProperty = async (req, res, next) => {
     if (type && property[0].type !== type) {
       // Validamos que el tipo sea los especificados en la base de datos. Si no, lanzamos error.
       if (type !== 'duplex' && type !== 'casa' && type !== 'piso') {
-        const error = new Error('El tipo de vivienda no es válido.');
-        error.httpStatus = 403;
-        throw error;
+        const error = new Error('El tipo de vivienda no es válido.')
+        error.httpStatus = 403
+        throw error
       }
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET type = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET type = ?, modifiedAt = ? WHERE idProperty = ?',
         [type, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ###########
@@ -233,14 +230,14 @@ const editProperty = async (req, res, next) => {
      */
     if (stair && property[0].stair !== stair) {
       // Validamos la información recibida.
-      validateData = { stair };
-      await validate(editPropertySchema, validateData);
+      validateData = { stair }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET stair = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET stair = ?, modifiedAt = ? WHERE idProperty = ?',
         [stair, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ##########
@@ -252,14 +249,14 @@ const editProperty = async (req, res, next) => {
      */
     if (flat && property[0].flat !== flat) {
       // Validamos la información recibida.
-      validateData = { flat };
-      await validate(editPropertySchema, validateData);
+      validateData = { flat }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET flat = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET flat = ?, modifiedAt = ? WHERE idProperty = ?',
         [flat, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ##########
@@ -271,14 +268,14 @@ const editProperty = async (req, res, next) => {
      */
     if (gate && property[0].gate !== gate) {
       // Validamos la información recibida.
-      validateData = { gate };
-      await validate(editPropertySchema, validateData);
+      validateData = { gate }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET gate = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET gate = ?, modifiedAt = ? WHERE idProperty = ?',
         [gate, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ########
@@ -290,14 +287,14 @@ const editProperty = async (req, res, next) => {
      */
     if (mts && property[0].mts !== mts) {
       // Validamos la información recibida.
-      validateData = { mts };
-      await validate(editPropertySchema, validateData);
+      validateData = { mts }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET mts = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET mts = ?, modifiedAt = ? WHERE idProperty = ?',
         [mts, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ###############
@@ -309,14 +306,14 @@ const editProperty = async (req, res, next) => {
      */
     if (rooms && property[0].rooms !== rooms) {
       // Validamos la información recibida.
-      validateData = { rooms };
-      await validate(editPropertySchema, validateData);
+      validateData = { rooms }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET rooms = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET rooms = ?, modifiedAt = ? WHERE idProperty = ?',
         [rooms, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ############
@@ -327,23 +324,23 @@ const editProperty = async (req, res, next) => {
      *
      */
 
-    //convertimos en número el dato booleanos
+    // convertimos en número el dato booleanos
     if (garage === 'true') {
-      garage = 1;
+      garage = 1
     } else {
-      garage = 0;
+      garage = 0
     }
 
     if (garage && property[0].garage !== garage) {
       // Validamos la información recibida.
-      validateData = { garage };
-      await validate(editPropertySchema, validateData);
+      validateData = { garage }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET garage = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET garage = ?, modifiedAt = ? WHERE idProperty = ?',
         [garage, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ##############
@@ -354,23 +351,23 @@ const editProperty = async (req, res, next) => {
      *
      */
 
-    //convertimos en número el dato booleanos
+    // convertimos en número el dato booleanos
     if (elevator === 'true') {
-      elevator = 1;
+      elevator = 1
     } else {
-      elevator = 0;
+      elevator = 0
     }
 
     if (elevator && property[0].elevator !== elevator) {
       // Validamos la información recibida.
-      validateData = { elevator };
-      await validate(editPropertySchema, validateData);
+      validateData = { elevator }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET elevator = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET elevator = ?, modifiedAt = ? WHERE idProperty = ?',
         [elevator, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * #############
@@ -380,24 +377,24 @@ const editProperty = async (req, res, next) => {
      * Actualizamos si la vivienda tiene terraza.
      *
      */
-    //convertimos en número el dato booleanos
+    // convertimos en número el dato booleanos
 
     if (terrace === 'true') {
-      terrace = 1;
+      terrace = 1
     } else {
-      terrace = 0;
+      terrace = 0
     }
 
     if (terrace && property[0].terrace !== terrace) {
       // Validamos la información recibida.
-      validateData = { terrace };
-      await validate(editPropertySchema, validateData);
+      validateData = { terrace }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET terrace = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET terrace = ?, modifiedAt = ? WHERE idProperty = ?',
         [terrace, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * #############
@@ -409,14 +406,14 @@ const editProperty = async (req, res, next) => {
      */
     if (toilets && property[0].toilets !== toilets) {
       // Validamos la información recibida.
-      validateData = { toilets };
-      await validate(editPropertySchema, validateData);
+      validateData = { toilets }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET toilets = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET toilets = ?, modifiedAt = ? WHERE idProperty = ?',
         [toilets, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * #######################
@@ -426,25 +423,25 @@ const editProperty = async (req, res, next) => {
      * Actualizamos si la vivienda tiene certificado energético.
      *
      */
-    //convertimos en número el dato booleanos
+    // convertimos en número el dato booleanos
     if (energyCertificate === 'true') {
-      energyCertificate = 1;
+      energyCertificate = 1
     } else {
-      energyCertificate = 0;
+      energyCertificate = 0
     }
     if (
       energyCertificate &&
       property[0].energyCertificate !== energyCertificate
     ) {
       // Validamos la información recibida.
-      validateData = { energyCertificate };
-      await validate(editPropertySchema, validateData);
+      validateData = { energyCertificate }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET energyCertificate = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET energyCertificate = ?, modifiedAt = ? WHERE idProperty = ?',
         [energyCertificate, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ######################
@@ -457,13 +454,13 @@ const editProperty = async (req, res, next) => {
     if (availabilityDate && property[0].availabilityDate !== availabilityDate) {
       // Validamos la información recibida.
 
-      const date = format(availabilityDate, 'yyyy-MM-dd');
+      const date = format(availabilityDate, 'yyyy-MM-dd')
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET availabilityDate = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET availabilityDate = ?, modifiedAt = ? WHERE idProperty = ?',
         [date, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ###########
@@ -475,14 +472,14 @@ const editProperty = async (req, res, next) => {
      */
     if (price && property[0].price !== price) {
       // Validamos la información recibida.
-      validateData = { price };
-      await validate(editPropertySchema, validateData);
+      validateData = { price }
+      await validate(editPropertySchema, validateData)
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET price = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET price = ?, modifiedAt = ? WHERE idProperty = ?',
         [price, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * #################
@@ -495,9 +492,9 @@ const editProperty = async (req, res, next) => {
     if (description && property[0].description !== description) {
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET description = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET description = ?, modifiedAt = ? WHERE idProperty = ?',
         [description, modifiedAt, idProperty]
-      );
+      )
     }
     /**
      * ###########
@@ -514,26 +511,26 @@ const editProperty = async (req, res, next) => {
         state !== 'alquilado' &&
         state !== 'disponible'
       ) {
-        const error = new Error('El estado de la vivienda no es válido.');
-        error.httpStatus = 403;
-        throw error;
+        const error = new Error('El estado de la vivienda no es válido.')
+        error.httpStatus = 403
+        throw error
       }
 
       // Actualizamos la información en la base de datos.
       await connection.query(
-        `UPDATE properties SET state = ?, modifiedAt = ? WHERE idProperty = ?`,
+        'UPDATE properties SET state = ?, modifiedAt = ? WHERE idProperty = ?',
         [state, modifiedAt, idProperty]
-      );
+      )
     }
     res.send({
       status: 'ok',
-      message: 'Vivienda actualizada.',
-    });
+      message: 'Vivienda actualizada.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = editProperty;
+module.exports = editProperty

@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import {
   FaAngleLeft,
   FaAngleRight,
   FaPencilAlt,
   FaStar,
-  FaTrash,
-} from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { del, get } from '../../Helpers/Api';
-import NewProperty from './NewProperty';
-import Carousel from 'react-material-ui-carousel';
-import { Message } from '../Properties/PropertyInfo';
+  FaTrash
+} from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import { del, get } from '../../Helpers/Api'
+import NewProperty from './NewProperty'
+import Carousel from 'react-material-ui-carousel'
+import { Message } from '../Properties/PropertyInfo'
 
-export default function Property({
+export default function Property ({
   property,
   token,
   profileOverlay,
   setProfileOverlay,
-  mountOn,
+  mountOn
 }) {
-  const [SlideImgs, setSlideImgs] = useState([]);
-  const [message, setMessage] = useState({ message: '', status: '' });
+  const [SlideImgs, setSlideImgs] = useState([])
+  const [message, setMessage] = useState({ message: '', status: '' })
   const [Overlay, setOverlay] = useState({
     shown: false,
-    form: '',
-  });
+    form: ''
+  })
 
   useEffect(() => {
     // const controller = new AbortController();
@@ -32,36 +32,36 @@ export default function Property({
       `http://192.168.5.103:4000/properties/${property.idProperty}/photos`,
       (data) => {
         if (data.status === 'ok' && mountOn === 'propertiesList') {
-          setSlideImgs(data.photos.slice(0, 5));
+          setSlideImgs(data.photos.slice(0, 5))
         } else if (data.status === 'ok' && mountOn === 'profile') {
-          setSlideImgs(data.photos);
+          setSlideImgs(data.photos)
         } else {
-          setSlideImgs(data.photos);
+          setSlideImgs(data.photos)
         }
       },
       (error) => setMessage({ message: error.message, status: 'error' }),
       null,
       null
-    );
+    )
     return () => {
       // controller.abort();
-    };
-  }, [property.idProperty, mountOn]);
+    }
+  }, [property.idProperty, mountOn])
 
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
+  function capitalizeFirstLetter (string) {
+    return string[0].toUpperCase() + string.slice(1)
   }
 
-  function onSubmitDeleted(body, e) {
+  function onSubmitDeleted (body, e) {
     del(
       `http://192.168.5.103:4000/properties/${property.idProperty}`,
       body,
       (data) => {
-        setMessage({ message: data.message, status: 'ok' });
+        setMessage({ message: data.message, status: 'ok' })
       },
       (error) => setMessage({ message: error.message, status: 'error' }),
       token
-    );
+    )
   }
 
   return (
@@ -102,7 +102,7 @@ export default function Property({
                   >
                     {next && 'Next'}
                   </FaAngleRight>
-                );
+                )
               } else {
                 return (
                   <FaAngleLeft
@@ -111,29 +111,31 @@ export default function Property({
                   >
                     {prev && 'Previous'}
                   </FaAngleLeft>
-                );
+                )
               }
             }}
             className='slider-cont min-w-xxs h-48 transition-all transform ease-in'
           >
-            {SlideImgs.length > 0 ? (
-              SlideImgs.map((img, i) => {
-                return (
-                  <img
-                    key={i}
-                    className='object-cover w-full h-48'
-                    src={'http://192.168.5.103:4000/photo/' + img.name}
-                    alt='default'
-                  />
-                );
-              })
-            ) : (
-              <img
-                className='object-fit h-48 w-full'
-                src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
-                alt='default home'
-              />
-            )}
+            {SlideImgs.length > 0
+              ? (
+                  SlideImgs.map((img, i) => {
+                    return (
+                      <img
+                        key={i}
+                        className='object-cover w-full h-48'
+                        src={'http://192.168.5.103:4000/photo/' + img.name}
+                        alt='default'
+                      />
+                    )
+                  })
+                )
+              : (
+                <img
+                  className='object-fit h-48 w-full'
+                  src='https://www.arquitecturaydiseno.es/medio/2020/10/19/casa-prefabricada-de-hormipresa-en-el-boecillo-valladolid-realizada-con-el-sistema-arctic-wall-de-paneles-estructurales-con-el-acabado-incorporado_6f2a28cd_1280x794.jpg'
+                  alt='default home'
+                />
+                )}
           </Carousel>
         </div>
 
@@ -165,38 +167,40 @@ export default function Property({
               {Array(parseInt(property.votes))
                 .fill(null)
                 .map((value, i) => {
-                  return <FaStar key={i} className='text-principal-1' />;
+                  return <FaStar key={i} className='text-principal-1' />
                 })}
             </footer>
           </Link>
-          {token ? (
-            <div className='flex justify-between w-full absolute bottom-1 '>
-              <button
-                className='text-xl p-4 hover:text-blue-700'
-                onClick={() => {
-                  setOverlay({ shown: true, form: 'editProperty' });
-                }}
-              >
-                <FaPencilAlt />
-              </button>
-              <button
-                className='text-xl p-4 hover:text-red-500'
-                onClick={() => {
-                  setProfileOverlay({
-                    form: 'deleteProperty',
-                    shown: true,
-                    onSubmitDeleted: onSubmitDeleted,
-                  });
-                }}
-              >
-                <FaTrash />
-              </button>
-            </div>
-          ) : (
-            ''
-          )}
+          {token
+            ? (
+              <div className='flex justify-between w-full absolute bottom-1 '>
+                <button
+                  className='text-xl p-4 hover:text-blue-700'
+                  onClick={() => {
+                    setOverlay({ shown: true, form: 'editProperty' })
+                  }}
+                >
+                  <FaPencilAlt />
+                </button>
+                <button
+                  className='text-xl p-4 hover:text-red-500'
+                  onClick={() => {
+                    setProfileOverlay({
+                      form: 'deleteProperty',
+                      shown: true,
+                      onSubmitDeleted: onSubmitDeleted
+                    })
+                  }}
+                >
+                  <FaTrash />
+                </button>
+              </div>
+              )
+            : (
+                ''
+              )}
         </div>
       </article>
     </>
-  );
+  )
 }

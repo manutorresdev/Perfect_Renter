@@ -1,42 +1,42 @@
-import { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { get } from '../../Helpers/Api';
-import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import Login from '../Forms/Login';
+import { useContext, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { get } from '../../Helpers/Api'
+import { TokenContext } from '../../Helpers/Hooks/TokenProvider'
+import Login from '../Forms/Login'
 
-export default function ManageBokking({ match }) {
-  const [Token] = useContext(TokenContext);
-  const [booking, setBooking] = useState({});
+export default function ManageBokking ({ match }) {
+  const [Token] = useContext(TokenContext)
+  const [booking, setBooking] = useState({})
 
-  function acceptBooking() {
+  function acceptBooking () {
     // const controller = new AbortController();
     get(
       `http://192.168.5.103:4000/properties/${match.params.bookingCode}/accept`,
       (data) => {
-        setBooking(data);
+        setBooking(data)
       },
       (error) => {
-        console.error(error);
-        setBooking(error);
+        console.error(error)
+        setBooking(error)
       },
       Token,
       null
-    );
+    )
   }
 
-  function cancelBooking() {
+  function cancelBooking () {
     // const controller = new AbortController();
     get(
       `http://192.168.5.103:4000/properties/${match.params.bookingCode}/cancel`,
       (data) => {
-        setBooking(data);
+        setBooking(data)
       },
       (error) => {
-        setBooking(error);
+        setBooking(error)
       },
       Token,
       null
-    );
+    )
   }
 
   if (Token) {
@@ -56,7 +56,7 @@ export default function ManageBokking({ match }) {
             </Link>
           </section>
         </div>
-      );
+      )
     }
     if (booking.status === 'ok') {
       return (
@@ -74,7 +74,7 @@ export default function ManageBokking({ match }) {
             </Link>
           </section>
         </div>
-      );
+      )
     }
     if (match.path.includes('accept')) {
       return (
@@ -107,7 +107,7 @@ export default function ManageBokking({ match }) {
             </div>
           </section>
         </div>
-      );
+      )
     } else {
       return (
         <div className='z-10 bg-white bg-opacity-0 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
@@ -139,10 +139,10 @@ export default function ManageBokking({ match }) {
             </div>
           </section>
         </div>
-      );
+      )
     }
   } else {
-    /**Si no esta validado mostramos el componente login y al entrar vuelve a la misma url de accept o cancel */
+    /** Si no esta validado mostramos el componente login y al entrar vuelve a la misma url de accept o cancel */
     return (
       <>
         <div className='z-10 bg-white bg-opacity-0 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center py-20 overflow-scroll sm:overflow-hidden'>
@@ -154,6 +154,6 @@ export default function ManageBokking({ match }) {
           </section>
         </div>
       </>
-    );
+    )
   }
 }

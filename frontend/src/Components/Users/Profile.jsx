@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import {
   capitalizeFirstLetter,
   CreateFormData,
@@ -6,8 +6,8 @@ import {
   get,
   parseJwt,
   post,
-  put,
-} from '../../Helpers/Api';
+  put
+} from '../../Helpers/Api'
 import {
   FaCamera,
   FaHome,
@@ -15,36 +15,36 @@ import {
   FaPlus,
   FaPlusSquare,
   FaStar,
-  FaUser,
-} from 'react-icons/fa';
-import Register from '../Forms/Register';
-import useProperties from '../../Helpers/Hooks/useProperties';
-import Property from '../Properties/Property';
-import Avatar from '../Users/avatar';
-import NewProperty from '../Properties/NewProperty';
-import { Link } from 'react-router-dom';
-import { ConfirmMessage } from '../Forms/VoteForm';
-import { useForm } from 'react-hook-form';
-import Password from '../Forms/Inputs/Password';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DateRangePicker from '@mui/lab/DateRangePicker';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { format } from 'date-fns';
-import esEsLocale from 'date-fns/locale/es';
-import { Box } from '@mui/system';
-import { Message } from '../Properties/PropertyInfo';
+  FaUser
+} from 'react-icons/fa'
+import Register from '../Forms/Register'
+import useProperties from '../../Helpers/Hooks/useProperties'
+import Property from '../Properties/Property'
+import Avatar from '../Users/avatar'
+import NewProperty from '../Properties/NewProperty'
+import { Link } from 'react-router-dom'
+import { ConfirmMessage } from '../Forms/VoteForm'
+import { useForm } from 'react-hook-form'
+import Password from '../Forms/Inputs/Password'
+import LocalizationProvider from '@mui/lab/LocalizationProvider'
+import DateRangePicker from '@mui/lab/DateRangePicker'
+import AdapterDateFns from '@mui/lab/AdapterDateFns'
+import { format } from 'date-fns'
+import esEsLocale from 'date-fns/locale/es'
+import { Box } from '@mui/system'
+import { Message } from '../Properties/PropertyInfo'
 
-export default function Profile({ token, setToken }) {
-  const [User, setUser] = useState({});
+export default function Profile ({ token, setToken }) {
+  const [User, setUser] = useState({})
   const [Overlay, setOverlay] = useState({
     shown: false,
     info: {},
-    form: '',
-  });
-  const [Bookings, setBookings] = useState([]);
-  const [ShownBookings, setShownBookings] = useState('proximas');
-  const [properties] = useProperties([]);
-  const [Votes, setVotes] = useState([]);
+    form: ''
+  })
+  const [Bookings, setBookings] = useState([])
+  const [ShownBookings, setShownBookings] = useState('proximas')
+  const [properties] = useProperties([])
+  const [Votes, setVotes] = useState([])
 
   useEffect(() => {
     // const controller = new AbortController(null);
@@ -53,61 +53,61 @@ export default function Profile({ token, setToken }) {
     get(
       `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
       (data) => {
-        setUser(data.userInfo);
+        setUser(data.userInfo)
       },
       (error) => console.error(error),
       token,
       null
-    );
+    )
     if (User.idUser) {
       get(
         `http://192.168.5.103:4000/users/${User.idUser}/bookings`,
         (data) => {
-          setBookings(data.bookings);
+          setBookings(data.bookings)
         },
         (error) => {
-          console.error(error);
+          console.error(error)
         },
         token,
         null
-      );
+      )
       get(
         `http://192.168.5.103:4000/users/${User.idUser}/votes`,
         (data) => {
           if (data.status === 'ok') {
-            setVotes(data.Valoraciones);
+            setVotes(data.Valoraciones)
           }
         },
         (error) => {
-          console.error(error);
+          console.error(error)
         },
         token,
         null
-      );
+      )
     }
     return () => {
       // controller.abort();
       // controllerBookings.abort();
       // controllerVotes.abort();
-    };
-  }, [token, User.avatar, User.idUser]);
+    }
+  }, [token, User.avatar, User.idUser])
 
-  function onSubmitDeleted(body, e) {
+  function onSubmitDeleted (body, e) {
     del(
       `http://192.168.5.103:4000/users/${User.idUser}`,
       body,
       (data) => {
-        setToken('');
-        window.location.reload();
+        setToken('')
+        window.location.reload()
       },
       (error) => console.log(error),
       token
-    );
+    )
   }
 
   const propiedadUsuario = properties.filter(
     (property) => property.idUser === User.idUser
-  );
+  )
 
   return (
     <article className='pt-24 pb-32 flex flex-col w-full justify-center max-w-5xl m-auto relative'>
@@ -182,7 +182,7 @@ export default function Profile({ token, setToken }) {
           />
           <button
             onClick={() => {
-              setOverlay({ shown: true, userInfo: User, form: 'avatar' });
+              setOverlay({ shown: true, userInfo: User, form: 'avatar' })
             }}
             className='bg-white bg-opacity-50 h-full w-full absolute top-0 right-0 left-0 bottom-0'
           >
@@ -197,7 +197,7 @@ export default function Profile({ token, setToken }) {
             <button
               className='text-2xl '
               onClick={() => {
-                setOverlay({ shown: true, userInfo: User, form: 'register' });
+                setOverlay({ shown: true, userInfo: User, form: 'register' })
               }}
             >
               <FaPencilAlt />
@@ -227,20 +227,22 @@ export default function Profile({ token, setToken }) {
         <section className='alquileres flex-grow'>
           <div className='flex flex-col sm:flex-row'>
             <div className='contenedor-alquileres flex flex-wrap justify-center gap-5 sm:max-w-none sm:justify-start sm:pl-2 px-2 pb-10 '>
-              {propiedadUsuario.length > 0 ? (
-                propiedadUsuario.map((property) => (
-                  <Property
-                    setProfileOverlay={setOverlay}
-                    profileOverlay={Overlay}
-                    key={property.idProperty}
-                    property={property}
-                    token={token}
-                    mountOn={'profile'}
-                  />
-                ))
-              ) : (
-                <div>No hay ningún inmueble</div>
-              )}
+              {propiedadUsuario.length > 0
+                ? (
+                    propiedadUsuario.map((property) => (
+                      <Property
+                        setProfileOverlay={setOverlay}
+                        profileOverlay={Overlay}
+                        key={property.idProperty}
+                        property={property}
+                        token={token}
+                        mountOn='profile'
+                      />
+                    ))
+                  )
+                : (
+                  <div>No hay ningún inmueble</div>
+                  )}
             </div>
             <div className='text-gray-400 flex flex-col items-center gap-2 m-auto pb-5 lg:flex-grow'>
               <button
@@ -248,8 +250,8 @@ export default function Profile({ token, setToken }) {
                   setOverlay({
                     shown: true,
                     userInfo: User,
-                    form: 'property',
-                  });
+                    form: 'property'
+                  })
                 }}
                 className='flex flex-col items-center gap-2'
               >
@@ -267,7 +269,7 @@ export default function Profile({ token, setToken }) {
             <button
               className='py-2 px-10 border-opacity-5 hover:text-white '
               onClick={() => {
-                !(ShownBookings === 'proximas') && setShownBookings('proximas');
+                !(ShownBookings === 'proximas') && setShownBookings('proximas')
               }}
             >
               Próximas
@@ -275,7 +277,7 @@ export default function Profile({ token, setToken }) {
             <button
               onClick={() => {
                 !(ShownBookings === 'finalizada') &&
-                  setShownBookings('finalizada');
+                  setShownBookings('finalizada')
               }}
               className='py-2 px-10 border-opacity-5 hover:text-white '
             >
@@ -295,56 +297,60 @@ export default function Profile({ token, setToken }) {
           OPINIONES
         </h2>
         <div className='votes-cont pt-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
-          {Votes.length ? (
-            Votes.map((vote) => {
-              return (
-                <article
-                  className='flex w-10/12 shadow-xl max-w-xs'
-                  key={vote.idVote}
-                >
-                  <img
-                    className='w-14 h-14 rounded-full m-2'
-                    src={
+          {Votes.length
+            ? (
+                Votes.map((vote) => {
+                  return (
+                    <article
+                      className='flex w-10/12 shadow-xl max-w-xs'
+                      key={vote.idVote}
+                    >
+                      <img
+                        className='w-14 h-14 rounded-full m-2'
+                        src={
                       vote.avatar
                         ? 'http://192.168.5.103:4000/photo/' + vote.avatar
                         : require('../../Images/defProfile.png').default
                     }
-                    alt='imagen de perfil'
-                  />
-                  <section className=''>
-                    <h1 className='font-bold'>
-                      {vote.name} {vote.lastName}
-                    </h1>
-                    <p className=''>{vote.commentRenter}</p>
-                    <div className='flex text-xs self-center py-2'>
-                      {vote.voteValueRenter > 0 ? (
-                        Array(parseInt(vote.voteValueRenter))
-                          .fill(null)
-                          .map((value, i) => {
-                            return (
-                              <FaStar
-                                key={i}
-                                className='text-principal-1 text-xl'
-                              ></FaStar>
-                            );
-                          })
-                      ) : (
-                        <div className='h-4'>
-                          <FaStar className='text-gray-200' />
+                        alt='imagen de perfil'
+                      />
+                      <section className=''>
+                        <h1 className='font-bold'>
+                          {vote.name} {vote.lastName}
+                        </h1>
+                        <p className=''>{vote.commentRenter}</p>
+                        <div className='flex text-xs self-center py-2'>
+                          {vote.voteValueRenter > 0
+                            ? (
+                                Array(parseInt(vote.voteValueRenter))
+                                  .fill(null)
+                                  .map((value, i) => {
+                                    return (
+                                      <FaStar
+                                        key={i}
+                                        className='text-principal-1 text-xl'
+                                      />
+                                    )
+                                  })
+                              )
+                            : (
+                              <div className='h-4'>
+                                <FaStar className='text-gray-200' />
+                              </div>
+                              )}
                         </div>
-                      )}
-                    </div>
-                  </section>
-                </article>
-              );
-            })
-          ) : (
-            <p className='font-medium p-2'>Aún no tiene valoraciones</p>
-          )}
+                      </section>
+                    </article>
+                  )
+                })
+              )
+            : (
+              <p className='font-medium p-2'>Aún no tiene valoraciones</p>
+              )}
         </div>
       </section>
     </article>
-  );
+  )
 }
 /*
  * ##########################
@@ -352,32 +358,32 @@ export default function Profile({ token, setToken }) {
  * ##########################
  *
  */
-function Delete({ setOverlay, Overlay, usuario }) {
-  const [CanDelete, setCanDelete] = useState(false);
-  const [Error, setError] = useState('');
+function Delete ({ setOverlay, Overlay, usuario }) {
+  const [CanDelete, setCanDelete] = useState(false)
+  const [Error, setError] = useState('')
 
   const {
     setValue,
     handleSubmit,
     register,
-    formState: { errors },
-  } = useForm();
+    formState: { errors }
+  } = useForm()
 
   useEffect(() => {
-    setValue('email', usuario.email);
-  }, [usuario, setValue]);
+    setValue('email', usuario.email)
+  }, [usuario, setValue])
 
-  function onSubmit(body) {
+  function onSubmit (body) {
     post(
       'http://192.168.5.103:4000/users/login',
       CreateFormData(body),
       (data) => {
-        data.status === 'ok' && setCanDelete(true);
+        data.status === 'ok' && setCanDelete(true)
       },
       (data) => {
-        setError('Contraseña incorrecta');
+        setError('Contraseña incorrecta')
       }
-    );
+    )
   }
 
   return (
@@ -386,22 +392,24 @@ function Delete({ setOverlay, Overlay, usuario }) {
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={(e) => {
-            e.stopPropagation();
-            setOverlay({ shown: false, info: {} });
+            e.stopPropagation()
+            setOverlay({ shown: false, info: {} })
           }}
         >
           <FaPlus className='transform scale-150 rotate-45' />
         </button>
         <h1 className='title text-3xl p-4 border-b-4 self-center border-gray-700 flex justify-center w-5/6 select-none'>
-          {Overlay.form === 'deleteAccount' ? (
-            <span className='flex items-center gap-2'>
-              <FaUser /> Eliminar cuenta
-            </span>
-          ) : (
-            <span className='flex items-center gap-2'>
-              <FaHome /> Eliminar propiedad
-            </span>
-          )}
+          {Overlay.form === 'deleteAccount'
+            ? (
+              <span className='flex items-center gap-2'>
+                <FaUser /> Eliminar cuenta
+              </span>
+              )
+            : (
+              <span className='flex items-center gap-2'>
+                <FaHome /> Eliminar propiedad
+              </span>
+              )}
         </h1>
         <p>
           {Overlay.form === 'deleteAccount'
@@ -414,13 +422,15 @@ function Delete({ setOverlay, Overlay, usuario }) {
             onSubmit={handleSubmit(onSubmit)}
           >
             <Password register={register} errors={errors} />
-            {Error ? (
-              <div className='text-red-600 font-medium text-center'>
-                {Error}
-              </div>
-            ) : (
-              ''
-            )}
+            {Error
+              ? (
+                <div className='text-red-600 font-medium text-center'>
+                  {Error}
+                </div>
+                )
+              : (
+                  ''
+                )}
             <input
               className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
               type='submit'
@@ -437,14 +447,14 @@ function Delete({ setOverlay, Overlay, usuario }) {
           onClick={(e) => {
             Overlay.form === 'deleteAccount'
               ? Overlay.onSubmitDeleted()
-              : Overlay.onSubmitDeleted();
+              : Overlay.onSubmitDeleted()
           }}
         >
           Eliminar
         </button>
       </section>
     </div>
-  );
+  )
 }
 /*
  * #########################
@@ -452,9 +462,9 @@ function Delete({ setOverlay, Overlay, usuario }) {
  * #########################
  *
  */
-function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
-  function capitalizeFirstLetter(string) {
-    return string[0].toUpperCase() + string.slice(1);
+function BookingsComp ({ Bookings, ShownBookings, User, setOverlay }) {
+  function capitalizeFirstLetter (string) {
+    return string[0].toUpperCase() + string.slice(1)
   }
   return (
     <div
@@ -462,113 +472,117 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
       bookings-cont p-5 flex flex-col items-center  gap-5
       sm:justify-start sm:flex-row sm:flex-wrap lg:justify-start'
     >
-      {Bookings.length ? (
-        Bookings.filter((booking) => {
-          if (ShownBookings === 'proximas') {
-            return booking.state !== 'finalizada';
-          } else {
-            return booking.state === 'finalizada';
-          }
-        }).map((booking) => {
-          return (
-            <span key={booking.idBooking} className='max-w-xs'>
-              <article
-                className={`animate-fadeIn filter drop-shadow-xl h-1/3 max-w-xs flex flex-col items-start justify-between
+      {Bookings.length
+        ? (
+            Bookings.filter((booking) => {
+              if (ShownBookings === 'proximas') {
+                return booking.state !== 'finalizada'
+              } else {
+                return booking.state === 'finalizada'
+              }
+            }).map((booking) => {
+              return (
+                <span key={booking.idBooking} className='max-w-xs'>
+                  <article
+                    className={`animate-fadeIn filter drop-shadow-xl h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
                 lg:flex-row lg:max-w-md lg:w-full`}
-              >
-                <div className='flex flex-col flex-grow lg:w-5/12 w-full'>
-                  <h2 className='bg-gray-Primary text-principal-1 text-lg w-full pl-2'>
-                    {capitalizeFirstLetter(booking.type)} en {booking.city}
-                  </h2>
-                  <p>
-                    {booking.address}, {booking.number}
-                  </p>
-                  <p>Precio: {Number(booking.price)}€</p>
-                  <p>
-                    Entrada:{' '}
-                    {new Date(booking.startBookingDate).toLocaleDateString()}
-                  </p>
-                  <p>
-                    Salida:{' '}
-                    {new Date(booking.endBookingDate).toLocaleDateString()}
-                  </p>
-                  {booking.state !== 'finalizada' && (
-                    <div className='flex pt-1'>
-                      <button
-                        onClick={() => {
-                          setOverlay({
-                            form: 'editBooking',
-                            info: { ...User, ...booking },
-                            shown: true,
-                          });
-                        }}
-                        className='bg-gray-200 text-principal-gris font-medium flex items-center justify-between p-1 w-full'
-                      >
-                        {' '}
-                        <FaPencilAlt />
-                        <span className='flex-grow'>Editar</span>
-                      </button>
-                      <button
-                        onClick={() => {
-                          setOverlay({
-                            form: 'cancelBooking',
-                            info: { ...User, ...booking },
-                            shown: true,
-                          });
-                        }}
-                        className='bg-gray-100 font-medium text-principal-gris p-1 w-full'
-                      >
-                        Cancelar
-                      </button>
+                  >
+                    <div className='flex flex-col flex-grow lg:w-5/12 w-full'>
+                      <h2 className='bg-gray-Primary text-principal-1 text-lg w-full pl-2'>
+                        {capitalizeFirstLetter(booking.type)} en {booking.city}
+                      </h2>
+                      <p>
+                        {booking.address}, {booking.number}
+                      </p>
+                      <p>Precio: {Number(booking.price)}€</p>
+                      <p>
+                        Entrada:{' '}
+                        {new Date(booking.startBookingDate).toLocaleDateString()}
+                      </p>
+                      <p>
+                        Salida:{' '}
+                        {new Date(booking.endBookingDate).toLocaleDateString()}
+                      </p>
+                      {booking.state !== 'finalizada' && (
+                        <div className='flex pt-1'>
+                          <button
+                            onClick={() => {
+                              setOverlay({
+                                form: 'editBooking',
+                                info: { ...User, ...booking },
+                                shown: true
+                              })
+                            }}
+                            className='bg-gray-200 text-principal-gris font-medium flex items-center justify-between p-1 w-full'
+                          >
+                            {' '}
+                            <FaPencilAlt />
+                            <span className='flex-grow'>Editar</span>
+                          </button>
+                          <button
+                            onClick={() => {
+                              setOverlay({
+                                form: 'cancelBooking',
+                                info: { ...User, ...booking },
+                                shown: true
+                              })
+                            }}
+                            className='bg-gray-100 font-medium text-principal-gris p-1 w-full'
+                          >
+                            Cancelar
+                          </button>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <div className='border-r-2 border-opacity-75 border-gray-700'></div>
-                <Link
-                  to={`/alquileres/${booking.idProperty}`}
-                  className='lg:h-40 w-full relative flex flex-col flex-grow justify-between lg:w-4/12'
-                >
-                  <img
-                    className={
+                    <div className='border-r-2 border-opacity-75 border-gray-700' />
+                    <Link
+                      to={`/alquileres/${booking.idProperty}`}
+                      className='lg:h-40 w-full relative flex flex-col flex-grow justify-between lg:w-4/12'
+                    >
+                      <img
+                        className={
                       booking.photo
                         ? 'h-32 w-44 object-cover'
                         : 'flex-grow object-cover w-full h-full'
                     }
-                    src={
+                        src={
                       booking.photo
                         ? 'http://192.168.5.103:4000/photo/' + booking.photo
                         : require('../../Images/defPicture.jpg').default
                     }
-                    alt='alquiler'
-                  />
-                  <div className='flex justify-end bg-gray-Primary w-full p-2'>
-                    {booking.votes > 0 ? (
-                      Array(parseInt(booking.votes))
-                        .fill(null)
-                        .map((value, i) => {
-                          return (
-                            <FaStar
-                              key={i}
-                              className='text-principal-1'
-                            ></FaStar>
-                          );
-                        })
-                    ) : (
-                      <div className='h-4'></div>
-                    )}
-                  </div>
-                </Link>
-              </article>
-              <div className='separador bg-principal-1 h-4 mt-5 w-full sm:w-0 max-w-xs'></div>
-            </span>
-          );
-        })
-      ) : (
-        <h2>No hay reservas.</h2>
-      )}
+                        alt='alquiler'
+                      />
+                      <div className='flex justify-end bg-gray-Primary w-full p-2'>
+                        {booking.votes > 0
+                          ? (
+                              Array(parseInt(booking.votes))
+                                .fill(null)
+                                .map((value, i) => {
+                                  return (
+                                    <FaStar
+                                      key={i}
+                                      className='text-principal-1'
+                                    />
+                                  )
+                                })
+                            )
+                          : (
+                            <div className='h-4' />
+                            )}
+                      </div>
+                    </Link>
+                  </article>
+                  <div className='separador bg-principal-1 h-4 mt-5 w-full sm:w-0 max-w-xs' />
+                </span>
+              )
+            })
+          )
+        : (
+          <h2>No hay reservas.</h2>
+          )}
     </div>
-  );
+  )
 }
 
 /*
@@ -577,22 +591,22 @@ function BookingsComp({ Bookings, ShownBookings, User, setOverlay }) {
  * ######################
  *
  */
-function CancelBooking({ setOverlay, info, Token }) {
-  const [message, setMessage] = useState({ message: '', status: 'ok' });
+function CancelBooking ({ setOverlay, info, Token }) {
+  const [message, setMessage] = useState({ message: '', status: 'ok' })
 
-  function Confirm(bookingCode) {
+  function Confirm (bookingCode) {
     get(
       `http://192.168.5.103:4000/properties/${bookingCode}/cancel`,
       (data) => {
-        setMessage(data.message);
-        setOverlay({ shown: false, info: {}, form: '' });
-        window.location.reload();
+        setMessage(data.message)
+        setOverlay({ shown: false, info: {}, form: '' })
+        window.location.reload()
       },
       (error) => {
-        setMessage(error.message);
+        setMessage(error.message)
       },
       Token
-    );
+    )
   }
 
   return (
@@ -602,7 +616,7 @@ function CancelBooking({ setOverlay, info, Token }) {
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
-            setOverlay({ shown: false, info: {}, form: '' });
+            setOverlay({ shown: false, info: {}, form: '' })
           }}
         >
           <FaPlus className='transform scale-150 rotate-45' />
@@ -612,7 +626,7 @@ function CancelBooking({ setOverlay, info, Token }) {
         </h1>
         <div className='perfil flex flex-col items-center gap-5'>
           <article
-            className={`animate-fadeIn border border-black w-full md:w-4/12 md:max-w-md sm:w-7/12 shadow-2xl`}
+            className='animate-fadeIn border border-black w-full md:w-4/12 md:max-w-md sm:w-7/12 shadow-2xl'
           >
             <h2 className='bg-gray-Primary text-principal-1 text-lg w-full font-medium'>
               {capitalizeFirstLetter(info.type)} en {info.city}
@@ -631,17 +645,19 @@ function CancelBooking({ setOverlay, info, Token }) {
               alt=''
             /> */}
             <div className='flex bg-gray-Primary w-min  pr-2 gap-1'>
-              {info.votes > 0 ? (
-                Array(parseInt(info.votes))
-                  .fill(null)
-                  .map((value, i) => {
-                    return (
-                      <FaStar key={i} className='text-principal-1'></FaStar>
-                    );
-                  })
-              ) : (
-                <div className='h-4'></div>
-              )}
+              {info.votes > 0
+                ? (
+                    Array(parseInt(info.votes))
+                      .fill(null)
+                      .map((value, i) => {
+                        return (
+                          <FaStar key={i} className='text-principal-1' />
+                        )
+                      })
+                  )
+                : (
+                  <div className='h-4' />
+                  )}
             </div>
           </article>
           <h3 className='text-base font-medium'>
@@ -656,7 +672,7 @@ function CancelBooking({ setOverlay, info, Token }) {
             </button>
             <button
               onClick={() => {
-                setOverlay({ shown: false, form: '', info: {} });
+                setOverlay({ shown: false, form: '', info: {} })
               }}
               className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
             >
@@ -666,7 +682,7 @@ function CancelBooking({ setOverlay, info, Token }) {
         </div>
       </section>
     </div>
-  );
+  )
 }
 
 /*
@@ -675,22 +691,22 @@ function CancelBooking({ setOverlay, info, Token }) {
  * ####################
  *
  */
-function EditBooking({ setOverlay, info, Token }) {
-  const [Message, setMessage] = useState({ status: '', message: '' });
-  const [pickerValue, setPickerValue] = useState([null, null]);
-  const [newDates, setNewDates] = useState([null, null]);
+function EditBooking ({ setOverlay, info, Token }) {
+  const [Message, setMessage] = useState({ status: '', message: '' })
+  const [pickerValue, setPickerValue] = useState([null, null])
+  const [newDates, setNewDates] = useState([null, null])
 
-  function Confirm(bookingCode, dates) {
+  function Confirm (bookingCode, dates) {
     // Fechas a comparar
     const startBookingDate = new Date(
       info.startBookingDate
-    ).toLocaleDateString();
-    const newStartBookingDate = new Date(dates[0]).toLocaleDateString();
-    const endBookingDate = new Date(info.endBookingDate).toLocaleDateString();
-    const newEndBookingDate = new Date(dates[1]).toLocaleDateString();
+    ).toLocaleDateString()
+    const newStartBookingDate = new Date(dates[0]).toLocaleDateString()
+    const endBookingDate = new Date(info.endBookingDate).toLocaleDateString()
+    const newEndBookingDate = new Date(dates[1]).toLocaleDateString()
     // Si hay nuevas fechas seleccionadas, entra
     if (!newDates[0] && !newDates[1]) {
-      console.warn('Debes seleccionar fechas nuevas');
+      console.warn('Debes seleccionar fechas nuevas')
     } else {
       // Si las nuevas seleccionadas son iguales a las existentes, error
       if (
@@ -705,8 +721,8 @@ function EditBooking({ setOverlay, info, Token }) {
           name: info.name,
           lastName: info.lastName,
           tel: info.tel,
-          email: info.email,
-        };
+          email: info.email
+        }
         put(
           `http://192.168.5.103:4000/properties/${info.idProperty}/${bookingCode}`,
           CreateFormData(body),
@@ -715,26 +731,26 @@ function EditBooking({ setOverlay, info, Token }) {
               setMessage({
                 status: 'ok',
                 message:
-                  'Reserva editada con éxito. Tu casero confirmará la reserva.',
-              });
+                  'Reserva editada con éxito. Tu casero confirmará la reserva.'
+              })
             }
           },
           (error) => {
-            setMessage({ status: 'error', message: error.message });
+            setMessage({ status: 'error', message: error.message })
           },
           Token
-        );
+        )
       } else {
         setMessage({
           status: 'error',
-          message: 'Debes escoger fechas diferentes',
-        });
+          message: 'Debes escoger fechas diferentes'
+        })
       }
     }
   }
 
   const inpStyle =
-    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+    'px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white rounded text-sm border border-gray-400 outline-none focus:outline-none focus:ring'
   return (
     <div className='overlay z-20 p-4 bg-white justify-center bg-opacity-75 fixed w-full h-full left-0 top-0 flex flex-col items-center py-24 overscroll-scroll sm:overflow-hidden'>
       {Message.status === 'ok' && <ConfirmMessage Message={Message.message} />}
@@ -742,7 +758,7 @@ function EditBooking({ setOverlay, info, Token }) {
         <button
           className='close-overlay absolute top-3 p-5 right-2'
           onClick={() => {
-            setOverlay({ shown: false, info: {}, form: '' });
+            setOverlay({ shown: false, info: {}, form: '' })
           }}
         >
           <FaPlus className='transform scale-150 rotate-45' />
@@ -752,7 +768,7 @@ function EditBooking({ setOverlay, info, Token }) {
         </h1>
         <div className='perfil flex flex-col items-center gap-5'>
           <section
-            className={`animate-fadeIn bg-white border text-center filter drop-shadow-xl w-full md:w-4/12 md:max-w-md sm:w-7/12`}
+            className='animate-fadeIn bg-white border text-center filter drop-shadow-xl w-full md:w-4/12 md:max-w-md sm:w-7/12'
           >
             <h2 className='bg-gray-Primary text-principal-1 text-lg w-full font-medium'>
               {capitalizeFirstLetter(info.type)} en {info.city}
@@ -771,17 +787,19 @@ function EditBooking({ setOverlay, info, Token }) {
               alt=''
             /> */}
             <div className='flex bg-gray-Primary w-min rounded-tr pr-2 gap-1'>
-              {info.votes > 0 ? (
-                Array(parseInt(info.votes))
-                  .fill(null)
-                  .map((value, i) => {
-                    return (
-                      <FaStar key={i} className='text-principal-1'></FaStar>
-                    );
-                  })
-              ) : (
-                <div className='h-4'></div>
-              )}
+              {info.votes > 0
+                ? (
+                    Array(parseInt(info.votes))
+                      .fill(null)
+                      .map((value, i) => {
+                        return (
+                          <FaStar key={i} className='text-principal-1' />
+                        )
+                      })
+                  )
+                : (
+                  <div className='h-4' />
+                  )}
             </div>
           </section>
           <section>
@@ -793,7 +811,7 @@ function EditBooking({ setOverlay, info, Token }) {
               >
                 <DateRangePicker
                   disablePast
-                  autoOk={true}
+                  autoOk
                   label='Advanced keyboard'
                   value={pickerValue}
                   shouldDisableDate={(x) => {}}
@@ -803,16 +821,16 @@ function EditBooking({ setOverlay, info, Token }) {
                       new Date(newValue[0]).getTime() >
                       new Date(newValue[1]).getTime()
                     ) {
-                      console.error('Fecha de entrada mayor a fecha de salida');
+                      console.error('Fecha de entrada mayor a fecha de salida')
                     } else if (
                       new Date(newValue[0]).getTime() ===
                       new Date(newValue[1]).getTime()
                     ) {
-                      console.error('Selecciona fechas diferentes');
+                      console.error('Selecciona fechas diferentes')
                     } else {
-                      console.warn('FECHAS CORRECTAS');
-                      setPickerValue(newValue);
-                      setNewDates([newValue[0], newValue[1]]);
+                      console.warn('FECHAS CORRECTAS')
+                      setPickerValue(newValue)
+                      setNewDates([newValue[0], newValue[1]])
                     }
                   }}
                   renderInput={(startProps, endProps) => (
@@ -850,7 +868,7 @@ function EditBooking({ setOverlay, info, Token }) {
             </button>
             <button
               onClick={() => {
-                setOverlay({ shown: false, form: '', info: {} });
+                setOverlay({ shown: false, form: '', info: {} })
               }}
               className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
             >
@@ -860,5 +878,5 @@ function EditBooking({ setOverlay, info, Token }) {
         </div>
       </article>
     </div>
-  );
+  )
 }

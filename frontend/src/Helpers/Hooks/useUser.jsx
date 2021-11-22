@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
-import { get, parseJwt } from '../Api';
-import { TokenContext } from './TokenProvider';
+import { useContext, useEffect, useState } from 'react'
+import { get, parseJwt } from '../Api'
+import { TokenContext } from './TokenProvider'
 
-export default function useUser() {
-  const [token] = useContext(TokenContext);
-  const [User, setUser] = useState({});
+export default function useUser () {
+  const [token] = useContext(TokenContext)
+  const [User, setUser] = useState({})
 
   useEffect(() => {
     // const controller = new AbortController();
@@ -13,20 +13,20 @@ export default function useUser() {
         `http://192.168.5.103:4000/users/${parseJwt(token).idUser}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
-            setUser(data.userInfo);
+            setUser(data.userInfo)
           } else {
-            setUser({});
+            setUser({})
           }
         },
         (error) => console.error(error),
         token,
         null
-      );
+      )
     }
     return () => {
       // controller.abort();
-    };
-  }, [token]);
+    }
+  }, [token])
 
-  return [User, setUser];
+  return [User, setUser]
 }

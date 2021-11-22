@@ -1,5 +1,5 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  *
  * @module Helpers
@@ -11,32 +11,32 @@ const getDB = require('../../config/getDB');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const propertyExist = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
-    //Obtenemos el id de la propiedad
-    const { idProperty } = req.params;
+    // Obtenemos el id de la propiedad
+    const { idProperty } = req.params
 
-    //seleccionamos la propiedad
+    // seleccionamos la propiedad
     const [property] = await connection.query(
-      `SELECT * FROM properties WHERE idProperty = ?`,
+      'SELECT * FROM properties WHERE idProperty = ?',
       [idProperty]
-    );
+    )
 
     // si la propiedad no existe enviamos error
     if (property.length < 1) {
-      const error = new Error('La vivienda no existe.');
-      error.httpStatus = 404;
-      throw error;
+      const error = new Error('La vivienda no existe.')
+      error.httpStatus = 404
+      throw error
     }
-    next();
+    next()
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = propertyExist;
+module.exports = propertyExist

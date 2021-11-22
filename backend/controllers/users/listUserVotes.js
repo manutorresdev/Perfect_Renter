@@ -1,5 +1,5 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Users
  */
@@ -11,15 +11,12 @@ const getDB = require('../../config/getDB');
  * @returns {Promise} Devuelve un objeto con los votos
  */
 const listUserVotes = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el id del usuario.
-    const { idUser } = req.params;
-
-    // Obtenemos el id del usuario que hace la request
-    const idReqUser = req.userAuth.idUser;
+    const { idUser } = req.params
 
     // Obtenemos los votos del usuario a visualizar
     const [votes] = await connection.query(
@@ -37,17 +34,17 @@ const listUserVotes = async (req, res, next) => {
       WHERE idTenant = ?
       `,
       [idUser]
-    );
+    )
 
     res.send({
       status: 'ok',
-      Valoraciones: votes,
-    });
+      Valoraciones: votes
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = listUserVotes;
+module.exports = listUserVotes

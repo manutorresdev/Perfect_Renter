@@ -1,5 +1,5 @@
 // @ts-nocheck
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 /**
  *
  * @module Helpers
@@ -13,33 +13,33 @@ const jwt = require('jsonwebtoken');
 const authUser = async (req, res, next) => {
   try {
     // Obtenemos la cabecera de autorización.
-    const { authorization } = req.headers;
+    const { authorization } = req.headers
 
     // Si no existe la cabecera de autorización lanzamos un error.
     if (!authorization) {
-      const error = new Error('Falta la cabecera de autorización');
-      error.httpStatus = 401;
-      throw error;
+      const error = new Error('Falta la cabecera de autorización')
+      error.httpStatus = 401
+      throw error
     }
 
     // Variable que almacenará la info del token.
-    let tokenInfo;
+    let tokenInfo
 
     try {
       // Desencriptamos el token.
-      tokenInfo = jwt.verify(authorization, process.env.SECRET);
+      tokenInfo = jwt.verify(authorization, process.env.SECRET)
     } catch (_) {
-      const error = new Error('El token no es válido');
-      error.httpStatus = 401;
-      throw error;
+      const error = new Error('El token no es válido')
+      error.httpStatus = 401
+      throw error
     }
 
     // Inyectamos en el objeto "request" la info del token: id, role.
-    req.userAuth = tokenInfo;
-    next();
+    req.userAuth = tokenInfo
+    next()
   } catch (error) {
-    next(error);
+    next(error)
   }
-};
+}
 
-module.exports = authUser;
+module.exports = authUser

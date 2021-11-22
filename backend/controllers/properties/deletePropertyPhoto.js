@@ -1,6 +1,6 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
-const { deletePhoto } = require('../../libs/helpers');
+const getDB = require('../../config/getDB')
+const { deletePhoto } = require('../../libs/helpers')
 /**
  * @module Entries
  */
@@ -11,48 +11,48 @@ const { deletePhoto } = require('../../libs/helpers');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const deletePropertyPhoto = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Se obteniene id de la propiedad y de la photo
-    const { idProperty, photoName } = req.params;
+    const { idProperty, photoName } = req.params
 
     // Comprobamos que la foto existe
 
     const [photo] = await connection.query(
-      `SELECT idPhoto FROM photos WHERE name = ? AND idProperty = ?`,
+      'SELECT idPhoto FROM photos WHERE name = ? AND idProperty = ?',
       [photoName, idProperty]
-    );
+    )
 
     // Si la foto no existe, lanzamos un error
     if (photo.length < 1) {
-      const error = new Error('La foto no existe.');
-      error.httpStatus = 404;
-      throw error;
+      const error = new Error('La foto no existe.')
+      error.httpStatus = 404
+      throw error
     }
 
     // Borramos la foto del servidor con la función deletePhoto de helpers
 
-    await deletePhoto(photoName);
+    await deletePhoto(photoName)
 
     // Borramos la foto de la base de datos
 
     await connection.query(
-      `DELETE FROM photos WHERE idPhoto = ? AND idProperty = ?`,
+      'DELETE FROM photos WHERE idPhoto = ? AND idProperty = ?',
       [photo[0].idPhoto, idProperty]
-    );
+    )
 
     res.send({
       status: 'ok',
-      message: 'Foto eliminada.',
-    });
+      message: 'Foto eliminada.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = deletePropertyPhoto;
+module.exports = deletePropertyPhoto

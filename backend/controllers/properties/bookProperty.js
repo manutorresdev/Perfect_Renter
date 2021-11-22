@@ -1,11 +1,9 @@
-// @ts-nocheck
-const { format } = require('date-fns');
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 const {
   sendMail,
   generateRandomString,
-  formatDate,
-} = require('../../libs/helpers');
+  formatDate
+} = require('../../libs/helpers')
 /**
  * @module Entries
  */
@@ -16,50 +14,50 @@ const {
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const bookProperty = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el id de la vivienda a contactar.
-    const { idProperty } = req.params;
+    const { idProperty } = req.params
 
     // Obtenemos el id del usuario que contacta.
-    const { idUser: idReqUser } = req.userAuth;
+    const { idUser: idReqUser } = req.userAuth
 
     // Obtenemos los datos del usuario que contacta.
     let { name, lastName, email, tel, comentarios, startDate, endDate } =
-      req.body;
+      req.body
 
-    const now = formatDate(new Date());
+    const now = formatDate(new Date())
 
     // Comprobamos que los campos obligatorios tengan contenido.
 
     if (!comentarios) {
       const error = new Error(
         'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
-      );
-      error.httpStatus = 400;
-      throw error;
+      )
+      error.httpStatus = 400
+      throw error
     }
     if (!startDate || !endDate) {
-      const error = new Error('Falta definir la fecha de la reserva.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('Falta definir la fecha de la reserva.')
+      error.httpStatus = 400
+      throw error
     }
     // Si la fecha reservada es menor a la fecha actual, lanzamos error.
     if (startDate < now) {
-      const error = new Error('No puedes reservar en el pasado.');
-      error.httpStatus = 403;
-      throw error;
+      const error = new Error('No puedes reservar en el pasado.')
+      error.httpStatus = 403
+      throw error
     }
 
     // Si la fecha end es menor a la fecha start, lanzamos error.
     if (endDate < startDate) {
       const error = new Error(
         'Fecha de salida debe ser mayor a la fecha de inicio'
-      );
-      error.httpStatus = 403;
-      throw error;
+      )
+      error.httpStatus = 403
+      throw error
     }
 
     // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
@@ -72,7 +70,7 @@ const bookProperty = async (req, res, next) => {
         WHERE properties.idProperty = ?
         `,
       [idProperty]
-    );
+    )
 
     //  Comprobamos que no haya una solicitud en proceso de aceptar.
     const [valiDate] = await connection.query(
@@ -80,21 +78,21 @@ const bookProperty = async (req, res, next) => {
       SELECT * FROM bookings WHERE ((startBookingDate BETWEEN ? AND ?)  OR (endBookingDate BETWEEN ? AND ?)) AND idProperty = ?
         `,
       [startDate, endDate, startDate, endDate, idProperty]
-    );
+    )
 
     if (valiDate.length > 0) {
       res.send({
         status: 'ok',
         message:
-          'Las fechas seleccionadas no estan disponibles para esta propiedad',
-      });
+          'Las fechas seleccionadas no estan disponibles para esta propiedad'
+      })
     } else {
       const [petition] = await connection.query(
         `
       SELECT state FROM bookings WHERE idRenter = ? AND idTenant = ? AND idProperty = ? AND startBookingDate = ? AND endBookingDate = ?
         `,
         [property[0].idUser, idReqUser, idProperty, startDate, endDate]
-      );
+      )
 
       // Si hay petición en proceso, lanzamos error y mostramos en que proceso está.
       if (petition.length > 0) {
@@ -102,16 +100,16 @@ const bookProperty = async (req, res, next) => {
           status: 'ok',
           Estado_de_la_peticion: `${petition[0].state}`,
           message:
-            'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.',
-        });
+            'Ya tienes petición en proceso para este alquiler. Si hay algún error, ponte en contacto con nosotros.'
+        })
       } else {
         // Si el usuario es el dueño de la vivienda, lanzamos error.
         if (idReqUser === Number(property[0].idUser)) {
           const error = new Error(
             'No puedes contactar con una vivienda de tu propiedad.'
-          );
-          error.httpStatus = 403;
-          throw error;
+          )
+          error.httpStatus = 403
+          throw error
         }
 
         // Seleccionamos el nombre completo, el email, el teléfono del usuario que contacta. (PARA EL FRONTEND)
@@ -120,41 +118,41 @@ const bookProperty = async (req, res, next) => {
       SELECT name,lastName,tel,email FROM users WHERE idUser = ?
       `,
           [idReqUser]
-        );
+        )
 
         if (!name) {
-          name = contactUser[0].name;
+          name = contactUser[0].name
           if (!name) {
-            const error = new Error('Falta el nombre.');
-            error.httpStatus = 400;
-            throw error;
+            const error = new Error('Falta el nombre.')
+            error.httpStatus = 400
+            throw error
           }
         }
         if (!lastName) {
-          lastName = contactUser[0].lastName;
+          lastName = contactUser[0].lastName
           if (!lastName) {
-            const error = new Error('Falta el apellido.');
-            error.httpStatus = 400;
-            throw error;
+            const error = new Error('Falta el apellido.')
+            error.httpStatus = 400
+            throw error
           }
         }
         if (!email) {
-          email = contactUser[0].email;
+          email = contactUser[0].email
           if (!email) {
-            const error = new Error('Falta el email.');
-            error.httpStatus = 400;
-            throw error;
+            const error = new Error('Falta el email.')
+            error.httpStatus = 400
+            throw error
           }
         }
         if (!tel) {
-          tel = contactUser[0].tel;
+          tel = contactUser[0].tel
           if (!tel) {
-            tel = 'No especificado.';
+            tel = 'No especificado.'
           }
         }
 
         // Generamos el codigo de reserva,
-        const bookingCode = generateRandomString(10);
+        const bookingCode = generateRandomString(10)
         // Definimos el body del email
         const emailBody = `
       <style>
@@ -267,7 +265,7 @@ const bookProperty = async (req, res, next) => {
             </th>
           </tfoot>
         </table>
-    `;
+    `
 
         const emailBodyReq = `
     <table>
@@ -303,21 +301,21 @@ const bookProperty = async (req, res, next) => {
         </th>
       </tfoot>
     </table>
-    `;
+    `
         // Enviamos el correo del usuario que contacta, al usuario a contactar.
         if (process.env.NODE_ENV !== 'test') {
           await sendMail({
             to: property[0].email,
             subject: 'Solicitud de reserva.',
-            body: emailBody,
-          });
+            body: emailBody
+          })
 
           // VALIDAR CORREO USUARIO QUE RESERVA
           await sendMail({
             to: email,
             subject: 'Solicitud de reserva.',
-            body: emailBodyReq,
-          });
+            body: emailBodyReq
+          })
         }
 
         //   // Agregamos el código de reserva en la base de datos junto a la posible reserva.
@@ -332,22 +330,22 @@ const bookProperty = async (req, res, next) => {
             formatDate(new Date()),
             idProperty,
             startDate,
-            endDate,
+            endDate
           ]
-        );
+        )
 
         res.send({
           status: 'ok',
           message: 'Correo electrónico enviado con éxito.',
-          bookingCode,
-        });
+          bookingCode
+        })
       }
     }
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = bookProperty;
+module.exports = bookProperty

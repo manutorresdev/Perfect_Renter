@@ -1,11 +1,9 @@
-// @ts-nocheck
-const { format } = require('date-fns');
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 const {
   sendMail,
   formatDate,
-  generateRandomString,
-} = require('../../libs/helpers');
+  generateRandomString
+} = require('../../libs/helpers')
 /**
  * @module Entries */
 /**
@@ -15,17 +13,17 @@ const {
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const editBooking = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
     // Obtenemos el codigo de reserva de los path params.
-    const { idProperty, bookingCode } = req.params;
+    const { idProperty, bookingCode } = req.params
 
     // Obtenemos las nuevas fechas
-    const { startDate, endDate, city, name, lastName, tel, email } = req.body;
+    const { startDate, endDate, city, name, lastName, tel, email } = req.body
     // Obtenemos el id del usuario que cambia la reserva (INQUILINO)
-    const { idUser } = req.userAuth;
+    const { idUser } = req.userAuth
 
     // Obtenemos los datos de la reserva
     const [booking] = await connection.query(
@@ -34,7 +32,7 @@ const editBooking = async (req, res, next) => {
       WHERE idProperty = ? AND bookingCode = ? AND idTenant = ?
       `,
       [idProperty, bookingCode, idUser]
-    );
+    )
 
     // Obtenemos los datos del usuario propietario
     const [owner] = await connection.query(
@@ -44,25 +42,25 @@ const editBooking = async (req, res, next) => {
     WHERE idUser = ?
     `,
       [booking[0].idRenter]
-    );
+    )
 
     // Si la reserva no existe enviamos error
     if (booking.length < 1) {
-      const error = new Error('La reserva no existe.');
-      error.httpStatus = 404;
-      throw error;
+      const error = new Error('La reserva no existe.')
+      error.httpStatus = 404
+      throw error
     }
     // Si no se han enviado fechas de reserva, lanzamos error
     if (!startDate || !endDate) {
-      const error = new Error('Falta definir la fecha de la reserva.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('Falta definir la fecha de la reserva.')
+      error.httpStatus = 400
+      throw error
     }
 
     // Generamos el nuevo codigo de reserva, al ser una nueva reserva
-    const newBookingCode = generateRandomString(10);
+    const newBookingCode = generateRandomString(10)
     // Formateamos las fechas para insertarlas en la base de datos
-    const modifiedAt = formatDate(new Date());
+    const modifiedAt = formatDate(new Date())
     // Definimos el body del email
     const emailBody = `
     <table>
@@ -102,7 +100,7 @@ const editBooking = async (req, res, next) => {
         </th>
       </tfoot>
     </table>
-    `;
+    `
 
     const emailBodyReq = `
     <table>
@@ -135,51 +133,51 @@ const editBooking = async (req, res, next) => {
         </th>
       </tfoot>
     </table>
-    `;
+    `
 
     // Enviamos el correo a ambos.
     if (process.env.NODE_ENV !== 'test') {
       await sendMail({
         to: owner[0].email,
         subject: 'Cambio de reserva.',
-        body: emailBody,
-      });
+        body: emailBody
+      })
       // VALIDAR CORREO USUARIO QUE RESERVA
       await sendMail({
         to: email,
         subject: 'Copia cambio de reserva.',
-        body: emailBodyReq,
-      });
+        body: emailBodyReq
+      })
     }
     // Editamos los eventos SQL
     await connection.query(
       `
     DROP EVENT ${bookingCode}_event_start
     `
-    );
+    )
 
     await connection.query(
       `
     DROP EVENT ${bookingCode}_event_end
     `
-    );
+    )
     // Editamos los datos de la reserva a la nueva reserva
     await connection.query(
       `
     UPDATE bookings SET bookingCode = ?, modifiedAt = ?, startBookingDate = ?, endBookingDate = ?, state = "peticion" WHERE idBooking = ?
       `,
       [newBookingCode, modifiedAt, startDate, endDate, booking[0].idBooking]
-    );
+    )
 
     res.send({
       status: 'ok',
-      message: 'Reserva editada con éxito.',
-    });
+      message: 'Reserva editada con éxito.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = editBooking;
+module.exports = editBooking

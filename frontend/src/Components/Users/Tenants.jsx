@@ -1,26 +1,26 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { get, parseJwt } from '../../Helpers/Api';
-import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import ContactTenant from '../Forms/ContactTenant';
-import LoadingSkeleton from './LoadingSkeleton';
-import Tenant from './Tenant';
-import VoteForm from '../Forms/VoteForm';
-import { useForm } from 'react-hook-form';
-import { useHistory, useLocation } from 'react-router';
-import { FaFilter, FaPlus } from 'react-icons/fa';
+import React, { useContext, useEffect, useState } from 'react'
+import { get, parseJwt } from '../../Helpers/Api'
+import { TokenContext } from '../../Helpers/Hooks/TokenProvider'
+import ContactTenant from '../Forms/ContactTenant'
+import LoadingSkeleton from './LoadingSkeleton'
+import Tenant from './Tenant'
+import VoteForm from '../Forms/VoteForm'
+import { useForm } from 'react-hook-form'
+import { useHistory, useLocation } from 'react-router'
+import { FaFilter, FaPlus } from 'react-icons/fa'
 
-export default function UsersList(props) {
-  const [Token] = useContext(TokenContext);
+export default function UsersList (props) {
+  const [Token] = useContext(TokenContext)
   const [Overlay, setOverlay] = useState({
     shown: false,
     form: '',
-    info: {},
-  });
+    info: {}
+  })
 
-  const [Bookings, setBookings] = useState([]);
-  const [Users, setUsers] = useState([]);
-  const [Loaded, setLoaded] = useState(false);
-  const location = useLocation();
+  const [Bookings, setBookings] = useState([])
+  const [Users, setUsers] = useState([])
+  const [Loaded, setLoaded] = useState(false)
+  const location = useLocation()
 
   // Necesario estar logueado
   useEffect(() => {
@@ -32,51 +32,51 @@ export default function UsersList(props) {
         `http://192.168.5.103:4000/users${location.search}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
-            setUsers(data.users);
-            setLoaded(true);
+            setUsers(data.users)
+            setLoaded(true)
           } else {
-            setUsers([]);
+            setUsers([])
           }
         },
         (error) => console.error(error),
         Token,
         null
-      );
+      )
     } else {
       get(
         'http://192.168.5.103:4000/users',
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
-            setUsers(data.users);
-            setLoaded(true);
+            setUsers(data.users)
+            setLoaded(true)
           } else {
-            setUsers([]);
+            setUsers([])
           }
         },
         (error) => console.error(error),
         Token,
         null
-      );
+      )
       get(
         `http://192.168.5.103:4000/users/${
           parseJwt(Token).idUser
         }/bookings/renter`,
         (data) => {
-          setBookings(data.bookings);
+          setBookings(data.bookings)
         },
         (error) => {
-          console.error(error);
+          console.error(error)
         },
         Token,
         null
-      );
+      )
     }
     return () => {
       // controller.abort();
       // controllerSearch.abort();
       // controllerBookings.abort();
-    };
-  }, [Token, location.search]);
+    }
+  }, [Token, location.search])
 
   return (
     <main className='pb-40 pt-20 flex w-full lg:max-w-customXL'>
@@ -98,7 +98,7 @@ export default function UsersList(props) {
         <button
           className='lg:hidden flex pl-6'
           onClick={() => {
-            setOverlay({ show: true });
+            setOverlay({ show: true })
           }}
         >
           Filtrar
@@ -115,72 +115,74 @@ export default function UsersList(props) {
             Array(10)
               .fill(null)
               .map((el, i) => <LoadingSkeleton key={i} />)}
-          {Users.length ? (
-            Users.map((user) => {
-              if (user.idUser === parseJwt(Token).idUser) {
-                return null;
-              } else {
-                return (
-                  <Tenant
-                    relation={Bookings.filter(
-                      (bookings) => bookings.idTenant === user.idUser
-                    )}
-                    user={user}
-                    key={user.idUser}
-                    setOverlay={setOverlay}
-                  />
-                );
-              }
-            })
-          ) : (
-            <div className='p-5 font-medium'>
-              No hay inquilinos que mostrar.
-            </div>
-          )}
+          {Users.length
+            ? (
+                Users.map((user) => {
+                  if (user.idUser === parseJwt(Token).idUser) {
+                    return null
+                  } else {
+                    return (
+                      <Tenant
+                        relation={Bookings.filter(
+                          (bookings) => bookings.idTenant === user.idUser
+                        )}
+                        user={user}
+                        key={user.idUser}
+                        setOverlay={setOverlay}
+                      />
+                    )
+                  }
+                })
+              )
+            : (
+              <div className='p-5 font-medium'>
+                No hay inquilinos que mostrar.
+              </div>
+              )}
         </div>
       </section>
     </main>
-  );
+  )
 }
 
-function Filters({ setOverlay, Overlay }) {
-  const history = useHistory();
+function Filters ({ setOverlay, Overlay }) {
+  const history = useHistory()
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm({
     defaultValues: {
       orden: '',
       direccion: '',
-      ciudad: '',
-    },
-  });
+      ciudad: ''
+    }
+  })
 
-  function onSubmit(body, e) {
-    e.preventDefault();
+  function onSubmit (body, e) {
+    e.preventDefault()
 
     const queryString = Object.keys(body)
       .filter((val) => body[val].length > 1)
       .map((key) => {
-        return `${key}=${body[key]}`;
+        return `${key}=${body[key]}`
       })
-      .join('&');
+      .join('&')
 
     if (history.location.pathname.length > 12) {
-      history.replace('/inquilinos?' + queryString);
+      history.replace('/inquilinos?' + queryString)
     }
-    history.push('?' + queryString);
+    history.push('?' + queryString)
 
     if (window.innerWidth <= 650) {
-      setOverlay({ show: false });
+      setOverlay({ show: false })
     }
   }
 
-  const inputsLabelStyle = 'text-lg duration-200';
+  const inputsLabelStyle = 'text-lg duration-200'
   const inputStyle =
-    'bg-black bg-opacity-70 w-48 p-3 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg';
+    'bg-black bg-opacity-70 w-48 p-3 placeholder-yellow-300  mix-blend-multiply text-principal-1 font-light text-lg'
   return (
     <div
       className={`transform ${
@@ -193,7 +195,7 @@ function Filters({ setOverlay, Overlay }) {
         <button
           className='close-overlay absolute top-3 right-3 lg:hidden'
           onClick={() => {
-            setOverlay({ show: false, form: '' });
+            setOverlay({ show: false, form: '' })
           }}
         >
           <FaPlus className='transform rotate-45 ' />
@@ -254,12 +256,12 @@ function Filters({ setOverlay, Overlay }) {
                       value:
                         /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                       message:
-                        'La ciudad no puede contener caracteres especiales ni números.',
+                        'La ciudad no puede contener caracteres especiales ni números.'
                     },
                     maxLength: {
                       value: 30,
-                      message: 'La ciudad no puede tener más de 50 caracteres.',
-                    },
+                      message: 'La ciudad no puede tener más de 50 caracteres.'
+                    }
                   })}
                   type='text'
                   name='ciudad'
@@ -282,5 +284,5 @@ function Filters({ setOverlay, Overlay }) {
         </div>
       </section>
     </div>
-  );
+  )
 }

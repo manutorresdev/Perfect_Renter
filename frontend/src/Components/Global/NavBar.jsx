@@ -1,32 +1,32 @@
-import { React, useEffect, useState } from 'react';
-import * as FaIcons from 'react-icons/fa';
-import { MenuElements } from './MenuElements';
-import { Link, useHistory } from 'react-router-dom';
+import { React, useEffect, useState } from 'react'
+import * as FaIcons from 'react-icons/fa'
+import { MenuElements } from './MenuElements'
+import { Link, useHistory } from 'react-router-dom'
 
-export default function NavBar({ token, setToken }) {
-  const [mostrarMenu, setMostrarMenu] = useState(false);
-  const showMenu = () => setMostrarMenu(!mostrarMenu);
-  const [width, setWidth] = useState(window.innerWidth);
-  const [selectedLocation, setSelectedLocation] = useState();
-  const history = useHistory();
-
-  useEffect(() => {
-    const handleWindowResize = () => setWidth(window.innerWidth);
-    window.addEventListener('resize', handleWindowResize);
-    return () => window.removeEventListener('resize', handleWindowResize);
-  }, []);
+export default function NavBar ({ token, setToken }) {
+  const [mostrarMenu, setMostrarMenu] = useState(false)
+  const showMenu = () => setMostrarMenu(!mostrarMenu)
+  const [width, setWidth] = useState(window.innerWidth)
+  const [selectedLocation, setSelectedLocation] = useState()
+  const history = useHistory()
 
   useEffect(() => {
-    const path = history.location.pathname.split('/')[1];
+    const handleWindowResize = () => setWidth(window.innerWidth)
+    window.addEventListener('resize', handleWindowResize)
+    return () => window.removeEventListener('resize', handleWindowResize)
+  }, [])
+
+  useEffect(() => {
+    const path = history.location.pathname.split('/')[1]
     if (path) {
-      setSelectedLocation(path);
+      setSelectedLocation(path)
     } else {
-      setSelectedLocation('');
+      setSelectedLocation('')
     }
-  }, [history.location.pathname, selectedLocation]);
+  }, [history.location.pathname, selectedLocation])
 
   const buttonStyle =
-    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
+    'select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
 
   return (
     <nav className='navbar flex-grow-0 bg-gray-Primary grid grid-cols-9 gap-5 items-center font-light h-20 fixed top-0 w-full z-50 '>
@@ -43,12 +43,12 @@ export default function NavBar({ token, setToken }) {
       {width <= 637 && (
         <div
           onClick={() => {
-            setMostrarMenu(false);
+            setMostrarMenu(false)
           }}
           className={`Menu toggler animate-fadeIn ${
             mostrarMenu ? 'static' : 'hidden'
           } absolute h-screen w-screen bg-gray-700 top-0 left-0 bottom-0 right-0 bg-opacity-20 duration-300 z-10 cursor-pointer`}
-        ></div>
+        />
       )}
       <ul
         className={`navBar
@@ -71,7 +71,7 @@ export default function NavBar({ token, setToken }) {
                   {item.title}
                 </Link>
               </li>
-            );
+            )
           } else {
             return (
               <li
@@ -89,15 +89,15 @@ export default function NavBar({ token, setToken }) {
                   {item.title}
                 </Link>
               </li>
-            );
+            )
           }
         })}
         {token && (
           <button
-            className={`block sm:hidden text-white p-1 hover:text-principal-1 sm:col-start-8 md:col-start-9 md:col-end-10 justify-self-start py-10 w-full sm:w-auto sm:justify-self-end md:justify-self-center`}
+            className='block sm:hidden text-white p-1 hover:text-principal-1 sm:col-start-8 md:col-start-9 md:col-end-10 justify-self-start py-10 w-full sm:w-auto sm:justify-self-end md:justify-self-center'
             onClick={() => {
-              setToken('');
-              window.location.reload();
+              setToken('')
+              window.location.reload()
             }}
           >
             Salir
@@ -110,39 +110,41 @@ export default function NavBar({ token, setToken }) {
       >
         <FaIcons.FaBars onClick={showMenu} />
       </div>
-      {token ? (
-        <div
-          className={` col-start-4 col-end-7 justify-between flex gap-2 row-start-1 sm:col-start-8 sm:col-end-10 sm:justify-self-center md:justify-self-auto`}
-        >
-          <Link
-            to='/perfil'
-            className={`${buttonStyle} relative pr-5 flex items-center gap-3 justify-between`}
+      {token
+        ? (
+          <div
+            className=' col-start-4 col-end-7 justify-between flex gap-2 row-start-1 sm:col-start-8 sm:col-end-10 sm:justify-self-center md:justify-self-auto'
           >
-            <FaIcons.FaUser className='' />
-            <span className='flex-grow font-medium'>Perfil</span>
-          </Link>
-          <button
-            className={`hidden sm:block text-white  hover:text-principal-1 w-full justify-self-start sm:justify-self-end lg:justify-self-center`}
-            onClick={() => {
-              setToken('');
-              window.location.reload();
-            }}
+            <Link
+              to='/perfil'
+              className={`${buttonStyle} relative pr-5 flex items-center gap-3 justify-between`}
+            >
+              <FaIcons.FaUser className='' />
+              <span className='flex-grow font-medium'>Perfil</span>
+            </Link>
+            <button
+              className='hidden sm:block text-white  hover:text-principal-1 w-full justify-self-start sm:justify-self-end lg:justify-self-center'
+              onClick={() => {
+                setToken('')
+                window.location.reload()
+              }}
+            >
+              Salir
+            </button>
+          </div>
+          )
+        : (
+          <div
+            className=' col-start-3 col-end-8 justify-between flex gap-2 row-start-1 sm:col-start-8 sm:col-end-10 sm:justify-self-center md:justify-self-auto'
           >
-            Salir
-          </button>
-        </div>
-      ) : (
-        <div
-          className={` col-start-3 col-end-8 justify-between flex gap-2 row-start-1 sm:col-start-8 sm:col-end-10 sm:justify-self-center md:justify-self-auto`}
-        >
-          <Link className={`${buttonStyle} `} to='/login'>
-            Acceso
-          </Link>
-          <Link className={`${buttonStyle} `} to='/registro'>
-            Registro
-          </Link>
-        </div>
-      )}
+            <Link className={`${buttonStyle} `} to='/login'>
+              Acceso
+            </Link>
+            <Link className={`${buttonStyle} `} to='/registro'>
+              Registro
+            </Link>
+          </div>
+          )}
     </nav>
-  );
+  )
 }

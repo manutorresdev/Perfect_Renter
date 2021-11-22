@@ -1,13 +1,13 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 const {
   generateRandomString,
   formatDate,
   sendMail,
-  validate,
-} = require('../../libs/helpers');
+  validate
+} = require('../../libs/helpers')
 
-const { userSchema } = require('../../models/userSchema');
+const { userSchema } = require('../../models/userSchema')
 /**
  * @module Users
  */
@@ -18,43 +18,43 @@ const { userSchema } = require('../../models/userSchema');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay.
  */
 const newUser = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Validamos los datos recibidos.
-    await validate(userSchema, req.body);
+    await validate(userSchema, req.body)
 
     // Obtenemos los campos necesarios.
-    const { name, lastName, email, password, bio, city, birthDate } = req.body;
+    const { name, lastName, email, password, bio, city, birthDate } = req.body
 
     // Comprobamos que no faltan campos a rellenar.
     if (!name || !lastName || !email || !password || !city || !birthDate) {
-      const error = new Error('Debes rellenar todos los campos.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('Debes rellenar todos los campos.')
+      error.httpStatus = 400
+      throw error
     }
 
     // Comprobamos si el email existe en la base de datos.
     const [user] = await connection.query(
-      `SELECT idUser FROM users WHERE email = ?`,
+      'SELECT idUser FROM users WHERE email = ?',
       [email]
-    );
+    )
 
     // Si el email existe lanzamos un error.
     if (user.length > 0) {
-      const error = new Error('Ya existe un usuario registrado con ese email.');
-      error.httpStatus = 409;
-      throw error;
+      const error = new Error('Ya existe un usuario registrado con ese email.')
+      error.httpStatus = 409
+      throw error
     }
 
     // Creamos un código de registro de un solo uso.
-    const registrationCode = generateRandomString(20);
+    const registrationCode = generateRandomString(20)
 
     // Guardamos al usuario en la base de datos junto al código de registro.
     await connection.query(
-      `INSERT INTO users (name, lastName, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)`,
+      'INSERT INTO users (name, lastName, email, password, bio, registrationCode, createdAt, renterActive, birthDate, city) VALUES (?, ?, ?, SHA2(?, 512), ?, ?, ?, false, ?, ?)',
       [
         name,
         lastName,
@@ -64,9 +64,9 @@ const newUser = async (req, res, next) => {
         registrationCode,
         formatDate(new Date()),
         birthDate,
-        city,
+        city
       ]
-    );
+    )
 
     // Mensaje que enviaremos al usuario.
     const emailBody = `
@@ -89,7 +89,7 @@ const newUser = async (req, res, next) => {
             </th>
         </tfoot>
       </table>
-    `;
+    `
 
     // Enviamos el mensaje al correo del usuario.
     if (process.env.NODE_ENV !== 'test') {
@@ -97,23 +97,23 @@ const newUser = async (req, res, next) => {
         await sendMail({
           to: email,
           subject: 'Activa tu usuario de Perfect Renter.',
-          body: emailBody,
-        });
+          body: emailBody
+        })
       } catch (error) {
-        throw new Error('Error enviando el mensaje de verificación.');
+        throw new Error('Error enviando el mensaje de verificación.')
       }
     }
 
     res.send({
       status: 'ok',
       message: 'Usuario registrado, comprueba tu email para activarlo.',
-      registrationCode,
-    });
+      registrationCode
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = newUser;
+module.exports = newUser

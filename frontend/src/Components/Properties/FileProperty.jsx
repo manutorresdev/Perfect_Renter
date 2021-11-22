@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa'
 import {
   CreateFormData,
-  CreateFormDataMultipleFiles,
-  put,
-} from '../../Helpers/Api';
-import CircularProgress from '@mui/material/CircularProgress';
-import { Message } from '../Properties/PropertyInfo';
-export default function FileProperty({
+  // CreateFormDataMultipleFiles,
+  put
+} from '../../Helpers/Api'
+import CircularProgress from '@mui/material/CircularProgress'
+import { Message } from '../Properties/PropertyInfo'
+export default function FileProperty ({
   setOverlay,
   idProperty,
   Token,
@@ -17,77 +17,78 @@ export default function FileProperty({
   photos,
   setPhotosOnUpload,
   deletePhoto,
-  setLoaderDiv,
+  setLoaderDiv
 }) {
-  const [Error, setError] = useState('');
-  const [Button, setButton] = useState(false);
-  const [FileName, setFileName] = useState([]);
-  const [message, setMessage] = useState({ status: '', message: '' });
-  const [TotalPhotos, setTotalPhotos] = useState(0);
-  const hiddenInput = useRef(null);
-  const [Loader, setLoader] = useState(false);
-  const { handleSubmit, register } = useForm();
-  const { ref, onChange, ...rest } = register('photo');
+  const [Error, setError] = useState('')
+  const [Button, setButton] = useState(false)
+  const [FileName, setFileName] = useState([])
+  const [message, setMessage] = useState({ status: '', message: '' })
+  const [TotalPhotos, setTotalPhotos] = useState(0)
+  const hiddenInput = useRef(null)
+  const [Loader, setLoader] = useState(false)
+  const { handleSubmit, register } = useForm()
+  const { ref, onChange, ...rest } = register('photo')
 
-  function uploadFile(body, e) {
-    e.preventDefault();
+  function uploadFile (body, e) {
+    e.preventDefault()
 
-    const photos = [];
+    const photos = []
 
     Object.keys(body.photo).map((pic, index) => {
-      return photos.push(body.photo[index]);
-    });
+      return photos.push(body.photo[index])
+    })
 
     if (FileName) {
-      setPhotosOnUpload(FileName);
-      console.log('EDITAR', FileName);
+      setPhotosOnUpload(FileName)
+      console.log('EDITAR', FileName)
       setTimeout(() => {
-        setLoader(false);
-      }, 1000);
+        setLoader(false)
+      }, 1000)
       setFile({
         shown: false,
         userInfo: '',
-        form: '',
-      });
+        form: ''
+      })
     }
   }
 
-  function editFile(body, e) {
-    e.preventDefault();
+  function editFile (body, e) {
+    e.preventDefault()
 
-    const photos = [];
+    const photos = []
 
     Object.keys(body.photo).map((pic, index) => {
-      return photos.push(body.photo[index]);
-    });
+      return photos.push(body.photo[index])
+    })
+
+    console.log(photos)
+
     put(
       `http://192.168.5.103:4000/properties/${editProperty}`,
-      photos.length > 1
-        ? CreateFormDataMultipleFiles(photos)
-        : CreateFormData({ photo: photos[0] }),
+      CreateFormData({ photo: photos[0] }),
       (data) => {
         if (data.status === 'ok') {
-          console.log('Sucess');
+          console.log('Sucess')
           setTimeout(() => {
-            setButton(false);
-            setLoader(false);
-            setFileName('');
-          }, 500);
-          setMessage({ status: 'ok', message: '¡Fotos subidas con éxito!' });
+            setButton(false)
+            setLoader(false)
+            setFileName('')
+          }, 500)
+          setMessage({ status: 'ok', message: '¡Fotos subidas con éxito!' })
         }
       },
       (error) => {
-        setButton(true);
-        setLoader(false);
-        setError(error.message);
+        setButton(true)
+        setLoader(false)
+        setError(error.message)
       },
       Token
-    );
+    )
   }
 
   useEffect(() => {
-    setTotalPhotos(photos.length + FileName.length);
-  }, [FileName.length, photos.length, FileName]);
+    setTotalPhotos(photos.length + FileName.length)
+  }, [FileName.length, photos.length, FileName])
 
   return (
     <div className='overlay z-20 bg-white bg-opacity-75 justify-center fixed w-full h-full left-0 top-0 flex flex-col items-center px-12 py-24 overscroll-scroll sm:overflow-hidden'>
@@ -101,7 +102,7 @@ export default function FileProperty({
         <button
           className='close-overlay absolute top-3 right-3'
           onClick={() => {
-            setFile({ shown: false, form: '' });
+            setFile({ shown: false, form: '' })
           }}
         >
           <FaPlus className='transform rotate-45' />
@@ -120,8 +121,8 @@ export default function FileProperty({
               <button
                 className='font-medium flex items-center gap-2 bg-blue-600 text-white p-2'
                 onClick={(e) => {
-                  e.preventDefault();
-                  hiddenInput.current.click();
+                  e.preventDefault()
+                  hiddenInput.current.click()
                 }}
               >
                 <FaRegArrowAltCircleUp className='animate-bounce' />
@@ -141,10 +142,10 @@ export default function FileProperty({
                             <button
                               className='delete-photo absolute top-0 right-0 bg-principal-1'
                               onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setLoaderDiv(true);
-                                deletePhoto(photo.name);
+                                e.preventDefault()
+                                e.stopPropagation()
+                                setLoaderDiv(true)
+                                deletePhoto(photo.name)
                               }}
                             >
                               <FaPlus className='transform rotate-45' />
@@ -157,75 +158,77 @@ export default function FileProperty({
                               className='w-20 h-20 object-cover'
                             />
                           </div>
-                        );
+                        )
                       })}
                     </div>
                   </div>
                 )}
-                {FileName ? (
-                  <div className='flex flex-col gap-1'>
-                    <span className='border-b-2 border-gray-600 w-1/2 sm:w- mb-2'>
-                      Fotos seleccionadas:
-                    </span>
-                    <div className='selected-photos-cont flex flex-wrap gap-2 justify-center'>
-                      {FileName.map((file, index) => {
-                        return (
-                          <div key={file.name} className='relative w-20'>
-                            <button
-                              className='delete-photo absolute top-0 right-0 bg-principal-1'
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setLoader(true);
-                                console.log(FileName);
-                                setFileName(
-                                  FileName.filter(
-                                    (fileToRemove) =>
-                                      fileToRemove.name !== file.name
+                {FileName
+                  ? (
+                    <div className='flex flex-col gap-1'>
+                      <span className='border-b-2 border-gray-600 w-1/2 sm:w- mb-2'>
+                        Fotos seleccionadas:
+                      </span>
+                      <div className='selected-photos-cont flex flex-wrap gap-2 justify-center'>
+                        {FileName.map((file, index) => {
+                          return (
+                            <div key={file.name} className='relative w-20'>
+                              <button
+                                className='delete-photo absolute top-0 right-0 bg-principal-1'
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  e.stopPropagation()
+                                  setLoader(true)
+                                  console.log(FileName)
+                                  setFileName(
+                                    FileName.filter(
+                                      (fileToRemove) =>
+                                        fileToRemove.name !== file.name
+                                    )
                                   )
-                                );
 
-                                setTimeout(() => {
-                                  setLoader(false);
-                                }, 1000);
-                              }}
-                            >
-                              <FaPlus className='transform rotate-45' />
-                            </button>
-                            <img
-                              src={URL.createObjectURL(file)}
-                              alt='prueba'
-                              className='w-20 h-20 object-cover'
-                            />
-                          </div>
-                        );
-                      })}
+                                  setTimeout(() => {
+                                    setLoader(false)
+                                  }, 1000)
+                                }}
+                              >
+                                <FaPlus className='transform rotate-45' />
+                              </button>
+                              <img
+                                src={URL.createObjectURL(file)}
+                                alt='prueba'
+                                className='w-20 h-20 object-cover'
+                              />
+                            </div>
+                          )
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <p className='text-center'>Ningún archivo seleccionado.</p>
-                )}
+                    )
+                  : (
+                    <p className='text-center'>Ningún archivo seleccionado.</p>
+                    )}
               </div>
 
               <input
                 className='hidden'
                 {...rest}
                 onChange={(e) => {
-                  setLoader(true);
-                  const arrayPhotos = [];
-                  onChange(e);
+                  setLoader(true)
+                  const arrayPhotos = []
+                  onChange(e)
                   for (const photo of hiddenInput.current.files) {
-                    arrayPhotos.push(photo);
+                    arrayPhotos.push(photo)
                   }
-                  setFileName(arrayPhotos);
-                  setButton(true);
+                  setFileName(arrayPhotos)
+                  setButton(true)
                   setTimeout(() => {
-                    setLoader(false);
-                  }, 5000);
+                    setLoader(false)
+                  }, 5000)
                 }}
                 ref={(e) => {
-                  ref(e);
-                  hiddenInput.current = e;
+                  ref(e)
+                  hiddenInput.current = e
                 }}
                 type='file'
                 multiple='multiple'
@@ -253,8 +256,8 @@ export default function FileProperty({
 
             <button
               onClick={(e) => {
-                setButton(false);
-                setLoader(true);
+                setButton(false)
+                setLoader(true)
               }}
               type='submit'
               className={`${
@@ -272,5 +275,5 @@ export default function FileProperty({
         </div>
       </section>
     </div>
-  );
+  )
 }

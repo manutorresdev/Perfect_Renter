@@ -1,5 +1,5 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Users
  */
@@ -11,21 +11,21 @@ const getDB = require('../../config/getDB');
  * @returns {Promise} Devuelve un objeto con los datos
  */
 const listBookedProperties = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el id del usuario.
-    const { idUser } = req.params;
+    const { idUser } = req.params
 
     // Obtenemos el id del usuario que hace la request
-    const idReqUser = req.userAuth.idUser;
+    const idReqUser = req.userAuth.idUser
 
     // Comprobamos que el usuario logueado es el dueño del usuario a listar reservas
     if (Number(idUser) !== idReqUser) {
-      const error = new Error('No tienes permisos.');
-      error.httpStatus = 403;
-      throw error;
+      const error = new Error('No tienes permisos.')
+      error.httpStatus = 403
+      throw error
     }
 
     // Obtenemos los alquileres del usuario como INQUILINO = TENANT
@@ -56,17 +56,17 @@ const listBookedProperties = async (req, res, next) => {
       GROUP BY bookings.idBooking;
       `,
       [idReqUser]
-    );
+    )
 
     res.send({
       status: 'ok',
-      bookings,
-    });
+      bookings
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = listBookedProperties;
+module.exports = listBookedProperties

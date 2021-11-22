@@ -1,4 +1,4 @@
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Entries
  */
@@ -10,9 +10,9 @@ const getDB = require('../../config/getDB');
  * @returns {Promise} Devuelve una lista objetos con los datos
  */
 const listProperties = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos los queryParams en caso de que haya.
     let {
@@ -28,45 +28,45 @@ const listProperties = async (req, res, next) => {
       baños: filtToilets,
       m2: filtMts,
       entrada: startDate,
-      salida: endDate,
-    } = req.query;
-    console.log();
+      salida: endDate
+    } = req.query
+    console.log()
     // Cambiamos valores para encajar con backend.
     if (order === 'precio') {
-      order = 'price';
+      order = 'price'
     } else if (order === 'creacion') {
-      order = 'createdAt';
+      order = 'createdAt'
     } else if (order === 'valoraciones') {
-      order = 'votes';
+      order = 'votes'
     }
 
     // Establecemos opciones de validación de orden.
-    const validOrderOptions = ['votes', 'createdAt', 'price'];
+    const validOrderOptions = ['votes', 'createdAt', 'price']
 
     // Establecemos opciones de valicadión de dirección
-    const validDirectionOptions = ['DESC', 'ASC'];
+    const validDirectionOptions = ['DESC', 'ASC']
 
     // Establecemos un orden por defecto
-    const orderBy = validOrderOptions.includes(order) ? order : 'createdAt';
+    const orderBy = validOrderOptions.includes(order) ? order : 'createdAt'
 
     // Establecemos una dirección por defecto
     const orderDirection = validDirectionOptions.includes(direction)
       ? direction
-      : 'ASC';
+      : 'ASC'
 
-    //Verificamos valores de los filtros y si no vienen les asignamos por defecto
-    const city = filtCity ? filtCity : '%';
-    const province = filtProvince ? filtProvince : '%';
-    const type = filtType ? filtType : '%';
-    const pmax = filtPmax ? filtPmax : 10000;
-    const pmin = filtPmin ? filtPmin : 0;
-    const rooms = filtRooms ? filtRooms : 0;
-    const garage = filtGarage ? filtGarage : 0;
-    const toilets = filtToilets ? filtToilets : 0;
-    const mts = filtMts ? filtMts : 0;
+    // Verificamos valores de los filtros y si no vienen les asignamos por defecto
+    const city = filtCity || '%'
+    const province = filtProvince || '%'
+    const type = filtType || '%'
+    const pmax = filtPmax || 10000
+    const pmin = filtPmin || 0
+    const rooms = filtRooms || 0
+    const garage = filtGarage || 0
+    const toilets = filtToilets || 0
+    const mts = filtMts || 0
 
-    let properties;
-    /***** Verificamos si la peticion viene de un usuario Propietario *****/
+    let properties
+    /** *** Verificamos si la peticion viene de un usuario Propietario *****/
     if (req.params.idUser) {
       // Obtenemos el id del usuario que hace la peticion.
       const { idUser } = req.params;
@@ -106,8 +106,8 @@ const listProperties = async (req, res, next) => {
       } ${orderDirection}
       `,
         [idUser]
-      );
-      /*********** Final usuario propietario *****************/
+      )
+      /** ********* Final usuario propietario *****************/
     } else {
       // Si hay filtro por fechas, comprobamos que propiedades están disponibles para dichas fechas.
       if (startDate && endDate) {
@@ -125,11 +125,11 @@ const listProperties = async (req, res, next) => {
            GROUP BY idProperty;
           `,
           [startDate, endDate, startDate, endDate]
-        );
+        )
         // Obtenemos los datos de las propiedades
-        const propertiesToFilter = [];
+        const propertiesToFilter = []
         for (const property of propertiesWithDatesFree) {
-          propertiesToFilter.push(property.idProperty);
+          propertiesToFilter.push(property.idProperty)
         }
 
         [properties] = await connection.query(
@@ -179,9 +179,9 @@ const listProperties = async (req, res, next) => {
             pmax,
             garage,
             toilets,
-            mts,
+            mts
           ]
-        );
+        )
       } else {
         // Obtenemos los datos de todas las propiedades
 
@@ -231,23 +231,23 @@ const listProperties = async (req, res, next) => {
             pmax,
             garage,
             toilets,
-            mts,
+            mts
           ]
-        );
+        )
       }
 
-      //Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
+      // Si hay coincidencias para la query las devolvemos, sino mostramos mensaje de no encontrado
 
       res.send({
         status: 'ok',
-        properties,
-      });
+        properties
+      })
     }
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = listProperties;
+module.exports = listProperties

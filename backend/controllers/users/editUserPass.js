@@ -1,13 +1,13 @@
 // @ts-nocheck
-require('dotenv').config();
-const getDB = require('../../config/getDB');
+require('dotenv').config()
+const getDB = require('../../config/getDB')
 const {
   validate,
   formatDate,
   sendMail,
-  generateRandomString,
-} = require('../../libs/helpers');
-const { passSchema } = require('../../models/passSchema');
+  generateRandomString
+} = require('../../libs/helpers')
+const { passSchema } = require('../../models/passSchema')
 /**
  * @module Users
  */
@@ -18,28 +18,28 @@ const { passSchema } = require('../../models/passSchema');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const editUserPass = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos id del usuario a cambiar la contraseña.
-    const { idUser } = req.params;
+    const { idUser } = req.params
 
     // Obtenemos la antigua contraseña y la nueva.
-    const { oldPass, newPass } = req.body;
+    const { oldPass, newPass } = req.body
 
     // Validamos la contraseña.
-    const verify = { password: newPass };
-    await validate(passSchema, verify);
+    const verify = { password: newPass }
+    await validate(passSchema, verify)
 
     // Si el usuario a editar no coincide con el usuario editando, mandamos error.
     if (req.userAuth.idUser !== Number(idUser)) {
       const error = new Error(
         'No puedes cambiar la contraseña de otro usuario.'
-      );
-      error.httpStatus = 403;
-      throw error;
+      )
+      error.httpStatus = 403
+      throw error
     }
 
     // Comprobamos que la contraseña antigua sea correcta.
@@ -48,17 +48,17 @@ const editUserPass = async (req, res, next) => {
     SELECT idUser, email FROM users WHERE idUser = ? AND password = SHA2(?,512)
     `,
       [idUser, oldPass]
-    );
+    )
 
     // Lanzamos error si la contrasña no es la misma.
     if (user.length < 1) {
-      const error = new Error('Contraseña incorrecta.');
-      error.httpStatus = 401;
-      throw error;
+      const error = new Error('Contraseña incorrecta.')
+      error.httpStatus = 401
+      throw error
     }
 
     // Generamos un código de verificación
-    const regCode = generateRandomString(20);
+    const regCode = generateRandomString(20)
 
     // Cambiamos la contraseña en la base de datos y "desactivamos" al usuario hasta que lo verifique.
     await connection.query(
@@ -66,7 +66,7 @@ const editUserPass = async (req, res, next) => {
     UPDATE users SET password = SHA2(?,512), modifiedAt = ?, renterActive = false, registrationCode = ? WHERE idUser = ?
     `,
       [newPass, formatDate(new Date()), regCode, idUser]
-    );
+    )
 
     // Creamos el cuerpo del email.
     const emailBody = `
@@ -91,28 +91,28 @@ const editUserPass = async (req, res, next) => {
             </th>
         </tfoot>
     </table>
-    `;
+    `
 
     // Envío de email.
     if (process.env.NODE_ENV !== 'test') {
       await sendMail({
         to: user[0].email,
         subject: 'Cambio de contraseña Perfect Renter',
-        body: emailBody,
-      });
+        body: emailBody
+      })
     }
 
     res.send({
       status: 'ok',
       regCode,
       message:
-        'Contraseña cambiada con éxito. Confirma el cambio haciendo click en el enlace que te hemos enviado al correo electónico.',
-    });
+        'Contraseña cambiada con éxito. Confirma el cambio haciendo click en el enlace que te hemos enviado al correo electónico.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = editUserPass;
+module.exports = editUserPass

@@ -1,22 +1,21 @@
 // @ts-nocheck
-require('dotenv').config();
-const sgMail = require('@sendgrid/mail');
-const { format } = require('date-fns');
-const { ensureDir, unlink } = require('fs-extra');
-const sharp = require('sharp');
-const crypto = require('crypto');
-const uuid = require('uuid');
-const path = require('path');
-const fs = require('fs').promises;
+require('dotenv').config()
+const sgMail = require('@sendgrid/mail')
+const { format } = require('date-fns')
+const { ensureDir, unlink } = require('fs-extra')
+const sharp = require('sharp')
+const crypto = require('crypto')
+const uuid = require('uuid')
+const path = require('path')
 
 const {
   UPLOADS_DIRECTORY,
   SENDGRID_API_KEY: api,
-  SENDGRID_FROM: from,
-} = process.env;
-sgMail.setApiKey(api);
+  SENDGRID_FROM: from
+} = process.env
+sgMail.setApiKey(api)
 
-const uploadsDir = path.join(__dirname, UPLOADS_DIRECTORY);
+const uploadsDir = path.join(__dirname, UPLOADS_DIRECTORY)
 /**
  * @module Helpers
  */
@@ -34,7 +33,7 @@ const uploadsDir = path.join(__dirname, UPLOADS_DIRECTORY);
  * @param {*} body Contenido del correo electrónico.
  * @param {*} html Estructura del correo electrónico escrito en HTML.
  */
-async function sendMail({ to, subject, body }) {
+async function sendMail ({ to, subject, body }) {
   // Preparamos el mensaje.
   const msg = {
     to,
@@ -46,10 +45,10 @@ async function sendMail({ to, subject, body }) {
                 <h1>${subject}</h1>
                 <p>${body}</p>
             </div>
-        `,
-  };
+        `
+  }
   // Enviamos el mensaje.
-  await sgMail.send(msg);
+  await sgMail.send(msg)
 }
 
 /**
@@ -62,8 +61,8 @@ async function sendMail({ to, subject, body }) {
  * @param {*} date Parámetro obtenido del middleware que lo utilice. Es una fecha en formato JS
  * @returns Devuelve una fecha en formato legible para la base de datos. (SQL)
  */
-function formatDate(date) {
-  return format(date, 'yyyy-MM-dd HH:mm:ss');
+function formatDate (date) {
+  return format(date, 'yyyy-MM-dd HH:mm:ss')
 }
 
 /**
@@ -77,8 +76,8 @@ function formatDate(date) {
  * @param {*} max Valor máximo del número aleatorio a mostrar.
  * @returns {number} Devuelve un número entero entre los dos valores indicados.
  */
-function getRandomValue(min, max) {
-  return Math.round(Math.random() * (max - min) + min);
+function getRandomValue (min, max) {
+  return Math.round(Math.random() * (max - min) + min)
 }
 
 /**
@@ -92,32 +91,32 @@ function getRandomValue(min, max) {
  * @returns Un nombre de imagen
  */
 
-async function savePhoto(image) {
-  //comprabamos que directorio de salida de imagenes existe
-  await ensureDir(uploadsDir);
-  console.log('\x1b[43m########\x1b[30m', image, 'FOTOS');
+async function savePhoto (image) {
+  // comprabamos que directorio de salida de imagenes existe
+  await ensureDir(uploadsDir)
+  console.log('\x1b[43m########\x1b[30m', image, 'FOTOS')
   // Convertimos la imagen a un objeto sharp
-  console.log('\x1b[45m%%%%%%%', 'PRE-SHARP');
-  console.log(sharp(image.data), 'SHARPED');
-  const sharpImage = sharp(image.data);
-  console.log('\x1b[45m%%%%%%%', sharpImage);
-  //accedemos a los metadatos de la imagen para comprobar su anchura
-  const imageInfo = await sharpImage.metadata();
+  console.log('\x1b[45m%%%%%%%', 'PRE-SHARP')
+  console.log(sharp(image.data), 'SHARPED')
+  const sharpImage = sharp(image.data)
+  console.log('\x1b[45m%%%%%%%', sharpImage)
+  // accedemos a los metadatos de la imagen para comprobar su anchura
+  const imageInfo = await sharpImage.metadata()
 
   // definimos el ancho máximos
-  const IMAGE_MAX_WIDTH = 1000;
+  const IMAGE_MAX_WIDTH = 1000
   // si el ancho de la imagen supera el máximo redimensionamos la imagen
-  if (imageInfo.width > IMAGE_MAX_WIDTH) sharpImage.resize(IMAGE_MAX_WIDTH);
+  if (imageInfo.width > IMAGE_MAX_WIDTH) sharpImage.resize(IMAGE_MAX_WIDTH)
 
-  //generamos un nombre unico a la imagen
-  const imageName = `${uuid.v4()}.jpg`;
-  //creamos la ruta absoluta a la nueva ubicación de la imagen
-  const imagePath = path.join(uploadsDir, imageName);
-  //guardamos la imagen en el directorio uploads
-  await sharpImage.toFile(imagePath);
-  //retornamos el nombre del fichero
-  console.log('ERROR POR AQUI');
-  return imageName;
+  // generamos un nombre unico a la imagen
+  const imageName = `${uuid.v4()}.jpg`
+  // creamos la ruta absoluta a la nueva ubicación de la imagen
+  const imagePath = path.join(uploadsDir, imageName)
+  // guardamos la imagen en el directorio uploads
+  await sharpImage.toFile(imagePath)
+  // retornamos el nombre del fichero
+  console.log('ERROR POR AQUI')
+  return imageName
 }
 
 /**
@@ -129,12 +128,12 @@ async function savePhoto(image) {
  * Función que elimina las fotos del disco
  * @param {string} photoName Entra como parámetro el nombre de la imagen
  */
-async function deletePhoto(photoName) {
+async function deletePhoto (photoName) {
   // Creamos la ruta absoluta al archivo.
-  const photoPath = path.join(uploadsDir, photoName);
+  const photoPath = path.join(uploadsDir, photoName)
 
   // Eliminamos la foto del disco.
-  await unlink(photoPath);
+  await unlink(photoPath)
 }
 
 /**
@@ -147,8 +146,8 @@ async function deletePhoto(photoName) {
  * @param {number} length Cantidad de carácteres.
  * @returns {string} Devuelve un UUID
  */
-function generateRandomString(length) {
-  return crypto.randomBytes(length).toString('hex');
+function generateRandomString (length) {
+  return crypto.randomBytes(length).toString('hex')
 }
 
 /**
@@ -161,13 +160,13 @@ function generateRandomString(length) {
  * @param {Object} schema Esquema de validación de datos.
  * @param {*} data Datos introducidos por el usuario, provienen del req.body.
  */
-async function validate(schema, data) {
+async function validate (schema, data) {
   try {
-    await schema.validateAsync(data);
+    await schema.validateAsync(data)
   } catch (error) {
-    console.log(error.message);
-    error.httpStatus = 400;
-    throw error;
+    console.log(error.message)
+    error.httpStatus = 400
+    throw error
   }
 }
 
@@ -179,5 +178,5 @@ module.exports = {
   generateRandomString,
   validate,
   sendMail,
-  uploadsDir,
-};
+  uploadsDir
+}

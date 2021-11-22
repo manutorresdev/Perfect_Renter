@@ -1,36 +1,36 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { FaGithub, FaInstagram } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { MenuElements } from './MenuElements';
+import React, { useEffect, useRef, useState } from 'react'
+import { FaGithub, FaInstagram } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import { MenuElements } from './MenuElements'
 
-export function useOnScreen(ref) {
-  const [isIntersecting, setIntersecting] = useState(false);
+export function useOnScreen (ref) {
+  const [isIntersecting, setIntersecting] = useState(false)
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) =>
       setIntersecting(entry.isIntersecting)
-    );
-    observer.observe(ref.current);
+    )
+    observer.observe(ref.current)
     return () => {
-      observer.disconnect();
-    };
-  }, [ref]);
+      observer.disconnect()
+    }
+  }, [ref])
 
-  return isIntersecting;
+  return isIntersecting
 }
 
-export default function Footer({
+export default function Footer ({
   token,
   setToken,
   setIsFooterVisible,
-  IsFooterVisible,
+  IsFooterVisible
 }) {
-  const footer = useRef();
-  const isVisible = useOnScreen(footer);
+  const footer = useRef()
+  const isVisible = useOnScreen(footer)
 
   useEffect(() => {
-    setIsFooterVisible(isVisible);
-  }, [isVisible, setIsFooterVisible]);
+    setIsFooterVisible(isVisible)
+  }, [isVisible, setIsFooterVisible])
 
   return (
     <footer
@@ -52,7 +52,7 @@ export default function Footer({
         <ul className=' sm:flex sm:justify-between'>
           {MenuElements.map((item) => {
             if (item.id === 1) {
-              return '';
+              return ''
             }
             if (item.id === 3 && !token) {
               return (
@@ -62,7 +62,7 @@ export default function Footer({
                 >
                   <Link to={item.path}>{item.title}</Link>
                 </li>
-              );
+              )
             } else {
               return (
                 <li
@@ -71,7 +71,7 @@ export default function Footer({
                 >
                   <Link to={item.path}>{item.title}</Link>
                 </li>
-              );
+              )
             }
           })}
         </ul>
@@ -96,5 +96,5 @@ export default function Footer({
         </div>
       </div>
     </footer>
-  );
+  )
 }

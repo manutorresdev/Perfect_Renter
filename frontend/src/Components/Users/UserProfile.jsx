@@ -1,19 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { capitalizeFirstLetter, get } from '../../Helpers/Api';
-import { FaStar } from 'react-icons/fa';
-import { TokenContext } from '../../Helpers/Hooks/TokenProvider';
-import ContactTenant from '../Forms/ContactTenant';
-import useProperties from '../../Helpers/Hooks/useProperties';
-import Property from '../Properties/Property';
-import { Link } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react'
+import { capitalizeFirstLetter, get } from '../../Helpers/Api'
+import { FaStar } from 'react-icons/fa'
+import { TokenContext } from '../../Helpers/Hooks/TokenProvider'
+import ContactTenant from '../Forms/ContactTenant'
+import useProperties from '../../Helpers/Hooks/useProperties'
+import Property from '../Properties/Property'
+import { Link } from 'react-router-dom'
 
-export default function UserProfile({ match }) {
-  const [Token] = useContext(TokenContext);
-  const [user, setUser] = useState({});
-  const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} });
-  const [Bookings, setBookings] = useState([]);
-  const [properties] = useProperties([]);
-  const [Votes, setVotes] = useState([]);
+export default function UserProfile ({ match }) {
+  const [Token] = useContext(TokenContext)
+  const [user, setUser] = useState({})
+  const [Overlay, setOverlay] = useState({ shown: false, userInfo: {} })
+  const [Bookings, setBookings] = useState([])
+  const [properties] = useProperties([])
+  const [Votes, setVotes] = useState([])
 
   useEffect(() => {
     // const controller = new AbortController();
@@ -22,52 +22,52 @@ export default function UserProfile({ match }) {
     get(
       `http://192.168.5.103:4000/users/${match.params.idUser}`,
       (data) => {
-        setUser(data.userInfo);
+        setUser(data.userInfo)
       },
       (error) => {
-        console.error(error);
+        console.error(error)
       },
       Token,
       null
-    );
+    )
     get(
       `http://192.168.5.103:4000/users/${match.params.idUser}/bookings/renter`,
       (data) => {
         if (data.status === 'ok') {
-          setBookings(data.bookings);
+          setBookings(data.bookings)
         }
       },
       (error) => {
-        console.error(error);
+        console.error(error)
       },
       Token,
       null
-    );
+    )
     get(
       `http://192.168.5.103:4000/users/${match.params.idUser}/votes`,
       (data) => {
         if (data.status === 'ok') {
-          setVotes(data.Valoraciones);
+          setVotes(data.Valoraciones)
         }
       },
       (error) => {
-        console.error(error);
+        console.error(error)
       },
       Token,
       null
-    );
+    )
     return () => {
       // controller.abort();
       // controllerBookings.abort();
       // controllerVotes.abort();
-    };
-  }, [match.params.idUser, Token]);
+    }
+  }, [match.params.idUser, Token])
 
   const propiedadUsuario = properties.filter(
     (property) => property.idUser === user.idUser
-  );
+  )
   const buttonStyle =
-    'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer';
+    'select-none w-1/4 self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
 
   return (
     <>
@@ -106,9 +106,9 @@ export default function UserProfile({ match }) {
                   return (
                     <FaStar
                       key={value}
-                      className={`text-principal-1 duration-200 text-2xl cursor-pointer`}
+                      className='text-principal-1 duration-200 text-2xl cursor-pointer'
                     />
-                  );
+                  )
                 })}
               </div>
               <h2 className='text-2xl border-b border-gray-200 text-principal-gris bg-principal-1 w-full p-1 font-semibold'>
@@ -134,81 +134,85 @@ export default function UserProfile({ match }) {
       bookings-cont p-5 flex flex-col items-center  gap-5
       sm:justify-start sm:flex-row sm:flex-wrap lg:justify-start'
           >
-            {Bookings.length ? (
-              Bookings.map((booking) => {
-                return (
-                  <span key={booking.idBooking} className='max-w-xs'>
-                    <article
-                      className={`animate-fadeIn filter drop-shadow-xl h-1/3 max-w-xs flex flex-col items-start justify-between
+            {Bookings.length
+              ? (
+                  Bookings.map((booking) => {
+                    return (
+                      <span key={booking.idBooking} className='max-w-xs'>
+                        <article
+                          className={`animate-fadeIn filter drop-shadow-xl h-1/3 max-w-xs flex flex-col items-start justify-between
                 sm:w- sm:max-w-xs
                 lg:flex-row lg:max-w-md lg:w-full`}
-                    >
-                      <div className='flex flex-col flex-grow lg:w-5/12 w-full'>
-                        <h2 className='bg-gray-Primary text-principal-1 text-lg w-full pl-2'>
-                          {capitalizeFirstLetter(booking.type)} en{' '}
-                          {booking.city}
-                        </h2>
-                        <p>
-                          {booking.address}, {booking.number}
-                        </p>
-                        <p>Precio: {Number(booking.price)}€</p>
-                        <p>
-                          Entrada:{' '}
-                          {new Date(
-                            booking.startBookingDate
-                          ).toLocaleDateString()}
-                        </p>
-                        <p>
-                          Salida:
-                          {new Date(
-                            booking.endBookingDate
-                          ).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div className='border-r-2 border-opacity-75 border-gray-700'></div>
-                      <Link
-                        to={`/alquileres/${booking.idProperty}`}
-                        className='lg:h-40 w-full relative flex flex-col flex-grow justify-between lg:w-4/12'
-                      >
-                        <img
-                          className='flex-grow object-cover w-full h-full'
-                          src={
+                        >
+                          <div className='flex flex-col flex-grow lg:w-5/12 w-full'>
+                            <h2 className='bg-gray-Primary text-principal-1 text-lg w-full pl-2'>
+                              {capitalizeFirstLetter(booking.type)} en{' '}
+                              {booking.city}
+                            </h2>
+                            <p>
+                              {booking.address}, {booking.number}
+                            </p>
+                            <p>Precio: {Number(booking.price)}€</p>
+                            <p>
+                              Entrada:{' '}
+                              {new Date(
+                                booking.startBookingDate
+                              ).toLocaleDateString()}
+                            </p>
+                            <p>
+                              Salida:
+                              {new Date(
+                                booking.endBookingDate
+                              ).toLocaleDateString()}
+                            </p>
+                          </div>
+                          <div className='border-r-2 border-opacity-75 border-gray-700' />
+                          <Link
+                            to={`/alquileres/${booking.idProperty}`}
+                            className='lg:h-40 w-full relative flex flex-col flex-grow justify-between lg:w-4/12'
+                          >
+                            <img
+                              className='flex-grow object-cover w-full h-full'
+                              src={
                             booking.photo
                               ? 'http://192.168.5.103:4000/photo/' +
                                 booking.photo
                               : require('../../Images/defPicture.jpg').default
                           }
-                          alt='alquiler'
-                        />
-                        <div className='flex justify-end bg-gray-Primary w-full p-2'>
-                          {booking.votes > 0 ? (
-                            Array(parseInt(booking.votes))
-                              .fill(null)
-                              .map((value, i) => {
-                                return (
-                                  <FaStar
-                                    key={i}
-                                    className='text-principal-1'
-                                  ></FaStar>
-                                );
-                              })
-                          ) : (
-                            <div className='h-4'></div>
-                          )}
-                        </div>
-                      </Link>
-                    </article>
-                    {Bookings.length > 1 && (
-                      <div className='separador bg-principal-1 h-4 mt-5 w-full sm:w-0 max-w-xs'></div>
-                    )}
-                  </span>
-                );
-              })
-            ) : (
-              <h2 className='p-2'>
-                Este inquilino no tiene historial de viviendas.
-              </h2>
-            )}
+                              alt='alquiler'
+                            />
+                            <div className='flex justify-end bg-gray-Primary w-full p-2'>
+                              {booking.votes > 0
+                                ? (
+                                    Array(parseInt(booking.votes))
+                                      .fill(null)
+                                      .map((value, i) => {
+                                        return (
+                                          <FaStar
+                                            key={i}
+                                            className='text-principal-1'
+                                          />
+                                        )
+                                      })
+                                  )
+                                : (
+                                  <div className='h-4' />
+                                  )}
+                            </div>
+                          </Link>
+                        </article>
+                        {Bookings.length > 1 && (
+                          <div className='separador bg-principal-1 h-4 mt-5 w-full sm:w-0 max-w-xs' />
+                        )}
+                      </span>
+                    )
+                  })
+                )
+              : (
+                <h2 className='p-2'>
+                  Este inquilino no tiene historial de viviendas.
+                </h2>
+                )}
           </div>
         </section>
         <section className='w-full '>
@@ -216,43 +220,45 @@ export default function UserProfile({ match }) {
             Aquileres
           </h2>
           <div className='flex flex-wrap gap-5 justify-center'>
-            {propiedadUsuario.length > 0 ? (
-              propiedadUsuario.map((property) => (
-                <Property key={property.idProperty} property={property}>
-                  <div className='cont-vivienda bg-white w-auto min-w-min my-5 border border-black shadow-2xl '>
-                    <img
-                      className='w-auto max-w-xs'
-                      src={require('../../Images/defPicture.jpg').default}
-                      alt='default'
-                    />
-                    <div>
-                      {property.city}
-                      <br />
-                      {property.province}
-                      <br />
-                      {property.adress}
-                      <br />
-                      {property.price}
-                      <br />
-                      <span className='flex'>
-                        {Array(parseInt(property.votes))
-                          .fill(null)
-                          .map((value, i) => {
-                            return (
-                              <FaStar
-                                key={i}
-                                className='text-principal-1'
-                              ></FaStar>
-                            );
-                          })}
-                      </span>
-                    </div>
-                  </div>
-                </Property>
-              ))
-            ) : (
-              <div className='font-medium p-2'>No hay ningún inmueble.</div>
-            )}
+            {propiedadUsuario.length > 0
+              ? (
+                  propiedadUsuario.map((property) => (
+                    <Property key={property.idProperty} property={property}>
+                      <div className='cont-vivienda bg-white w-auto min-w-min my-5 border border-black shadow-2xl '>
+                        <img
+                          className='w-auto max-w-xs'
+                          src={require('../../Images/defPicture.jpg').default}
+                          alt='default'
+                        />
+                        <div>
+                          {property.city}
+                          <br />
+                          {property.province}
+                          <br />
+                          {property.adress}
+                          <br />
+                          {property.price}
+                          <br />
+                          <span className='flex'>
+                            {Array(parseInt(property.votes))
+                              .fill(null)
+                              .map((value, i) => {
+                                return (
+                                  <FaStar
+                                    key={i}
+                                    className='text-principal-1'
+                                  />
+                                )
+                              })}
+                          </span>
+                        </div>
+                      </div>
+                    </Property>
+                  ))
+                )
+              : (
+                <div className='font-medium p-2'>No hay ningún inmueble.</div>
+                )}
           </div>
         </section>
 
@@ -261,64 +267,68 @@ export default function UserProfile({ match }) {
             Opiniones
           </h2>
           <div className='votes-cont pt-5 flex flex-col sm:flex-row sm:flex-wrap gap-5 w-full items-center justify-center'>
-            {Votes.length ? (
-              Votes.map((vote) => {
-                return (
-                  <article
-                    className='flex w-10/12 shadow-xl max-w-xs'
-                    key={vote.idVote}
-                  >
-                    <img
-                      className='w-14 h-14 rounded-full m-2'
-                      src={
+            {Votes.length
+              ? (
+                  Votes.map((vote) => {
+                    return (
+                      <article
+                        className='flex w-10/12 shadow-xl max-w-xs'
+                        key={vote.idVote}
+                      >
+                        <img
+                          className='w-14 h-14 rounded-full m-2'
+                          src={
                         vote.avatar
                           ? 'http://192.168.5.103:4000/photo/' + vote.avatar
                           : require('../../Images/defProfile.png').default
                       }
-                      alt='imagen de perfil'
-                    />
-                    <section className=''>
-                      <h1 className='font-bold'>
-                        {vote.name} {vote.lastName}
-                      </h1>
-                      <p className=''>{vote.commentRenter}</p>
-                      <div className='flex text-xs self-center py-2'>
-                        {vote.voteValueRenter > 0 ? (
-                          Array(parseInt(vote.voteValueRenter))
-                            .fill(null)
-                            .map((value, i) => {
-                              return (
-                                <FaStar
-                                  key={i}
-                                  className='text-principal-1 text-xl'
-                                ></FaStar>
-                              );
-                            })
-                        ) : (
-                          <div className='h-4'>
-                            <FaStar className='text-gray-200' />
+                          alt='imagen de perfil'
+                        />
+                        <section className=''>
+                          <h1 className='font-bold'>
+                            {vote.name} {vote.lastName}
+                          </h1>
+                          <p className=''>{vote.commentRenter}</p>
+                          <div className='flex text-xs self-center py-2'>
+                            {vote.voteValueRenter > 0
+                              ? (
+                                  Array(parseInt(vote.voteValueRenter))
+                                    .fill(null)
+                                    .map((value, i) => {
+                                      return (
+                                        <FaStar
+                                          key={i}
+                                          className='text-principal-1 text-xl'
+                                        />
+                                      )
+                                    })
+                                )
+                              : (
+                                <div className='h-4'>
+                                  <FaStar className='text-gray-200' />
+                                </div>
+                                )}
                           </div>
-                        )}
-                      </div>
-                    </section>
-                  </article>
-                );
-              })
-            ) : (
-              <p className='font-medium p-2'>Aún no tiene valoraciones</p>
-            )}
+                        </section>
+                      </article>
+                    )
+                  })
+                )
+              : (
+                <p className='font-medium p-2'>Aún no tiene valoraciones</p>
+                )}
           </div>
         </section>
 
         <button
           className={buttonStyle + ''}
           onClick={() => {
-            setOverlay({ shown: true, info: user, form: 'contact' });
+            setOverlay({ shown: true, info: user, form: 'contact' })
           }}
         >
           Contactar
         </button>
       </main>
     </>
-  );
+  )
 }

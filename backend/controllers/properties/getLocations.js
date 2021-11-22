@@ -1,4 +1,4 @@
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Entries
  */
@@ -10,9 +10,9 @@ const getDB = require('../../config/getDB');
  */
 
 const getLocations = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Seleccionamos las provincias que contengan los carácteres introducidos
     const [provinces] = await connection.query(
@@ -20,7 +20,7 @@ const getLocations = async (req, res, next) => {
     SELECT provincia, provinciaid
     FROM provincias
     `
-    );
+    )
 
     const [cities] = await connection.query(
       `
@@ -28,18 +28,18 @@ const getLocations = async (req, res, next) => {
     FROM municipios
     WHERE calle IS NULL
     `
-    );
+    )
 
     res.send({
       status: 'ok',
       provinces,
-      cities,
-    });
+      cities
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = getLocations;
+module.exports = getLocations

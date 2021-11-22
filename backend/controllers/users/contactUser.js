@@ -1,6 +1,6 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
-const { formatDate, sendMail } = require('../../libs/helpers');
+const getDB = require('../../config/getDB')
+const { sendMail } = require('../../libs/helpers')
 /**
  * @module Users
  */
@@ -11,28 +11,28 @@ const { formatDate, sendMail } = require('../../libs/helpers');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const contactUser = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el id del usuario a contactar.
-    const { idUser } = req.params;
+    const { idUser } = req.params
 
     // Obtenemos los datos del usuario que contacta.
-    const { name, lastName, email, tel, comentarios, property } = req.body;
+    const { name, lastName, email, tel, comentarios, property } = req.body
 
     // Si el usuario a contactar y el usuario contactado son el mismo, devolvemos error.
     if (Number(idUser) === req.userAuth.idUser) {
-      const error = new Error('No puedes contactar contigo mismo.');
-      error.httpStatus = 403;
-      throw error;
+      const error = new Error('No puedes contactar contigo mismo.')
+      error.httpStatus = 403
+      throw error
     }
 
     // Si no están los datos obligatorios, lanzamos error.
     if (!name || !email || !comentarios) {
-      const error = new Error('Faltan campos obligatorios.');
-      error.httpStatus = 400;
-      throw error;
+      const error = new Error('Faltan campos obligatorios.')
+      error.httpStatus = 400
+      throw error
     }
 
     // Seleccionamos la imagen, el nombre completo y el email del usuario a contactar. (PARA EL FRONTEND)
@@ -41,15 +41,7 @@ const contactUser = async (req, res, next) => {
     SELECT name,lastName,avatar,email FROM users WHERE idUser = ?
     `,
       [idUser]
-    );
-
-    // Seleccionamos el nombre completo, el email, el teléfono del usuario que contacta. (PARA EL FRONTEND)
-    const [contactUser] = await connection.query(
-      `
-      SELECT name,lastName,tel,email FROM users WHERE idUser = ?
-      `,
-      [req.userAuth.idUser]
-    );
+    )
 
     // Definimos el body del email
     const emailBody = `
@@ -73,26 +65,26 @@ const contactUser = async (req, res, next) => {
         </td>
       </tbody>
     </table>
-    `;
+    `
 
     // Enviamos el correo del usuario que contacta, al usuario a contactar.
     if (process.env.NODE_ENV !== 'test') {
       await sendMail({
         to: user[0].email,
         subject: 'Contacto de propietario.',
-        body: emailBody,
-      });
+        body: emailBody
+      })
     }
 
     res.send({
       status: 'ok',
-      message: 'Correo electrónico enviado con éxito.',
-    });
+      message: 'Correo electrónico enviado con éxito.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = contactUser;
+module.exports = contactUser

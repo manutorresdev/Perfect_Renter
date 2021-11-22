@@ -1,35 +1,36 @@
-import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { CreateFormData, post } from '../../Helpers/Api';
-import Email from './Inputs/Email';
-import FirstName from './Inputs/FirstName';
-import { Message } from '../Properties/PropertyInfo';
-export default function ContactUs() {
-  const [message, setMessage] = useState({ message: '', status: '' });
+import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { CreateFormData, post } from '../../Helpers/Api'
+import Email from './Inputs/Email'
+import FirstName from './Inputs/FirstName'
+import { Message } from '../Properties/PropertyInfo'
+
+export default function ContactUs () {
+  const [message, setMessage] = useState({ message: '', status: '' })
   const {
     handleSubmit,
     register,
     formState: { errors },
-    control,
-  } = useForm();
+    control
+  } = useForm()
 
-  function onSubmit(body, e) {
-    e.preventDefault();
+  function onSubmit (body, e) {
+    e.preventDefault()
     post(
       'http://192.168.5.103:4000/contact',
       CreateFormData(body),
       (data) => {
-        setMessage({ message: data.message, status: 'ok' });
+        setMessage({ message: data.message, status: 'ok' })
       },
       (error) => {
-        setMessage({ message: error.message, status: 'error' });
+        setMessage({ message: error.message, status: 'error' })
       }
-    );
+    )
   }
 
   // Styles
   const inpStyle =
-    'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring';
+    'px-3 py-3 w-full placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring'
 
   return (
     <section className='pt-20 sm:pb-40 flex flex-col items-center bg-white'>
@@ -64,16 +65,16 @@ export default function ContactUs() {
                   value:
                     /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/,
                   message:
-                    'El nombre no puede contener caracteres especiales ni números.',
+                    'El nombre no puede contener caracteres especiales ni números.'
                 },
                 minLength: {
                   value: 3,
-                  message: 'El nombre debe contener como mínimo 3 caracteres.',
+                  message: 'El nombre debe contener como mínimo 3 caracteres.'
                 },
                 maxLength: {
                   value: 30,
-                  message: 'El nombre no puede tener más de 30 caracteres.',
-                },
+                  message: 'El nombre no puede tener más de 30 caracteres.'
+                }
               }}
               render={({ field: { onChange, name, ref, value } }) => {
                 return (
@@ -84,7 +85,7 @@ export default function ContactUs() {
                     name={name}
                     className={`${inpStyle}`}
                   />
-                );
+                )
               }}
             />
           </label>
@@ -97,8 +98,8 @@ export default function ContactUs() {
                 required: 'Debes escribir un email.',
                 maxLength: {
                   value: 200,
-                  message: 'El email no puede contener más de 200 caracteres.',
-                },
+                  message: 'El email no puede contener más de 200 caracteres.'
+                }
               }}
               render={({ field: { onChange, name, ref, value } }) => {
                 return (
@@ -109,7 +110,7 @@ export default function ContactUs() {
                     name={name}
                     className={inpStyle}
                   />
-                );
+                )
               }}
             />
           </label>
@@ -136,10 +137,10 @@ export default function ContactUs() {
                 required: 'Debes añadir algún comentario.',
                 maxLength: {
                   value: 250,
-                  message: 'No puedes escribir más de 250 caracteres.',
-                },
+                  message: 'No puedes escribir más de 250 caracteres.'
+                }
               })}
-            ></textarea>
+            />
           </label>
           {errors.comentarios && (
             <p className='text-red-500'>{errors.comentarios.message}</p>
@@ -152,5 +153,5 @@ export default function ContactUs() {
         </form>
       </div>
     </section>
-  );
+  )
 }

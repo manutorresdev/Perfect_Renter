@@ -1,32 +1,32 @@
-import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import { CreateFormData, post } from '../../Helpers/Api';
-import useLocalStorage from '../../Helpers/Hooks/useLocalStorage';
-import Email from './Inputs/Email';
-import Password from './Inputs/Password';
+import React, { useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
+import { CreateFormData, post } from '../../Helpers/Api'
+import useLocalStorage from '../../Helpers/Hooks/useLocalStorage'
+import Email from './Inputs/Email'
+import Password from './Inputs/Password'
 
-export default function Login() {
-  const [, setToken] = useLocalStorage('Token', '');
+export default function Login () {
+  const [, setToken] = useLocalStorage('Token', '')
 
   // States
-  const { handleSubmit, register, formState: errors, control } = useForm();
-  const formFunctions = { register, errors };
-  const [Error, setError] = useState('');
+  const { handleSubmit, register, formState: errors, control } = useForm()
+  const formFunctions = { register, errors }
+  const [Error, setError] = useState('')
 
   // Enviar datos a backend
-  function onSubmit(body) {
+  function onSubmit (body) {
     post(
       'http://192.168.5.103:4000/users/login',
       CreateFormData(body),
       (data) => {
-        setToken(data.token);
-        window.location.reload();
+        setToken(data.token)
+        window.location.reload()
       },
       (data) => {
-        setError(data.message);
+        setError(data.message)
       }
-    );
+    )
   }
 
   return (
@@ -48,8 +48,8 @@ export default function Login() {
               required: 'Debes escribir un email.',
               maxLength: {
                 value: 200,
-                message: 'El email no puede contener más de 200 caracteres.',
-              },
+                message: 'El email no puede contener más de 200 caracteres.'
+              }
             }}
             render={({ field: { onChange, name, ref } }) => {
               return (
@@ -59,18 +59,20 @@ export default function Login() {
                   name={name}
                   className='px-3 py-3 placeholder-gray-400 text-gray-600 relative bg-white text-sm border border-gray-400 outline-none focus:outline-none focus:ring w-full cursor-pointer'
                 />
-              );
+              )
             }}
           />
           {errors.email && (
             <p className='text-red-500'>{errors.email.message}</p>
           )}
           <Password {...formFunctions} />
-          {Error ? (
-            <div className='text-red-500 font-medium text-center'>{Error}</div>
-          ) : (
-            ''
-          )}
+          {Error
+            ? (
+              <div className='text-red-500 font-medium text-center'>{Error}</div>
+              )
+            : (
+                ''
+              )}
           <input
             className='select-none w-full self-center text-center bg-principal-1 text-principal-gris border border-yellow-300 text-black py-2 px-3 hover:bg-gray-Primary hover:text-principal-1 transform ease-in duration-200 cursor-pointer'
             type='submit'
@@ -94,5 +96,5 @@ export default function Login() {
         </div>
       </section>
     </>
-  );
+  )
 }

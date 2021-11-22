@@ -1,5 +1,5 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
+const getDB = require('../../config/getDB')
 /**
  * @module Users
  */
@@ -10,13 +10,13 @@ const getDB = require('../../config/getDB');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const validateUser = async (req, res, next) => {
-  let connection;
+  let connection
 
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el codigo de registro de los path params.
-    const { registrationCode: regCode } = req.params;
+    const { registrationCode: regCode } = req.params
 
     // Comprobamos que el usuario a validar, esté pendiente de validar.
     const [user] = await connection.query(
@@ -24,13 +24,13 @@ const validateUser = async (req, res, next) => {
     SELECT idUser FROM users WHERE registrationCode = ?
     `,
       [regCode]
-    );
+    )
 
     // Si no hay usuario a validar, lanzamos error.
     if (user.length < 1) {
-      const error = new Error('No hay usuarios pendientes de validar.');
-      error.httpStatus = 404;
-      throw error;
+      const error = new Error('No hay usuarios pendientes de validar.')
+      error.httpStatus = 404
+      throw error
     }
 
     // Editamos el valor de activo/inactivo del usuario y cambiamos el codigo de registro a NULL
@@ -39,17 +39,17 @@ const validateUser = async (req, res, next) => {
     UPDATE users SET renterActive = true, registrationCode = NULL WHERE registrationCode = ?
     `,
       [regCode]
-    );
+    )
 
     res.send({
       status: 'ok',
-      message: 'Verificación completada',
-    });
+      message: 'Verificación completada'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = validateUser;
+module.exports = validateUser

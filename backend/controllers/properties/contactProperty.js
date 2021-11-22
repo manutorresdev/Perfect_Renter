@@ -1,6 +1,6 @@
 // @ts-nocheck
-const getDB = require('../../config/getDB');
-const { sendMail } = require('../../libs/helpers');
+const getDB = require('../../config/getDB')
+const { sendMail } = require('../../libs/helpers')
 /**
  * @module Entries
  */
@@ -11,15 +11,15 @@ const { sendMail } = require('../../libs/helpers');
  * @param {*} next Envía al siguiente middleware, si existe. O lanza errores si los hay
  */
 const contactProperty = async (req, res, next) => {
-  let connection;
+  let connection
   try {
-    connection = await getDB();
+    connection = await getDB()
 
     // Obtenemos el id de la vivienda a contactar.
-    const { idProperty } = req.params;
+    const { idProperty } = req.params
 
     // Obtenemos los datos del usuario que contacta.
-    let { name, lastName, email, tel, comentarios } = req.body;
+    const { name, lastName, email, tel, comentarios } = req.body
 
     // Seleccionamos la imagen, el nombre y la ciudad del alquiler contactar. (PARA EL FRONTEND)
     const [property] = await connection.query(
@@ -31,14 +31,14 @@ const contactProperty = async (req, res, next) => {
         WHERE properties.idProperty = ?
         `,
       [idProperty]
-    );
+    )
 
     if (!comentarios || comentarios.length < 1) {
       const error = new Error(
         'Debes añadir un comentario. EJM: Estoy interesado en su vivienda, me vendría bien contactar con usted.'
-      );
-      error.httpStatus = 400;
-      throw error;
+      )
+      error.httpStatus = 400
+      throw error
     }
 
     // Definimos el body del email
@@ -68,31 +68,31 @@ const contactProperty = async (req, res, next) => {
           </td>
       </tbody>
     </table>
-    `;
+    `
 
     // Enviamos el correo del usuario que contacta, al usuario a contactar.
     if (process.env.NODE_ENV !== 'test') {
       await sendMail({
         to: property[0].email,
         subject: 'Mensaje de usuario Perfect Renter',
-        body: emailBody,
-      });
+        body: emailBody
+      })
       await sendMail({
         to: email,
         subject: 'Copia de tu mensaje - Perfect Renter',
-        body: emailBody,
-      });
+        body: emailBody
+      })
     }
 
     res.send({
       status: 'ok',
-      message: 'Correo electrónico enviado con éxito.',
-    });
+      message: 'Correo electrónico enviado con éxito.'
+    })
   } catch (error) {
-    next(error);
+    next(error)
   } finally {
-    if (connection) connection.release();
+    if (connection) connection.release()
   }
-};
+}
 
-module.exports = contactProperty;
+module.exports = contactProperty
