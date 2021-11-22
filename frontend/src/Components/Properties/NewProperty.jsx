@@ -730,62 +730,62 @@ export default function NewProperty ({ setOverlay, Token, EditProperty }) {
               <div className='flex flex-wrap gap-2 justify-center'>
                 {EditProperty && Photos
                   ? Photos.map((photo) => {
-                      return (
-                        <div key={photo.name} className='relative'>
-                          <button
-                            className='delete-photo absolute top-0 right-0 bg-principal-1'
-                            onClick={(e) => {
-                              e.preventDefault()
-                              e.stopPropagation()
-                              deletePhoto(photo.name)
-                              setLoader(true)
-                            }}
-                          >
-                            <FaPlus className='transform rotate-45' />
-                          </button>
-                          <img
-                            src={
+                    return (
+                      <div key={photo.name} className='relative'>
+                        <button
+                          className='delete-photo absolute top-0 right-0 bg-principal-1'
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            deletePhoto(photo.name)
+                            setLoader(true)
+                          }}
+                        >
+                          <FaPlus className='transform rotate-45' />
+                        </button>
+                        <img
+                          src={
                               'http://192.168.5.103:4000/photo/' + photo.name
                             }
-                            alt='prueba'
-                            className='w-20 h-20 object-cover'
-                          />
-                        </div>
-                      )
-                    })
+                          alt='prueba'
+                          className='w-20 h-20 object-cover'
+                        />
+                      </div>
+                    )
+                  })
                   : ''}
                 {PhotosOnUpload.length > 0
                   ? PhotosOnUpload.map((file, index) => {
-                      return (
-                        <div key={file.name} className='relative w-20'>
-                          <button
-                            className='delete-photo absolute top-0 right-0 bg-principal-1'
-                            onClick={(e) => {
-                              e.preventDefault()
-                              e.stopPropagation()
-                              setLoader(true)
-                              setPhotosOnUpload(
-                                PhotosOnUpload.filter(
-                                  (fileToRemove) =>
-                                    fileToRemove.name !== file.name
-                                )
+                    return (
+                      <div key={file.name} className='relative w-20'>
+                        <button
+                          className='delete-photo absolute top-0 right-0 bg-principal-1'
+                          onClick={(e) => {
+                            e.preventDefault()
+                            e.stopPropagation()
+                            setLoader(true)
+                            setPhotosOnUpload(
+                              PhotosOnUpload.filter(
+                                (fileToRemove) =>
+                                  fileToRemove.name !== file.name
                               )
+                            )
 
-                              setTimeout(() => {
-                                setLoader(false)
-                              }, 1000)
-                            }}
-                          >
-                            <FaPlus className='transform rotate-45' />
-                          </button>
-                          <img
-                            src={URL.createObjectURL(file)}
-                            alt='prueba'
-                            className='w-20 h-20 object-cover'
-                          />
-                        </div>
-                      )
-                    })
+                            setTimeout(() => {
+                              setLoader(false)
+                            }, 1000)
+                          }}
+                        >
+                          <FaPlus className='transform rotate-45' />
+                        </button>
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt='prueba'
+                          className='w-20 h-20 object-cover'
+                        />
+                      </div>
+                    )
+                  })
                   : 'La primera fotografía será la principal.'}
               </div>
               <FaCamera

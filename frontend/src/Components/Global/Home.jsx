@@ -237,7 +237,7 @@ export function RentersList () {
         {Users.length
           ? Users.slice(0, 4).map((user) => (
             <Renter Token={Token} key={user.idUser} user={user} />
-            ))
+          ))
           : ''}
       </div>
       {Token
