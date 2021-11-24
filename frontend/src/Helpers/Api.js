@@ -126,10 +126,16 @@ export function CreateFormData (body) {
 
 export function CreateFormDataMultipleFiles (files) {
   const formData = new FormData()
-  if (files.length > 0) {
-    files.map((file) => formData.append('photo', file))
-  }
 
+  files.map(photo => formData.append('photo', photo))
+  // if (files.length > 0) {
+  //   files.map((file) => {
+  //     return formData.append('photo', file)
+  //   })
+  // }
+  files.map((photo, i) => {
+    return console.log(photo, 'foto' + i)
+  })
   return formData
 }
 

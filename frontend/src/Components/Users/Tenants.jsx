@@ -29,7 +29,7 @@ export default function UsersList (props) {
     // const controllerBookings = new AbortControllenullr();
     if (location.search) {
       get(
-        `http://192.168.5.103:4000/users${location.search}`,
+        `http://localhost:4000/users${location.search}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users)
@@ -44,7 +44,7 @@ export default function UsersList (props) {
       )
     } else {
       get(
-        'http://192.168.5.103:4000/users',
+        'http://localhost:4000/users',
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUsers(data.users)
@@ -58,7 +58,7 @@ export default function UsersList (props) {
         null
       )
       get(
-        `http://192.168.5.103:4000/users/${
+        `http://localhost:4000/users/${
           parseJwt(Token).idUser
         }/bookings/renter`,
         (data) => {

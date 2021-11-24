@@ -16,10 +16,9 @@ export default function RecoverPass () {
     e.preventDefault()
 
     put(
-      'http://192.168.5.103:4000/users/password/recover',
+      'http://localhost:4000/users/password/recover',
       body,
       (data) => {
-        console.log(data)
         setMessage({
           message: '¡Revisa tu correo electrónico para cambiar la contraseña!',
           status: 'ok'

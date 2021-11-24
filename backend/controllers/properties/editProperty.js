@@ -68,19 +68,18 @@ const editProperty = async (req, res, next) => {
      *
      */
 
-    if (req.files && req.files.photo) {
+    if (req.files.photo) {
       // Recorremos las fotos recibidas para subirlas.
-      for (const photo of Object.values(req.files.photo)) {
+      if (Object.values(req.files).length === 1) {
         // Obtenemos la cantidad de fotos que tiene esa propiedad.
         const [photos] = await connection.query(
-          `
-      SELECT idPhoto FROM photos WHERE idProperty = ?
-      `,
-          [idProperty]
+        `
+        SELECT idPhoto FROM photos WHERE idProperty = ?
+        `,
+        [idProperty]
         )
 
         // Comprobamos que no haya más de 30 fotos.
-
         if (photos.length > 29) {
           const error = new Error('Solo puedes subir un máximo de 30 fotos.')
           error.httpStatus = 403
@@ -88,19 +87,53 @@ const editProperty = async (req, res, next) => {
         }
         let photoName
         try {
-          photoName = await savePhoto(photo)
+          photoName = await savePhoto(Object.values(req.files)[0])
         } catch (_) {
           const error = new Error('Formato incorrecto.')
           error.httpStatus = 400
           throw error
         }
         await connection.query(
-          `
-      INSERT INTO photos (name,idProperty,createdAt)
-      VALUES (?,?,?)
-      `,
-          [photoName, idProperty, formatDate(new Date())]
+        `
+        INSERT INTO photos (name,idProperty,createdAt)
+        VALUES (?,?,?)
+        `,
+        [photoName, idProperty, formatDate(new Date())]
         )
+      } else {
+        for (const photo of Object.values(req.files.photo)) {
+          // Obtenemos la cantidad de fotos que tiene esa propiedad.
+          const [photos] = await connection.query(
+            `
+        SELECT idPhoto FROM photos WHERE idProperty = ?
+        `,
+            [idProperty]
+          )
+
+          // Comprobamos que no haya más de 30 fotos.
+
+          if (photos.length > 29) {
+            const error = new Error('Solo puedes subir un máximo de 30 fotos.')
+            error.httpStatus = 403
+            throw error
+          }
+          let photoName
+          try {
+            console.log(photo)
+            photoName = await savePhoto(photo)
+          } catch (_) {
+            const error = new Error('Formato incorrecto.')
+            error.httpStatus = 400
+            throw error
+          }
+          await connection.query(
+            `
+        INSERT INTO photos (name,idProperty,createdAt)
+        VALUES (?,?,?)
+        `,
+            [photoName, idProperty, formatDate(new Date())]
+          )
+        }
       }
     }
     /**

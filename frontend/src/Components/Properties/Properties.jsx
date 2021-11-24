@@ -13,7 +13,7 @@ export default function Properties (props) {
   useEffect(() => {
     // const controller = new AbortController();
     get(
-      'http://192.168.5.103:4000/properties?orden=valoraciones&direccion=DESC',
+      'http://localhost:4000/properties?orden=valoraciones&direccion=DESC',
       (data) => {
         if (data.message !== 'No hay conicidencias para su búsqueda') {
           setBestRatedProperties(data.properties)

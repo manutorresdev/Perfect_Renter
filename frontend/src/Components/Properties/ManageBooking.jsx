@@ -11,7 +11,7 @@ export default function ManageBokking ({ match }) {
   function acceptBooking () {
     // const controller = new AbortController();
     get(
-      `http://192.168.5.103:4000/properties/${match.params.bookingCode}/accept`,
+      `http://localhost:4000/properties/${match.params.bookingCode}/accept`,
       (data) => {
         setBooking(data)
       },
@@ -27,7 +27,7 @@ export default function ManageBokking ({ match }) {
   function cancelBooking () {
     // const controller = new AbortController();
     get(
-      `http://192.168.5.103:4000/properties/${match.params.bookingCode}/cancel`,
+      `http://localhost:4000/properties/${match.params.bookingCode}/cancel`,
       (data) => {
         setBooking(data)
       },

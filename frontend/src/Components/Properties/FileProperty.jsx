@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form'
 import { FaPlus, FaRegArrowAltCircleUp } from 'react-icons/fa'
 import {
   CreateFormData,
-  // CreateFormDataMultipleFiles,
+  // CreateFormData,
+  CreateFormDataMultipleFiles,
   put
 } from '../../Helpers/Api'
 import CircularProgress from '@mui/material/CircularProgress'
@@ -40,7 +41,6 @@ export default function FileProperty ({
 
     if (FileName) {
       setPhotosOnUpload(FileName)
-      console.log('EDITAR', FileName)
       setTimeout(() => {
         setLoader(false)
       }, 1000)
@@ -61,11 +61,9 @@ export default function FileProperty ({
       return photos.push(body.photo[index])
     })
 
-    console.log(photos)
-
     put(
-      `http://192.168.5.103:4000/properties/${editProperty}`,
-      CreateFormData({ photo: photos[0] }),
+      `http://localhost:4000/properties/${editProperty}`,
+      photos.length === 1 ? CreateFormData({ photo: photos[0] }) : CreateFormDataMultipleFiles(photos),
       (data) => {
         if (data.status === 'ok') {
           console.log('Sucess')
@@ -152,7 +150,7 @@ export default function FileProperty ({
                             </button>
                             <img
                               src={
-                                'http://192.168.5.103:4000/photo/' + photo.name
+                                'http://localhost:4000/photo/' + photo.name
                               }
                               alt='prueba'
                               className='w-20 h-20 object-cover'
@@ -179,7 +177,6 @@ export default function FileProperty ({
                                   e.preventDefault()
                                   e.stopPropagation()
                                   setLoader(true)
-                                  console.log(FileName)
                                   setFileName(
                                     FileName.filter(
                                       (fileToRemove) =>
@@ -231,7 +228,7 @@ export default function FileProperty ({
                   hiddenInput.current = e
                 }}
                 type='file'
-                multiple='multiple'
+                multiple
                 name='photo'
               />
             </div>

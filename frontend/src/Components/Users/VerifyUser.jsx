@@ -8,7 +8,7 @@ export default function VerifyUser ({ match }) {
   useEffect(() => {
     // const controller = new AbortController();
     get(
-      `http://192.168.5.103:4000/users/validate/${match.params.registrationCode}`,
+      `http://localhost:4000/users/validate/${match.params.registrationCode}`,
       (data) => {
         setMessage(data.message)
       },

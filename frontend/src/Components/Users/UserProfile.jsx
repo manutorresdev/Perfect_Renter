@@ -20,7 +20,7 @@ export default function UserProfile ({ match }) {
     // const controllerBookings = new AbortController();
     // const controllerVotes = new AbortController();
     get(
-      `http://192.168.5.103:4000/users/${match.params.idUser}`,
+      `http://localhost:4000/users/${match.params.idUser}`,
       (data) => {
         setUser(data.userInfo)
       },
@@ -31,7 +31,7 @@ export default function UserProfile ({ match }) {
       null
     )
     get(
-      `http://192.168.5.103:4000/users/${match.params.idUser}/bookings/renter`,
+      `http://localhost:4000/users/${match.params.idUser}/bookings/renter`,
       (data) => {
         if (data.status === 'ok') {
           setBookings(data.bookings)
@@ -44,7 +44,7 @@ export default function UserProfile ({ match }) {
       null
     )
     get(
-      `http://192.168.5.103:4000/users/${match.params.idUser}/votes`,
+      `http://localhost:4000/users/${match.params.idUser}/votes`,
       (data) => {
         if (data.status === 'ok') {
           setVotes(data.Valoraciones)
@@ -85,7 +85,7 @@ export default function UserProfile ({ match }) {
               className=' w-60 h-60 object-cover rounded-circle'
               src={
                 user.avatar
-                  ? `http://192.168.5.103:4000/photo/${user.avatar}`
+                  ? `http://localhost:4000/photo/${user.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt='imagen de perfil'
@@ -175,7 +175,7 @@ export default function UserProfile ({ match }) {
                               className='flex-grow object-cover w-full h-full'
                               src={
                             booking.photo
-                              ? 'http://192.168.5.103:4000/photo/' +
+                              ? 'http://localhost:4000/photo/' +
                                 booking.photo
                               : require('../../Images/defPicture.jpg').default
                           }
@@ -279,7 +279,7 @@ export default function UserProfile ({ match }) {
                           className='w-14 h-14 rounded-full m-2'
                           src={
                         vote.avatar
-                          ? 'http://192.168.5.103:4000/photo/' + vote.avatar
+                          ? 'http://localhost:4000/photo/' + vote.avatar
                           : require('../../Images/defProfile.png').default
                       }
                           alt='imagen de perfil'
