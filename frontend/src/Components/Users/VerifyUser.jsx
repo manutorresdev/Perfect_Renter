@@ -8,7 +8,7 @@ export default function VerifyUser ({ match }) {
   useEffect(() => {
     // const controller = new AbortController();
     get(
-      `http://localhost:4000/users/validate/${match.params.registrationCode}`,
+      `https://api.reservalo.online/users/validate/${match.params.registrationCode}`,
       (data) => {
         setMessage(data.message)
       },

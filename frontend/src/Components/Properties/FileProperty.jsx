@@ -62,7 +62,7 @@ export default function FileProperty ({
     })
 
     put(
-      `http://localhost:4000/properties/${editProperty}`,
+      `https://api.reservalo.online/properties/${editProperty}`,
       photos.length === 1 ? CreateFormData({ photo: photos[0] }) : CreateFormDataMultipleFiles(photos),
       (data) => {
         if (data.status === 'ok') {
@@ -150,7 +150,7 @@ export default function FileProperty ({
                             </button>
                             <img
                               src={
-                                'http://localhost:4000/photo/' + photo.name
+                                'https://api.reservalo.online/photo/' + photo.name
                               }
                               alt='prueba'
                               className='w-20 h-20 object-cover'

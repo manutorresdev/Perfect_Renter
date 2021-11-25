@@ -13,7 +13,7 @@ export default function Properties (props) {
   useEffect(() => {
     // const controller = new AbortController();
     get(
-      'http://localhost:4000/properties?orden=valoraciones&direccion=DESC',
+      'https://api.reservalo.online/properties?orden=valoraciones&direccion=DESC',
       (data) => {
         if (data.message !== 'No hay conicidencias para su búsqueda') {
           setBestRatedProperties(data.properties)

@@ -33,7 +33,7 @@ export default function ResetPass ({ match }) {
               setError(true)
             } else {
               put(
-                `http://localhost:4000/users/password/recover/${match.params.idUser}/${match.params.recoverCode}`,
+                `https://api.reservalo.online/users/password/recover/${match.params.idUser}/${match.params.recoverCode}`,
                 { password: data.password },
                 (data) => {
                   setMessage({

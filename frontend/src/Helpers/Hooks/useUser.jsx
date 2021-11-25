@@ -10,7 +10,7 @@ export default function useUser () {
     // const controller = new AbortController();
     if (token) {
       get(
-        `http://localhost:4000/users/${parseJwt(token).idUser}`,
+        `https://api.reservalo.online/users/${parseJwt(token).idUser}`,
         (data) => {
           if (data.message !== 'No hay conicidencias para su busqueda') {
             setUser(data.userInfo)

@@ -111,12 +111,12 @@ export default function NewProperty ({ setOverlay, Token, EditProperty }) {
   function onSubmitProperty (body, e) {
     setLoader(true)
     post(
-      'http://localhost:4000/properties',
+      'https://api.reservalo.online/properties',
       CreateFormData(body),
       (data) => {
         if (PhotosOnUpload) {
           put(
-            `http://localhost:4000/properties/${data.property}`,
+            `https://api.reservalo.online/properties/${data.property}`,
             CreateFormDataMultipleFiles(PhotosOnUpload),
             (data) => {
               console.log('Success')
@@ -150,7 +150,7 @@ export default function NewProperty ({ setOverlay, Token, EditProperty }) {
   function onSubmitEdited (body, e) {
     e.preventDefault()
     put(
-      `http://localhost:4000/properties/${EditProperty.idProperty}`,
+      `https://api.reservalo.online/properties/${EditProperty.idProperty}`,
       CreateFormData(body),
       (data) => {
         console.log('Sucess')
@@ -168,7 +168,7 @@ export default function NewProperty ({ setOverlay, Token, EditProperty }) {
 
   useEffect(() => {
     get(
-      'http://localhost:4000/properties/location',
+      'https://api.reservalo.online/properties/location',
       (data) => {
         setProvinces(data.provinces)
         setCities(data.cities)
@@ -188,7 +188,7 @@ export default function NewProperty ({ setOverlay, Token, EditProperty }) {
     const controller = new AbortController()
     if (EditProperty) {
       get(
-        `http://localhost:4000/properties/${EditProperty.idProperty}/photos`,
+        `https://api.reservalo.online/properties/${EditProperty.idProperty}/photos`,
         (data) => {
           if (data.status === 'ok') {
             setPhotos(data.photos)
@@ -209,7 +209,7 @@ export default function NewProperty ({ setOverlay, Token, EditProperty }) {
   function deletePhoto (name) {
     if (EditProperty) {
       del(
-        `http://localhost:4000/properties/${EditProperty.idProperty}/photos/${name}`,
+        `https://api.reservalo.online/properties/${EditProperty.idProperty}/photos/${name}`,
         null,
         (data) => {
           if (data.status === 'ok') {
@@ -745,7 +745,7 @@ export default function NewProperty ({ setOverlay, Token, EditProperty }) {
                         </button>
                         <img
                           src={
-                              'http://localhost:4000/photo/' + photo.name
+                              'https://api.reservalo.online/photo/' + photo.name
                             }
                           alt='prueba'
                           className='w-20 h-20 object-cover'

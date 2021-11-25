@@ -32,7 +32,7 @@ export default function Avatar ({ setOverlay, avatar, usuario, Token }) {
         })
 
         put(
-          `http://localhost:4000/users/${usuario.idUser}`,
+          `https://api.reservalo.online/users/${usuario.idUser}`,
           CreateFormData({ avatar: file }),
           (data) => {
             console.log('Success')

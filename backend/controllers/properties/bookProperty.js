@@ -170,7 +170,7 @@ const bookProperty = async (req, res, next) => {
       thead {
           height: 20vh;
           width: 100%;
-          background: linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('http://localhost:4000/photo/portada-nosotros.jpg');
+          background: linear-gradient(rgba(16, 16, 16, 0.3),rgba(16, 16, 16, 0.9)),url('https://api.reservalo.online/photo/portada-nosotros.jpg');
           background-repeat: no-repeat;
           background-size: cover;
           background-position: center;

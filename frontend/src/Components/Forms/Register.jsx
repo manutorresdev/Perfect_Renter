@@ -74,7 +74,7 @@ export default function Register ({
       setError('Debes ser mayor de edad.')
     } else {
       post(
-        'http://localhost:4000/users',
+        'https://api.reservalo.online/users',
         CreateFormData(body),
         (data) => {
           console.log('Success')
@@ -93,7 +93,7 @@ export default function Register ({
   function onSubmitEdited (body, e) {
     e.preventDefault()
     put(
-      `http://localhost:4000/users/${usuario.idUser}`,
+      `https://api.reservalo.online/users/${usuario.idUser}`,
       CreateFormData(body),
       (data) => {
         console.log('Success')

@@ -27,7 +27,7 @@ export default function ContactTenant ({ info, setOverlay, Token, properties }) 
   function onSubmit (body, e) {
     e.preventDefault()
     post(
-      `http://localhost:4000/users/${info.idUser}/contact`,
+      `https://api.reservalo.online/users/${info.idUser}/contact`,
       CreateFormData(body),
       (data) => {
         setMessage({ message: data.message, status: 'ok' })
@@ -219,7 +219,7 @@ export default function ContactTenant ({ info, setOverlay, Token, properties }) 
               className='w-60 h-60 object-cover rounded-circle'
               src={
                 info.avatar
-                  ? `http://localhost:4000/photo/${info.avatar}`
+                  ? `https://api.reservalo.online/photo/${info.avatar}`
                   : require('../../Images/defProfile.png').default
               }
               alt='imagen de perfil'
